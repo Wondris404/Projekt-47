@@ -100,7 +100,7 @@ func _transport_index(u) -> void:
 	u._new()
 	GameState.config.progression = false
 	GameState.player.cash = 1.0e10
-	for kind in ["coal_mine", "logistics_hub", "logistics_hub", "cargo_port"]:
+	for kind in ["coal_mine", "logistics_hub", "logistics_hub", "cargo_port", "ai_firm", "data_center"]:
 		GameState.found_firm(kind, "Audit " + kind, "SK")
 	var firms = GameState.player_firms()
 	for f in firms: f.pos = [100.0, 100.0]
@@ -118,12 +118,22 @@ func _transport_index(u) -> void:
 		for cid in ["coal", "crude_oil", "electricity"]:
 			if Transport.discount(f, cid) != expected[str(f.id) + cid]: identical = false
 	u._chk("audit_transport_index_exact", identical)
+	IndustrySystem._prepare_local_competition()
+	var yields_equal = true
+	for f in firms:
+		IndustrySystem.use_local_competition_cache = false
+		var scan = IndustrySystem._yield_mult(f, str(f.facilities[0].recipe))
+		IndustrySystem.use_local_competition_cache = true
+		if scan != IndustrySystem._yield_mult(f, str(f.facilities[0].recipe)): yields_equal = false
+	u._chk("audit_ai_index_exact", yields_equal)
 	var saved = GameState.to_dict().duplicate(true)
 	GameState.from_dict(saved.duplicate(true))
+	IndustrySystem.use_local_competition_cache = false
 	Transport.use_support_index = false
 	for i in 3: GameState.simulate_day()
 	var reference = JSON.stringify(GameState.to_dict())
 	GameState.from_dict(saved.duplicate(true))
 	Transport.use_support_index = true
+	IndustrySystem.use_local_competition_cache = true
 	for i in 3: GameState.simulate_day()
 	u._chk("audit_transport_simulation_exact", reference == JSON.stringify(GameState.to_dict()))

@@ -332,6 +332,7 @@ var use_local_competition_cache := true
 var _local_competition: Dictionary = {}
 var _local_competition_members: Dictionary = {}
 var _local_competition_valid := false
+var _player_ai_counts: Dictionary = {}
 
 func _build_internal_pool() -> void:
 	_internal = {}
@@ -446,12 +447,16 @@ func settle_start() -> void:
 func _prepare_local_competition() -> void:
 	_local_competition.clear()
 	_local_competition_members.clear()
+	_player_ai_counts.clear()
 	for firm in GameState.firms:
 		if firm.get("closed", false):
 			continue
 		var key = str(firm.get("country", "")) + "|" + str(firm.get("industry", ""))
 		_local_competition[key] = int(_local_competition.get(key, 0)) + 1
 		_local_competition_members[str(firm.get("id", ""))] = key
+		if str(firm.get("owner", "")) == "player" and str(firm.get("industry", "")) == "ai_firm":
+			var iso = str(firm.get("country", ""))
+			_player_ai_counts[iso] = int(_player_ai_counts.get(iso, 0)) + 1
 	_local_competition_valid = true
 
 func settle_chunk(start: int, count: int) -> int:
@@ -938,6 +943,11 @@ func _production_spec(firm: Dictionary, recipe: Dictionary) -> Dictionary:
 func _yield_mult(firm: Dictionary, recipe_id: String) -> float:
 	if firm.get("owner", "") != "player":
 		return 1.0
+	if use_local_competition_cache and _local_competition_valid:
+		var boost = 1.0
+		if not str(firm.get("industry", "")) in ["ai_firm", "data_center"]:
+			boost += minf(Brand.AI_BOOST_MAX, Brand.AI_BOOST_EACH * int(_player_ai_counts.get(str(firm.get("country", "")), 0)))
+		return _yield_mult0(firm, recipe_id) * boost
 	return _yield_mult0(firm, recipe_id) * Brand.ai_boost(firm)  # JUAN21: AI firma v krajine zvysuje vykon
 
 func _yield_mult0(firm: Dictionary, recipe_id: String) -> float:
