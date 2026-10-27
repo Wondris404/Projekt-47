@@ -2,6 +2,7 @@ extends RefCounted
 
 func run(u) -> void:
 	_trade_ledger(u)
+	_power_input(u)
 
 func _trade_ledger(u) -> void:
 	u._new()
@@ -29,3 +30,20 @@ func _trade_ledger(u) -> void:
 	u._chk("audit_trade_cost", is_equal_approx(float(h.cogs), float(trade.cost)))
 	u._chk("audit_trade_profit_matches_cash", is_equal_approx(float(h.profit), float(firm.cash) - before))
 	u._chk("audit_trade_tax", is_equal_approx(float(h.tax), IndustrySystem.tax_due("SK", float(trade.revenue) - float(trade.cost))))
+
+func _power_input(u) -> void:
+	u._new()
+	GameState.config.progression = false
+	GameState.player.cash = 2.0e8
+	GameState.found_firm("wheat_farm", "Audit energie", "SK")
+	var firm: Dictionary = GameState.player_firms()[-1]
+	GameState.firms = [firm]
+	GameState.player.modifiers.power_mult = 0.5
+	var fac: Dictionary = firm.facilities[0]
+	fac.inventory = {"electricity": 0.125}
+	firm.plans = [{"fi": 0, "desired": 1.0}]
+	GameState.markets.SK.wheat.sell_fill = 0.0
+	IndustrySystem.settle()
+	u._chk("audit_power_research_full_run", is_equal_approx(float(fac.inventory.get("wheat", 0.0)), 1.5))
+	u._chk("audit_power_exact_consumption", is_zero_approx(float(fac.inventory.electricity)))
+	u._chk("audit_power_recipe_immutable", is_equal_approx(float(DataLoader.recipes.wheat_farm.inputs.electricity), 0.25))

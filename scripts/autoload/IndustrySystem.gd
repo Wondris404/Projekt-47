@@ -513,7 +513,7 @@ func settle_chunk(start: int, count: int) -> int:
 					_market_execution(iso, str(in_id), "buyers", firm, bought, cost / bought)
 				if is_pl and record_goods_flow:
 					_flow_add(flow.inputs, str(in_id), {"bought": bought, "internal": own_in, "cost": cost})
-			var applied: Dictionary = apply_recipe(fac.inventory, str(fac.recipe), desired, _yield_mult(firm, str(fac.recipe)))
+			var applied: Dictionary = apply_spec(fac.inventory, _production_spec(firm, recipe), desired, _yield_mult(firm, str(fac.recipe)))
 			var made = float(applied.get("actual", 0.0))
 			for out_id in recipe.get("outputs", {}).keys():
 				var sell_fill = MarketSystem.actor_sell_fill(iso, out_id)
@@ -923,6 +923,17 @@ func _input_qty(firm: Dictionary, recipe: Dictionary, in_id: String) -> float:
 	if in_id == "electricity" and firm.get("owner", "") == "player":
 		q *= float(GameState.player.modifiers.get("power_mult", 1.0))
 	return q
+
+# Planning and production must use the same researched input quantities.
+# Copy only modified inputs; the shared recipe remains immutable.
+func _production_spec(firm: Dictionary, recipe: Dictionary) -> Dictionary:
+	var inputs: Dictionary = recipe.get("inputs", {})
+	if not inputs.has("electricity") or firm.get("owner", "") != "player" or float(GameState.player.modifiers.get("power_mult", 1.0)) == 1.0:
+		return recipe
+	var spec = recipe.duplicate()
+	spec.inputs = inputs.duplicate()
+	spec.inputs.electricity = _input_qty(firm, recipe, "electricity")
+	return spec
 
 func _yield_mult(firm: Dictionary, recipe_id: String) -> float:
 	if firm.get("owner", "") != "player":
