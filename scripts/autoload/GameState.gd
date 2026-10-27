@@ -37,6 +37,7 @@ var next_loan = 1
 var next_bank = 1
 var usd_per_eur = 1.08
 var ext: Dictionary = {}  # JUAN4: politika, focus tree, AI konkurenti (volitelny kluc savu "ext")
+var state_revision := 0  # Runtime only: distinguish worlds even at the same saved day.
 
 const SAVE_VERSION = 3  # v2: dlhopisy z knihy maju kupon = statny vynos (v1 mohol mat kupon = cena/100); v3 (etapa 1): dref, cpi_hist/cpi_acc/cpi_n, prev_rate/upd_day povinne
 const BOND_MIGRATE_COUPON = 0.25
@@ -60,6 +61,7 @@ const _SAVE_TYPES = {
 const _SAVE_ARRAYS_OF_DICTS = ["firms", "banks", "wars", "bond_orders", "stock_orders", "sites"]
 
 func new_game(cfg: Dictionary) -> void:
+	state_revision += 1
 	_ph = 0  # JUAN23
 	config = cfg.duplicate(true)
 	rng.seed = int(cfg.get("seed", 47))
@@ -940,6 +942,7 @@ func from_dict(d: Dictionary) -> String:
 	var err = validate_save(d)
 	if err != "":
 		return err
+	state_revision += 1
 	_ph = 0  # platny save nahradi aj pripadny rozpracovany den
 	running = bool(d.get("running", true))
 	paused = true

@@ -87,6 +87,14 @@ const CAP_TAU = 60.0   # dni: kapacita (dref) nasleduje referencny dopyt (EMA)
 const WAR_OPENNESS = 0.55
 
 func reset_runtime() -> void:
+	_cw.clear()
+	_cw_day = -1
+	_ram_day = -1
+	_active.clear()
+	_dt.clear()
+	_rivals.clear()
+	_rivals_valid = false
+	_war_set.clear()
 	d_now.clear()
 	d_ref.clear()
 	sup_day.clear()

@@ -738,11 +738,13 @@ func broker_text(f: Dictionary) -> String:
 
 # ===================== JUAN15: odberatelia (kto kupuje od hraca) =====================
 var _pf_day = -1
+var _pf_revision = -1
 var _pf: Dictionary = {}
 
 func _player_firm_map() -> Dictionary:
-	if _pf_day != GameState.day_index:
+	if _pf_day != GameState.day_index or _pf_revision != GameState.state_revision:
 		_pf_day = GameState.day_index
+		_pf_revision = GameState.state_revision
 		_pf = {}
 		for f in GameState.player_firms():
 			_pf[str(f.id)] = f

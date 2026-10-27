@@ -15,6 +15,7 @@ const PIPE_GOODS = ["crude_oil", "natural_gas", "fuel"]
 const GOODS = ["wheat", "coffee", "meat", "crude_oil", "coal", "iron_ore", "copper", "steel", "chemicals", "pharma", "textiles", "electronics", "automobiles", "weapons", "arms", "fuel", "natural_gas"]
 const KIND_NAME = {"rail": "Železnica", "pipe": "Ropovod / plynovod"}
 var _day := -1
+var _revision := -1
 
 func st() -> Dictionary:
 	if typeof(GameState.get("ext")) != TYPE_DICTIONARY:
@@ -74,7 +75,7 @@ var _c_cap := {}
 const _WM = preload("res://scripts/ui/world_map.gd")
 
 func _cache_ok() -> void:
-	var sig = "%d|%d|%d|%d" % [Engine.get_process_frames(), GameState.day_index, GameState.firms.size(), lines().size()]
+	var sig = "%d|%d|%d|%d|%d" % [GameState.state_revision, Engine.get_process_frames(), GameState.day_index, GameState.firms.size(), lines().size()]
 	if sig != _csig:
 		_csig = sig
 		_c_wp.clear(); _c_dpos.clear(); _c_conn.clear(); _c_disc.clear(); _c_hub.clear()
@@ -191,9 +192,10 @@ func _discount0(f: Dictionary, cid: String) -> Dictionary:
 	return {"d": d, "rail": rail, "pipe": pipe, "logi": logi, "port": port, "hub": str(hub.get("id", ""))}
 
 func begin_day() -> void:
-	if _day == GameState.day_index:
+	if _day == GameState.day_index and _revision == GameState.state_revision:
 		return
 	_day = GameState.day_index
+	_revision = GameState.state_revision
 	invalidate()
 	for l in lines():
 		l.used_prev = float(l.get("used", 0.0))
