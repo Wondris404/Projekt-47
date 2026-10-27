@@ -72,6 +72,8 @@ func _ready() -> void:
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/local_comp.gd").new().run(unit)
 			exit_code = 1 if unit.fails > 0 else 0
+		elif args.size() > 0 and str(args[0]) == "performance_audit":
+			load("res://tests/performance_audit.gd").new().run()
 		elif args.size() > 0 and str(args[0]) == "profile_sim":
 			load("res://tests/profile_sim.gd").new().run()
 		elif args.size() > 0 and str(args[0]) == "phase_routes_unit":
