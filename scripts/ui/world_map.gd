@@ -58,6 +58,11 @@ var _anim_acc: float = 0.0
 var _cafe_anim: Texture2D
 var _factory_anim: Texture2D
 var _bank_anim: Texture2D
+var _camera_initialized := false
+var _camera_fit := 1.0
+var _camera_size := Vector2.ZERO
+var _camera_transform := Transform2D.IDENTITY
+var _drag_button := MOUSE_BUTTON_NONE
 
 func _ready() -> void:
 	clip_contents = true
@@ -74,10 +79,47 @@ func _ready() -> void:
 	_atlas_layer.map = self
 	add_child(_atlas_layer)
 	_build()
+	item_rect_changed.connect(_preserve_camera_layout)
+	set_notify_transform(true)
+	get_window().focus_exited.connect(_cancel_drag)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		queue_redraw()
+	elif what == NOTIFICATION_TRANSFORM_CHANGED:
+		_preserve_camera_layout()
+
+func _initialize_camera_frame() -> void:
+	if _camera_initialized or size.x <= 1.0 or size.y <= 1.0:
+		return
+	_camera_fit = _fit()
+	_camera_size = size
+	_camera_transform = get_global_transform()
+	_camera_initialized = true
+
+# A panel changes both the map rectangle and its canvas position. Preserve
+# world -> canvas; resizing reveals more map, without changing zoom or LOD.
+func _preserve_camera_layout() -> void:
+	if not _camera_initialized or size.x <= 1.0 or size.y <= 1.0:
+		return
+	var transform = get_global_transform()
+	if size == _camera_size and transform == _camera_transform:
+		return
+	var world_size = Vector2(float(DataLoader.map.get("w", 1440)), float(DataLoader.map.get("h", 720)))
+	var old_origin = (_camera_size - world_size * _camera_fit * zoom) * 0.5 + pan
+	var into_new = transform.affine_inverse() * _camera_transform
+	var desired_origin = into_new * old_origin
+	_camera_fit *= _camera_transform.x.length() / maxf(transform.x.length(), 0.0001)
+	pan = desired_origin - (size - world_size * _camera_fit * zoom) * 0.5
+	_zoom_anchor = into_new * _zoom_anchor
+	_drag_start = into_new * _drag_start
+	_camera_size = size
+	_camera_transform = transform
+	queue_redraw()
+
+func _cancel_drag() -> void:
+	dragging = false
+	_drag_button = MOUSE_BUTTON_NONE
 
 func _process(delta: float) -> void:
 	if absf(_zoom_target - zoom) > 0.0005 * zoom:  # JUAN12: plynuly zoom ku kurzoru
@@ -219,6 +261,8 @@ func _centroid(poly: PackedVector2Array) -> Vector2:
 	return sum / float(poly.size())
 
 func _fit() -> float:
+	if _camera_initialized:
+		return _camera_fit
 	var mw = float(DataLoader.map.get("w", 1440))
 	var mh = float(DataLoader.map.get("h", 720))
 	return min(size.x / mw, size.y / mh)
@@ -284,6 +328,7 @@ func site_at(p: Vector2, radius: float) -> Dictionary:
 
 var prof := {}
 func _draw() -> void:
+	_initialize_camera_frame()
 	var t0 = Time.get_ticks_usec()
 	if not atlas:
 		_draw_water()  # JUAN16: hlbka vody
@@ -876,16 +921,16 @@ func _click_at(sp: Vector2) -> void:
 
 
 func _zoom_at(mouse: Vector2, new_zoom: float, smooth: bool = false) -> void:
+	new_zoom = clampf(new_zoom, 1.0, MAX_ZOOM)
 	if not smooth:
 		_zoom_target = new_zoom
+		_zoom_anchor = mouse
 	# JUAN-FIX: zoom k bodu pod kurzorom (berie do úvahy pan)
 	var fz_old = max(_fit() * zoom, 0.0001)
 	var w = (mouse - _origin()) / fz_old
 	zoom = new_zoom
 	var after = _origin() + w * _fit() * zoom
 	pan += mouse - after
-	if zoom <= 1.0001:
-		pan = Vector2.ZERO
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -901,15 +946,20 @@ func _gui_input(event: InputEvent) -> void:
 		elif mb.button_index == MOUSE_BUTTON_LEFT:
 			if mb.pressed:
 				dragging = true
+				_drag_button = MOUSE_BUTTON_LEFT
 				_drag_moved = 0.0
 				_drag_start = mb.position
-			else:
-				dragging = false
+			elif _drag_button == MOUSE_BUTTON_LEFT:
+				_cancel_drag()
 				if _drag_moved < 6.0:
-					_click_at(_drag_start)
+					_click_at(mb.position)
 				queue_redraw()
 		elif mb.button_index == MOUSE_BUTTON_RIGHT:
-			dragging = mb.pressed
+			if mb.pressed:
+				dragging = true
+				_drag_button = MOUSE_BUTTON_RIGHT
+			elif _drag_button == MOUSE_BUTTON_RIGHT:
+				_cancel_drag()
 			queue_redraw()
 	elif event is InputEventPanGesture:
 		pan -= (event as InputEventPanGesture).delta * 20.0
