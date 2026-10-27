@@ -1,0 +1,8 @@
+[
+  {"id":"sandbox","name":"Sandbox","country":"SK","loan":250000,"years":5,"found":"","hot":false,"text":"Voľný štart. Krajinu, pôžičku aj prvé podnikanie si vyberieš."},
+  {"id":"cafe","name":"Kaviareň na rohu","country":"SK","loan":180000,"years":5,"found":"cafe","hot":false,"text":"Bratislava, malá pôžička, prvá prevádzka je kaviareň."},
+  {"id":"trader","name":"Obchodník","country":"NL","loan":300000,"years":4,"found":"trade_desk","hot":false,"text":"Rotterdamský štýl. Kancelária hľadá cenové rozdiely medzi krajinami."},
+  {"id":"bank","name":"Vlastná banka","country":"DE","loan":1000000,"years":8,"found":"bank","hot":false,"text":"Veľká pôžička. Po štarte založ banku, ak ostane kapitál."},
+  {"id":"factory","name":"Priemysel","country":"CZ","loan":600000,"years":6,"found":"textile_mill","hot":false,"text":"Textilka ako prvý závod. Ďalšie reťazce staviaš z cashflow."},
+  {"id":"crisis","name":"Napätý svet","country":"PL","loan":400000,"years":5,"found":"","hot":true,"text":"Vyššia šanca vojny a už rozhorúčené spory. Zbrane a bezpečnosť sú drahšie."}
+]

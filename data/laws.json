@@ -1,0 +1,126 @@
+{
+  "international": [
+    {"id": "un_charter", "name": "Charta OSN (1945), čl. 2 ods. 4", "area": "peace", "text": "Zákaz hrozby silou a použitia sily proti územnej celistvosti štátu."},
+    {"id": "geneva", "name": "Ženevské dohovory (1949)", "area": "war", "text": "Ochrana ranených, zajatcov a civilistov vo vojne."},
+    {"id": "gatt", "name": "GATT 1994 a Dohoda o založení WTO", "area": "trade", "text": "Clá viazané, zákaz svojvoľnej diskriminácie v obchode."},
+    {"id": "basel", "name": "Bazilej III", "area": "bank", "min_reserve": 0.08, "text": "Minimálny kapitál a rezervy bánk."},
+    {"id": "att", "name": "Zmluva o obchode so zbraňami (2013)", "area": "arms", "text": "Vývoz zbraní do prebiehajúceho konfliktu je zakázaný."},
+    {"id": "un_sanctions", "name": "Charta OSN, čl. 41", "area": "embargo", "text": "Sankcie Bezpečnostnej rady viažu všetky štáty."},
+    {"id": "vclt", "name": "Viedenský dohovor o zmluvnom práve (1969)", "area": "treaty", "text": "Platnosť a výklad medzinárodných zmlúv."},
+    {"id": "tfeu", "name": "Zmluva o fungovaní Európskej únie", "area": "customs", "text": "Colná únia a voľný pohyb medzi členmi EÚ."}
+  ],
+  "countries": {
+    "SK": [
+      {"id": "sk_tax", "name": "Zákon č. 595/2003 Z. z. o dani z príjmov", "area": "tax", "corporate_tax": 0.21},
+      {"id": "sk_labor", "name": "Zákonník práce č. 311/2001 Z. z.", "area": "labor", "wage_mult": 1.0},
+      {"id": "sk_bank", "name": "Zákon č. 483/2001 Z. z. o bankách", "area": "bank", "min_reserve": 0.08},
+      {"id": "sk_env", "name": "Zákon č. 17/1992 Zb. o životnom prostredí", "area": "environment"},
+      {"id": "sk_arms", "name": "Zákon č. 392/2011 Z. z. o výrobkoch obranného priemyslu", "area": "arms", "license": true}
+    ],
+    "CZ": [
+      {"id": "cz_tax", "name": "Zákon č. 586/1992 Sb. o daních z příjmů", "area": "tax", "corporate_tax": 0.21},
+      {"id": "cz_labor", "name": "Zákoník práce č. 262/2006 Sb.", "area": "labor", "wage_mult": 1.0},
+      {"id": "cz_bank", "name": "Zákon č. 21/1992 Sb. o bankách", "area": "bank", "min_reserve": 0.08},
+      {"id": "cz_env", "name": "Zákon č. 17/1992 Sb. o životním prostředí", "area": "environment"},
+      {"id": "cz_arms", "name": "Zákon č. 38/1994 Sb. o vojenském materiálu", "area": "arms", "license": true}
+    ],
+    "DE": [
+      {"id": "de_tax", "name": "Körperschaftsteuergesetz (KStG)", "area": "tax", "corporate_tax": 0.30},
+      {"id": "de_labor", "name": "Mindestlohngesetz (MiLoG)", "area": "labor", "wage_mult": 1.0},
+      {"id": "de_bank", "name": "Kreditwesengesetz (KWG)", "area": "bank", "min_reserve": 0.08},
+      {"id": "de_env", "name": "Bundes-Immissionsschutzgesetz (BImSchG)", "area": "environment"},
+      {"id": "de_arms", "name": "Außenwirtschaftsgesetz (AWG)", "area": "arms", "license": true}
+    ],
+    "PL": [
+      {"id": "pl_tax", "name": "Ustawa o podatku dochodowym od osób prawnych", "area": "tax", "corporate_tax": 0.19},
+      {"id": "pl_labor", "name": "Kodeks pracy", "area": "labor", "wage_mult": 1.0},
+      {"id": "pl_bank", "name": "Prawo bankowe", "area": "bank", "min_reserve": 0.08},
+      {"id": "pl_env", "name": "Prawo ochrony środowiska", "area": "environment"},
+      {"id": "pl_arms", "name": "Ustawa o obrocie towarami strategicznymi", "area": "arms", "license": true}
+    ],
+    "AT": [
+      {"id": "at_tax", "name": "Körperschaftsteuergesetz 1988", "area": "tax", "corporate_tax": 0.23},
+      {"id": "at_labor", "name": "Arbeitsverfassungsgesetz", "area": "labor", "wage_mult": 1.0},
+      {"id": "at_bank", "name": "Bankwesengesetz (BWG)", "area": "bank", "min_reserve": 0.08},
+      {"id": "at_env", "name": "Umweltverträglichkeitsprüfungsgesetz 2000", "area": "environment"},
+      {"id": "at_arms", "name": "Kriegsmaterialgesetz", "area": "arms", "license": true}
+    ],
+    "HU": [
+      {"id": "hu_tax", "name": "1996. évi LXXXI. törvény a társasági adóról", "area": "tax", "corporate_tax": 0.09},
+      {"id": "hu_labor", "name": "2012. évi I. törvény a munka törvénykönyvéről", "area": "labor", "wage_mult": 1.0},
+      {"id": "hu_bank", "name": "2013. évi CCXXXVII. törvény a hitelintézetekről", "area": "bank", "min_reserve": 0.08},
+      {"id": "hu_env", "name": "1995. évi LIII. törvény a környezet védelméről", "area": "environment"},
+      {"id": "hu_arms", "name": "2005. évi CIX. törvény a haditechnikai termékekről", "area": "arms", "license": true}
+    ],
+    "FR": [
+      {"id": "fr_tax", "name": "Code général des impôts", "area": "tax", "corporate_tax": 0.25},
+      {"id": "fr_labor", "name": "Code du travail", "area": "labor", "wage_mult": 1.0},
+      {"id": "fr_bank", "name": "Code monétaire et financier", "area": "bank", "min_reserve": 0.08},
+      {"id": "fr_env", "name": "Code de l'environnement", "area": "environment"},
+      {"id": "fr_arms", "name": "Code de la défense", "area": "arms", "license": true}
+    ],
+    "UA": [
+      {"id": "ua_tax", "name": "Податковий кодекс України", "area": "tax", "corporate_tax": 0.18},
+      {"id": "ua_labor", "name": "Кодекс законів про працю України", "area": "labor", "wage_mult": 1.0},
+      {"id": "ua_bank", "name": "Закон України про банки і банківську діяльність", "area": "bank", "min_reserve": 0.08},
+      {"id": "ua_env", "name": "Закон України про охорону навколишнього природного середовища", "area": "environment"},
+      {"id": "ua_arms", "name": "Закон України про державний контроль міжнародних передач", "area": "arms", "license": true}
+    ],
+    "US": [
+      {"id": "us_tax", "name": "Internal Revenue Code, Title 26", "area": "tax", "corporate_tax": 0.21},
+      {"id": "us_labor", "name": "Fair Labor Standards Act", "area": "labor", "wage_mult": 1.0},
+      {"id": "us_bank", "name": "Dodd-Frank Act", "area": "bank", "min_reserve": 0.08},
+      {"id": "us_env", "name": "Clean Air Act", "area": "environment"},
+      {"id": "us_arms", "name": "Arms Export Control Act", "area": "arms", "license": true}
+    ],
+    "CN": [
+      {"id": "cn_tax", "name": "Enterprise Income Tax Law", "area": "tax", "corporate_tax": 0.25},
+      {"id": "cn_labor", "name": "Labor Contract Law", "area": "labor", "wage_mult": 1.0},
+      {"id": "cn_bank", "name": "Law on Commercial Banks", "area": "bank", "min_reserve": 0.08},
+      {"id": "cn_env", "name": "Environmental Protection Law", "area": "environment"},
+      {"id": "cn_arms", "name": "Export Control Law", "area": "arms", "license": true}
+    ],
+    "RU": [
+      {"id": "ru_tax", "name": "Nalogovyj kodeks RF, glava 25", "area": "tax", "corporate_tax": 0.20},
+      {"id": "ru_labor", "name": "Trudovoj kodeks RF", "area": "labor", "wage_mult": 1.0},
+      {"id": "ru_bank", "name": "Federalnyj zakon č. 395-1 o bankach", "area": "bank", "min_reserve": 0.08},
+      {"id": "ru_env", "name": "Federalnyj zakon č. 7-FZ ob ochrane okružajuščej sredy", "area": "environment"},
+      {"id": "ru_arms", "name": "Federalnyj zakon č. 114-FZ o vojenno-techničeskom sotrudničestve", "area": "arms", "license": true}
+    ],
+    "SA": [
+      {"id": "sa_tax", "name": "Income Tax Law", "area": "tax", "corporate_tax": 0.20},
+      {"id": "sa_labor", "name": "Labor Law", "area": "labor", "wage_mult": 1.0},
+      {"id": "sa_bank", "name": "Banking Control Law", "area": "bank", "min_reserve": 0.08},
+      {"id": "sa_env", "name": "Environmental Law", "area": "environment"},
+      {"id": "sa_arms", "name": "Law of Weapons and Ammunition", "area": "arms", "license": true}
+    ],
+    "NO": [
+      {"id": "no_tax", "name": "Skatteloven", "area": "tax", "corporate_tax": 0.22},
+      {"id": "no_labor", "name": "Arbeidsmiljøloven", "area": "labor", "wage_mult": 1.0},
+      {"id": "no_bank", "name": "Finansforetaksloven", "area": "bank", "min_reserve": 0.08},
+      {"id": "no_env", "name": "Forurensningsloven", "area": "environment"},
+      {"id": "no_arms", "name": "Eksportkontrolloven", "area": "arms", "license": true}
+    ],
+    "NL": [
+      {"id": "nl_tax", "name": "Wet op de vennootschapsbelasting 1969", "area": "tax", "corporate_tax": 0.258},
+      {"id": "nl_labor", "name": "Arbeidsomstandighedenwet", "area": "labor", "wage_mult": 1.0},
+      {"id": "nl_bank", "name": "Wet op het financieel toezicht", "area": "bank", "min_reserve": 0.08},
+      {"id": "nl_env", "name": "Wet milieubeheer", "area": "environment"},
+      {"id": "nl_arms", "name": "Besluit strategische goederen", "area": "arms", "license": true}
+    ],
+    "GB": [
+      {"id": "gb_tax", "name": "Corporation Tax Act 2010", "area": "tax", "corporate_tax": 0.25},
+      {"id": "gb_labor", "name": "Employment Rights Act 1996", "area": "labor", "wage_mult": 1.0},
+      {"id": "gb_bank", "name": "Financial Services and Markets Act 2000", "area": "bank", "min_reserve": 0.08},
+      {"id": "gb_env", "name": "Environment Act 2021", "area": "environment"},
+      {"id": "gb_arms", "name": "Export Control Act 2002", "area": "arms", "license": true}
+    ],
+    "BR": [
+      {"id": "br_tax", "name": "Decreto nº 9.580/2018 (RIR)", "area": "tax", "corporate_tax": 0.34},
+      {"id": "br_labor", "name": "Consolidação das Leis do Trabalho", "area": "labor", "wage_mult": 1.0},
+      {"id": "br_bank", "name": "Lei nº 4.595/1964", "area": "bank", "min_reserve": 0.08},
+      {"id": "br_env", "name": "Lei nº 6.938/1981", "area": "environment"},
+      {"id": "br_arms", "name": "Decreto nº 10.030/2019 (R-105)", "area": "arms", "license": true}
+    ]
+  }
+}

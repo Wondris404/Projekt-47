@@ -1,0 +1,4503 @@
+{
+ "SK": {
+  "gov": "democracy",
+  "leader_name": "Robert Fixo",
+  "ruling": "center",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.303,
+    "leader_name": "Polly Moneybags"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.305,
+    "leader_name": "Hugo Inflato"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.392,
+    "leader_name": "Robert Fixo"
+   }
+  ]
+ },
+ "CZ": {
+  "gov": "democracy",
+  "leader_name": "Andrej Babysit",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.22,
+    "leader_name": "Grace Tariff"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.263,
+    "leader_name": "Will Ribboncut"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.233,
+    "leader_name": "Polly Loophole"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.283,
+    "leader_name": "Andrej Babysit"
+   }
+  ]
+ },
+ "DE": {
+  "gov": "democracy",
+  "leader_name": "Olaf Scholzzz",
+  "ruling": "center",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.18,
+    "leader_name": "Goldie Taxley"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.33,
+    "leader_name": "Olaf Scholzzz"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.21,
+    "leader_name": "Hugo Moneybags"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.28,
+    "leader_name": "Polly Vetoson"
+   }
+  ]
+ },
+ "PL": {
+  "gov": "democracy",
+  "leader_name": "Donald Tusktooth",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.118,
+    "leader_name": "Duke Bonanza"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.332,
+    "leader_name": "Donald Tusktooth"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.277,
+    "leader_name": "Lance Loophole"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.273,
+    "leader_name": "Barry Handshake"
+   }
+  ]
+ },
+ "AT": {
+  "gov": "democracy",
+  "leader_name": "Karl Nehammock",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.136,
+    "leader_name": "Duke Pledgewood"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.284,
+    "leader_name": "Goldie Pollster"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.294,
+    "leader_name": "Karl Nehammock"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.286,
+    "leader_name": "Lance Dividend"
+   }
+  ]
+ },
+ "HU": {
+  "gov": "democracy",
+  "leader_name": "Viktor Orbanana",
+  "ruling": "green",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.244,
+    "leader_name": "Rich Inflato"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.488,
+    "leader_name": "Viktor Orbanana"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.268,
+    "leader_name": "Goldie Ballotbox"
+   }
+  ]
+ },
+ "FR": {
+  "gov": "democracy",
+  "leader_name": "Emmanuel Macaroon",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.287,
+    "leader_name": "Wally Quorum"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.144,
+    "leader_name": "Mona Pollster"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.388,
+    "leader_name": "Emmanuel Macaroon"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.181,
+    "leader_name": "Dolly Taxley"
+   }
+  ]
+ },
+ "UA": {
+  "gov": "hybrid",
+  "leader_name": "Volodymyr Zelenskyline",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.494,
+    "leader_name": "Volodymyr Zelenskyline"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.291,
+    "leader_name": "Duke Podium"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.215,
+    "leader_name": "Lance Ballotbox"
+   }
+  ]
+ },
+ "US": {
+  "gov": "democracy",
+  "leader_name": "Donald Trumpet",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.31,
+    "leader_name": "Donald Trumpet"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.239,
+    "leader_name": "Will Budget"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.174,
+    "leader_name": "Chuck Pledgewood"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.277,
+    "leader_name": "Wally Ribboncut"
+   }
+  ]
+ },
+ "CN": {
+  "gov": "communist",
+  "leader_name": "Xi Jinpong",
+  "ruling": "comm",
+  "parties": [
+   {
+    "id": "comm",
+    "name": "Komunistická strana",
+    "ideology": "komunizmus",
+    "popularity": 0.698,
+    "leader_name": "Xi Jinpong"
+   },
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.302,
+    "leader_name": "Chuck Bonanza"
+   }
+  ]
+ },
+ "RU": {
+  "gov": "autocracy",
+  "leader_name": "Vladimir Putout",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.784,
+    "leader_name": "Vladimir Putout"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.216,
+    "leader_name": "Mona Mandate"
+   }
+  ]
+ },
+ "SA": {
+  "gov": "monarchy",
+  "leader_name": "Prince Mo Bin Sandman",
+  "ruling": "royal",
+  "parties": [
+   {
+    "id": "royal",
+    "name": "Kráľovská rada",
+    "ideology": "monarchizmus",
+    "popularity": 0.633,
+    "leader_name": "Prince Mo Bin Sandman"
+   },
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.155,
+    "leader_name": "Lance Spinwell"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.212,
+    "leader_name": "Rich Bonanza"
+   }
+  ]
+ },
+ "NO": {
+  "gov": "democracy",
+  "leader_name": "Jonas Gahr Storage",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.387,
+    "leader_name": "Goldie Inflato"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.224,
+    "leader_name": "Grace Bonanza"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.389,
+    "leader_name": "Jonas Gahr Storage"
+   }
+  ]
+ },
+ "NL": {
+  "gov": "democracy",
+  "leader_name": "Dick Schoofball",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.281,
+    "leader_name": "Grace Budget"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.487,
+    "leader_name": "Dick Schoofball"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.233,
+    "leader_name": "Penny Quorum"
+   }
+  ]
+ },
+ "GB": {
+  "gov": "democracy",
+  "leader_name": "Keir Starmergency",
+  "ruling": "center",
+  "parties": [
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.389,
+    "leader_name": "Keir Starmergency"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.357,
+    "leader_name": "Chuck Moneybags"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.254,
+    "leader_name": "Holly Taxley"
+   }
+  ]
+ },
+ "BR": {
+  "gov": "democracy",
+  "leader_name": "Lula da Silverware",
+  "ruling": "green",
+  "parties": [
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.285,
+    "leader_name": "Will Pollster"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.367,
+    "leader_name": "Lula da Silverware"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.348,
+    "leader_name": "Rich Vetoson"
+   }
+  ]
+ },
+ "IT": {
+  "gov": "democracy",
+  "leader_name": "Giorgia Meloney",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.317,
+    "leader_name": "Giorgia Meloney"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.205,
+    "leader_name": "Goldie Moneybags"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.245,
+    "leader_name": "Hugo Spinwell"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.232,
+    "leader_name": "Barry Budget"
+   }
+  ]
+ },
+ "ES": {
+  "gov": "democracy",
+  "leader_name": "Pedro Sanchezzy",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.308,
+    "leader_name": "Pedro Sanchezzy"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.296,
+    "leader_name": "Duke Moneybags"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.186,
+    "leader_name": "Rusty Filibuster"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.21,
+    "leader_name": "Goldie Dividend"
+   }
+  ]
+ },
+ "SE": {
+  "gov": "democracy",
+  "leader_name": "Ulf Kristersonic",
+  "ruling": "green",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.324,
+    "leader_name": "Goldie Filibuster"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.345,
+    "leader_name": "Ulf Kristersonic"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.331,
+    "leader_name": "Mona Filibuster"
+   }
+  ]
+ },
+ "FI": {
+  "gov": "democracy",
+  "leader_name": "Petteri Orpheus",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.311,
+    "leader_name": "Duke Pollster"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.294,
+    "leader_name": "Wally Budget"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.395,
+    "leader_name": "Petteri Orpheus"
+   }
+  ]
+ },
+ "TR": {
+  "gov": "hybrid",
+  "leader_name": "Recep Erdoğone",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.481,
+    "leader_name": "Recep Erdoğone"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.279,
+    "leader_name": "Polly Pledgewood"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.24,
+    "leader_name": "Mona Handshake"
+   }
+  ]
+ },
+ "JP": {
+  "gov": "democracy",
+  "leader_name": "Shiggy Ishibashful",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.287,
+    "leader_name": "Lance Loophole"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.297,
+    "leader_name": "Sunny Quorum"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.416,
+    "leader_name": "Shiggy Ishibashful"
+   }
+  ]
+ },
+ "IN": {
+  "gov": "democracy",
+  "leader_name": "Narendra Modem",
+  "ruling": "center",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.22,
+    "leader_name": "Rich Tariff"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.215,
+    "leader_name": "Barry Loophole"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.394,
+    "leader_name": "Narendra Modem"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.171,
+    "leader_name": "Holly Filibuster"
+   }
+  ]
+ },
+ "AU": {
+  "gov": "democracy",
+  "leader_name": "Anthony Albanapsy",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.255,
+    "leader_name": "Bill Ballotbox"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.269,
+    "leader_name": "Goldie Vetoson"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.189,
+    "leader_name": "Chuck Vetoson"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.287,
+    "leader_name": "Anthony Albanapsy"
+   }
+  ]
+ },
+ "CA": {
+  "gov": "democracy",
+  "leader_name": "Mark Carnival",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.315,
+    "leader_name": "Polly Quorum"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.19,
+    "leader_name": "Dolly Handshake"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.327,
+    "leader_name": "Mark Carnival"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.168,
+    "leader_name": "Sunny Tariff"
+   }
+  ]
+ },
+ "MX": {
+  "gov": "democracy",
+  "leader_name": "Claudia Shinebaum",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.294,
+    "leader_name": "Polly Bonanza"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.479,
+    "leader_name": "Claudia Shinebaum"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.227,
+    "leader_name": "Sunny Budget"
+   }
+  ]
+ },
+ "FJ": {
+  "gov": "democracy",
+  "leader_name": "Barry Bonanza",
+  "ruling": "green",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.422,
+    "leader_name": "Barry Bonanza"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.19,
+    "leader_name": "Goldie Dividend"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.388,
+    "leader_name": "Rich Inflato"
+   }
+  ]
+ },
+ "TZ": {
+  "gov": "hybrid",
+  "leader_name": "Polly Ballotbox",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.602,
+    "leader_name": "Polly Ballotbox"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.176,
+    "leader_name": "Holly Loophole"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.222,
+    "leader_name": "Rich Ribboncut"
+   }
+  ]
+ },
+ "KZ": {
+  "gov": "autocracy",
+  "leader_name": "Kassym-Jomart Tokayak",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.727,
+    "leader_name": "Kassym-Jomart Tokayak"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.273,
+    "leader_name": "Holly Moneybags"
+   }
+  ]
+ },
+ "UZ": {
+  "gov": "autocracy",
+  "leader_name": "Barry Pollster",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.661,
+    "leader_name": "Barry Pollster"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.339,
+    "leader_name": "Dolly Loophole"
+   }
+  ]
+ },
+ "PG": {
+  "gov": "hybrid",
+  "leader_name": "Chuck Budget",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.518,
+    "leader_name": "Chuck Budget"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.179,
+    "leader_name": "Bill Bonanza"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.303,
+    "leader_name": "Mona Quorum"
+   }
+  ]
+ },
+ "ID": {
+  "gov": "democracy",
+  "leader_name": "Prabowo Subiantastic",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.494,
+    "leader_name": "Prabowo Subiantastic"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.192,
+    "leader_name": "Rusty Bonanza"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.315,
+    "leader_name": "Rich Moneybags"
+   }
+  ]
+ },
+ "AR": {
+  "gov": "democracy",
+  "leader_name": "Javier Mileage",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.285,
+    "leader_name": "Holly Loophole"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.193,
+    "leader_name": "Dolly Ribboncut"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.305,
+    "leader_name": "Javier Mileage"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.217,
+    "leader_name": "Mona Inflato"
+   }
+  ]
+ },
+ "CL": {
+  "gov": "democracy",
+  "leader_name": "Gabriel Boricue",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.259,
+    "leader_name": "Gabriel Boricue"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.251,
+    "leader_name": "Barry Filibuster"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.245,
+    "leader_name": "Goldie Vetoson"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.245,
+    "leader_name": "Grace Mandate"
+   }
+  ]
+ },
+ "CD": {
+  "gov": "autocracy",
+  "leader_name": "Wally Ballotbox",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.775,
+    "leader_name": "Wally Ballotbox"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.225,
+    "leader_name": "Penny Tariff"
+   }
+  ]
+ },
+ "SO": {
+  "gov": "autocracy",
+  "leader_name": "Grace Loophole",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.546,
+    "leader_name": "Grace Loophole"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.265,
+    "leader_name": "Rusty Ballotbox"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.189,
+    "leader_name": "Grace Loophole"
+   }
+  ]
+ },
+ "KE": {
+  "gov": "hybrid",
+  "leader_name": "Rusty Tariff",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.682,
+    "leader_name": "Rusty Tariff"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.159,
+    "leader_name": "Grace Pollster"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.158,
+    "leader_name": "Lance Vetoson"
+   }
+  ]
+ },
+ "SD": {
+  "gov": "autocracy",
+  "leader_name": "Dolly Recount",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.829,
+    "leader_name": "Dolly Recount"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.171,
+    "leader_name": "Polly Podium"
+   }
+  ]
+ },
+ "TD": {
+  "gov": "autocracy",
+  "leader_name": "Hugo Dividend",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.794,
+    "leader_name": "Hugo Dividend"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.206,
+    "leader_name": "Sunny Spinwell"
+   }
+  ]
+ },
+ "HT": {
+  "gov": "hybrid",
+  "leader_name": "Rusty Ballotbox",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.656,
+    "leader_name": "Rusty Ballotbox"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.344,
+    "leader_name": "Sunny Budget"
+   }
+  ]
+ },
+ "DO": {
+  "gov": "democracy",
+  "leader_name": "Rich Handshake",
+  "ruling": "green",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.221,
+    "leader_name": "Barry Handshake"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.291,
+    "leader_name": "Rich Handshake"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.282,
+    "leader_name": "Rich Loophole"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.206,
+    "leader_name": "Rusty Ribboncut"
+   }
+  ]
+ },
+ "BS": {
+  "gov": "hybrid",
+  "leader_name": "Wally Quorum",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.709,
+    "leader_name": "Wally Quorum"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.291,
+    "leader_name": "Chuck Ribboncut"
+   }
+  ]
+ },
+ "TL": {
+  "gov": "democracy",
+  "leader_name": "Bill Recount",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.176,
+    "leader_name": "Mona Budget"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.199,
+    "leader_name": "Dolly Spinwell"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.366,
+    "leader_name": "Bill Recount"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.259,
+    "leader_name": "Duke Budget"
+   }
+  ]
+ },
+ "ZA": {
+  "gov": "democracy",
+  "leader_name": "Cyril Ramaphoser",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.177,
+    "leader_name": "Polly Loophole"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.341,
+    "leader_name": "Cyril Ramaphoser"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.189,
+    "leader_name": "Hugo Handshake"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.293,
+    "leader_name": "Hugo Loophole"
+   }
+  ]
+ },
+ "LS": {
+  "gov": "autocracy",
+  "leader_name": "Penny Handshake",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.604,
+    "leader_name": "Penny Handshake"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.396,
+    "leader_name": "Chuck Mandate"
+   }
+  ]
+ },
+ "UY": {
+  "gov": "democracy",
+  "leader_name": "Chuck Pollster",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.311,
+    "leader_name": "Rich Budget"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.269,
+    "leader_name": "Polly Inflato"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.42,
+    "leader_name": "Chuck Pollster"
+   }
+  ]
+ },
+ "BO": {
+  "gov": "hybrid",
+  "leader_name": "Duke Inflato",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.584,
+    "leader_name": "Duke Inflato"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.167,
+    "leader_name": "Mona Pledgewood"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.249,
+    "leader_name": "Chuck Podium"
+   }
+  ]
+ },
+ "PE": {
+  "gov": "democracy",
+  "leader_name": "Polly Podium",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.254,
+    "leader_name": "Grace Mandate"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.239,
+    "leader_name": "Bill Handshake"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.15,
+    "leader_name": "Sunny Loophole"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.358,
+    "leader_name": "Polly Podium"
+   }
+  ]
+ },
+ "CO": {
+  "gov": "democracy",
+  "leader_name": "Gustavo Petrol",
+  "ruling": "center",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.343,
+    "leader_name": "Polly Pollster"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.223,
+    "leader_name": "Polly Loophole"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.434,
+    "leader_name": "Gustavo Petrol"
+   }
+  ]
+ },
+ "PA": {
+  "gov": "democracy",
+  "leader_name": "Duke Taxley",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.272,
+    "leader_name": "Rich Inflato"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.193,
+    "leader_name": "Lance Pollster"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.36,
+    "leader_name": "Duke Taxley"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.175,
+    "leader_name": "Barry Vetoson"
+   }
+  ]
+ },
+ "CR": {
+  "gov": "democracy",
+  "leader_name": "Grace Moneybags",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.376,
+    "leader_name": "Grace Moneybags"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.334,
+    "leader_name": "Sunny Quorum"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.29,
+    "leader_name": "Goldie Loophole"
+   }
+  ]
+ },
+ "NI": {
+  "gov": "autocracy",
+  "leader_name": "Grace Tariff",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.76,
+    "leader_name": "Grace Tariff"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.24,
+    "leader_name": "Hugo Bonanza"
+   }
+  ]
+ },
+ "HN": {
+  "gov": "hybrid",
+  "leader_name": "Dolly Mandate",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.496,
+    "leader_name": "Dolly Mandate"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.285,
+    "leader_name": "Wally Pollster"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.218,
+    "leader_name": "Penny Inflato"
+   }
+  ]
+ },
+ "SV": {
+  "gov": "autocracy",
+  "leader_name": "Grace Handshake",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.472,
+    "leader_name": "Grace Handshake"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.295,
+    "leader_name": "Grace Podium"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.233,
+    "leader_name": "Lance Inflato"
+   }
+  ]
+ },
+ "GT": {
+  "gov": "hybrid",
+  "leader_name": "Rich Budget",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.736,
+    "leader_name": "Rich Budget"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.264,
+    "leader_name": "Mona Spinwell"
+   }
+  ]
+ },
+ "BZ": {
+  "gov": "autocracy",
+  "leader_name": "Grace Vetoson",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.802,
+    "leader_name": "Grace Vetoson"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.198,
+    "leader_name": "Duke Bonanza"
+   }
+  ]
+ },
+ "VE": {
+  "gov": "autocracy",
+  "leader_name": "Nicolas Mad-Euro",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.66,
+    "leader_name": "Nicolas Mad-Euro"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.143,
+    "leader_name": "Holly Inflato"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.197,
+    "leader_name": "Will Handshake"
+   }
+  ]
+ },
+ "GY": {
+  "gov": "democracy",
+  "leader_name": "Sunny Loophole",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.182,
+    "leader_name": "Dolly Podium"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.281,
+    "leader_name": "Chuck Tariff"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.287,
+    "leader_name": "Sunny Loophole"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.25,
+    "leader_name": "Polly Pollster"
+   }
+  ]
+ },
+ "SR": {
+  "gov": "democracy",
+  "leader_name": "Holly Ballotbox",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.402,
+    "leader_name": "Holly Ballotbox"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.299,
+    "leader_name": "Dolly Budget"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.141,
+    "leader_name": "Rusty Dividend"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.159,
+    "leader_name": "Chuck Moneybags"
+   }
+  ]
+ },
+ "EC": {
+  "gov": "hybrid",
+  "leader_name": "Barry Pledgewood",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.55,
+    "leader_name": "Barry Pledgewood"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.301,
+    "leader_name": "Will Filibuster"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.149,
+    "leader_name": "Hugo Recount"
+   }
+  ]
+ },
+ "JM": {
+  "gov": "democracy",
+  "leader_name": "Chuck Recount",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.169,
+    "leader_name": "Chuck Recount"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.193,
+    "leader_name": "Mona Moneybags"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.257,
+    "leader_name": "Wally Budget"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.381,
+    "leader_name": "Chuck Recount"
+   }
+  ]
+ },
+ "CU": {
+  "gov": "communist",
+  "leader_name": "Miguel Díaz-Canal",
+  "ruling": "comm",
+  "parties": [
+   {
+    "id": "comm",
+    "name": "Komunistická strana",
+    "ideology": "komunizmus",
+    "popularity": 0.649,
+    "leader_name": "Miguel Díaz-Canal"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.351,
+    "leader_name": "Sunny Budget"
+   }
+  ]
+ },
+ "ZW": {
+  "gov": "autocracy",
+  "leader_name": "Will Taxley",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.622,
+    "leader_name": "Will Taxley"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.378,
+    "leader_name": "Lance Inflato"
+   }
+  ]
+ },
+ "BW": {
+  "gov": "democracy",
+  "leader_name": "Dolly Loophole",
+  "ruling": "center",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.19,
+    "leader_name": "Duke Mandate"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.158,
+    "leader_name": "Wally Vetoson"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.43,
+    "leader_name": "Dolly Loophole"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.223,
+    "leader_name": "Polly Vetoson"
+   }
+  ]
+ },
+ "NA": {
+  "gov": "democracy",
+  "leader_name": "Grace Moneybags",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.31,
+    "leader_name": "Goldie Bonanza"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.215,
+    "leader_name": "Hugo Quorum"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.161,
+    "leader_name": "Rusty Recount"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.315,
+    "leader_name": "Grace Moneybags"
+   }
+  ]
+ },
+ "SN": {
+  "gov": "hybrid",
+  "leader_name": "Bill Dividend",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.66,
+    "leader_name": "Bill Dividend"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.34,
+    "leader_name": "Lance Budget"
+   }
+  ]
+ },
+ "ML": {
+  "gov": "autocracy",
+  "leader_name": "Sunny Pollster",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.777,
+    "leader_name": "Sunny Pollster"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.223,
+    "leader_name": "Lance Budget"
+   }
+  ]
+ },
+ "MR": {
+  "gov": "hybrid",
+  "leader_name": "Wally Loophole",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.723,
+    "leader_name": "Wally Loophole"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.277,
+    "leader_name": "Duke Quorum"
+   }
+  ]
+ },
+ "BJ": {
+  "gov": "autocracy",
+  "leader_name": "Mona Ribboncut",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.555,
+    "leader_name": "Mona Ribboncut"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.141,
+    "leader_name": "Will Handshake"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.305,
+    "leader_name": "Will Moneybags"
+   }
+  ]
+ },
+ "NE": {
+  "gov": "autocracy",
+  "leader_name": "Lance Podium",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.569,
+    "leader_name": "Lance Podium"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.291,
+    "leader_name": "Bill Loophole"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.14,
+    "leader_name": "Rusty Quorum"
+   }
+  ]
+ },
+ "NG": {
+  "gov": "hybrid",
+  "leader_name": "Bola Tinubucks",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.749,
+    "leader_name": "Bola Tinubucks"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.251,
+    "leader_name": "Bill Moneybags"
+   }
+  ]
+ },
+ "CM": {
+  "gov": "autocracy",
+  "leader_name": "Will Pollster",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.482,
+    "leader_name": "Will Pollster"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.206,
+    "leader_name": "Duke Ribboncut"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.312,
+    "leader_name": "Grace Bonanza"
+   }
+  ]
+ },
+ "TG": {
+  "gov": "autocracy",
+  "leader_name": "Goldie Pollster",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.585,
+    "leader_name": "Goldie Pollster"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.215,
+    "leader_name": "Barry Filibuster"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.2,
+    "leader_name": "Hugo Tariff"
+   }
+  ]
+ },
+ "GH": {
+  "gov": "democracy",
+  "leader_name": "Rich Inflato",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.265,
+    "leader_name": "Sunny Pledgewood"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.413,
+    "leader_name": "Rich Inflato"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.322,
+    "leader_name": "Rusty Pollster"
+   }
+  ]
+ },
+ "CI": {
+  "gov": "hybrid",
+  "leader_name": "Chuck Tariff",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.799,
+    "leader_name": "Chuck Tariff"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.201,
+    "leader_name": "Rich Pledgewood"
+   }
+  ]
+ },
+ "GN": {
+  "gov": "autocracy",
+  "leader_name": "Barry Budget",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.651,
+    "leader_name": "Barry Budget"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.349,
+    "leader_name": "Barry Filibuster"
+   }
+  ]
+ },
+ "GW": {
+  "gov": "autocracy",
+  "leader_name": "Polly Tariff",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.696,
+    "leader_name": "Polly Tariff"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.304,
+    "leader_name": "Polly Mandate"
+   }
+  ]
+ },
+ "LR": {
+  "gov": "hybrid",
+  "leader_name": "Duke Handshake",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.502,
+    "leader_name": "Duke Handshake"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.336,
+    "leader_name": "Wally Taxley"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.163,
+    "leader_name": "Holly Podium"
+   }
+  ]
+ },
+ "SL": {
+  "gov": "hybrid",
+  "leader_name": "Polly Recount",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.508,
+    "leader_name": "Polly Recount"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.27,
+    "leader_name": "Dolly Moneybags"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.222,
+    "leader_name": "Barry Mandate"
+   }
+  ]
+ },
+ "BF": {
+  "gov": "autocracy",
+  "leader_name": "Holly Loophole",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.751,
+    "leader_name": "Holly Loophole"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.249,
+    "leader_name": "Grace Loophole"
+   }
+  ]
+ },
+ "CF": {
+  "gov": "autocracy",
+  "leader_name": "Barry Recount",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.592,
+    "leader_name": "Barry Recount"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.249,
+    "leader_name": "Barry Budget"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.16,
+    "leader_name": "Wally Spinwell"
+   }
+  ]
+ },
+ "CG": {
+  "gov": "autocracy",
+  "leader_name": "Duke Quorum",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.735,
+    "leader_name": "Duke Quorum"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.265,
+    "leader_name": "Dolly Bonanza"
+   }
+  ]
+ },
+ "GA": {
+  "gov": "autocracy",
+  "leader_name": "Lance Moneybags",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.642,
+    "leader_name": "Lance Moneybags"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.358,
+    "leader_name": "Bill Dividend"
+   }
+  ]
+ },
+ "GQ": {
+  "gov": "autocracy",
+  "leader_name": "Goldie Tariff",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.535,
+    "leader_name": "Goldie Tariff"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.239,
+    "leader_name": "Bill Budget"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.226,
+    "leader_name": "Duke Loophole"
+   }
+  ]
+ },
+ "ZM": {
+  "gov": "hybrid",
+  "leader_name": "Rich Dividend",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.794,
+    "leader_name": "Rich Dividend"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.206,
+    "leader_name": "Penny Budget"
+   }
+  ]
+ },
+ "MW": {
+  "gov": "hybrid",
+  "leader_name": "Rusty Moneybags",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.649,
+    "leader_name": "Rusty Moneybags"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.351,
+    "leader_name": "Rusty Vetoson"
+   }
+  ]
+ },
+ "MZ": {
+  "gov": "autocracy",
+  "leader_name": "Polly Tariff",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.737,
+    "leader_name": "Polly Tariff"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.263,
+    "leader_name": "Dolly Budget"
+   }
+  ]
+ },
+ "SZ": {
+  "gov": "monarchy",
+  "leader_name": "Barry Loophole",
+  "ruling": "royal",
+  "parties": [
+   {
+    "id": "royal",
+    "name": "Kráľovská rada",
+    "ideology": "monarchizmus",
+    "popularity": 0.594,
+    "leader_name": "Barry Loophole"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.406,
+    "leader_name": "Lance Inflato"
+   }
+  ]
+ },
+ "AO": {
+  "gov": "autocracy",
+  "leader_name": "Dolly Vetoson",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.762,
+    "leader_name": "Dolly Vetoson"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.238,
+    "leader_name": "Hugo Tariff"
+   }
+  ]
+ },
+ "BI": {
+  "gov": "autocracy",
+  "leader_name": "Mona Moneybags",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.472,
+    "leader_name": "Mona Moneybags"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.27,
+    "leader_name": "Mona Quorum"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.258,
+    "leader_name": "Chuck Dividend"
+   }
+  ]
+ },
+ "IL": {
+  "gov": "democracy",
+  "leader_name": "Bibi Nettyahoo",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.375,
+    "leader_name": "Bibi Nettyahoo"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.295,
+    "leader_name": "Wally Pollster"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.331,
+    "leader_name": "Barry Spinwell"
+   }
+  ]
+ },
+ "LB": {
+  "gov": "hybrid",
+  "leader_name": "Goldie Quorum",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.645,
+    "leader_name": "Goldie Quorum"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.355,
+    "leader_name": "Wally Loophole"
+   }
+  ]
+ },
+ "MG": {
+  "gov": "hybrid",
+  "leader_name": "Dolly Ribboncut",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.487,
+    "leader_name": "Dolly Ribboncut"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.2,
+    "leader_name": "Dolly Quorum"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.314,
+    "leader_name": "Hugo Pollster"
+   }
+  ]
+ },
+ "GM": {
+  "gov": "hybrid",
+  "leader_name": "Barry Loophole",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.52,
+    "leader_name": "Barry Loophole"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.236,
+    "leader_name": "Chuck Ribboncut"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.244,
+    "leader_name": "Rusty Vetoson"
+   }
+  ]
+ },
+ "TN": {
+  "gov": "hybrid",
+  "leader_name": "Barry Bonanza",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.6,
+    "leader_name": "Barry Bonanza"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.205,
+    "leader_name": "Bill Handshake"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.195,
+    "leader_name": "Sunny Ribboncut"
+   }
+  ]
+ },
+ "DZ": {
+  "gov": "autocracy",
+  "leader_name": "Holly Pledgewood",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.631,
+    "leader_name": "Holly Pledgewood"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.369,
+    "leader_name": "Penny Handshake"
+   }
+  ]
+ },
+ "JO": {
+  "gov": "monarchy",
+  "leader_name": "Dolly Podium",
+  "ruling": "royal",
+  "parties": [
+   {
+    "id": "royal",
+    "name": "Kráľovská rada",
+    "ideology": "monarchizmus",
+    "popularity": 0.687,
+    "leader_name": "Dolly Podium"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.313,
+    "leader_name": "Rusty Mandate"
+   }
+  ]
+ },
+ "AE": {
+  "gov": "monarchy",
+  "leader_name": "Sheikh Mo Billions",
+  "ruling": "royal",
+  "parties": [
+   {
+    "id": "royal",
+    "name": "Kráľovská rada",
+    "ideology": "monarchizmus",
+    "popularity": 0.537,
+    "leader_name": "Sheikh Mo Billions"
+   },
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.244,
+    "leader_name": "Chuck Ribboncut"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.22,
+    "leader_name": "Hugo Podium"
+   }
+  ]
+ },
+ "QA": {
+  "gov": "monarchy",
+  "leader_name": "Rich Filibuster",
+  "ruling": "royal",
+  "parties": [
+   {
+    "id": "royal",
+    "name": "Kráľovská rada",
+    "ideology": "monarchizmus",
+    "popularity": 0.542,
+    "leader_name": "Rich Filibuster"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.326,
+    "leader_name": "Polly Loophole"
+   },
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.132,
+    "leader_name": "Rich Bonanza"
+   }
+  ]
+ },
+ "KW": {
+  "gov": "monarchy",
+  "leader_name": "Wally Filibuster",
+  "ruling": "royal",
+  "parties": [
+   {
+    "id": "royal",
+    "name": "Kráľovská rada",
+    "ideology": "monarchizmus",
+    "popularity": 0.525,
+    "leader_name": "Wally Filibuster"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.227,
+    "leader_name": "Rusty Mandate"
+   },
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.247,
+    "leader_name": "Barry Mandate"
+   }
+  ]
+ },
+ "IQ": {
+  "gov": "hybrid",
+  "leader_name": "Polly Mandate",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.542,
+    "leader_name": "Polly Mandate"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.205,
+    "leader_name": "Goldie Filibuster"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.253,
+    "leader_name": "Dolly Filibuster"
+   }
+  ]
+ },
+ "OM": {
+  "gov": "monarchy",
+  "leader_name": "Holly Filibuster",
+  "ruling": "royal",
+  "parties": [
+   {
+    "id": "royal",
+    "name": "Kráľovská rada",
+    "ideology": "monarchizmus",
+    "popularity": 0.434,
+    "leader_name": "Holly Filibuster"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.292,
+    "leader_name": "Dolly Taxley"
+   },
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.273,
+    "leader_name": "Bill Moneybags"
+   }
+  ]
+ },
+ "VU": {
+  "gov": "democracy",
+  "leader_name": "Barry Bonanza",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.282,
+    "leader_name": "Polly Mandate"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.311,
+    "leader_name": "Rusty Recount"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.407,
+    "leader_name": "Barry Bonanza"
+   }
+  ]
+ },
+ "KH": {
+  "gov": "autocracy",
+  "leader_name": "Sunny Spinwell",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.644,
+    "leader_name": "Sunny Spinwell"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.356,
+    "leader_name": "Hugo Ribboncut"
+   }
+  ]
+ },
+ "TH": {
+  "gov": "democracy",
+  "leader_name": "Bill Quorum",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.45,
+    "leader_name": "Bill Quorum"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.313,
+    "leader_name": "Goldie Ballotbox"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.237,
+    "leader_name": "Barry Filibuster"
+   }
+  ]
+ },
+ "LA": {
+  "gov": "communist",
+  "leader_name": "Hugo Pledgewood",
+  "ruling": "comm",
+  "parties": [
+   {
+    "id": "comm",
+    "name": "Komunistická strana",
+    "ideology": "komunizmus",
+    "popularity": 0.704,
+    "leader_name": "Hugo Pledgewood"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.296,
+    "leader_name": "Wally Dividend"
+   }
+  ]
+ },
+ "MM": {
+  "gov": "autocracy",
+  "leader_name": "Holly Pollster",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.619,
+    "leader_name": "Holly Pollster"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.381,
+    "leader_name": "Rich Filibuster"
+   }
+  ]
+ },
+ "VN": {
+  "gov": "communist",
+  "leader_name": "To Lamborghini",
+  "ruling": "comm",
+  "parties": [
+   {
+    "id": "comm",
+    "name": "Komunistická strana",
+    "ideology": "komunizmus",
+    "popularity": 0.629,
+    "leader_name": "To Lamborghini"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.371,
+    "leader_name": "Rusty Taxley"
+   }
+  ]
+ },
+ "KP": {
+  "gov": "communist",
+  "leader_name": "Kim Jong-Fun",
+  "ruling": "comm",
+  "parties": [
+   {
+    "id": "comm",
+    "name": "Komunistická strana",
+    "ideology": "komunizmus",
+    "popularity": 0.729,
+    "leader_name": "Kim Jong-Fun"
+   },
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.271,
+    "leader_name": "Duke Podium"
+   }
+  ]
+ },
+ "KR": {
+  "gov": "democracy",
+  "leader_name": "Lee Jae-mango",
+  "ruling": "green",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.147,
+    "leader_name": "Chuck Tariff"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.368,
+    "leader_name": "Lee Jae-mango"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.143,
+    "leader_name": "Rusty Budget"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.342,
+    "leader_name": "Hugo Pledgewood"
+   }
+  ]
+ },
+ "MN": {
+  "gov": "hybrid",
+  "leader_name": "Hugo Tariff",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.511,
+    "leader_name": "Hugo Tariff"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.357,
+    "leader_name": "Lance Inflato"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.132,
+    "leader_name": "Barry Spinwell"
+   }
+  ]
+ },
+ "BD": {
+  "gov": "hybrid",
+  "leader_name": "Wally Dividend",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.601,
+    "leader_name": "Wally Dividend"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.197,
+    "leader_name": "Rusty Ballotbox"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.201,
+    "leader_name": "Will Handshake"
+   }
+  ]
+ },
+ "BT": {
+  "gov": "hybrid",
+  "leader_name": "Rich Vetoson",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.507,
+    "leader_name": "Rich Vetoson"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.194,
+    "leader_name": "Penny Dividend"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.299,
+    "leader_name": "Holly Ballotbox"
+   }
+  ]
+ },
+ "NP": {
+  "gov": "hybrid",
+  "leader_name": "Hugo Tariff",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.552,
+    "leader_name": "Hugo Tariff"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.238,
+    "leader_name": "Grace Quorum"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.211,
+    "leader_name": "Sunny Loophole"
+   }
+  ]
+ },
+ "PK": {
+  "gov": "hybrid",
+  "leader_name": "Shehbaz Sharifluous",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.658,
+    "leader_name": "Shehbaz Sharifluous"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.342,
+    "leader_name": "Polly Vetoson"
+   }
+  ]
+ },
+ "AF": {
+  "gov": "autocracy",
+  "leader_name": "Bill Quorum",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.6,
+    "leader_name": "Bill Quorum"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.287,
+    "leader_name": "Mona Handshake"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.113,
+    "leader_name": "Hugo Mandate"
+   }
+  ]
+ },
+ "TJ": {
+  "gov": "autocracy",
+  "leader_name": "Holly Inflato",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.746,
+    "leader_name": "Holly Inflato"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.254,
+    "leader_name": "Will Handshake"
+   }
+  ]
+ },
+ "KG": {
+  "gov": "autocracy",
+  "leader_name": "Sunny Vetoson",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.721,
+    "leader_name": "Sunny Vetoson"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.279,
+    "leader_name": "Grace Ballotbox"
+   }
+  ]
+ },
+ "TM": {
+  "gov": "autocracy",
+  "leader_name": "Mona Taxley",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.588,
+    "leader_name": "Mona Taxley"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.133,
+    "leader_name": "Dolly Ribboncut"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.279,
+    "leader_name": "Duke Taxley"
+   }
+  ]
+ },
+ "IR": {
+  "gov": "autocracy",
+  "leader_name": "Ayatollah Comeonei",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.821,
+    "leader_name": "Ayatollah Comeonei"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.179,
+    "leader_name": "Goldie Pledgewood"
+   }
+  ]
+ },
+ "SY": {
+  "gov": "autocracy",
+  "leader_name": "Interim Ahmed Al-Sharade",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.558,
+    "leader_name": "Interim Ahmed Al-Sharade"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.314,
+    "leader_name": "Will Vetoson"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.128,
+    "leader_name": "Rich Vetoson"
+   }
+  ]
+ },
+ "AM": {
+  "gov": "hybrid",
+  "leader_name": "Dolly Dividend",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.486,
+    "leader_name": "Dolly Dividend"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.219,
+    "leader_name": "Lance Vetoson"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.295,
+    "leader_name": "Will Tariff"
+   }
+  ]
+ },
+ "BY": {
+  "gov": "autocracy",
+  "leader_name": "Alexander Lukashpenko",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.661,
+    "leader_name": "Alexander Lukashpenko"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.339,
+    "leader_name": "Sunny Ribboncut"
+   }
+  ]
+ },
+ "MD": {
+  "gov": "hybrid",
+  "leader_name": "Rusty Quorum",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.514,
+    "leader_name": "Rusty Quorum"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.225,
+    "leader_name": "Dolly Tariff"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.261,
+    "leader_name": "Hugo Ribboncut"
+   }
+  ]
+ },
+ "RO": {
+  "gov": "democracy",
+  "leader_name": "Nicușor Danube",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.266,
+    "leader_name": "Goldie Moneybags"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.2,
+    "leader_name": "Lance Pollster"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.377,
+    "leader_name": "Nicușor Danube"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.157,
+    "leader_name": "Rusty Ballotbox"
+   }
+  ]
+ },
+ "LT": {
+  "gov": "democracy",
+  "leader_name": "Sunny Podium",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.354,
+    "leader_name": "Sunny Podium"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.312,
+    "leader_name": "Bill Filibuster"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.334,
+    "leader_name": "Barry Mandate"
+   }
+  ]
+ },
+ "LV": {
+  "gov": "democracy",
+  "leader_name": "Rich Podium",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.301,
+    "leader_name": "Hugo Vetoson"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.279,
+    "leader_name": "Will Dividend"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.421,
+    "leader_name": "Rich Podium"
+   }
+  ]
+ },
+ "EE": {
+  "gov": "democracy",
+  "leader_name": "Goldie Vetoson",
+  "ruling": "green",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.292,
+    "leader_name": "Chuck Loophole"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.481,
+    "leader_name": "Goldie Vetoson"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.227,
+    "leader_name": "Penny Filibuster"
+   }
+  ]
+ },
+ "BG": {
+  "gov": "democracy",
+  "leader_name": "Goldie Dividend",
+  "ruling": "green",
+  "parties": [
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.256,
+    "leader_name": "Penny Pledgewood"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.243,
+    "leader_name": "Mona Taxley"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.284,
+    "leader_name": "Goldie Dividend"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.218,
+    "leader_name": "Chuck Vetoson"
+   }
+  ]
+ },
+ "GR": {
+  "gov": "democracy",
+  "leader_name": "Kyriakos Mitsotakeaway",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.508,
+    "leader_name": "Kyriakos Mitsotakeaway"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.265,
+    "leader_name": "Mona Filibuster"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.227,
+    "leader_name": "Mona Inflato"
+   }
+  ]
+ },
+ "AL": {
+  "gov": "hybrid",
+  "leader_name": "Holly Vetoson",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.805,
+    "leader_name": "Holly Vetoson"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.195,
+    "leader_name": "Rich Handshake"
+   }
+  ]
+ },
+ "HR": {
+  "gov": "democracy",
+  "leader_name": "Polly Moneybags",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.349,
+    "leader_name": "Rusty Ribboncut"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.23,
+    "leader_name": "Hugo Inflato"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.421,
+    "leader_name": "Polly Moneybags"
+   }
+  ]
+ },
+ "CH": {
+  "gov": "democracy",
+  "leader_name": "Federal Council of Fondue",
+  "ruling": "green",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.155,
+    "leader_name": "Hugo Quorum"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.364,
+    "leader_name": "Federal Council of Fondue"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.278,
+    "leader_name": "Barry Taxley"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.204,
+    "leader_name": "Mona Quorum"
+   }
+  ]
+ },
+ "LU": {
+  "gov": "democracy",
+  "leader_name": "Mona Inflato",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.292,
+    "leader_name": "Chuck Mandate"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.121,
+    "leader_name": "Holly Filibuster"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.254,
+    "leader_name": "Duke Recount"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.334,
+    "leader_name": "Mona Inflato"
+   }
+  ]
+ },
+ "BE": {
+  "gov": "democracy",
+  "leader_name": "Bart De Waffler",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.415,
+    "leader_name": "Bart De Waffler"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.256,
+    "leader_name": "Goldie Budget"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.329,
+    "leader_name": "Barry Mandate"
+   }
+  ]
+ },
+ "PT": {
+  "gov": "democracy",
+  "leader_name": "Luís Montenegroove",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.373,
+    "leader_name": "Luís Montenegroove"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.271,
+    "leader_name": "Sunny Filibuster"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.355,
+    "leader_name": "Penny Mandate"
+   }
+  ]
+ },
+ "IE": {
+  "gov": "democracy",
+  "leader_name": "Micheál Martini",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.157,
+    "leader_name": "Bill Pledgewood"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.328,
+    "leader_name": "Micheál Martini"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.29,
+    "leader_name": "Mona Podium"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.225,
+    "leader_name": "Chuck Pollster"
+   }
+  ]
+ },
+ "SB": {
+  "gov": "democracy",
+  "leader_name": "Chuck Pollster",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.202,
+    "leader_name": "Duke Vetoson"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.268,
+    "leader_name": "Barry Dividend"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.193,
+    "leader_name": "Rich Bonanza"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.337,
+    "leader_name": "Chuck Pollster"
+   }
+  ]
+ },
+ "NZ": {
+  "gov": "democracy",
+  "leader_name": "Hugo Recount",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.324,
+    "leader_name": "Hugo Handshake"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.315,
+    "leader_name": "Wally Recount"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.361,
+    "leader_name": "Hugo Recount"
+   }
+  ]
+ },
+ "LK": {
+  "gov": "hybrid",
+  "leader_name": "Duke Loophole",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.481,
+    "leader_name": "Duke Loophole"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.248,
+    "leader_name": "Mona Moneybags"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.271,
+    "leader_name": "Barry Budget"
+   }
+  ]
+ },
+ "DK": {
+  "gov": "democracy",
+  "leader_name": "Mette Fredriksandwich",
+  "ruling": "right",
+  "parties": [
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.306,
+    "leader_name": "Hugo Ribboncut"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.336,
+    "leader_name": "Holly Ribboncut"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.358,
+    "leader_name": "Mette Fredriksandwich"
+   }
+  ]
+ },
+ "IS": {
+  "gov": "democracy",
+  "leader_name": "Will Inflato",
+  "ruling": "center",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.204,
+    "leader_name": "Dolly Filibuster"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.332,
+    "leader_name": "Will Inflato"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.242,
+    "leader_name": "Rich Ballotbox"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.222,
+    "leader_name": "Polly Taxley"
+   }
+  ]
+ },
+ "AZ": {
+  "gov": "autocracy",
+  "leader_name": "Lance Inflato",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.653,
+    "leader_name": "Lance Inflato"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.347,
+    "leader_name": "Hugo Pollster"
+   }
+  ]
+ },
+ "GE": {
+  "gov": "hybrid",
+  "leader_name": "Duke Quorum",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.637,
+    "leader_name": "Duke Quorum"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.363,
+    "leader_name": "Penny Taxley"
+   }
+  ]
+ },
+ "PH": {
+  "gov": "democracy",
+  "leader_name": "Bongbong Marcoconut",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.551,
+    "leader_name": "Bongbong Marcoconut"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.222,
+    "leader_name": "Will Pledgewood"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.227,
+    "leader_name": "Holly Recount"
+   }
+  ]
+ },
+ "MY": {
+  "gov": "democracy",
+  "leader_name": "Rich Pledgewood",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.179,
+    "leader_name": "Polly Quorum"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.318,
+    "leader_name": "Rich Pledgewood"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.267,
+    "leader_name": "Chuck Spinwell"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.236,
+    "leader_name": "Chuck Ballotbox"
+   }
+  ]
+ },
+ "BN": {
+  "gov": "monarchy",
+  "leader_name": "Bill Taxley",
+  "ruling": "royal",
+  "parties": [
+   {
+    "id": "royal",
+    "name": "Kráľovská rada",
+    "ideology": "monarchizmus",
+    "popularity": 0.541,
+    "leader_name": "Bill Taxley"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.182,
+    "leader_name": "Dolly Taxley"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.277,
+    "leader_name": "Mona Taxley"
+   }
+  ]
+ },
+ "SI": {
+  "gov": "democracy",
+  "leader_name": "Rusty Dividend",
+  "ruling": "left",
+  "parties": [
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.345,
+    "leader_name": "Rusty Dividend"
+   },
+   {
+    "id": "green",
+    "name": "Zelení",
+    "ideology": "ekológia",
+    "popularity": 0.184,
+    "leader_name": "Hugo Inflato"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.251,
+    "leader_name": "Hugo Mandate"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.221,
+    "leader_name": "Grace Pledgewood"
+   }
+  ]
+ },
+ "ER": {
+  "gov": "autocracy",
+  "leader_name": "Will Tariff",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.618,
+    "leader_name": "Will Tariff"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.217,
+    "leader_name": "Wally Bonanza"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.164,
+    "leader_name": "Hugo Mandate"
+   }
+  ]
+ },
+ "PY": {
+  "gov": "autocracy",
+  "leader_name": "Wally Quorum",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.702,
+    "leader_name": "Wally Quorum"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.298,
+    "leader_name": "Rusty Pledgewood"
+   }
+  ]
+ },
+ "YE": {
+  "gov": "autocracy",
+  "leader_name": "Rich Podium",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.715,
+    "leader_name": "Rich Podium"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.285,
+    "leader_name": "Polly Tariff"
+   }
+  ]
+ },
+ "CY": {
+  "gov": "democracy",
+  "leader_name": "Penny Mandate",
+  "ruling": "center",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.324,
+    "leader_name": "Will Recount"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.17,
+    "leader_name": "Barry Loophole"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.166,
+    "leader_name": "Hugo Vetoson"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.34,
+    "leader_name": "Penny Mandate"
+   }
+  ]
+ },
+ "MA": {
+  "gov": "monarchy",
+  "leader_name": "Duke Spinwell",
+  "ruling": "royal",
+  "parties": [
+   {
+    "id": "royal",
+    "name": "Kráľovská rada",
+    "ideology": "monarchizmus",
+    "popularity": 0.616,
+    "leader_name": "Duke Spinwell"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.384,
+    "leader_name": "Holly Bonanza"
+   }
+  ]
+ },
+ "EG": {
+  "gov": "autocracy",
+  "leader_name": "Abdel Sisi-Phus",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.725,
+    "leader_name": "Abdel Sisi-Phus"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.275,
+    "leader_name": "Sunny Budget"
+   }
+  ]
+ },
+ "LY": {
+  "gov": "autocracy",
+  "leader_name": "Barry Ballotbox",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.577,
+    "leader_name": "Barry Ballotbox"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.178,
+    "leader_name": "Will Inflato"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.245,
+    "leader_name": "Will Ballotbox"
+   }
+  ]
+ },
+ "ET": {
+  "gov": "autocracy",
+  "leader_name": "Sunny Spinwell",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.521,
+    "leader_name": "Sunny Spinwell"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.214,
+    "leader_name": "Sunny Budget"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.265,
+    "leader_name": "Duke Spinwell"
+   }
+  ]
+ },
+ "DJ": {
+  "gov": "autocracy",
+  "leader_name": "Sunny Dividend",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.553,
+    "leader_name": "Sunny Dividend"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.173,
+    "leader_name": "Bill Spinwell"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.274,
+    "leader_name": "Penny Vetoson"
+   }
+  ]
+ },
+ "UG": {
+  "gov": "hybrid",
+  "leader_name": "Grace Ballotbox",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.521,
+    "leader_name": "Grace Ballotbox"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.233,
+    "leader_name": "Hugo Quorum"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.246,
+    "leader_name": "Polly Recount"
+   }
+  ]
+ },
+ "RW": {
+  "gov": "autocracy",
+  "leader_name": "Barry Ballotbox",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.588,
+    "leader_name": "Barry Ballotbox"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.213,
+    "leader_name": "Holly Vetoson"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.199,
+    "leader_name": "Grace Spinwell"
+   }
+  ]
+ },
+ "BA": {
+  "gov": "hybrid",
+  "leader_name": "Dolly Handshake",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.571,
+    "leader_name": "Dolly Handshake"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.211,
+    "leader_name": "Lance Ribboncut"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.217,
+    "leader_name": "Wally Tariff"
+   }
+  ]
+ },
+ "MK": {
+  "gov": "hybrid",
+  "leader_name": "Lance Ballotbox",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.554,
+    "leader_name": "Lance Ballotbox"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.146,
+    "leader_name": "Polly Podium"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.3,
+    "leader_name": "Grace Taxley"
+   }
+  ]
+ },
+ "RS": {
+  "gov": "hybrid",
+  "leader_name": "Aleksandar Vučićookie",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.614,
+    "leader_name": "Aleksandar Vučićookie"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.386,
+    "leader_name": "Holly Pollster"
+   }
+  ]
+ },
+ "ME": {
+  "gov": "hybrid",
+  "leader_name": "Grace Mandate",
+  "ruling": "populist",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.595,
+    "leader_name": "Grace Mandate"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.224,
+    "leader_name": "Penny Ballotbox"
+   },
+   {
+    "id": "right",
+    "name": "Konzervatívci",
+    "ideology": "pravica",
+    "popularity": 0.181,
+    "leader_name": "Wally Tariff"
+   }
+  ]
+ },
+ "TT": {
+  "gov": "democracy",
+  "leader_name": "Rusty Dividend",
+  "ruling": "center",
+  "parties": [
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.239,
+    "leader_name": "Wally Quorum"
+   },
+   {
+    "id": "center",
+    "name": "Liberálny stred",
+    "ideology": "stred",
+    "popularity": 0.412,
+    "leader_name": "Rusty Dividend"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.349,
+    "leader_name": "Goldie Bonanza"
+   }
+  ]
+ },
+ "SS": {
+  "gov": "autocracy",
+  "leader_name": "Dolly Quorum",
+  "ruling": "nat",
+  "parties": [
+   {
+    "id": "nat",
+    "name": "Národná jednota",
+    "ideology": "nacionalizmus",
+    "popularity": 0.538,
+    "leader_name": "Dolly Quorum"
+   },
+   {
+    "id": "populist",
+    "name": "Populisti",
+    "ideology": "populizmus",
+    "popularity": 0.172,
+    "leader_name": "Hugo Dividend"
+   },
+   {
+    "id": "left",
+    "name": "Sociálni demokrati",
+    "ideology": "ľavica",
+    "popularity": 0.29,
+    "leader_name": "Duke Ballotbox"
+   }
+  ]
+ }
+}

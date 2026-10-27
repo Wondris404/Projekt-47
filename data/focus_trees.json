@@ -1,0 +1,1510 @@
+{
+  "trees": {
+    "USA": [
+      {
+        "id": "US1",
+        "name": "Marshallov plán",
+        "year": "1948",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Marshall_Plan",
+        "status": "OVERENE",
+        "note": "platí do 1952"
+      },
+      {
+        "id": "US2",
+        "name": "Kórejská vojna",
+        "year": "1950",
+        "prerequisites": [
+          "US1"
+        ],
+        "exclusive": [
+          "US2A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Korean_War",
+        "status": "OVERENE"
+      },
+      {
+        "id": "US2A",
+        "name": "Izolacionizmus",
+        "year": "1950",
+        "prerequisites": [
+          "US1"
+        ],
+        "exclusive": [
+          "US2"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Korean_War",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "US3",
+        "name": "Interstate Highway Act",
+        "year": "1956",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Federal-Aid_Highway_Act_of_1956",
+        "status": "OVERENE"
+      },
+      {
+        "id": "US4",
+        "name": "NASA",
+        "year": "1958",
+        "prerequisites": [
+          "US3"
+        ],
+        "exclusive": [],
+        "source": "https://www.nasa.gov/history/",
+        "status": "OVERENE"
+      },
+      {
+        "id": "US5",
+        "name": "Kubánska kríza – blokáda",
+        "year": "1962",
+        "prerequisites": [
+          "US4"
+        ],
+        "exclusive": [
+          "US5A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Cuban_Missile_Crisis",
+        "status": "OVERENE"
+      },
+      {
+        "id": "US5A",
+        "name": "Letecký úder",
+        "year": "1962",
+        "prerequisites": [
+          "US4"
+        ],
+        "exclusive": [
+          "US5"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Cuban_Missile_Crisis",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "US6",
+        "name": "Civil Rights Act",
+        "year": "1964",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Civil_Rights_Act_of_1964",
+        "status": "OVERENE"
+      },
+      {
+        "id": "US7",
+        "name": "Vietnam – eskalácia",
+        "year": "1965",
+        "prerequisites": [
+          "US2"
+        ],
+        "exclusive": [
+          "US7A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Vietnam_War",
+        "status": "OVERENE"
+      },
+      {
+        "id": "US7A",
+        "name": "Neintervencia",
+        "year": "1965",
+        "prerequisites": [
+          "US2"
+        ],
+        "exclusive": [
+          "US7"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Vietnam_War",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "US8",
+        "name": "Koniec zlatého štandardu",
+        "year": "1971",
+        "prerequisites": [
+          "US7"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Nixon_shock",
+        "status": "OVERENE"
+      },
+      {
+        "id": "US9",
+        "name": "Otvorenie Číne (Nixon)",
+        "year": "1972",
+        "prerequisites": [
+          "US8"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/1972_visit_by_Richard_Nixon_to_China",
+        "status": "OVERENE"
+      },
+      {
+        "id": "US10",
+        "name": "Reaganomika + SDI",
+        "year": "1981/1983",
+        "prerequisites": [
+          "US9"
+        ],
+        "exclusive": [
+          "US10A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Strategic_Defense_Initiative",
+        "status": "OVERENE"
+      },
+      {
+        "id": "US10A",
+        "name": "Détente pokračuje",
+        "year": "1981",
+        "prerequisites": [
+          "US9"
+        ],
+        "exclusive": [
+          "US10"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Strategic_Defense_Initiative",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "US11",
+        "name": "Vojna proti terorizmu",
+        "year": "2001",
+        "prerequisites": [
+          "US10"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/War_on_terror",
+        "status": "OVERENE"
+      },
+      {
+        "id": "US12",
+        "name": "CHIPS and Science Act",
+        "year": "2022",
+        "prerequisites": [
+          "US11"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/CHIPS_and_Science_Act",
+        "status": "OVERENE"
+      }
+    ],
+    "SU": [
+      {
+        "id": "SU1",
+        "name": "Smrť Stalina / kolektívne vedenie",
+        "year": "1953",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Death_and_state_funeral_of_Joseph_Stalin",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU2",
+        "name": "Destalinizácia",
+        "year": "1956",
+        "prerequisites": [
+          "SU1"
+        ],
+        "exclusive": [
+          "SU2A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/On_the_Cult_of_Personality_and_Its_Consequences",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU2A",
+        "name": "Stalinistická línia",
+        "year": "1956",
+        "prerequisites": [
+          "SU1"
+        ],
+        "exclusive": [
+          "SU2"
+        ],
+        "source": "https://en.wikipedia.org/wiki/On_the_Cult_of_Personality_and_Its_Consequences",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "SU3",
+        "name": "Potlačenie Maďarska",
+        "year": "1956",
+        "prerequisites": [
+          "SU2"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Hungarian_Revolution_of_1956",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU4",
+        "name": "Sputnik / vesmírny program",
+        "year": "1957",
+        "prerequisites": [
+          "SU2"
+        ],
+        "exclusive": [],
+        "source": "https://www.nasa.gov/history/sputnik/",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU5",
+        "name": "Čínsko-sovietska roztržka",
+        "year": "1960",
+        "prerequisites": [
+          "SU2"
+        ],
+        "exclusive": [
+          "SU5A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Sino-Soviet_split",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU5A",
+        "name": "Zachovať alianciu",
+        "year": "1960",
+        "prerequisites": [
+          "SU2"
+        ],
+        "exclusive": [
+          "SU5"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Sino-Soviet_split",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "SU6",
+        "name": "Brežnevova doktrína / invázia do ČSSR",
+        "year": "1968",
+        "prerequisites": [
+          "SU3"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Warsaw_Pact_invasion_of_Czechoslovakia",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU7",
+        "name": "Afganistan",
+        "year": "1979",
+        "prerequisites": [
+          "SU6"
+        ],
+        "exclusive": [
+          "SU7A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Soviet%E2%80%93Afghan_War",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU7A",
+        "name": "Neintervencia",
+        "year": "1979",
+        "prerequisites": [
+          "SU6"
+        ],
+        "exclusive": [
+          "SU7"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Soviet%E2%80%93Afghan_War",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "SU8",
+        "name": "Perestrojka/glasnosť",
+        "year": "1985–86",
+        "prerequisites": [
+          "SU7"
+        ],
+        "exclusive": [
+          "SU8A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Perestroika",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU8A",
+        "name": "Tvrdá línia",
+        "year": "1985",
+        "prerequisites": [
+          "SU7"
+        ],
+        "exclusive": [
+          "SU8"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Perestroika",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "SU9",
+        "name": "Rozpad ZSSR",
+        "year": "1991",
+        "prerequisites": [
+          "SU8"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Dissolution_of_the_Soviet_Union",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU10",
+        "name": "Šoková terapia / privatizácia",
+        "year": "1992",
+        "prerequisites": [
+          "SU9"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Shock_therapy_%28economics%29",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU11",
+        "name": "Anexia Krymu",
+        "year": "2014",
+        "prerequisites": [
+          "SU10"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/2014_Russian_annexation_of_Crimea",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU12",
+        "name": "Invázia na Ukrajinu",
+        "year": "2022",
+        "prerequisites": [
+          "SU11"
+        ],
+        "exclusive": [
+          "SU12A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Russo-Ukrainian_war_%282022%E2%80%93present%29",
+        "status": "OVERENE"
+      },
+      {
+        "id": "SU12A",
+        "name": "Zmrazený konflikt",
+        "year": "2022",
+        "prerequisites": [
+          "SU11"
+        ],
+        "exclusive": [
+          "SU12"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Russo-Ukrainian_war_%282022%E2%80%93present%29",
+        "status": "OVERENE",
+        "note": "A"
+      }
+    ],
+    "CN": [
+      {
+        "id": "CN1",
+        "name": "Vstup do Kórejskej vojny",
+        "year": "1950",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Korean_War",
+        "status": "OVERENE"
+      },
+      {
+        "id": "CN2",
+        "name": "Prvá päťročnica",
+        "year": "1953",
+        "prerequisites": [
+          "CN1"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/1st_Five-Year_Plan_%28China%29",
+        "status": "OVERENE"
+      },
+      {
+        "id": "CN3",
+        "name": "Veľký skok vpred",
+        "year": "1958",
+        "prerequisites": [
+          "CN2"
+        ],
+        "exclusive": [
+          "CN3A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Great_Leap_Forward",
+        "status": "OVERENE"
+      },
+      {
+        "id": "CN3A",
+        "name": "Pokračovať sovietsky model",
+        "year": "1958",
+        "prerequisites": [
+          "CN2"
+        ],
+        "exclusive": [
+          "CN3"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Great_Leap_Forward",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "CN4",
+        "name": "Jadrová zbraň",
+        "year": "1964",
+        "prerequisites": [
+          "CN2"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Project_596",
+        "status": "OVERENE"
+      },
+      {
+        "id": "CN5",
+        "name": "Kultúrna revolúcia",
+        "year": "1966",
+        "prerequisites": [
+          "CN3"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Cultural_Revolution",
+        "status": "OVERENE"
+      },
+      {
+        "id": "CN6",
+        "name": "Kreslo v OSN",
+        "year": "1971",
+        "prerequisites": [
+          "CN5"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/United_Nations_General_Assembly_Resolution_2758_%28XXVI%29",
+        "status": "OVERENE"
+      },
+      {
+        "id": "CN7",
+        "name": "Reforma a otvorenie",
+        "year": "1978",
+        "prerequisites": [
+          "CN6"
+        ],
+        "exclusive": [
+          "CN7A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Reform_and_opening_up",
+        "status": "OVERENE"
+      },
+      {
+        "id": "CN7A",
+        "name": "Maoistická línia",
+        "year": "1978",
+        "prerequisites": [
+          "CN6"
+        ],
+        "exclusive": [
+          "CN7"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Reform_and_opening_up",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "CN8",
+        "name": "Tchien-an-men",
+        "year": "1989",
+        "prerequisites": [
+          "CN7"
+        ],
+        "exclusive": [
+          "CN8A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/1989_Tiananmen_Square_protests_and_massacre",
+        "status": "OVERENE"
+      },
+      {
+        "id": "CN8A",
+        "name": "Politická liberalizácia",
+        "year": "1989",
+        "prerequisites": [
+          "CN7"
+        ],
+        "exclusive": [
+          "CN8"
+        ],
+        "source": "https://en.wikipedia.org/wiki/1989_Tiananmen_Square_protests_and_massacre",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "CN9",
+        "name": "Návrat Hongkongu",
+        "year": "1997",
+        "prerequisites": [
+          "CN7"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Handover_of_Hong_Kong",
+        "status": "OVERENE"
+      },
+      {
+        "id": "CN10",
+        "name": "Vstup do WTO",
+        "year": "2001",
+        "prerequisites": [
+          "CN9"
+        ],
+        "exclusive": [],
+        "source": "https://www.wto.org/english/thewto_e/countries_e/china_e.htm",
+        "status": "OVERENE"
+      },
+      {
+        "id": "CN11",
+        "name": "Iniciatíva Pás a cesta",
+        "year": "2013",
+        "prerequisites": [
+          "CN10"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Belt_and_Road_Initiative",
+        "status": "OVERENE"
+      }
+    ],
+    "UK": [
+      {
+        "id": "UK1",
+        "name": "Jadrová zbraň",
+        "year": "1952",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Operation_Hurricane",
+        "status": "OVERENE"
+      },
+      {
+        "id": "UK2",
+        "name": "Suezská kríza",
+        "year": "1956",
+        "prerequisites": [
+          "UK1"
+        ],
+        "exclusive": [
+          "UK2A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Suez_Crisis",
+        "status": "OVERENE"
+      },
+      {
+        "id": "UK2A",
+        "name": "Nezasahovať",
+        "year": "1956",
+        "prerequisites": [
+          "UK1"
+        ],
+        "exclusive": [
+          "UK2"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Suez_Crisis",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "UK3",
+        "name": "Vietor zmien – dekolonizácia Afriky",
+        "year": "1960",
+        "prerequisites": [
+          "UK2"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Wind_of_Change_%28speech%29",
+        "status": "OVERENE"
+      },
+      {
+        "id": "UK4",
+        "name": "Vstup do EEC",
+        "year": "1973",
+        "prerequisites": [
+          "UK3"
+        ],
+        "exclusive": [
+          "UK4A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/1973_enlargement_of_the_European_Communities",
+        "status": "OVERENE"
+      },
+      {
+        "id": "UK4A",
+        "name": "EFTA navždy",
+        "year": "1973",
+        "prerequisites": [
+          "UK3"
+        ],
+        "exclusive": [
+          "UK4"
+        ],
+        "source": "https://en.wikipedia.org/wiki/1973_enlargement_of_the_European_Communities",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "UK5",
+        "name": "Ropa v Severnom mori",
+        "year": "1975",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/North_Sea_oil",
+        "status": "OVERENE"
+      },
+      {
+        "id": "UK6",
+        "name": "Thatcherizmus",
+        "year": "1979",
+        "prerequisites": [
+          "UK4"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Thatcherism",
+        "status": "OVERENE"
+      },
+      {
+        "id": "UK7",
+        "name": "Falklandy",
+        "year": "1982",
+        "prerequisites": [
+          "UK6"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Falklands_War",
+        "status": "OVERENE"
+      },
+      {
+        "id": "UK8",
+        "name": "Big Bang deregulácia City",
+        "year": "1986",
+        "prerequisites": [
+          "UK6"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Big_Bang_%28financial_markets%29",
+        "status": "OVERENE"
+      },
+      {
+        "id": "UK9",
+        "name": "Dohoda Veľkého piatku",
+        "year": "1998",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Good_Friday_Agreement",
+        "status": "OVERENE"
+      },
+      {
+        "id": "UK10",
+        "name": "Brexit (referendum 2016, odchod 2020)",
+        "year": "2016",
+        "prerequisites": [
+          "UK4"
+        ],
+        "exclusive": [
+          "UK10A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Brexit",
+        "status": "OVERENE"
+      },
+      {
+        "id": "UK10A",
+        "name": "Zostať v EÚ",
+        "year": "2016",
+        "prerequisites": [
+          "UK4"
+        ],
+        "exclusive": [
+          "UK10"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Brexit",
+        "status": "OVERENE",
+        "note": "A"
+      }
+    ],
+    "FR": [
+      {
+        "id": "FR1",
+        "name": "ESUO/Schumanov plán",
+        "year": "1951",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/European_Coal_and_Steel_Community",
+        "status": "OVERENE"
+      },
+      {
+        "id": "FR2",
+        "name": "Dien Bien Phu – odchod z Indočíny",
+        "year": "1954",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Battle_of_Dien_Bien_Phu",
+        "status": "OVERENE"
+      },
+      {
+        "id": "FR3",
+        "name": "Alžírska vojna",
+        "year": "1954–62",
+        "prerequisites": [
+          "FR2"
+        ],
+        "exclusive": [
+          "FR3A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Algerian_War",
+        "status": "OVERENE"
+      },
+      {
+        "id": "FR3A",
+        "name": "Skorá nezávislosť",
+        "year": "1954",
+        "prerequisites": [
+          "FR2"
+        ],
+        "exclusive": [
+          "FR3"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Algerian_War",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "FR4",
+        "name": "Piata republika",
+        "year": "1958",
+        "prerequisites": [
+          "FR3"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/French_Fifth_Republic",
+        "status": "OVERENE"
+      },
+      {
+        "id": "FR5",
+        "name": "Force de frappe",
+        "year": "1960",
+        "prerequisites": [
+          "FR4"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Gerboise_Bleue_%28nuclear_test%29",
+        "status": "OVERENE"
+      },
+      {
+        "id": "FR6",
+        "name": "Odchod z vojenskej štruktúry NATO",
+        "year": "1966",
+        "prerequisites": [
+          "FR5"
+        ],
+        "exclusive": [
+          "FR6A"
+        ],
+        "source": "https://www.nato.int/cps/en/natohq/declassified_139272.htm",
+        "status": "OVERENE"
+      },
+      {
+        "id": "FR6A",
+        "name": "Zostať",
+        "year": "1966",
+        "prerequisites": [
+          "FR5"
+        ],
+        "exclusive": [
+          "FR6"
+        ],
+        "source": "https://www.nato.int/cps/en/natohq/declassified_139272.htm",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "FR7",
+        "name": "Máj 1968",
+        "year": "1968",
+        "prerequisites": [
+          "FR4"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/May_68",
+        "status": "OVERENE"
+      },
+      {
+        "id": "FR8",
+        "name": "Messmerov jadrový plán",
+        "year": "1974",
+        "prerequisites": [
+          "FR5"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Nuclear_power_in_France",
+        "status": "OVERENE"
+      },
+      {
+        "id": "FR9",
+        "name": "Maastricht / euro",
+        "year": "1992",
+        "prerequisites": [
+          "FR1"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Maastricht_Treaty",
+        "status": "OVERENE"
+      },
+      {
+        "id": "FR10",
+        "name": "Návrat do velenia NATO",
+        "year": "2009",
+        "prerequisites": [
+          "FR6"
+        ],
+        "exclusive": [],
+        "source": "https://www.nato.int/cps/en/natohq/topics_52044.htm",
+        "status": "OVERENE"
+      }
+    ],
+    "DE": [
+      {
+        "id": "DE1",
+        "name": "Wirtschaftswunder / sociálne trhové hospodárstvo",
+        "year": "1950s",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Wirtschaftswunder",
+        "status": "OVERENE"
+      },
+      {
+        "id": "DE2",
+        "name": "Vstup do NATO",
+        "year": "1955",
+        "prerequisites": [
+          "DE1"
+        ],
+        "exclusive": [
+          "DE2A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Germany%E2%80%93NATO_relations",
+        "status": "OVERENE"
+      },
+      {
+        "id": "DE2A",
+        "name": "Neutrálne zjednotené Nemecko (Stalinova nóta 1952)",
+        "year": "1952",
+        "prerequisites": [
+          "DE1"
+        ],
+        "exclusive": [
+          "DE2"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Germany%E2%80%93NATO_relations",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "DE3",
+        "name": "Rímske zmluvy – EEC",
+        "year": "1957",
+        "prerequisites": [
+          "DE1"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Treaty_of_Rome",
+        "status": "OVERENE"
+      },
+      {
+        "id": "DE4",
+        "name": "Berlínsky múr – reakcia",
+        "year": "1961",
+        "prerequisites": [
+          "DE2"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Berlin_Wall",
+        "status": "OVERENE"
+      },
+      {
+        "id": "DE5",
+        "name": "Elyzejská zmluva",
+        "year": "1963",
+        "prerequisites": [
+          "DE3"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/%C3%89lys%C3%A9e_Treaty",
+        "status": "OVERENE"
+      },
+      {
+        "id": "DE6",
+        "name": "Ostpolitik",
+        "year": "1969–72",
+        "prerequisites": [
+          "DE4"
+        ],
+        "exclusive": [
+          "DE6A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Ostpolitik",
+        "status": "OVERENE"
+      },
+      {
+        "id": "DE6A",
+        "name": "Hallsteinova doktrína",
+        "year": "1969",
+        "prerequisites": [
+          "DE4"
+        ],
+        "exclusive": [
+          "DE6"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Ostpolitik",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "DE7",
+        "name": "Znovuzjednotenie",
+        "year": "1990",
+        "prerequisites": [
+          "DE6"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/German_reunification",
+        "status": "OVERENE"
+      },
+      {
+        "id": "DE8",
+        "name": "Agenda 2010",
+        "year": "2003",
+        "prerequisites": [
+          "DE7"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Agenda_2010",
+        "status": "OVERENE"
+      },
+      {
+        "id": "DE9",
+        "name": "Energiewende / odchod z jadra",
+        "year": "2011",
+        "prerequisites": [
+          "DE8"
+        ],
+        "exclusive": [
+          "DE9A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Nuclear_power_phase-out",
+        "status": "OVERENE",
+        "note": "posledné bloky 2023"
+      },
+      {
+        "id": "DE9A",
+        "name": "Jadro zostáva",
+        "year": "2011",
+        "prerequisites": [
+          "DE8"
+        ],
+        "exclusive": [
+          "DE9"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Nuclear_power_phase-out",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "DE10",
+        "name": "Zeitenwende – fond 100 mld. €",
+        "year": "2022",
+        "prerequisites": [
+          "DE9"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Zeitenwende_speech",
+        "status": "OVERENE"
+      }
+    ],
+    "JP": [
+      {
+        "id": "JP1",
+        "name": "Sanfranciská mierová zmluva",
+        "year": "1951",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Treaty_of_San_Francisco",
+        "status": "OVERENE"
+      },
+      {
+        "id": "JP2",
+        "name": "Bezpečnostná zmluva s USA",
+        "year": "1951/1960",
+        "prerequisites": [
+          "JP1"
+        ],
+        "exclusive": [
+          "JP2A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Security_Treaty_between_the_United_States_and_Japan",
+        "status": "OVERENE"
+      },
+      {
+        "id": "JP2A",
+        "name": "Neutralita",
+        "year": "1951",
+        "prerequisites": [
+          "JP1"
+        ],
+        "exclusive": [
+          "JP2"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Security_Treaty_between_the_United_States_and_Japan",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "JP3",
+        "name": "Systém 1955 (dominancia LDP)",
+        "year": "1955",
+        "prerequisites": [
+          "JP2"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/1955_System",
+        "status": "OVERENE"
+      },
+      {
+        "id": "JP4",
+        "name": "Plán zdvojnásobenia príjmov",
+        "year": "1960",
+        "prerequisites": [
+          "JP3"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Income_Doubling_Plan",
+        "status": "OVERENE"
+      },
+      {
+        "id": "JP5",
+        "name": "Olympiáda Tokio + Šinkansen",
+        "year": "1964",
+        "prerequisites": [
+          "JP4"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Shinkansen",
+        "status": "OVERENE"
+      },
+      {
+        "id": "JP6",
+        "name": "Plazzská dohoda",
+        "year": "1985",
+        "prerequisites": [
+          "JP5"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Plaza_Accord",
+        "status": "OVERENE"
+      },
+      {
+        "id": "JP7",
+        "name": "Prasknutie bubliny / stratená dekáda",
+        "year": "1991",
+        "prerequisites": [
+          "JP6"
+        ],
+        "exclusive": [
+          "JP7A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Lost_Decades",
+        "status": "OVERENE"
+      },
+      {
+        "id": "JP7A",
+        "name": "Mäkké pristátie",
+        "year": "1991",
+        "prerequisites": [
+          "JP6"
+        ],
+        "exclusive": [
+          "JP7"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Lost_Decades",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "JP8",
+        "name": "Fukušima",
+        "year": "2011",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Fukushima_nuclear_accident",
+        "status": "OVERENE"
+      },
+      {
+        "id": "JP9",
+        "name": "Abenomika",
+        "year": "2012",
+        "prerequisites": [
+          "JP7"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Abenomics",
+        "status": "OVERENE"
+      }
+    ],
+    "IN": [
+      {
+        "id": "IN1",
+        "name": "Ústava / republika",
+        "year": "1950",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Constitution_of_India",
+        "status": "OVERENE"
+      },
+      {
+        "id": "IN2",
+        "name": "Prvá päťročnica",
+        "year": "1951",
+        "prerequisites": [
+          "IN1"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Five-Year_Plans_of_India",
+        "status": "OVERENE"
+      },
+      {
+        "id": "IN3",
+        "name": "Hnutie nezúčastnených",
+        "year": "1961",
+        "prerequisites": [
+          "IN1"
+        ],
+        "exclusive": [
+          "IN3A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Non-Aligned_Movement",
+        "status": "OVERENE"
+      },
+      {
+        "id": "IN3A",
+        "name": "Spojenectvo s blokom",
+        "year": "1961",
+        "prerequisites": [
+          "IN1"
+        ],
+        "exclusive": [
+          "IN3"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Non-Aligned_Movement",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "IN4",
+        "name": "Vojna s Čínou",
+        "year": "1962",
+        "prerequisites": [
+          "IN3"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Sino-Indian_War",
+        "status": "OVERENE"
+      },
+      {
+        "id": "IN5",
+        "name": "Zelená revolúcia",
+        "year": "1965–",
+        "prerequisites": [
+          "IN2"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Green_Revolution_in_India",
+        "status": "OVERENE"
+      },
+      {
+        "id": "IN6",
+        "name": "Vojna 1971 / Bangladéš",
+        "year": "1971",
+        "prerequisites": [
+          "IN4"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/India%E2%80%93Pakistan_war_of_1971",
+        "status": "OVERENE"
+      },
+      {
+        "id": "IN7",
+        "name": "Jadrový test Smiling Buddha",
+        "year": "1974",
+        "prerequisites": [
+          "IN6"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Smiling_Buddha",
+        "status": "OVERENE"
+      },
+      {
+        "id": "IN8",
+        "name": "Výnimočný stav",
+        "year": "1975",
+        "prerequisites": [
+          "IN7"
+        ],
+        "exclusive": [
+          "IN8A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/The_Emergency_%28India%29",
+        "status": "OVERENE"
+      },
+      {
+        "id": "IN8A",
+        "name": "Bez núdzového stavu",
+        "year": "1975",
+        "prerequisites": [
+          "IN7"
+        ],
+        "exclusive": [
+          "IN8"
+        ],
+        "source": "https://en.wikipedia.org/wiki/The_Emergency_%28India%29",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "IN9",
+        "name": "Liberalizácia",
+        "year": "1991",
+        "prerequisites": [
+          "IN8"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Economic_liberalisation_in_India",
+        "status": "OVERENE"
+      },
+      {
+        "id": "IN10",
+        "name": "Chandrayaan-3 pristátie",
+        "year": "2023",
+        "prerequisites": [
+          "IN9"
+        ],
+        "exclusive": [],
+        "source": "https://www.isro.gov.in/Chandrayaan3_Details.html",
+        "status": "OVERENE"
+      }
+    ],
+    "generic": [
+      {
+        "id": "G1",
+        "name": "Dekolonizácia – nezávislosť",
+        "year": "1947–1975",
+        "prerequisites": [],
+        "exclusive": [
+          "G1A",
+          "G1B"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Decolonization",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G1A",
+        "name": "Pokojný prechod",
+        "year": "1947–1975",
+        "prerequisites": [],
+        "exclusive": [
+          "G1",
+          "G1B"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Decolonization",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "G1B",
+        "name": "Oslobodzovacia vojna",
+        "year": "1947–1975",
+        "prerequisites": [],
+        "exclusive": [
+          "G1",
+          "G1A"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Decolonization",
+        "status": "OVERENE",
+        "note": "A"
+      },
+      {
+        "id": "G2",
+        "name": "Vstup do NATO",
+        "year": "1949–",
+        "prerequisites": [],
+        "exclusive": [
+          "G3",
+          "G4"
+        ],
+        "source": "https://www.nato.int/cps/en/natohq/topics_52044.htm",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G3",
+        "name": "Varšavská zmluva",
+        "year": "1955",
+        "prerequisites": [],
+        "exclusive": [
+          "G2",
+          "G4"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Warsaw_Pact",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G4",
+        "name": "Hnutie nezúčastnených",
+        "year": "1961",
+        "prerequisites": [
+          "G1"
+        ],
+        "exclusive": [
+          "G2",
+          "G3"
+        ],
+        "source": "https://en.wikipedia.org/wiki/Non-Aligned_Movement",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G5",
+        "name": "EEC (1957) → EÚ (Maastricht 1992)",
+        "year": "1957–1992",
+        "prerequisites": [
+          "G2"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/European_Union",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G6",
+        "name": "Koniec Bretton Woods – reakcia",
+        "year": "1971",
+        "prerequisites": [],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Nixon_shock",
+        "status": "OVERENE",
+        "options": [
+          "plávajúci kurz",
+          "fixácia"
+        ]
+      },
+      {
+        "id": "G7",
+        "name": "Ropný šok 1973 (embargo OAPEC)",
+        "year": "1973",
+        "prerequisites": [
+          "G6"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/1973_oil_crisis",
+        "status": "OVERENE",
+        "options": [
+          "šetrenie",
+          "jadro",
+          "nové náleziská"
+        ]
+      },
+      {
+        "id": "G8",
+        "name": "Ropný šok 1979 (Irán)",
+        "year": "1979",
+        "prerequisites": [
+          "G7"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/1979_oil_crisis",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G9",
+        "name": "Dlhová kríza / štrukturálne programy MMF",
+        "year": "1982–",
+        "prerequisites": [
+          "G8"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Latin_American_debt_crisis",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G10",
+        "name": "Pád komunizmu v strednej Európe",
+        "year": "1989",
+        "prerequisites": [
+          "G3"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Revolutions_of_1989",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G11",
+        "name": "Rozpad ZSSR – nové štáty",
+        "year": "1991",
+        "prerequisites": [
+          "G10"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Dissolution_of_the_Soviet_Union",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G12",
+        "name": "Vstup do WTO",
+        "year": "1995–",
+        "prerequisites": [
+          "G9"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/World_Trade_Organization",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G13",
+        "name": "Finančná kríza",
+        "year": "2008",
+        "prerequisites": [
+          "G12"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/2008_financial_crisis",
+        "status": "OVERENE"
+      },
+      {
+        "id": "G14",
+        "name": "Parížska dohoda",
+        "year": "2015",
+        "prerequisites": [
+          "G12"
+        ],
+        "exclusive": [],
+        "source": "https://unfccc.int/process-and-meetings/the-paris-agreement",
+        "status": "OVERENE"
+      },
+      {
+        "id": "TRHOVA",
+        "name": "Trhová reforma",
+        "year": "1978",
+        "prerequisites": [
+          "G10"
+        ],
+        "exclusive": [],
+        "source": "https://en.wikipedia.org/wiki/Reform_and_opening_up",
+        "status": "OVERENE",
+        "note": "pre socialistické štáty po G10",
+        "audience": "socialist"
+      }
+    ]
+  }
+}

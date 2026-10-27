@@ -1,0 +1,739 @@
+extends Node
+# JUAN10 Faza B: budovy cez realitku (#5), investicne fondy (#6), charita (#7), osobne staty hraca (#8),
+# kupa statu (#9), centrala (HQ) korporacie + financna divizia (t799u).
+# Stav: GameState.ext.emp (volitelny kluc savu v3; chyba -> vytvori sa prazdny).
+
+const RENT_MONTHLY = 0.006       # najom z budovy mesacne (podiel z ceny)
+const HQ_FEE_MIN = 50000.0
+const HQ_FEE_SHARE = 0.01        # presun HQ: 1 % hodnoty korporacie (min 50k)
+const STATE_TAX_MULT = 0.5       # vo vlastnom state plati hrac polovicnu dan
+const LOG_MAX = 40
+const FUND_SHARE = 0.3           # fond investuje 30 % hotovosti mesacne
+
+func st() -> Dictionary:
+	if typeof(GameState.get("ext")) != TYPE_DICTIONARY:
+		GameState.ext = {}
+	var e: Dictionary = GameState.ext
+	if not e.has("emp") or typeof(e.emp) != TYPE_DICTIONARY:
+		e["emp"] = {}
+	var s: Dictionary = e.emp
+	for k in ["buildings", "states", "charity_log"]:
+		if not s.has(k):
+			s[k] = []
+	for k2 in ["hq", "fin", "pop_month", "cust", "cust_prev"]:
+		if not s.has(k2):
+			s[k2] = {}
+	return s
+
+func _log(arr: Array, txt: String) -> void:
+	var dt = GameState.date
+	var ds = "%d.%d.%d" % [int(dt.get("d", 1)), int(dt.get("m", 1)), int(dt.get("y", 2024))] if typeof(dt) == TYPE_DICTIONARY else str(dt)
+	arr.push_front("%s: %s" % [ds, txt])
+	while arr.size() > LOG_MAX:
+		arr.pop_back()
+
+func _name(iso: String) -> String:
+	return str(GameState.world.get(iso, {}).get("name_sk", iso))
+
+# ===================== #5 budovy cez realitku =====================
+func has_realty(iso: String) -> bool:
+	for f in GameState.player_firms():
+		if str(f.get("industry", "")) == "real_estate" and str(f.get("country", "")) == iso:
+			return true
+	return false
+
+# JUAN21: typy nehnutelnosti (cena x, najom x); prazdna parcela nenesie najom, da sa zastavat
+const PROP_TYPES = {"office": {"name": "Kancelárie", "price": 1.0, "rent": 1.0}, "apartments": {"name": "Byty / apartmány", "price": 0.8, "rent": 1.15},
+	"shop": {"name": "Obchody", "price": 0.6, "rent": 1.25}, "warehouse": {"name": "Sklady", "price": 0.5, "rent": 0.85}, "plot": {"name": "Prázdna parcela", "price": 0.22, "rent": 0.0}}
+
+func btype(b: Dictionary) -> String:
+	var t = str(b.get("type", "office"))
+	return t if PROP_TYPES.has(t) else "office"
+
+func building_price(iso: String, city_name: String, ptype: String = "office") -> float:
+	return _building_price0(iso, city_name) * float(PROP_TYPES.get(ptype, PROP_TYPES.office).price)
+
+func _building_price0(iso: String, city_name: String) -> float:
+	var c: Dictionary = TerrainSystem.city_named(iso, city_name)
+	var pop = float(c.get("pop", 200000.0))
+	var gdp_pc = float(GameState.world.get(iso, {}).get("gdp_pc_usd", 10000.0)) / maxf(GameState.usd_per_eur, 0.1)
+	return clampf(gdp_pc * 40.0 * (1.0 + pop / 2000000.0), 150000.0, 25000000.0)
+
+func buy_building(iso: String, city_name: String, ptype: String = "office") -> String:
+	if not PROP_TYPES.has(ptype):
+		return "Neznámy typ nehnuteľnosti."
+	if not has_realty(iso):
+		return "Budovy kupuješ cez realitku. Najprv postav Realitku v krajine %s." % _name(iso)
+	if TerrainSystem.city_named(iso, city_name).is_empty():
+		return "Mesto nenájdené."
+	var p = building_price(iso, city_name, ptype)
+	if float(GameState.player.cash) < p:
+		return "%s stojí %s, máš %s." % [str(PROP_TYPES[ptype].name), EconMath.eur(p), EconMath.eur(float(GameState.player.cash))]
+	GameState.player.cash = float(GameState.player.cash) - p
+	var rent = p * RENT_MONTHLY * float(PROP_TYPES[ptype].rent) / float(PROP_TYPES[ptype].price)
+	st().buildings.append({"iso": iso, "city": city_name, "price": p, "rent": rent, "day": GameState.day_index, "type": ptype})
+	GameState.post_news("Kúpil si %s v meste %s za %s (nájom %s/mes.)." % [str(PROP_TYPES[ptype].name).to_lower(), city_name, EconMath.eur(p), EconMath.eur(rent)])
+	return ""
+
+# zastavanie prazdnej parcely: zaplatis rozdiel ceny + 10 % stavebne naklady
+func develop_cost(b: Dictionary, ptype: String) -> float:
+	return maxf(0.0, building_price(str(b.iso), str(b.city), ptype) - float(b.price)) * 1.1
+
+func develop_plot(idx: int, ptype: String) -> String:
+	var bl: Array = st().buildings
+	if idx < 0 or idx >= bl.size():
+		return "Parcela nenájdená."
+	var b: Dictionary = bl[idx]
+	if btype(b) != "plot":
+		return "Stavať sa dá len na prázdnej parcele."
+	if not PROP_TYPES.has(ptype) or ptype == "plot":
+		return "Vyber typ budovy."
+	var cost = develop_cost(b, ptype)
+	if float(GameState.player.cash) < cost:
+		return "Stavba stojí %s." % EconMath.eur(cost)
+	GameState.player.cash = float(GameState.player.cash) - cost
+	b.type = ptype
+	b.price = float(b.price) + cost / 1.1
+	b.rent = float(b.price) * RENT_MONTHLY * float(PROP_TYPES[ptype].rent) / float(PROP_TYPES[ptype].price)
+	GameState.post_news("Na parcele v meste %s si postavil: %s." % [str(b.city), str(PROP_TYPES[ptype].name)])
+	return ""
+
+# prehlad nehnutelnosti: group = city/country/type, ftype = "" alebo typ, sort = value/rent/count/name
+func realty_rows(group: String, ftype: String = "", sort: String = "value") -> Dictionary:
+	var rows = {}
+	var tot = {"count": 0, "value": 0.0, "rent": 0.0}
+	var by_type = {}
+	for b in st().buildings:
+		var t = btype(b)
+		if ftype != "" and t != ftype:
+			continue
+		var val = building_price(str(b.iso), str(b.city), t) if t != "plot" else float(b.price)
+		val = maxf(val, float(b.price))
+		var key = str(b.city) + "|" + str(b.iso) if group == "city" else (str(b.iso) if group == "country" else t)
+		if not rows.has(key):
+			rows[key] = {"key": key, "iso": str(b.iso), "city": str(b.city) if group == "city" else "", "type": t if group == "type" else "", "count": 0, "value": 0.0, "rent": 0.0,
+				"name": (str(b.city) + " (" + _name(str(b.iso)) + ")") if group == "city" else (_name(str(b.iso)) if group == "country" else str(PROP_TYPES[t].name))}
+		rows[key].count += 1
+		rows[key].value += val
+		rows[key].rent += float(b.rent)
+		tot.count += 1
+		tot.value += val
+		tot.rent += float(b.rent)
+		if not by_type.has(t):
+			by_type[t] = {"count": 0, "value": 0.0, "rent": 0.0}
+		by_type[t].count += 1
+		by_type[t].value += val
+		by_type[t].rent += float(b.rent)
+	var arr: Array = rows.values()
+	match sort:
+		"rent": arr.sort_custom(func(a, b): return float(a.rent) > float(b.rent))
+		"count": arr.sort_custom(func(a, b): return int(a.count) > int(b.count))
+		"name": arr.sort_custom(func(a, b): return str(a.name) < str(b.name))
+		_: arr.sort_custom(func(a, b): return float(a.value) > float(b.value))
+	return {"rows": arr, "total": tot, "by_type": by_type}
+
+func buildings_in(iso: String, city_name: String) -> Array:
+	return st().buildings.filter(func(b): return str(b.iso) == iso and str(b.city) == city_name)
+
+# ===================== #7 charita =====================
+func popularity() -> float:
+	return float(GameState.player.get("rating", 55))
+
+func donate(iso: String, amount: float) -> String:
+	if amount < 1000.0:
+		return "Minimálny dar je 1 000 €."
+	if float(GameState.player.cash) < amount:
+		return "Nemáš dosť peňazí."
+	var s = st()
+	var used = float(s.pop_month.get(iso, 0.0))
+	var gdp_pc = float(GameState.world.get(iso, {}).get("gdp_pc_usd", 10000.0)) / maxf(GameState.usd_per_eur, 0.1)
+	var gain = minf(5.0 - used, 3.0 * sqrt(amount / maxf(gdp_pc * 20.0, 1000.0)))  # klesajuci vynos, max +5 mesacne/krajina
+	GameState.player.cash = float(GameState.player.cash) - amount
+	if gain <= 0.0:
+		_log(s.charity_log, "dar %s v krajine %s – tento mesiac už bez efektu" % [EconMath.eur(amount), _name(iso)])
+		return "Dar prijatý, ale tento mesiac už popularitu v tejto krajine nezvýši."
+	s.pop_month[iso] = used + gain
+	GameState.player.rating = clampi(int(round(popularity() + gain)), 0, 100)
+	PoliticsSystem.add_influence(iso, gain * 0.6)
+	_log(s.charity_log, "dar %s (%s): popularita +%.1f" % [EconMath.eur(amount), _name(iso), gain])
+	return ""
+
+# ===================== #8 osobne staty =====================
+func stats() -> Dictionary:
+	var emp = 0.0
+	var sec = 0
+	var countries = {}
+	for f in GameState.player_firms():
+		emp += float(f.get("workers", 0.0))
+		countries[str(f.get("country", ""))] = true
+		if str(f.get("industry", "")) in ["pmc_unit", "arms_plant"]:
+			sec += 1
+	var infl = 0.0
+	for iso in PoliticsSystem.influence_map().keys():
+		infl += float(PoliticsSystem.influence(str(iso)))
+	return {"worth": GameState.net_worth(), "cash": float(GameState.player.cash), "employees": emp, "influence": infl,
+		"popularity": popularity(), "security": sec * 10 + int(PoliticsSystem.bonus_sum("pmc") * 100.0), "firms": GameState.player_firms().size(),
+		"countries": countries.size(), "corps": StockMarket.ex().corps.size(), "states": st().states.size(), "buildings": st().buildings.size()}
+
+# ===================== #9 kupa statu =====================
+func state_price(iso: String) -> float:
+	var w: Dictionary = GameState.world.get(iso, {})
+	var gdp = float(DataLoader.countries.get(iso, {}).get("gdp_usd", 1e11)) / maxf(GameState.usd_per_eur, 0.1)
+	var stab = float(w.get("stability", 0.6))
+	if stab > 1.0:
+		stab /= 100.0  # stabilita je v 0-100
+	return gdp * 0.08 * (0.5 + stab)
+
+func owns_state(iso: String) -> bool:
+	return st().states.has(iso)
+
+func buy_state(iso: String) -> String:
+	if not GameState.world.has(iso):
+		return "Neznáma krajina."
+	if owns_state(iso):
+		return "Túto krajinu už vlastníš."
+	var p = state_price(iso)
+	if GameState.net_worth() < p * 1.5:
+		return "Na kúpu krajiny %s potrebuješ čisté imanie aspoň %s (cena %s)." % [_name(iso), EconMath.eur(p * 1.5), EconMath.eur(p)]
+	if float(GameState.player.cash) < p:
+		return "Cena je %s v hotovosti, máš %s." % [EconMath.eur(p), EconMath.eur(float(GameState.player.cash))]
+	GameState.player.cash = float(GameState.player.cash) - p
+	st().states.append(iso)
+	PoliticsSystem.add_influence(iso, 100.0)
+	GameState.post_news("Kúpil si štát %s za %s. Môžeš zmeniť jeho politický systém." % [_name(iso), EconMath.eur(p)])
+	return ""
+
+func set_state_gov(iso: String, gov: String) -> String:
+	if not owns_state(iso):
+		return "Túto krajinu nevlastníš."
+	if not PoliticsSystem.GOV_NAMES.has(gov):
+		return "Neznámy systém."
+	var c: Dictionary = PoliticsSystem.country(iso)
+	c["gov"] = gov
+	GameState.post_news("%s má nový politický systém: %s." % [_name(iso), str(PoliticsSystem.GOV_NAMES[gov])])
+	return ""
+
+# ===================== HQ korporacie =====================
+func hq(cid: String) -> Dictionary:
+	return st().hq.get(cid, {})
+
+func hq_fee(cid: String) -> float:
+	var c: Dictionary = StockMarket.ex().corps.get(cid, {})
+	return maxf(HQ_FEE_MIN, StockMarket.corp_value(c) * HQ_FEE_SHARE) if not c.is_empty() else HQ_FEE_MIN
+
+func set_hq(cid: String, iso: String, pos: Vector2) -> String:
+	if not StockMarket.ex().corps.has(cid):
+		return "Najprv vytvor korporáciu (Burza → Korporácia / Holding)."
+	var city = TerrainSystem.urban_at(iso, pos)
+	if city.is_empty():
+		return "Centrála musí byť v meste (klikni do oranžového kruhu)."
+	var fee = 0.0 if hq(cid).is_empty() else hq_fee(cid)
+	if float(GameState.player.cash) < fee:
+		return "Presun centrály stojí %s." % EconMath.eur(fee)
+	GameState.player.cash = float(GameState.player.cash) - fee
+	st().hq[cid] = {"iso": iso, "city": str(city.name), "pos": [pos.x, pos.y]}
+	GameState.post_news("Centrála %s: %s (%s)%s. Korporácia platí dane v tejto krajine." % [str(StockMarket.ex().corps[cid].name), str(city.name), _name(iso), "" if fee == 0.0 else ", poplatok " + EconMath.eur(fee)])
+	return ""
+
+# krajina, ktorej danova sadzba plati pre firmu (HQ korporacie, inak krajina firmy)
+func tax_iso(firm: Dictionary) -> String:
+	var cid = str(firm.get("corp", ""))
+	if cid != "" and str(firm.get("owner", "")) == "player":
+		var h = hq(cid)
+		if not h.is_empty():
+			return str(h.iso)
+	return str(firm.get("country", ""))
+
+func tax_mult(firm: Dictionary) -> float:
+	return STATE_TAX_MULT if str(firm.get("owner", "")) == "player" and owns_state(tax_iso(firm)) else 1.0
+
+# ===================== financna divizia =====================
+func fin(cid: String) -> Dictionary:
+	var s = st()
+	if not s.fin.has(cid):
+		s.fin[cid] = {"on": false, "pct": 10.0, "optimize": true, "close_losers": false, "trade": false, "acquire": false,
+			"max_deal": 500000.0, "sectors": [], "budget": 0.0, "log": [], "flags": [], "loss_m": {}, "own": {}}
+	return s.fin[cid]
+
+func corp_firms(cid: String) -> Array:
+	return GameState.player_firms().filter(func(f): return str(f.get("corp", "")) == cid)
+
+func _last_profit(f: Dictionary) -> float:
+	var mh: Array = f.get("month_hist", [])
+	return 0.0 if mh.is_empty() else float(mh[mh.size() - 1].get("profit", 0.0))
+
+func fin_monthly(cid: String) -> void:
+	var d = fin(cid)
+	if not bool(d.on) or hq(cid).is_empty():
+		return
+	d.flags = []
+	var collected = 0.0
+	for f in corp_firms(cid):
+		var p = _last_profit(f)
+		if p > 0.0:
+			var take = minf(p * float(d.pct) / 100.0, maxf(0.0, float(f.cash)))
+			f.cash = float(f.cash) - take
+			collected += take
+		var lm: Dictionary = d.loss_m
+		lm[str(f.id)] = int(lm.get(str(f.id), 0)) + 1 if p < 0.0 else 0
+		if p < 0.0:
+			d.flags.append({"id": str(f.id), "name": str(f.name), "profit": p, "months": int(lm[str(f.id)])})
+		if bool(d.optimize) and p > 0.0 and IndustrySystem.firm_level(f) < 3:
+			var e = IndustrySystem.upgrade_firm(str(f.id))
+			if e == "":
+				_log(d.log, "upgrade %s (zisková firma)" % str(f.name))
+		if bool(d.close_losers) and int(lm.get(str(f.id), 0)) >= 6:
+			if IndustrySystem.sell_firm(str(f.id)) == "":
+				_log(d.log, "predaná chronicky stratová %s (%d mes. v strate)" % [str(f.name), int(lm[str(f.id)])])
+	d.budget = float(d.budget) + collected
+	if collected > 0.0:
+		_log(d.log, "rozpočet +%s (%.0f %% zo ziskov)" % [EconMath.eur(collected), float(d.pct)])
+
+func _ma(h: Array, n: int) -> float:
+	var k = mini(n, h.size())
+	if k == 0:
+		return 0.0
+	var s = 0.0
+	for i in k:
+		s += float(h[h.size() - 1 - i])
+	return s / float(k)
+
+func _sector_ok(d: Dictionary, row: Dictionary) -> bool:
+	var secs: Array = d.get("sectors", [])
+	return secs.is_empty() or secs.has(str(row.get("sector", "")))
+
+# kupa/predaj z rozpoctu divizie (akcie sa pripisu hracovi, divizia si vedie svoje)
+func _div_buy(d: Dictionary, t: String, qty: float) -> bool:
+	var q = StockMarket.quote(t, qty, "buy")
+	if float(q.get("total", 1e30)) > float(d.budget) or not (StockMarket.owned(t) + qty <= float(StockMarket.listing(t).shares)):
+		return false
+	var cash0 = float(GameState.player.cash)
+	GameState.player.cash = float(q.total) + 1.0
+	var e = StockMarket.buy(t, qty)
+	var spent = float(q.total) + 1.0 - float(GameState.player.cash)
+	GameState.player.cash = cash0
+	if e != "":
+		return false
+	d.budget = float(d.budget) - spent
+	d.own[t] = float(d.own.get(t, 0.0)) + qty
+	return true
+
+func _div_sell(d: Dictionary, t: String, qty: float) -> float:
+	var cash0 = float(GameState.player.cash)
+	if StockMarket.sell(t, qty) != "":
+		return 0.0
+	var got = float(GameState.player.cash) - cash0
+	GameState.player.cash = cash0
+	d.budget = float(d.budget) + got
+	d.own[t] = maxf(0.0, float(d.own.get(t, 0.0)) - qty)
+	return got
+
+func fin_weekly(cid: String) -> void:
+	var d = fin(cid)
+	if not bool(d.on) or hq(cid).is_empty():
+		return
+	if bool(d.trade):
+		for row in StockMarket.listings():
+			if not (str(row.kind) in ["nat", "rival"]) or not _sector_ok(d, row) or str(row.get("in_corp", "")) != "":
+				continue
+			var t = str(row.ticker)
+			if broker_held(t) > 0.0:
+				continue  # JUAN15: ticker spravuje burzova firma - ziadne dvojite obchodovanie
+			var ma = _ma(row.hist, 8)
+			if ma <= 0.0 or (row.hist as Array).size() < 4:
+				continue
+			var px = float(row.price)
+			if float(d.own.get(t, 0.0)) > 0.0 and px > ma * 1.08:
+				var got = _div_sell(d, t, float(d.own[t]))
+				if got > 0.0:
+					_log(d.log, "predaj %s (kurz %.0f %% nad priemerom) +%s" % [t, (px / ma - 1.0) * 100.0, EconMath.eur(got)])
+			elif px < ma * 0.92 and float(d.budget) > 10000.0:
+				var spend = minf(float(d.max_deal), float(d.budget) * 0.25)
+				var qty = floorf(spend / (px * 1.01))
+				if qty >= 1.0 and _div_buy(d, t, qty):
+					_log(d.log, "nákup %s %.0f ks (kurz %.0f %% pod priemerom)" % [t, qty, (1.0 - px / ma) * 100.0])
+	if bool(d.acquire):
+		for row2 in StockMarket.listings():
+			if not (str(row2.kind) in ["nat", "rival"]) or not _sector_ok(d, row2) or str(row2.get("in_corp", "")) != "":
+				continue
+			var t2 = str(row2.ticker)
+			var need = floorf(float(row2.shares) * 0.51 - StockMarket.owned(t2))
+			if need > 0.0:
+				var q = StockMarket.quote(t2, need, "buy")
+				if float(q.total) > float(d.max_deal) or float(q.total) > float(d.budget):
+					continue
+				if not _div_buy(d, t2, need):
+					continue
+			if StockMarket.can_absorb(t2) and StockMarket.absorb_into_corp(cid, t2) == "":
+				_log(d.log, "prevzatie a začlenenie %s (%s)" % [str(row2.name), t2])
+				d.own.erase(t2)
+				break
+
+# ===================== #6 investicne fondy =====================
+func fund_monthly(f: Dictionary) -> void:
+	var fd: Dictionary = f.get("fund", {})
+	if fd.is_empty():
+		fd = {"own": {}, "log": []}
+	var budget = maxf(0.0, float(f.cash)) * FUND_SHARE
+	if budget > 5000.0 and not StockMarket.ex().list.is_empty():
+		var rows = StockMarket.listings().filter(func(r): return str(r.kind) in ["nat", "rival"])
+		rows.sort_custom(func(a, b): return float(a.get("growth", 0)) > float(b.get("growth", 0)))
+		for i in mini(3, rows.size()):
+			var t = str(rows[i].ticker)
+			var px = float(rows[i].price)
+			var qty = floorf(budget / 3.0 / maxf(px, 0.01))
+			if qty < 1.0 or StockMarket.owned(t) + qty > float(rows[i].shares):
+				continue
+			var cost = px * qty
+			f.cash = float(f.cash) - cost
+			StockMarket.ex().own[t] = StockMarket.owned(t) + qty
+			fd.own[t] = float(fd.own.get(t, 0.0)) + qty
+			_log(fd.log, "kúpil %s %.0f ks za %s" % [t, qty, EconMath.eur(cost)])
+	f["fund"] = fd
+
+func fund_rows(f: Dictionary) -> Array:
+	var out: Array = []
+	var fd: Dictionary = f.get("fund", {})
+	for t in fd.get("own", {}).keys():
+		var row = StockMarket.listing(str(t))
+		if row.is_empty():
+			continue
+		var q = float(fd.own[t])
+		out.append({"ticker": str(t), "name": str(row.name), "sector": str(StockMarket.SECTORS.get(str(row.sector), {}).get("name", "")), "qty": q, "value": q * float(row.price)})
+	out.sort_custom(func(a, b): return float(a.value) > float(b.value))
+	return out
+
+# ===================== hodinky =====================
+func monthly() -> void:
+	var s = st()
+	s.pop_month = {}
+	var rent = 0.0
+	for b in s.buildings:
+		rent += float(b.rent)
+	if rent > 0.0:
+		GameState.player.cash = float(GameState.player.cash) + rent
+	for f in GameState.player_firms():
+		if str(f.get("industry", "")) == "invest_fund":
+			fund_monthly(f)
+	s.cust_prev = s.cust  # JUAN15: odberatelia - uzavri mesiac
+	s.cust = {}
+	for cid in StockMarket.ex().corps.keys():
+		fin_monthly(str(cid))
+
+func weekly() -> void:
+	for bf in GameState.player_firms():
+		if str(bf.get("industry", "")) == "stock_broker":
+			broker_weekly(bf)
+	for cid in StockMarket.ex().corps.keys():
+		fin_weekly(str(cid))
+
+func extra_worth() -> float:
+	var v = 0.0
+	for b in st().buildings:
+		v += float(b.price) * 0.9
+	for d in st().fin.values():
+		v += float(d.get("budget", 0.0))
+	return v
+
+# ===================== JUAN13 (t806u): zavislost krajiny na hracovi =====================
+const DEP_LABELS = [[10.0, "Žiadna"], [30.0, "Nízka"], [55.0, "Stredná"], [85.0, "Vysoká"], [101.0, "Úplná"]]
+
+func dependency(iso: String) -> Dictionary:
+	var w: Dictionary = GameState.world.get(iso, {})
+	var gdp_eur = maxf(1.0, float(w.get("gdp_usd", DataLoader.countries.get(iso, {}).get("gdp_usd", 1e11))) / maxf(GameState.usd_per_eur, 0.1))
+	var pop = maxf(1.0, float(w.get("population", DataLoader.countries.get(iso, {}).get("population", 1e6))))
+	var rev = 0.0
+	var emp = 0.0
+	var out: Dictionary = {}
+	for f in GameState.player_firms():
+		if str(f.get("country", "")) != iso:
+			continue
+		var mh: Array = f.get("month_hist", [])
+		rev += (float(mh[mh.size() - 1].get("rev", 0.0)) * 12.0) if mh.size() > 0 else 0.0
+		emp += float(f.get("workers", 0.0))
+		for fac in f.get("facilities", []):
+			var rc: Dictionary = DataLoader.recipes.get(str(fac.get("recipe", "")), {})
+			if rc.is_empty():
+				continue
+			var tp = IndustrySystem._throughput(f, fac, rc)
+			for o in rc.get("outputs", {}).keys():
+				out[o] = float(out.get(o, 0.0)) + float(rc.outputs[o]) * tp
+	var res_rows: Array = []
+	var res_share = 0.0
+	for cid in out.keys():
+		var bk: Dictionary = GameState.markets.get(iso, {}).get(cid, {})
+		var dem = float(bk.get("last_dem", 0.0))
+		var sh = clampf(float(out[cid]) / dem, 0.0, 1.0) if dem > 0.0 else 0.0
+		res_rows.append({"cid": str(cid), "name": str(DataLoader.commodity(str(cid)).get("name", cid)), "qty": float(out[cid]), "share": sh})
+		res_share = maxf(res_share, sh * (1.5 if DataLoader.commodity(str(cid)).get("category", "") == "energy" else 1.0))
+	res_rows.sort_custom(func(a, b): return float(a.share) > float(b.share))
+	var loans = 0.0
+	for b in BankingSystem.player_banks():
+		if str(b.get("country", "")) == iso:
+			loans += BankProducts.cons_outstanding(b) + BankProducts.sum_p(b.get("mort_loans", [])) + BankProducts.sum_p(b.get("corp_loans", []))
+	var infl = PoliticsSystem.influence(iso)
+	var c_gdp = clampf((rev / gdp_eur) / 0.25, 0.0, 1.0)
+	var c_res = clampf(res_share, 0.0, 1.0)
+	var c_emp = clampf((emp / (pop * 0.5)) / 0.2, 0.0, 1.0)
+	var c_loan = clampf((loans / gdp_eur) / 0.3, 0.0, 1.0)
+	var c_inf = clampf(infl / 100.0, 0.0, 1.0)
+	var owned = owns_state(iso)
+	var idx = 100.0 if owned else clampf(c_gdp * 35.0 + c_res * 25.0 + c_emp * 15.0 + c_loan * 10.0 + c_inf * 15.0, 0.0, 100.0)
+	return {"index": idx, "label": dep_label(idx), "gdp_share": rev / gdp_eur, "emp_share": emp / (pop * 0.5), "loans": loans, "loan_share": loans / gdp_eur,
+		"influence": infl, "owned": owned, "resources": res_rows, "parts": {"HDP": c_gdp * 35.0, "Suroviny/energia": c_res * 25.0, "Zamestnanci": c_emp * 15.0, "Úvery": c_loan * 10.0, "Vplyv": c_inf * 15.0}}
+
+func dep_label(idx: float) -> String:
+	for l in DEP_LABELS:
+		if idx < float(l[0]):
+			return str(l[1])
+	return "Úplná"
+
+func dep_index(iso: String) -> float:
+	return float(dependency(iso).index)
+
+func dependency_text(iso: String) -> String:
+	var d = dependency(iso)
+	var t = "ZÁVISLOSŤ NA TEBE: %.0f/100 – %s%s\n" % [float(d.index), str(d.label), " (vlastníš tento štát)" if bool(d.owned) else ""]
+	t += "• HDP vyrobené tvojimi firmami: %.2f %%\n• Tvoji zamestnanci: %.2f %% pracujúcich\n• Úvery tvojich bánk: %s (%.2f %% HDP)\n• Vplyv: %.0f\n" % [float(d.gdp_share) * 100.0, float(d.emp_share) * 100.0, EconMath.eur(float(d.loans)), float(d.loan_share) * 100.0, float(d.influence)]
+	if (d.resources as Array).is_empty():
+		t += "• Suroviny/služby od teba: žiadne\n"
+	for r in (d.resources as Array).slice(0, 6):
+		t += "• %s: %.1f/deň = %.1f %% spotreby krajiny\n" % [str(r.name), float(r.qty), float(r.share) * 100.0]
+	var p: Dictionary = d.parts
+	t += "Rozpad indexu: " + ", ".join(p.keys().map(func(k): return "%s %.0f" % [k, float(p[k])]))
+	t += "\nVyššia závislosť = vyššia šanca lobingu a vymáhania dlhov (pri Úplnej ~100 %)."
+	return t
+
+
+# ===================== JUAN15: burzova firma (obchodnik s cennymi papiermi) =====================
+const BROKER_RISK = [  # [kup pod priemerom, predaj nad priemerom, podiel kapitalu na obchod, sanca chybneho obchodu]
+	{"name": "nízke", "buy": 0.90, "sell": 1.08, "pos": 0.05, "err": 0.01},
+	{"name": "stredné", "buy": 0.93, "sell": 1.06, "pos": 0.10, "err": 0.03},
+	{"name": "vysoké", "buy": 0.96, "sell": 1.04, "pos": 0.20, "err": 0.07}]
+const BROKER_FEE_WEEK = 1500.0
+const BROKER_FEE_RATE = 0.002
+
+func broker(f: Dictionary) -> Dictionary:
+	if typeof(f.get("broker")) != TYPE_DICTIONARY:
+		f["broker"] = {}
+	var b: Dictionary = f.broker
+	var defs = {"on": true, "cap_pct": 0.5, "risk": 1, "own": {}, "cost": {}, "pl": 0.0, "fees": 0.0, "trades": 0, "log": []}
+	for k in defs.keys():
+		if not b.has(k):
+			b[k] = defs[k]
+	return b
+
+func broker_held(t: String) -> float:
+	var q = 0.0
+	for f in GameState.player_firms():
+		if str(f.get("industry", "")) == "stock_broker" and typeof(f.get("broker")) == TYPE_DICTIONARY:
+			q += float(f.broker.get("own", {}).get(t, 0.0))
+	return q
+
+func _fin_held(t: String) -> bool:
+	for d in st().fin.values():
+		if float(d.get("own", {}).get(t, 0.0)) > 0.0:
+			return true
+	return false
+
+func broker_value(f: Dictionary) -> float:
+	var v = 0.0
+	var b = broker(f)
+	for t in b.own.keys():
+		v += float(b.own[t]) * float(StockMarket.listing(str(t)).get("price", 0.0))
+	return v
+
+func _br_trade(f: Dictionary, t: String, qty: float, side: String) -> float:
+	# obchod cez spolocny register hraca (StockMarket.ex().own), penaze ide z/do kasy firmy
+	var cash0 = float(GameState.player.cash)
+	var e = ""
+	var delta = 0.0
+	if side == "buy":
+		var q = StockMarket.quote(t, qty, "buy")
+		if float(q.get("total", 1e30)) > float(f.cash):
+			return 0.0
+		GameState.player.cash = float(q.total) + 1.0
+		e = StockMarket.buy(t, qty)
+		delta = float(q.total) + 1.0 - float(GameState.player.cash)
+	else:
+		GameState.player.cash = 0.0
+		e = StockMarket.sell(t, qty)
+		delta = float(GameState.player.cash)
+	GameState.player.cash = cash0
+	if e != "":
+		return 0.0
+	f.cash = float(f.cash) + (-delta if side == "buy" else delta)
+	return delta
+
+func broker_weekly(f: Dictionary) -> void:
+	var b = broker(f)
+	if not bool(b.on) or StockMarket.ex().list.is_empty():
+		return
+	var rk: Dictionary = BROKER_RISK[clampi(int(b.risk), 0, 2)]
+	var turnover = 0.0
+	var cap = maxf(0.0, float(f.cash) + broker_value(f)) * clampf(float(b.cap_pct), 0.0, 1.0)
+	for row in StockMarket.listings():
+		if not (str(row.kind) in ["nat", "rival"]) or str(row.get("in_corp", "")) != "":
+			continue
+		var t = str(row.ticker)
+		var ma = _ma(row.hist, 8)
+		if ma <= 0.0 or (row.hist as Array).size() < 4:
+			continue
+		var px = float(row.price)
+		var held = float(b.own.get(t, 0.0))
+		if held > 0.0 and px > ma * float(rk.sell):
+			var got = _br_trade(f, t, held, "sell")
+			if got > 0.0:
+				var basis = float(b.cost.get(t, 0.0))
+				b.pl = float(b.pl) + got - basis
+				b.own.erase(t)
+				b.cost.erase(t)
+				b.trades = int(b.trades) + 1
+				turnover += got
+				_log(b.log, "predaj %s +%s (zisk %s)" % [t, EconMath.eur(got), EconMath.eur(got - basis)])
+		elif held <= 0.0 and px < ma * float(rk.buy) and not _fin_held(t):
+			var free = cap - broker_value(f)
+			var spend = minf(free, cap * float(rk.pos))
+			var qty = floorf(spend / (px * 1.01))
+			if spend > 5000.0 and qty >= 1.0 and StockMarket.owned(t) + qty <= float(row.shares):
+				var paid = _br_trade(f, t, qty, "buy")
+				if paid > 0.0:
+					b.own[t] = qty
+					b.cost[t] = paid
+					b.trades = int(b.trades) + 1
+					turnover += paid
+					_log(b.log, "nákup %s %.0f ks za %s (%.0f %% pod priemerom)" % [t, qty, EconMath.eur(paid), (1.0 - px / ma) * 100.0])
+	var fee = BROKER_FEE_WEEK + turnover * BROKER_FEE_RATE
+	f.cash = float(f.cash) + fee
+	b.fees = float(b.fees) + fee
+	b.pl = float(b.pl) + fee
+	if GameState.rng.randf() < float(rk.err) and float(f.cash) > 0.0:
+		var loss = float(f.cash) * GameState.rng.randf_range(0.01, 0.04)
+		f.cash = float(f.cash) - loss
+		b.pl = float(b.pl) - loss
+		_log(b.log, "chybný obchod / zlý odhad trhu: strata %s" % EconMath.eur(loss))
+
+func broker_text(f: Dictionary) -> String:
+	var b = broker(f)
+	var rk: Dictionary = BROKER_RISK[clampi(int(b.risk), 0, 2)]
+	var unreal = broker_value(f)
+	for t in b.cost.keys():
+		unreal -= float(b.cost[t])
+	var out = "BURZA / OBCHODNÍK: %s · kapitál na obchody %d %% · riziko %s\n" % ["zapnutý" if bool(b.on) else "vypnutý", int(float(b.cap_pct) * 100.0), str(rk.name)]
+	out += "Realizovaný zisk/strata (vrátane poplatkov) %s · poplatky %s · nerealizovaný %s · obchodov %d\n" % [EconMath.eur(float(b.pl)), EconMath.eur(float(b.fees)), EconMath.eur(unreal), int(b.trades)]
+	out += "Kupuje akcie pod 8-týždňovým priemerom, predáva nad ním. Vyššie riziko = väčšie pozície a častejšie chyby.\nDRŽÍ:\n"
+	var rows: Array = []
+	for t in b.own.keys():
+		var row = StockMarket.listing(str(t))
+		rows.append([str(t), str(row.get("name", "")), float(b.own[t]), float(b.own[t]) * float(row.get("price", 0.0)), float(b.cost.get(t, 0.0))])
+	rows.sort_custom(func(x, y): return float(x[3]) > float(y[3]))
+	if rows.is_empty():
+		out += "• nič (čaká na podhodnotené akcie)\n"
+	for r in rows.slice(0, 10):
+		out += "• %s %s: %.0f ks = %s (nákup %s)\n" % [r[0], r[1], r[2], EconMath.eur(r[3]), EconMath.eur(r[4])]
+	for lg in (b.log as Array).slice(0, 4):
+		out += "  · %s\n" % str(lg)
+	return out
+
+# ===================== JUAN15: odberatelia (kto kupuje od hraca) =====================
+var _pf_day = -1
+var _pf: Dictionary = {}
+
+func _player_firm_map() -> Dictionary:
+	if _pf_day != GameState.day_index:
+		_pf_day = GameState.day_index
+		_pf = {}
+		for f in GameState.player_firms():
+			_pf[str(f.id)] = f
+	return _pf
+
+func record_sales(iso: String, cid: String, offers_list: Array, bids_list: Array, npc_dem: float, dem: float, sell_fill: float, px: float) -> void:
+	var pm = _player_firm_map()
+	if pm.is_empty() or dem <= 0.0:
+		return
+	var sold_by_corp = {}
+	for o in offers_list:
+		var fid = str(o.actor).split(":")[0]
+		if pm.has(fid) and Brand.VEHICLES.has(cid):
+			Brand.track(fid, cid, float(o.qty) * sell_fill, iso)  # JUAN21
+		if pm.has(fid):
+			var corp = str(pm[fid].get("corp", ""))
+			sold_by_corp[corp] = float(sold_by_corp.get(corp, 0.0)) + float(o.qty) * sell_fill
+	if sold_by_corp.is_empty():
+		return
+	var buyers = [{"name": "Domácnosti a štát", "q": npc_dem}]
+	var bl = bids_list.duplicate()
+	bl.sort_custom(func(a, b): return float(a.qty) > float(b.qty))
+	var rest = 0.0
+	for i in bl.size():
+		var bid_fid = str(bl[i].actor).split(":")[0]
+		if i < 5:
+			var bf = pm.get(bid_fid, {})
+			if bf.is_empty():
+				bf = GameState.firm_by_id(bid_fid)
+			var nm = str(bf.get("name", "Zahraničná firma"))
+			if str(bf.get("owner", "")) == "player":
+				nm += " (tvoja)"
+			buyers.append({"name": nm, "q": float(bl[i].qty)})
+		else:
+			rest += float(bl[i].qty)
+	if rest > 0.0:
+		buyers.append({"name": "Ostatné firmy", "q": rest})
+	var c: Dictionary = st().cust
+	for corp in sold_by_corp.keys():
+		var sold = float(sold_by_corp[corp])
+		for by in buyers:
+			var q = sold * float(by.q) / dem
+			if q <= 0.0:
+				continue
+			var k = "%s|%s|%s|%s" % [corp, iso, cid, str(by.name)]
+			var row: Array = c.get(k, [0.0, 0.0])
+			c[k] = [float(row[0]) + q, float(row[1]) + q * px]
+
+func customers(corp_filter: String = "*", sort_by: String = "eur") -> Dictionary:
+	var s = st()
+	var src: Dictionary = s.cust_prev if not (s.cust_prev as Dictionary).is_empty() else s.cust
+	var rows: Array = []
+	var tot = 0.0
+	for k in src.keys():
+		var p = str(k).split("|")
+		if p.size() < 4 or (corp_filter != "*" and p[0] != corp_filter):
+			continue
+		var v: Array = src[k]
+		if float(v[1]) < 1.0:
+			continue
+		rows.append({"corp": p[0], "iso": p[1], "country": _name(p[1]), "good": str(DataLoader.commodity(p[2]).get("name", p[2])), "buyer": p[3], "qty": float(v[0]), "eur": float(v[1])})
+		tot += float(v[1])
+	match sort_by:
+		"qty":
+			rows.sort_custom(func(a, b): return float(a.qty) > float(b.qty))
+		"country":
+			rows.sort_custom(func(a, b): return str(a.country) < str(b.country) or (str(a.country) == str(b.country) and float(a.eur) > float(b.eur)))
+		"good":
+			rows.sort_custom(func(a, b): return str(a.good) < str(b.good) or (str(a.good) == str(b.good) and float(a.eur) > float(b.eur)))
+		_:
+			rows.sort_custom(func(a, b): return float(a.eur) > float(b.eur))
+	var by_c = {}
+	for r in rows:
+		by_c[r.country] = float(by_c.get(r.country, 0.0)) + float(r.eur)
+	return {"rows": rows, "total": tot, "countries": by_c, "full_month": not (s.cust_prev as Dictionary).is_empty()}
+
+
+# JUAN17: mapovy mod Odberatelia - nakupy podla krajiny (iso)
+func customers_by_iso() -> Dictionary:
+	var s = st()
+	var src: Dictionary = s.cust_prev if not (s.cust_prev as Dictionary).is_empty() else s.cust
+	var out = {}
+	for k in src.keys():
+		var p = str(k).split("|")
+		if p.size() < 4:
+			continue
+		var eur = float(src[k][1])
+		if eur <= 0.0:
+			continue
+		if not out.has(p[1]):
+			out[p[1]] = {"eur": 0.0, "goods": {}}
+		out[p[1]].eur = float(out[p[1]].eur) + eur
+		var g = str(DataLoader.commodity(p[2]).get("name", p[2]))
+		out[p[1]].goods[g] = float(out[p[1]].goods.get(g, 0.0)) + eur
+	return out

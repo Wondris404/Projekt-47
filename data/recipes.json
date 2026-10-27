@@ -1,0 +1,1034 @@
+[
+ {
+  "id": "cafe",
+  "name": "Kaviareň",
+  "labor": 5,
+  "rent": 36,
+  "maintain": 8,
+  "inputs": {
+   "coffee": 0.004,
+   "wheat": 0.025,
+   "meat": 0.004,
+   "electricity": 0.12
+  },
+  "outputs": {
+   "food_service": 58
+  },
+  "endow": "",
+  "local": true,
+  "staff": 8
+ },
+ {
+  "id": "wheat_farm",
+  "name": "Pšeničná farma",
+  "labor": 2,
+  "rent": 14,
+  "maintain": 6,
+  "inputs": {
+   "electricity": 0.25
+  },
+  "outputs": {
+   "wheat": 1.5
+  },
+  "endow": "wheat",
+  "local": false,
+  "staff": 8
+ },
+ {
+  "id": "coffee_farm",
+  "name": "Kávovníková plantáž",
+  "labor": 6,
+  "rent": 12,
+  "maintain": 5,
+  "inputs": {
+   "electricity": 0.15
+  },
+  "outputs": {
+   "coffee": 0.16
+  },
+  "endow": "coffee",
+  "local": false,
+  "staff": 25
+ },
+ {
+  "id": "livestock",
+  "name": "Chov",
+  "labor": 3,
+  "rent": 16,
+  "maintain": 6,
+  "inputs": {
+   "wheat": 0.4,
+   "electricity": 0.2
+  },
+  "outputs": {
+   "meat": 0.35
+  },
+  "endow": "meat",
+  "local": false,
+  "staff": 12
+ },
+ {
+  "id": "oil_well",
+  "name": "Ropný vrt",
+  "labor": 8,
+  "rent": 40,
+  "maintain": 80,
+  "inputs": {
+   "electricity": 2.5,
+   "steel": 0.02
+  },
+  "outputs": {
+   "crude_oil": 90
+  },
+  "endow": "crude_oil",
+  "local": false,
+  "staff": 150
+ },
+ {
+  "id": "coal_mine",
+  "name": "Uhoľná baňa",
+  "labor": 10,
+  "rent": 22,
+  "maintain": 30,
+  "inputs": {
+   "electricity": 1.4
+  },
+  "outputs": {
+   "coal": 18
+  },
+  "endow": "coal",
+  "local": false,
+  "staff": 300
+ },
+ {
+  "id": "iron_mine",
+  "name": "Železnorudná baňa",
+  "labor": 10,
+  "rent": 22,
+  "maintain": 28,
+  "inputs": {
+   "electricity": 1.6
+  },
+  "outputs": {
+   "iron_ore": 22
+  },
+  "endow": "iron_ore",
+  "local": false,
+  "staff": 350
+ },
+ {
+  "id": "copper_mine",
+  "name": "Medená baňa",
+  "labor": 12,
+  "rent": 24,
+  "maintain": 35,
+  "inputs": {
+   "electricity": 2.0
+  },
+  "outputs": {
+   "copper": 0.28
+  },
+  "endow": "copper",
+  "local": false,
+  "staff": 350
+ },
+ {
+  "id": "power_coal",
+  "name": "Uhoľná elektráreň",
+  "labor": 6,
+  "rent": 30,
+  "maintain": 55,
+  "inputs": {
+   "coal": 19.3
+  },
+  "outputs": {
+   "electricity": 46
+  },
+  "endow": "",
+  "local": false,
+  "staff": 250
+ },
+ {
+  "id": "steel_mill",
+  "name": "Oceliareň",
+  "labor": 14,
+  "rent": 40,
+  "maintain": 70,
+  "inputs": {
+   "iron_ore": 8.5,
+   "coal": 2.8,
+   "electricity": 4.5
+  },
+  "outputs": {
+   "steel": 5
+  },
+  "endow": "steel",
+  "local": false,
+  "staff": 800
+ },
+ {
+  "id": "chem_plant",
+  "name": "Chemický závod",
+  "labor": 12,
+  "rent": 36,
+  "maintain": 60,
+  "inputs": {
+   "crude_oil": 13,
+   "electricity": 4.2
+  },
+  "outputs": {
+   "chemicals": 4
+  },
+  "endow": "chemicals",
+  "local": false,
+  "staff": 600
+ },
+ {
+  "id": "pharma_lab",
+  "name": "Farmaceutická výroba",
+  "labor": 10,
+  "rent": 48,
+  "maintain": 40,
+  "inputs": {
+   "chemicals": 0.35,
+   "electricity": 0.8
+  },
+  "outputs": {
+   "pharma": 0.22
+  },
+  "endow": "pharma",
+  "local": false,
+  "staff": 500
+ },
+ {
+  "id": "textile_mill",
+  "name": "Textilka",
+  "labor": 9,
+  "rent": 20,
+  "maintain": 12,
+  "inputs": {
+   "chemicals": 0.02,
+   "electricity": 0.4
+  },
+  "outputs": {
+   "textiles": 32
+  },
+  "endow": "textiles",
+  "local": false,
+  "staff": 350
+ },
+ {
+  "id": "electronics_plant",
+  "name": "Elektronika",
+  "labor": 16,
+  "rent": 42,
+  "maintain": 35,
+  "inputs": {
+   "copper": 0.01,
+   "chemicals": 0.08,
+   "electricity": 1.1
+  },
+  "outputs": {
+   "electronics": 9
+  },
+  "endow": "electronics",
+  "local": false,
+  "staff": 700
+ },
+ {
+  "id": "auto_plant",
+  "name": "Automobilka",
+  "labor": 28,
+  "rent": 70,
+  "maintain": 80,
+  "inputs": {
+   "steel": 1.4,
+   "electronics": 5,
+   "electricity": 2.2
+  },
+  "outputs": {
+   "automobiles": 0.28
+  },
+  "endow": "automobiles",
+  "local": false,
+  "staff": 1000
+ },
+ {
+  "id": "arms_plant",
+  "name": "Zbrojovka",
+  "labor": 18,
+  "rent": 50,
+  "maintain": 45,
+  "inputs": {
+   "steel": 0.7,
+   "chemicals": 0.25,
+   "electronics": 1.2,
+   "electricity": 1.0
+  },
+  "outputs": {
+   "arms": 0.45
+  },
+  "endow": "weapons",
+  "local": false,
+  "staff": 650
+ },
+ {
+  "id": "construction_co",
+  "name": "Stavebná firma",
+  "labor": 8,
+  "rent": 18,
+  "maintain": 10,
+  "inputs": {
+   "steel": 0.35,
+   "electricity": 0.3
+  },
+  "outputs": {
+   "construction": 0.85
+  },
+  "endow": "",
+  "local": true,
+  "staff": 160
+ },
+ {
+  "id": "logistics_hub",
+  "name": "Logistický uzol",
+  "labor": 6,
+  "rent": 28,
+  "maintain": 15,
+  "inputs": {
+   "crude_oil": 2.2,
+   "electricity": 0.4
+  },
+  "outputs": {
+   "logistics": 2.2
+  },
+  "endow": "",
+  "local": true,
+  "staff": 200
+ },
+ {
+  "id": "finance_office",
+  "name": "Investičná kancelária",
+  "labor": 4,
+  "rent": 40,
+  "maintain": 6,
+  "inputs": {
+   "electricity": 0.2
+  },
+  "outputs": {
+   "finance": 1.1
+  },
+  "endow": "",
+  "local": true,
+  "staff": 30
+ },
+ {
+  "id": "pmc_unit",
+  "name": "Súkromná bezpečnosť",
+  "labor": 10,
+  "rent": 20,
+  "maintain": 12,
+  "inputs": {
+   "arms": 0.04,
+   "electricity": 0.15
+  },
+  "outputs": {
+   "pmc_services": 0.32
+  },
+  "endow": "",
+  "local": true,
+  "staff": 150
+ },
+ {
+  "id": "trade_desk",
+  "name": "Obchodná kancelária",
+  "labor": 3,
+  "rent": 30,
+  "maintain": 4,
+  "inputs": {},
+  "outputs": {},
+  "endow": "",
+  "local": true,
+  "trade": true,
+  "capacity": 40,
+  "staff": 12
+ },
+ {
+  "id": "restaurant",
+  "name": "Reštaurácia",
+  "labor": 9,
+  "rent": 50,
+  "maintain": 12,
+  "inputs": {
+   "meat": 0.01,
+   "wheat": 0.05,
+   "coffee": 0.002,
+   "electricity": 0.2
+  },
+  "outputs": {
+   "food_service": 110
+  },
+  "endow": "",
+  "local": true,
+  "staff": 18
+ },
+ {
+  "id": "bakery",
+  "name": "Pekáreň",
+  "labor": 4,
+  "rent": 24,
+  "maintain": 8,
+  "inputs": {
+   "wheat": 0.12,
+   "electricity": 0.3
+  },
+  "outputs": {
+   "food_service": 66
+  },
+  "endow": "",
+  "local": true,
+  "staff": 12
+ },
+ {
+  "id": "gym",
+  "name": "Fitko",
+  "labor": 3,
+  "rent": 30,
+  "maintain": 6,
+  "inputs": {
+   "electricity": 0.4
+  },
+  "outputs": {
+   "food_service": 42
+  },
+  "endow": "",
+  "local": true,
+  "staff": 10
+ },
+ {
+  "id": "auto_service",
+  "name": "Autoservis",
+  "labor": 4,
+  "rent": 26,
+  "maintain": 8,
+  "inputs": {
+   "steel": 0.02,
+   "electronics": 0.1,
+   "electricity": 0.3
+  },
+  "outputs": {
+   "logistics": 0.35
+  },
+  "endow": "",
+  "local": true,
+  "staff": 12
+ },
+ {
+  "id": "eshop",
+  "name": "E-shop",
+  "labor": 1,
+  "rent": 4,
+  "maintain": 2,
+  "inputs": {
+   "electronics": 0.3,
+   "logistics": 0.01
+  },
+  "outputs": {
+   "logistics": 0.09
+  },
+  "endow": "",
+  "local": true,
+  "staff": 15
+ },
+ {
+  "id": "real_estate",
+  "name": "Realitka",
+  "labor": 3,
+  "rent": 22,
+  "maintain": 3,
+  "inputs": {
+   "electricity": 0.1
+  },
+  "outputs": {
+   "finance": 0.36
+  },
+  "endow": "",
+  "local": true,
+  "staff": 12
+ },
+ {
+  "id": "hotel",
+  "name": "Hotel",
+  "labor": 25,
+  "rent": 120,
+  "maintain": 40,
+  "inputs": {
+   "meat": 0.03,
+   "wheat": 0.12,
+   "electricity": 1.2
+  },
+  "outputs": {
+   "food_service": 620
+  },
+  "endow": "",
+  "local": true,
+  "staff": 100
+ },
+ {
+  "id": "supermarket",
+  "name": "Supermarket",
+  "labor": 30,
+  "rent": 90,
+  "maintain": 30,
+  "inputs": {
+   "wheat": 0.5,
+   "meat": 0.06,
+   "coffee": 0.01,
+   "textiles": 1.0,
+   "electricity": 1.0
+  },
+  "outputs": {
+   "food_service": 520
+  },
+  "endow": "",
+  "local": true,
+  "staff": 70
+ },
+ {
+  "id": "warehouse",
+  "name": "Logistika a sklady",
+  "labor": 12,
+  "rent": 60,
+  "maintain": 25,
+  "inputs": {
+   "crude_oil": 3.0,
+   "electricity": 0.6
+  },
+  "outputs": {
+   "logistics": 3.4
+  },
+  "endow": "",
+  "local": true,
+  "staff": 100
+ },
+ {
+  "id": "software",
+  "name": "Softvérová firma",
+  "labor": 15,
+  "rent": 60,
+  "maintain": 10,
+  "inputs": {
+   "electricity": 0.6,
+   "electronics": 0.2
+  },
+  "outputs": {
+   "finance": 2.2
+  },
+  "endow": "",
+  "local": true,
+  "staff": 80
+ },
+ {
+  "id": "ad_agency",
+  "name": "Reklamná agentúra",
+  "labor": 8,
+  "rent": 40,
+  "maintain": 6,
+  "inputs": {
+   "electricity": 0.3
+  },
+  "outputs": {
+   "finance": 1.0
+  },
+  "endow": "",
+  "local": true,
+  "staff": 40
+ },
+ {
+  "id": "clinic",
+  "name": "Súkromná klinika",
+  "labor": 20,
+  "rent": 80,
+  "maintain": 30,
+  "inputs": {
+   "pharma": 0.02,
+   "electricity": 0.8
+  },
+  "outputs": {
+   "food_service": 420
+  },
+  "endow": "",
+  "local": true,
+  "staff": 100
+ },
+ {
+  "id": "chip_fab",
+  "name": "Výroba čipov",
+  "labor": 40,
+  "rent": 160,
+  "maintain": 180,
+  "inputs": {
+   "copper": 0.03,
+   "chemicals": 0.3,
+   "electricity": 6.0
+  },
+  "outputs": {
+   "electronics": 42
+  },
+  "endow": "",
+  "local": false,
+  "staff": 1200
+ },
+ {
+  "id": "airline",
+  "name": "Letecká spoločnosť",
+  "labor": 60,
+  "rent": 200,
+  "maintain": 220,
+  "inputs": {
+   "crude_oil": 20.0,
+   "electricity": 1.0
+  },
+  "outputs": {
+   "logistics": 18
+  },
+  "endow": "",
+  "local": true,
+  "staff": 1200
+ },
+ {
+  "id": "telecom",
+  "name": "Telekom",
+  "labor": 30,
+  "rent": 120,
+  "maintain": 100,
+  "inputs": {
+   "electronics": 2.0,
+   "electricity": 3.0
+  },
+  "outputs": {
+   "finance": 9.0
+  },
+  "endow": "",
+  "local": true,
+  "staff": 900
+ },
+ {
+  "id": "solar_plant",
+  "name": "Solárna elektráreň",
+  "labor": 3,
+  "rent": 40,
+  "maintain": 30,
+  "inputs": {
+   "electronics": 0.1
+  },
+  "outputs": {
+   "electricity": 28
+  },
+  "endow": "",
+  "local": false,
+  "staff": 35
+ },
+ {
+  "id": "gas_plant",
+  "name": "Plynová elektráreň",
+  "labor": 6,
+  "rent": 40,
+  "maintain": 50,
+  "inputs": {
+   "natural_gas": 22.0
+  },
+  "outputs": {
+   "electricity": 52
+  },
+  "endow": "",
+  "local": false,
+  "staff": 160
+ },
+ {
+  "id": "nuclear_plant",
+  "name": "Jadrová elektráreň",
+  "labor": 40,
+  "rent": 200,
+  "maintain": 420,
+  "inputs": {
+   "electricity": 2.0
+  },
+  "outputs": {
+   "electricity": 420
+  },
+  "endow": "",
+  "local": false,
+  "staff": 700
+ },
+ {
+  "id": "shipyard",
+  "name": "Lodenica",
+  "labor": 50,
+  "rent": 150,
+  "maintain": 150,
+  "inputs": {
+   "steel": 6.0,
+   "electronics": 2.0,
+   "electricity": 3.0
+  },
+  "outputs": {
+   "ships": 0.0045
+  },
+  "endow": "",
+  "local": false,
+  "staff": 1500
+ },
+ {
+  "id": "insurance",
+  "name": "Poisťovňa",
+  "labor": 12,
+  "rent": 80,
+  "maintain": 10,
+  "inputs": {
+   "electricity": 0.3
+  },
+  "outputs": {
+   "finance": 3.0
+  },
+  "endow": "",
+  "local": true,
+  "staff": 300
+ },
+ {
+  "id": "invest_fund",
+  "name": "Investičný fond",
+  "labor": 6,
+  "rent": 90,
+  "maintain": 8,
+  "inputs": {
+   "electricity": 0.2
+  },
+  "outputs": {
+   "finance": 5.0
+  },
+  "endow": "",
+  "local": true,
+  "staff": 50
+ },
+ {
+  "id": "tv_station",
+  "name": "Televízia",
+  "labor": 30,
+  "rent": 100,
+  "maintain": 60,
+  "inputs": {
+   "electricity": 2.0,
+   "electronics": 0.3
+  },
+  "outputs": {
+   "finance": 1.6
+  },
+  "endow": "",
+  "local": true,
+  "staff": 350
+ },
+ {
+  "id": "social_network",
+  "name": "Sociálna sieť",
+  "labor": 25,
+  "rent": 80,
+  "maintain": 80,
+  "inputs": {
+   "electronics": 0.5,
+   "electricity": 3.0
+  },
+  "outputs": {
+   "finance": 3.0
+  },
+  "endow": "",
+  "local": true,
+  "staff": 400
+ },
+ {
+  "id": "newspaper",
+  "name": "Noviny",
+  "labor": 10,
+  "rent": 30,
+  "maintain": 10,
+  "inputs": {
+   "chemicals": 0.02,
+   "electricity": 0.3
+  },
+  "outputs": {
+   "finance": 0.4
+  },
+  "endow": "",
+  "local": true,
+  "staff": 120
+ },
+ {
+  "id": "casino",
+  "name": "Kasíno",
+  "labor": 20,
+  "rent": 90,
+  "maintain": 40,
+  "inputs": {
+   "electricity": 1.0,
+   "food_service": 5
+  },
+  "outputs": {
+   "finance": 4.0
+  },
+  "endow": "",
+  "local": true,
+  "staff": 180
+ },
+ {
+  "id": "offshore",
+  "name": "Offshore firma",
+  "labor": 1,
+  "rent": 30,
+  "maintain": 2,
+  "inputs": {},
+  "outputs": {
+   "finance": 1.8
+  },
+  "endow": "",
+  "local": true,
+  "staff": 12
+ },
+ {
+  "id": "airport",
+  "name": "Letisko",
+  "labor": 80,
+  "rent": 250,
+  "maintain": 300,
+  "inputs": {
+   "electricity": 2.0,
+   "crude_oil": 4.0
+  },
+  "outputs": {
+   "logistics": 10
+  },
+  "endow": "",
+  "local": true,
+  "staff": 900
+ },
+ {
+  "id": "oil_refinery",
+  "name": "Ropná rafinéria",
+  "labor": 12,
+  "rent": 60,
+  "maintain": 90,
+  "inputs": {
+   "crude_oil": 10.0,
+   "electricity": 1.5
+  },
+  "outputs": {
+   "fuel": 1.35
+  },
+  "endow": "",
+  "local": false,
+  "staff": 650
+ },
+ {
+  "id": "gas_works",
+  "name": "Plynáreň (spracovanie a distribúcia)",
+  "labor": 6,
+  "rent": 30,
+  "maintain": 40,
+  "inputs": {
+   "natural_gas": 20.0,
+   "electricity": 0.6
+  },
+  "outputs": {
+   "natural_gas": 19.0
+  },
+  "endow": "",
+  "local": true,
+  "staff": 120
+ },
+ {
+  "id": "stock_broker",
+  "name": "Burza / obchodník s cennými papiermi",
+  "labor": 8,
+  "rent": 120,
+  "maintain": 10,
+  "inputs": {
+   "electricity": 0.2
+  },
+  "outputs": {
+   "finance": 4.0
+  },
+  "endow": "",
+  "local": true,
+  "staff": 80
+ },
+ {
+  "id": "gas_well",
+  "name": "Vrt na zemný plyn",
+  "labor": 6,
+  "rent": 35,
+  "maintain": 55,
+  "inputs": {
+   "electricity": 1.5,
+   "steel": 0.01
+  },
+  "outputs": {
+   "natural_gas": 80
+  },
+  "endow": "",
+  "local": false,
+  "staff": 120
+ },
+ {
+  "id": "aircraft_plant",
+  "name": "Letecká továreň",
+  "labor": 90,
+  "rent": 250,
+  "maintain": 260,
+  "inputs": {
+   "steel": 3.0,
+   "electronics": 10.0,
+   "chemicals": 1.0,
+   "electricity": 6.0
+  },
+  "outputs": {
+   "aircraft": 0.004
+  },
+  "endow": "",
+  "local": false,
+  "staff": 1800
+ },
+ {
+  "id": "data_center",
+  "name": "Dátové centrum",
+  "labor": 12,
+  "rent": 120,
+  "maintain": 140,
+  "inputs": {
+   "electricity": 9.0,
+   "electronics": 3.0
+  },
+  "outputs": {
+   "compute": 14.0
+  },
+  "endow": "",
+  "local": true,
+  "staff": 200
+ },
+ {
+  "id": "ai_firm",
+  "name": "AI firma",
+  "labor": 25,
+  "rent": 90,
+  "maintain": 60,
+  "inputs": {
+   "compute": 5.0,
+   "electricity": 1.0,
+   "electronics": 0.3
+  },
+  "outputs": {
+   "ai_services": 4.5
+  },
+  "endow": "",
+  "local": true,
+  "staff": 120
+ },
+ {
+  "id": "hospital",
+  "name": "Súkromná nemocnica",
+  "labor": 35,
+  "rent": 150,
+  "maintain": 120,
+  "inputs": {
+   "electricity": 1.5
+  },
+  "outputs": {},
+  "endow": "",
+  "local": true,
+  "service": "hospital",
+  "staff": 600,
+  "capacity": 900
+ },
+ {
+  "id": "cargo_port",
+  "name": "Nákladný prístav",
+  "labor": 50,
+  "rent": 120,
+  "maintain": 260,
+  "inputs": {
+   "electricity": 3.0
+  },
+  "outputs": {},
+  "endow": "",
+  "local": true,
+  "service": "port",
+  "staff": 1200,
+  "capacity": 20000
+ },
+ {
+  "id": "school_primary",
+  "name": "Súkromná základná škola",
+  "labor": 15,
+  "rent": 30,
+  "maintain": 10,
+  "inputs": {
+   "electricity": 0.3
+  },
+  "outputs": {},
+  "endow": "",
+  "local": true,
+  "service": "school",
+  "staff": 45,
+  "capacity": 400,
+  "edu": 1.0
+ },
+ {
+  "id": "school_high",
+  "name": "Súkromná stredná škola",
+  "labor": 23,
+  "rent": 45,
+  "maintain": 15,
+  "inputs": {
+   "electricity": 0.4
+  },
+  "outputs": {},
+  "endow": "",
+  "local": true,
+  "service": "school",
+  "staff": 70,
+  "capacity": 600,
+  "edu": 1.3
+ },
+ {
+  "id": "university",
+  "name": "Súkromná univerzita",
+  "labor": 200,
+  "rent": 150,
+  "maintain": 90,
+  "inputs": {
+   "electricity": 2.0
+  },
+  "outputs": {},
+  "endow": "",
+  "local": true,
+  "service": "school",
+  "staff": 650,
+  "capacity": 6000,
+  "edu": 1.8
+ },
+ {
+  "id": "corp_academy",
+  "name": "Firemná akadémia",
+  "labor": 10,
+  "rent": 40,
+  "maintain": 12,
+  "inputs": {
+   "electricity": 0.3
+  },
+  "outputs": {},
+  "endow": "",
+  "local": true,
+  "service": "academy",
+  "staff": 30,
+  "capacity": 300,
+  "edu": 0.6
+ }
+]

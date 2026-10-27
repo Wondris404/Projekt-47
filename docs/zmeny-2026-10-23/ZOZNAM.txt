@@ -1,0 +1,6 @@
+deliver/ (23. 10. 2026)
+etapa0-changed-files.tar.gz   etapa 0 (19 súborov), už zapísaná na PC
+etapa1-changed-files.tar.gz   etapa 1 (11 súborov), sha256 18d6534fdf80f5c168861db0821998069fa6e92fbad50678f17d30ddfa87416c, zapísať PO etape 0
+STATUS-Projekt47.md           stav (môže ísť ako docs/STATUS.md)
+CHANGES-etapa0.md, CHANGES-etapa1.md, RESULT-etapa1.txt, QA-miguel-etapa1.md  dokumentácia
+Nič nové nad etapou 1.

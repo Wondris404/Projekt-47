@@ -1,0 +1,25 @@
+ETAPA 1 - VYSLEDOK (work1 vs work/Etapa 0). Godot 4.7.2 headless, seed 47.
+Konfig: clean (bez vojen, bez katastrof), 52 krajin x 11 komodit = 572 paro, home=SK/DE/US/BR (vystup identicky - bez hraca), start 2024-01-01.
+Kriterium: >=95 % paro v +-30 % po 1/3/6/12 rokoch, median 0.9-1.1, bez NaN/inf, deterministicky.
+
+den    | PRED inband_all (mimo pasma) median | PO inband_all (mimo pasma) median
+365    | 0.280 (412/572)         0.590       | 1.000 (0/572)  1.023
+1095   | 0.266 (420/572)         0.579       | 1.000 (0/572)  1.033
+2190   | 0.252 (428/572)         0.619       | 1.000 (0/572)  1.031
+4380   | 0.192 (462/572)         0.599       | 1.000 (0/572)  1.038
+cena min/max po 4380 d: PRED 0.000 / 11.43 x base ; PO 1.007 / 1.140
+NaN/inf: 0 (vsetky behy). Determinizmus: 2 behy SK 12 rokov bajt-identicke (cmp).
+Sok: vojna SK-CZ 120 d -> po 730 d po konci 100 % paro v pasme (pocas vojny pasmo SK 0.64); susko psenica 22 d (vrchol 1.09 x, po 240 d 1.02 x); sankcia CZ 100 d -> po 365 d 100 %.
+Sadzby (ZASTARANE cisla z v1, platia hodnoty z odseku 'FINALNE DROBNOSTI' nizsie: d365 sadzby max 0.060, inflacia max 0.011, od d1095 podlaha 0.002 = statny vynos 2,35-2,66 %). Nelepi na strope (unit e1_rate_not_stuck_at_ceiling).
+Testy: tests/run_all.sh rc=0 (golden OK po regeneracii 4 riadkov (RATE/CAP/MONTH_DEBT/LIVE, nova sadzba), unit 150 OK/0 FAIL; run_all pouziva mktemp a po behu upratuje, stabilita OK, kriterium d365 OK).
+Kriterium: SPLNENE v clean konfigu (vsetky 4 kontrolne body, 4 domovske krajiny).
+Pozor: bazova stabilita je z velkej casti dana konstrukciou (obchodny uzaver, bez cenoveho driftu) - pozri CHANGES-etapa1.md "Znamé obmedzenia".
+NEOVERENE: UI/okno, Windows, ine seedy, beh s vojnami/katastrofami na 12 rokov, vykon, GL render, hrac/firmy.
+
+PO REVIEW (opravy: sprava Primerie, 2 sucasne vojny - evidencia war_gdp_pen, validate_save + defaulty novych poli, mktemp): 12-rocny beh znova SK x2 + BR: inband_all 1.000 vo vsetkych 4 bodoch, median 1.023/1.033/1.031/1.038, NaN 0, determinizmus OK, vystup bajt-identicky s behom pred opravami.
+
+FINALNE DROBNOSTI PRED QA: SAVE_VERSION 3 + migracia v1/v2 -> v3 (testy v1, v2, v3, pokazeny v3); embargo ruší lift_embargo (nie lift_sanction); inflacia dozniva k 0 + RATE_SMOOTH 0.6 (sadzba SK po 2 vojnach: rozsah za posl. 6 mes. 0.0013, limit 0.02).
+12-rocny beh po uprave (SK x2 + US, clean, seed 47): inband_all 1.000 pri 365/1095/2190/4380 (0/572 mimo pasma), median 1.022/1.033/1.031/1.038, cena min 0.78 (d365) max 1.155, NaN 0, 2 behy SK bajt-identicke. Pozn.: d365 sadzby max 0.060, inflacia max 0.011 (datova inflacia uz nedrzi 14 mesiacov).
+SUCHO (presne nastavenie): iba SK, weather=drought, 22 d od dna 20; ponuka SK x0.62 pre wheat/coffee/meat, dopyt pseniece x1.2 (weather_factor) x1.05. Vrchol SK: pseniica 1.085, kava 0.993, maso 0.991, DE pseniica 0.958 -> vrchol 1.09 je dopytovy efekt pseniece; Miguelove 0.98-1.02 zodpovedaju kave/masu (nepotvrdene - nemam jeho scenar).
+
+POZN. (QA Miguel): '100 % v pasme' plati len pre 4 kontrolne dni; komodita finance je prechodne mimo pasma (max 1.332 d44, min 0.7435 d259); dalsie obmedzenia v CHANGES-etapa1.md 'Zname obmedzenia'.

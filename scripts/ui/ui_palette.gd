@@ -1,0 +1,23 @@
+class_name UiPalette
+extends Object
+
+const BG_0 = Color("16181B")
+const BG_1 = Color("202328")
+const BG_2 = Color("2B2F35")
+const BG_3 = Color("363B42")
+const BORDER = Color("4A5059")
+const BORDER_HI = Color("6B727D")
+const ACCENT = Color("F08C1A")
+const ACCENT_DIM = Color("B8660F")
+const TEXT = Color("E8E6E3")
+const TEXT_DIM = Color("A9ADB3")
+const TEXT_ON_ACCENT = Color("16181B")
+const OK = Color("6FBF5A")
+const WARN = Color("E3B33C")
+const BAD = Color("E0524A")
+const WATER = Color("1B2836")
+const LAND_BORDER = Color("0D0F11")
+const GRATICULE = Color("223244")
+const OUTLINE = Color("000000")
+const FIELD = Color("111316")
+const TOOLTIP_BG = Color("0F1113")

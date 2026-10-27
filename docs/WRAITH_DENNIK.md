@@ -1,0 +1,620 @@
+# WRAITH DENNÍK
+
+## AKTUÁLNY STAV
+
+Audit 2. Posledný krok: A2-K0b scroll pravého panelu. Posuvník je stále viditeľný a pri prepnutí záložky sa obsah vráti hore.
+Checkpoint pred krokom: `20261024-195653`.
+Ďalej: A2-K0c.
+V strome už sú menu a tutoriál, ale K4 a K0e ešte nie sú hotové. Golden hash `225646A676F7A7A096ABBF779BD684FEE59479ACAF6240C8B85AE1222B838991` nezmenený.
+
+Milník: M1/M2 oprava okna je v kóde a na snímke. M0 je zelené.
+VOLBA_1_VIZUAL = A (Factorio-like). VOLBA_2_KRAJINY = VSETKY. VOLBA_3_TEMPLATES = ____ (nevyplnená). VOLBA_4_AI_SUPERI = ANO.
+Úlohy [ZÁVISÍ OD VOLBA_1] sú odblokované. M4b ešte nie je začaté. Pri M4b platí variant A z promptu a z feature_research.md sekcie 1.15.
+Posledný krok: mapa kreslí farebné krajiny, panely sú tmavé (#2B2B2B, text #F2F2F2), pásy špendlíkov sú preč, top bar má dátum, hotovosť a čas, tlačidlá Založiť sú v ScrollContainer po kategóriách.
+Snímky: `audit\M1-ui-before.png`, `audit\M1-ui-after.png`.
+Headless po oprave: sonda exit 0, `P47_LIVE 1.4200 243375.3520 1 0.5887 0.0300`, `P47_PROBE_OK`, golden zhoda. Unit pred touto UI úpravou 153/0. Celý `run_all` po UI úprave ešte nespustený.
+10 minút max rýchlosť: 15:20:51–15:30:52, zastavené po 600 s wall time, 0× SCRIPT ERROR, 0× Parse Error, posledný `P47_RUN day 9240` v `audit\M1-10min.log`. Ďalšie behy Godot len headless alebo skryté okno, nie do popredia.
+Checkpoint: `20261024-153638` files=143 robocopy=1.
+Ďalej: M2 zvyšok (Save/Load). Katalóg T01–T70, focus stromy a F1–F13 sú v data a loade. Golden a save formát sa nemenili. Godot okno sa nespúšťa.
+
+### 2026-10-24 15:50 — katalóg 1950–2026
+Súbory: `data\tech_catalog.json`, `data\focus_trees.json`, `data\forecasts.json`, `scripts\autoload\DataLoader.gd` (`history_catalog_errors`), `tests\unit.gd` (`_history_catalog`). `data\research.json` nezmenený. Logistika I po 28 dňoch stále `freight_mult` 0.9.
+Headless: unit dvakrát exit 0, 0× `P47_UNIT_FAIL`. Dve sondy exit 0, `P47_PROBE_OK`, golden zhoda. Bez okna.
+F1–F13 majú pole `name` (uzol/udalosť), napr. F3 „AI na úrovni človeka (HLMI)“. Unit to číta cez `DataLoader.forecast_by_id`.
+Checkpoint pred zápisom: `20261024-154216`.
+
+## ZÁPISY
+
+### 2026-10-24 20:15 — A2-K0b scroll panelu
+Súbory: `scripts\main.gd` `_tab` (posuvník vždy viditeľný, follow_focus vypnutý), `_reset_tab_scroll` pri zmene záložky, pravý panel min. šírka 300 a pomer 1.0 namiesto pevného splitu. Headless vetva `-- uitest` vypisuje `P47_UI_FIT` a `P47_UI_SCROLL`.
+Headless: import 0, PROBE_OK áno, unit OK=183 FAIL=0, STAB_OK áno, STAB_NAN 0, run_all fails=0, golden hash zhodný áno. uitest: FIT 0 pri 1.0, 1.25 a 1.5; všetkých 6 záložiek `P47_UI_SCROLL … ok`.
+Ručne (Ondrej): NEOVERENÉ.
+Checkpoint: `20261024-195653`. Ďalej: A2-K0c.
+
+#### PRE ONDREJA – A2-K0b
+Čo sa zmenilo: Pravý panel má stále viditeľný posuvník. Keď prepneš záložku, zoznam začína znova hore, nie v polovici.
+Ako to vyskúšať: Spusti hru, Nová hra, Štart. Otvor záložku Firma a kolieskom zíď až po výskum. Potom klikni na Založiť a znova na Firma.
+Čo uvidíš: Posuvník vpravo a po návrate na záložku znova vrch zoznamu. Nič by nemalo byť odrezané mimo okna.
+Čo ešte nefunguje: nič známe z tohto kroku. Tutoriál a menu ešte nie sú dokončené podľa neskorších krokov.
+
+### 2026-10-24 18:33 — A2 baseline
+Súbory: žiadna zmena. Checkpoint `20261024-182706`.
+Headless: import 0, PROBE_OK áno, unit OK=183 FAIL=0, STAB_OK áno, STAB_NAN 0, run_all fails=0, golden hash zhodný áno.
+Ručne (Ondrej): NEOVERENÉ.
+Ďalej: A2-K0a.
+
+### 2026-10-24 18:39 — A2-K0a zoom
+Súbory: `scripts\main.gd` `_on_zoom` skrýva svetovú mapu, keď je región, a naopak. `scripts\ui\world_map.gd` a `scripts\ui\region_view.gd` `_ready` nastavujú `clip_contents`, aby zoom kolieskom nekreslil cez nadpis. `tests\unit.gd` `_zoom_exclusive` kontroluje, že po jednom prepnutí je viditeľná len regionálna mapa a po druhom len svet.
+Headless: import 0, PROBE_OK áno, unit OK=184 FAIL=0, STAB_OK áno, STAB_NAN 0, run_all fails=0, golden hash zhodný áno.
+Ručne (Ondrej): NEOVERENÉ. Svet/Región má prepínať mapy a koliesko nemá kresliť mimo rámu.
+Checkpoint: `20261024-182706`. Ďalej: A2-K0b.
+
+### 2026-10-24 14:04 — M0
+Súbory: `tests\run_all.ps1:1-24` (runner, neskôr riadok 22 InvariantCulture), `docs\PERF.md`, `docs\zmeny-2026-10-24\CHANGES-M0.md`, `docs\zmeny-2026-10-24\REPORT-M0.md`.
+Headless: import 0, `P47_LIVE 1.4200 243375.3520 1 0.5887 0.0300`, golden zhoda 37 riadkov, unit 150/0, inband_all 1.000, determinizmus OK, `VYSLEDOK fails=0`.
+Wall time run_all: 432.801 s, potom 2348.389 s a 442.475 s.
+Checkpointy: prvý `20261024-134531`, posledný M0 `20261024-145436`.
+Ďalej: M1.
+
+### 2026-10-24 15:11 — M1 kód
+Súbory: `scripts\autoload\LawSystem.gd` minister_sheet (sadzba, CPI, inflácia, nezamestnanosť, zákony, vojny, sankcie, počet AI firiem; staré kľúče tax/debt/stability/rating ostali). `scripts\main.gd` panel ministra, F3 FPS, argument `maxspeed`. `tests\probe.gd` nový riadok `P47_MIN_DATA` (starý `P47_MIN` nezmenený). `tests\run_all.ps1` vynechá `P47_MIN_DATA` z golden porovnania. `tests\unit.gd` tri testy. `tools\checkpoint.ps1` odmietne plochu a zálohu, prepínač `-RotationTest`. `checkpoint.ps1` v koreni len volá tools skript.
+Spawn AI firiem som nemenil (zmenil by golden). Save formát som nemenil.
+Headless unit: exit 0, OK=153 FAIL=0. `ai_firm_spawn_deterministic 28`, `ai_firms_in_save_roundtrip`, `minister_data_not_nan`. `ROTATION_OK keep=12` exit 0.
+`run_all` po tejto zmene: zatiaľ nespustené. Okno: nespustené.
+Checkpoint: `20261024-151150`.
+Ďalej: run_all, potom okno.
+
+### 2026-10-24 15:19 — M1 headless po kóde
+`run_all.ps1`: wall 433.534 s, exit 0, import 0, golden OK, unit 153/0, inband_all 1.000, `VYSLEDOK fails=0`. `P47_MIN 90.00 190.00` nezmenený.
+Ďalej: okno.
+
+### 2026-10-24 15:20 — M1 okno, prerušené
+Krátky beh: 0× SCRIPT ERROR, 0× Parse Error, `P47_RUN` deň 30…270.
+10 minút max rýchlosť: start 15:20:51, stop po 600 s o 15:30:52, 0× SCRIPT ERROR, 0× Parse Error, posledný riadok `P47_RUN day 9240`.
+Ďalej: oprava mapy a UI.
+
+### 2026-10-24 15:36 — M1/M2 vzhľad okna, VOLBA_1 = A
+Rozhodnutie: VOLBA_1_VIZUAL = A (Factorio-like).
+Súbory: `scripts\ui\world_map.gd` krajiny cez `draw_colored_polygon` (predtým tmavá dlaždica `terrain.png` na mori `#101820`, preto čierna plocha); preč sú špendlíky `border.png` na hranách. `scripts\main.gd` bez dlaždice `ui_chrome.png` a `border.png` (to boli pásy špendlíkov), téma panela `#2B2B2B` a text `#F2F2F2` (kontrast nad 4.5:1), top bar dátum / hotovosť / Pauza / 1 / 2 / 3 / +1 deň, ScrollContainer „Založiť“ s kategóriami Poľnohospodárstvo, Ťažba, Priemysel, Služby.
+Snímky: `audit\M1-ui-before.png` (čierna mapa, béžové pásy, orezaný text), `audit\M1-ui-after.png` (farebná mapa, tmavé panely, top bar, kategórie).
+Headless: sonda exit 0, golden zhoda, `P47_PROBE_OK`.
+Checkpoint: `20261024-153638`.
+Ďalej: M2 zvyšok a `run_all`.
+
+### 2026-10-24 22:10 — JUAN-FIX (touchpad, mapa, zoom, Pokračovať, ukladanie, dividendy K0c4)
+Robil Juan na kópii v boxe (nie Wraith). Zálohy: `*.orig_juan` (touchpad/mapa), `*.orig_juan2` (zvyšok).
+Súbory:
+- `scripts\main.gd` `_input`: touchpad (InputEventPanGesture), koliesko, PageUp/PageDown a šípky posúvajú aktívny pravý panel.
+- `scripts\ui\world_map.gd`: ťahanie mapy ľavým tlačidlom (krátky klik = výber krajiny), `_zoom_at` zoom k miestu pod kurzorom.
+- `scripts\ui\main_menu.gd`: Pokračovať bolo vypnuté, kým neexistoval save, a save sa nedal nikde vytvoriť. Teraz počas hry pokračuje v hre, inak načíta posledný slot. Nové tlačidlo „Uložiť hru“ (slot 1), „Načítať hru“ s obnovou stavu slotov.
+- `scripts\main.gd`: `save_game()`, F5 a Ctrl+S = rýchle uloženie do slotu 1, hláška „Hra uložená“. Esc v menu = späť do hry s pôvodným stavom pauzy. Panel „Moje firmy“ (všetky firmy: krajina, tržby, náklady, zisk za 30 dní, hotovosť, rezerva, posledná dividenda). Hláška po založení s menom firmy. Toast „Dividendy z tvojich firiem: +X €“.
+- `scripts\autoload\IndustrySystem.gd`: `pay_dividends()`, `firm_reserve()` (EMA nákladov × 30 dní), `firm_period_profit()`, `firm_summary()`, signál `dividends_paid`. Stratová firma nevypláca nič.
+- `scripts\autoload\BankingSystem.gd`: `_pull_dividend(need, from_firm)` už nie je DEAD, prevod firma → hráč + správa „Dividenda z <firma>: +X €“.
+- `scripts\autoload\GameState.gd`: volanie `IndustrySystem.pay_dividends()` v mesačnej vetve hneď za `_macro()`. Nové voliteľné kľúče firmy `last_div_day`, `last_dividend` (save `v:3` sa nemení).
+- `tests\unit.gd`: `_juan2_dividends`, `_juan2_save_load` (8 testov).
+Headless: unit OK=191 FAIL=0, `P47_DIVIDEND d30=4036200 d60=4198308 paid=162108`, STAB_OK áno, uitest FIT 0/0/0, SCROLL 6× ok, CLICK 4× ok. Golden: FAIL už na nedotknutej verzii (riadok `P47_MIN_DATA` navyše, prostredie / run_all.sh ho nefiltruje), diff po zmenách identický → zmeny golden nezmenili.
+Ručne (Ondrej): NEOVERENÉ.
+PRE ONDREJA: Esc → Uložiť hru (alebo F5 / Ctrl+S) → hláška „Hra uložená“. Pokračovať ťa vráti do hry. Založ firmu, pusti čas cez 1. deň mesiaca → v správach „Dividenda z …“ a hotovosť ti narastie. Záložka Firma → MOJE FIRMY ukáže všetky tvoje firmy.
+
+## JUAN-FIX 3 (2026-10-24): Postaviť tu, úvery banky, detail firmy, pravá ruka
+Zmenené: scripts/autoload/IndustrySystem.gd, BankingSystem.gd, GameState.gd, scripts/main.gd, scripts/ui/world_map.gd, nové scripts/ui/firm_chart.gd, tests/unit.gd. Zálohy *.orig_juan3. SAVE_VERSION ostáva 3 (nové kľúče sú voliteľné: firm.pos, month_hist, month_acc, manager, workers; bank.pos, cons_rate, cons_loans, cons_stats).
+Čísla: Kaviareň 80 000 € + 17 600 € kapitál, Kancelária (finance_office) 220 000 € + 48 400 €, Banka 500 000 € licencia. Úvery ľuďom: 36 mesiacov, anuita, mesačne max 50 % voľnej likvidity, default ~0,2–0,5 %/mes. Bez pravej ruky: efektivita 80 %, dokúpi 50 % materiálu, odíde 5 % ľudí/mes. S pravou rukou: efektivita 90 % + 30 % × schopnosť, plat = náklad.
+Testy: unit 218 OK / 0 FAIL, uitest P47_UI_PLACE placed=1 icon_click=1, P47_UI_DETAIL open=1 manager=1, stabilita OK; golden_probe padá ako predtým (riadok P47_MIN_DATA).
+
+PRE ONDREJA:
+1. Klikni na krajinu, choď do záložky Založiť, hore v POSTAVIŤ NA MAPE vyber Kaviareň, Kanceláriu alebo Banku a stlač „Postaviť tu“.
+2. Klikni na miesto vnútri tej krajiny. Na tom mieste sa objaví ikona (tvoje majú rámik). Esc stavbu zruší.
+3. Klikni na ikonu na mape alebo na „Detail: …“ v záložke Firma. Otvorí sa okno s grafom (tržby, náklady, zisk po mesiacoch, ukáže sa po prvom celom mesiaci), čo firma musí kúpiť, ľudia, mzdy, rezerva, dividendy.
+4. V detaile daj „Najať pravú ruku“ (3 kandidáti so schopnosťou a platom). Bez nej firma ide horšie a ľudia odchádzajú. Dá sa aj prepustiť.
+5. Banka: v záložke Trh & banky nastav „Úrok pre ľudí“. Každého 1. v mesiaci banka sama požičia ľuďom a vidíš požičané, splátky, úroky a defaulty. Vyšší úrok = menej záujemcov, viac defaultov.
+
+## JUAN-FIX 4 (2026-10-24 noc): banka, menu s módmi, postava, intro, terén, mestá, politika, AI konkurencia, ciele, PMC
+Robil Juan na kópii v boxe. Zálohy `*.orig_juan4`. SAVE_VERSION ostáva 3: nové kľúče sú voliteľné (`ext` = politika/ciele/konkurenti, `player.nick/gender/charm_discount/gender_action_day`, banka `sav_rate, savings, mort_rate, corp_rate, mort_loans, corp_loans, reserve_target, prod_stats, month_hist, recovered_total, written_off`, `config.difficulty/politics/rivals`). Starý save sa načíta a doplní defaulty (test j4_old_save_no_ext, j4_bank_save).
+Nové súbory: scripts/autoload/Difficulty.gd, TerrainSystem.gd, PoliticsSystem.gd, RivalSystem.gd, BankProducts.gd, scripts/ui/intro_scene.gd, assets/intro/s1..s4_m|f.png, data/cities.json, tests/juan4.gd, data/countries_extra_juan4.json + data/map_extra_juan4.json (pripravené, nenačítané).
+Obtiažnosť (Difficulty.gd): Easy štart 400 000 €, ceny ×0,80, udalosti ×0,5 (sila ×0,6), AI ×0,6, úroky −1 p.b., bez vojen | Tutoriál 200 000 €, ×0,90, ×0,5/0,7, AI ×0,7, −0,5 p.b. | Medium 150 000 €, všetko ×1 | Hard 50 000 €, ×1,25, ×1,6/1,4, AI ×1,5, +1,5 p.b. | Realistic 0 €, ×1,10, ×1,3/1,2, AI ×1,3, +1 p.b.
+Krajiny: 26 → ostáva 26 v hre. Vygenerovaných 139 ďalších (Natural Earth + geonames), ale simulácia so 165 krajinami trvá 277 ms/deň oproti 25 ms/deň (11× pomalšie, rýchlosť 3 by nešla). Dáta sú v *_extra_juan4.json, treba najprv zrýchliť MarketSystem.trade_routes. Kosovo a Taiwan vynechané (otvorené rozhodnutie).
+
+PRE ONDREJA:
+1. Menu: hore sú módy Easy, Tutoriál, Medium, Hard, Realistic, Story. Story napíše „Na tomto sa pracuje — wondris404“. Ostatné otvoria nastavenie: prezývka, pohlavie (tooltip ukáže bonusy), krajina, seed, štartovací balík. Tutoriál = 10 krokov ako predtým.
+2. Intro: po Štart ide 4-scénové intro (vyhodenie, rozchod, prísaha, jachta). Medzerník = ďalej, Esc alebo klik = preskočiť. Žena má partnera a mužov na jachte, muž partnerku a ženy.
+3. Pohlavie: muž = mzdy −5 %, akcia Kampaň pre ženy (+5 reputácia, 70 %). Žena = Očariť pri vyjednávaní (ďalšia stavba −8 %, 60 %) a +5 % tržieb kaviarní a spotrebných firiem. Akcie sú v záložke Politika, raz za 90 dní. Iné = bez bonusov.
+4. Banka: postav ju v meste, klikni na ikonu alebo Firma → „Detail: Banka …“. Uvidíš bilanciu, kapitálovú primeranosť (min 8 %, pod ňou sa zastavia nové úvery), produkty (spotrebiteľské, hypotéky, firemné, sporiace účty, bežné vklady), graf bilancie a graf rizika nesplácania. Nastav úroky aj cieľ rezerv a daj „Uložiť nastavenia banky“.
+5. PMC vymáhanie: postav PMC (Založiť → PMC) do 300 km od banky, splň cieľ „Kontakty v miestnej vláde“ (Ciele) a v Politike daj „Úplatok ministrovi“ v tej krajine. Potom v detaile banky „Poslať PMC na nesplácačov“: vymôže 30–60 % nesplatených dlhov, stojí 15 000 € + 5 %, 20 % riziko škandálu (reputácia −15).
+6. Terén: tlačidlo „Terén / suroviny“ pod mapou. Bane a vrty len na náleziskách (farebné kolieska) mimo miest, kaviareň/kancelária/banka len v meste (oranžové kruhy). Pri „Postaviť tu“ blikajú platné miesta.
+7. Mesto: Svet / Región, klikni na mesto → panel s obyvateľmi, ekonomikou, budovami, tvojimi firmami a voľnými parcelami.
+8. Vojna: tlačidlo Vojna zmizlo. Vojny vedú štáty, ty môžeš lobovať za mier alebo konflikt (Politika).
+9. Politika: vláda, strana, dane, regulácia, voľby. Lobing a úplatky stoja peniaze, majú šancu a riziko škandálu.
+10. Ciele: strom so 4 vetvami (Lobing, Médiá, Financie, Priemysel). Naraz beží jeden cieľ, každý trvá dni a dá trvalý bonus.
+11. Konkurencia: AI firmy (Danubia Holding a spol.) zakladajú firmy, aj v tvojom odvetví, a pri cenovej vojne pridávajú výrobu. Podiel na trhu je v Politike dole.
+12. Ciele postavy (vetva Postava, vidíš len svoje): muž – Old boys club (lobing a úplatky −8 % cena, riziko škandálu ×0,92), Tvrdý vyjednávač (úvery −0,6 p.b.); žena – Sieť žien v biznise (pravá ruka −8 % plat), Mediálna ikona (reputácia +1 mesačne, kampane účinnejšie). Každý 40 dní, tooltip ukáže bonus.
+13. Strom cieľov (upresnené): záložka Ciele = posuvný strom s ikonami a čiarami (oranžová = splnená prerekvizita, červené ✕ = vylučujú sa), progress bar aktívneho cieľa, tooltip s efektom, trvaním, prerekvizitami. Vetvy Ekonomika, Politika, Podsvetie, Pohlavie (len tvoje). Trvanie 35–70 dní. Podsvetie: „Čistý podnikateľ“ (+5 reputácia, menej škandálov) VS „Korupcia a podsvetie“ (odomkne úplatky) → „Kontakty v miestnej vláde“ (odomkne PMC vymáhanie) → „Bezpečnostné kontakty“ (PMC +10 %). Úplatok ministrovi bez cieľa Korupcia nejde. Uložené v save (ext.focus).
+
+## #14 JUAN-FIX 5 (2026-10-24 noc): všetkých 165 krajín + úrovňová simulácia (tiered LOD)
+Robil Juan na kópii v boxe. Zálohy `*.orig_juan4`. SAVE_VERSION ostáva 3.
+- DataLoader načíta aj `countries_extra_juan4.json` + `map_extra_juan4.json` → 165 krajín (TW/XK v dátach nie sú). Argument `-- core26` vráti pôvodných 26 (porovnanie so zlatým výstupom sondy: zhodný okrem známeho riadku P47_MIN_DATA).
+- MarketSystem: tier 1 = top 70 ekonomík podľa HDP (`TIER1_TOP`) + pôvodných 26 + krajina hráča, vybraná krajina, krajiny s jeho firmami/bankou, krajiny vo vojne → plný denný trh. Tier 2 = ostatné (~95): prepočet raz za 7 dní, rozložený round-robin (1/7 denne), cena/zásoba/kapacita dobehnú 7 krokov naraz, CPI váha 7. Povýšenie je automatické každý deň (`refresh_tiers`). Po načítaní/novej hre prvý deň prepočíta všetko naplno.
+- Optimalizácie bez zmeny výsledku: `_openness` už nie je O(n²) cez blocked() (len reálne blokované dvojice), denná cache počtu firiem a vojen, rýchly výpočet dopytu a ponuky (kontext krajiny raz za deň, ramadán raz za deň, polia namiesto string kľúčov), CPI váhy cache.
+- Mapa: polygóny nových krajín so samoprienikom sa opravia (Clipper), všetkých 165 sa kreslí a dá sa kliknúť (test j5_map_clickable).
+- Starý save s 26 krajinami: doplnia sa chýbajúce krajiny s rovnovážnym trhom (`init_country_books`) a centrálnou bankou, politika sa doplní.
+- Výkon (box, 30 dní, headless): pred 165 krajín 272–277 ms/deň, 26 krajín 25 ms/deň → po 165 krajín ~31–35 ms/deň (cieľ ≤ 40 splnený s top 70), 26 krajín ~14–19 ms/deň. Rýchlosť 3 (24 dní/s) ≈ 0,8 s CPU za sekundu – hrateľné ako predtým s 26.
+- Testy: tests/juan5.gd (benchmark, povýšenie tieru firmou aj vojnou, tier 2 sa hýbe bez NaN, starý save 26 krajín).
+
+PRE ONDREJA:
+1. V hre je všetkých 165 krajín. Mapa ich všetky kreslí a dajú sa kliknúť.
+2. 70 najväčších ekonomík (plus tvoja krajina, krajiny s tvojimi firmami a krajiny vo vojne) sa počíta každý deň naplno. Malé krajiny sa počítajú raz za týždeň zjednodušene – keď tam niečo postavíš, hneď sa prepnú na plný výpočet. V Politike vidíš „tier 1/2“.
+3. Rýchlosť 3 ide zhruba ako predtým s 26 krajinami.
+4. Staré savy sa načítajú, chýbajúce krajiny sa doplnia.
+
+## #15 JUAN-FIX 5: politika všetkých krajín (vlády, strany, lídri – paródie)
+- data/politics_juan5.json (generátor /workspace/projekt47/work5/gen_pol.py): 165 krajín, typ vlády (demokracia 64, hybridný 39, autoritársky 48, monarchia 9, komunistický 5; zjednodušene podľa kategórií EIU), vládnuca strana, 2–4 strany (ideológia, popularita, `leader_name`), `leader_name` krajiny = satirické skomolené mená (napr. Donny Trumpeta, Vlado Putinko, Si Pingpong), malé krajiny generické vtipné mená.
+- Typ vlády: cena úplatku (demokracia ×1,5 … autoritársky ×0,8), riziko škandálu, šanca, základná regulácia, voľby len demokracia (48 mes.) a hybridný (60 mes.). Voľby berú strany krajiny a ich popularitu.
+- Nové akcie (záložka Politika, pre vybranú krajinu): Financovať stranu (popularita +6 % × účinnosť: demokracia 1, hybrid 0,7, autoritársky 0,35, monarchia 0,3, komunisti 0,25), Podporiť krajinu vo vojne (vzťahy +20 / s nepriateľmi −15, príjem z dodávok tvojich zbrojných/chemických/logistických/farma firiem, PMC kontrakt ak máš PMC, reputácia −2), Lobing za sankcie / za obchodnú dohodu (cieľ = výber krajiny), Štrajk (regulácia −5, podpora vlády −10 %, vysoké riziko škandálu). Všetko má cenu, šancu a škandál.
+- Tier 2 krajiny: politika sa prepočíta raz za 3 mesiace. Starý save: strany a lídri sa doplnia (`_fill_juan5`).
+- Upravený test j4_election (víťaz = prvá strana zoznamu krajiny).
+
+PRE ONDREJA:
+1. Každá krajina má typ vlády, lídra s vtipným menom a 2–4 strany s popularitou (Politika → text hore).
+2. V autoritárskych režimoch sú úplatky lacnejšie a menej riskantné, voľby nie sú a financovanie strán skoro nefunguje.
+3. Nové tlačidlá: Financovať stranu (vyber stranu), Podporiť krajinu vo vojne, Sankcie / Obchodná dohoda (vyber cieľovú krajinu), Štrajk.
+
+## #16 JUAN-FIX 5: strom výskumu (oddelený od cieľov)
+- data/research.json: pôvodných 8 uzlov ostáva (rovnaké id, cena, efekty) + 13 nových, 6 vetiev: Stroje a automatizácia, Ťažba a suroviny, Energetika, Logistika, Financie/IT, Spotrebné produkty (x/y pozícia, prerekvizity).
+- Nové efekty: yield_factory, yield_mining, yield_consumer (IndustrySystem._yield_mult), survey (väčší dosah ložísk v TerrainSystem.deposit_at), research_speed, rate_bonus (PoliticsSystem.rate_bonus), reach_mult (zatiaľ len uložené). Efekty sa už neprepisujú naslepo – platí lepšia hodnota.
+- Sloty: 1 základný, +1 cieľ „Výskumné oddelenie“ (nový uzol focus tree, Ekonomika, po fin1), +1 R&D centrum (250 000 €, tlačidlo v záložke Výskum). Ďalšie výskumy idú do fronty. Save: `player.research` = slot 1 (starý formát), nové voliteľné `player.research_extra`, `player.rnd_center`.
+- UI: nová záložka „Výskum“ – posuvný strom (scripts/ui/research_tree_view.gd, rovnaký štýl ako strom cieľov), čiary prerekvizít, tooltip s cenou, trvaním a efektom.
+- Upravený test logistics1_freight_still_0_9 (namiesto „presne 8 uzlov“ kontroluje, že pôvodných 8 existuje).
+
+PRE ONDREJA:
+1. Záložka Výskum: strom so 6 vetvami, klikni na uzol a výskum sa spustí (stojí peniaze a dni).
+2. Naraz beží 1 výskum. Druhý slot dá cieľ „Výskumné oddelenie“, tretí R&D centrum.
+3. Geologický prieskum zväčší náleziská na mape, Dátové centrum zrýchli výskum o 20 %.
+
+## #17 Mená (anglické slovné hračky + personál podľa krajiny) — HOTOVO
+- politics_juan5.json: lídri ako parodické slovné hračky (Donald Trumpet, Vladimir Putout, Xi Jinpong…); names_juan5.json: 60 skupín pre 165 krajín, ženské priezviská (-ová, -a…), poradie priezvisko-meno (JP, CN, KR, HU…).
+- Testy: j5_name_* (unit 354 OK / 0 FAIL).
+
+## Hlavné menu na celú obrazovku + splash + logo — HOTOVO
+- Splash ~3 s (fade in/out, preskočí sa klikom alebo klávesom; v headless a dev sa nezobrazí): logo pečať + PROJEKT-47 + „developed by Wondris404“. Boot splash Godotu nahradený logom, logo je aj ikona aplikácie (assets/ui/logo.png, icon.png).
+- Menu: pixelové nočné mesto s jachtou (assets/ui/menu_bg.png, pomalý pohyb), veľké logo, tlačidlá Pokračovať / Nová hra (→ Easy/Tutoriál/Medium/Hard/Realistic/Story) / Načítať hru / Nastavenia / Dev / Koniec, dole wondris404. Prispôsobí sa rozlíšeniu.
+- Kým je menu otvorené, mapa a herné UI sú skryté a hra stojí. Esc v hre otvorí menu (Pokračovať / Späť do hry).
+- Dev: hneď na mapu (bez intra, tutoriálu a prezývky), +50 M €, všetok výskum hotový, bez progresie. F12 = dev panel (+10 M, preskočiť 30 dní s ms/deň a FPS, dokončiť výskum). DEV hra sa neukladá do slotov.
+- uitest: P47_UI_MENU_FULLSCREEN 1.
+
+## #18 (časť) Letisko — HOTOVO, ostatné z #18 rozpracované
+- Hotel už je (stredný podnik). Nové letisko = veľký podnik za 15 M €. Vyžaduje mesto (krajina má ≥ 1 mil. obyv.). Mesačné poplatky za lety (rastú s tvojimi leteckými spoločnosťami v krajine) a za pasažierov (rastú s tvojimi hotelmi a veľkosťou krajiny).
+- Testy j5_airport_*.
+
+### PRE ONDREJA
+- Po spustení: logo → menu. Klik alebo kláves splash preskočí. Dev hra sa nedá uložiť (je to zámer).
+- Letisko postav v krajine s mestom. Viac leteckých spoločností a hotelov v tej krajine = vyššie poplatky.
+- Ešte chýba: kolaterálové úvery (zatiaľ len prázdna funkcia), UI pre vylepšenia firiem, #19 burza.
+
+## #18 dokončenie: úvery, progresia, upgrady, letisko, Dev panel
+- Limit úveru na štarte podľa obtiažnosti: Easy 200k, Tutoriál 180k, Medium 150k, Hard 120k, Realistic 100k. Rastie s čistým imaním, reputáciou a počtom splatených úverov.
+- Úver so zálohou (panel „Úver so zálohou“ pod tlačidlom Pôžička). Vyberieš firmy alebo hotovosť. Banka uzná z firmy 50 %, z hotovosti 70 % hodnoty. Úver najviac do hodnoty záloh a do limitu.
+- Založenú firmu nepredáš, nedáš na burzu ani do holdingu. Keď 3 mesiace nesplácaš alebo príde default, banka zálohy zoberie. Po splatení sa zálohy uvoľnia.
+- Nezabezpečený úver najviac 30 000 € (úrok +4 %), naraz len jeden.
+- Progresia platí v hrách z menu (nie v Dev): malé podniky hneď, stredné a veľké cez výskum alebo cieľ a minimálne čisté imanie.
+- Detail firmy: úroveň 1–3 s tlačidlom Vylepšiť (výskum Modernizácia, potom Priemysel 4.0), Predať firmu, IPO.
+- Letisko: reálne mesto z cities.json s aspoň 200 tis. obyvateľmi (zapíše sa do firmy).
+- Dev panel (F12): +10 M, skok o 30 dní (ms/deň, FPS), dokončiť výskum a všetky ciele, udalosť (recesia a pád burzy), vojna (vybraná krajina proti susedovi), log chýb.
+
+## #19 Burza, IPO, korporácia
+- Nová karta „Burza“: index P47, nálada trhu, zoznam titulov (40 národných firiem z top-20 ekonomík s burzou, AI konkurenti, tvoje firmy a holdingy), graf (index alebo titul), portfólio.
+- Cena sa riadi ziskom, rastom, sektorom (P/E), úrokmi, vojnami a udalosťami, náladou trhu a šumom; prepočítava sa týždenne. Dividendy mesačne: 40 % zisku, pri ovládanej firme 70 %.
+- Nad 50 % akcií je možné prevzatie. AI konkurent ti pri ňom odovzdá firmy.
+- IPO jednej firmy: hodnota aspoň 1 M €, predáš 30 % akcií, poplatok 5 %. Pod 50 % strácaš kontrolu nad firmou.
+- Korporácia/holding: aspoň 2 firmy, hodnota = súčet + 5 % za každú ďalšiu firmu (max +25 %). Firmy sa dajú pridať aj vyčleniť (spin-off; ak je holding na burze, akcionári dostanú akcie novej firmy v rovnakom pomere). IPO holdingu funguje rovnako.
+- Krajiny v úrovni 2 nemajú burzu. Odomknutie cez výskum Úverový scoring alebo Algoritmické hodnotenie úverov, prípadne cieľ Financie; IPO len cez Algoritmické hodnotenie úverov alebo cieľ.
+- Save v3: stav je vo voliteľnom kľúči ext.exch, staré savy fungujú.
+- Testy: j5_limit_*, j5_unsecured, j5_haircut, j5_secured_*, j5_pledged_*, j5_seized, j5_cash_release, j5_stock_*, j5_takeover*, j5_hostile_rival, j5_ipo*, j5_lose_control, j5_corp_*, j5_spinoff. uitest P47_UI_J5.
+
+### PRE ONDREJA
+- Peniaze: pod Pôžička klikni „Úver so zálohou“, zaškrtni, čo založíš, a zadaj sumu. Bez majetku zober nezabezpečených 30k.
+- Burza: karta Burza, vyber titul, zadaj kusy, Kúpiť/Predať. Nad 50 % klikni Prevziať.
+- IPO: detail firmy → IPO (firma musí mať hodnotu aspoň 1 M €). Holding: karta Burza dole, zaškrtni firmy a zadaj názov.
+- Dev hra sa neukladá.
+
+## Juan9 – Fáza A (2026-10-25)
+- Banky: jedna cesta založenia (Založiť → Postaviť na mape → Banka, v meste), starý gombík „Založiť banku“ v Trh & banky odstránený. Viac vlastných bánk (player.bank_ids), detail = kliknutá banka. Jeden úrok vkladov/sporenia. Vysvetlenie úverov (limit, úrok, záloha, splátky) v hre: gombík „Ako fungujú úvery a banky?“ + tooltipy.
+- Vnútorné dodávky: dodávateľ a odberateľ v tej istej krajine A v tom istom holdingu → odberateľ platí len dopravu (6 % trhovej ceny), platí pre všetky suroviny vrátane elektriny. Inak trhová cena.
+- UI: ovládací panel vľavo, mapa vpravo. Burza = zatvárateľné okno nad mapou (gombík Burza pod mapou).
+- Mapa: každý typ firmy sa stavia ručne kliknutím na mape (výber typu → klik na miesto). Pravidlá: obchody/služby v meste, letisko pri meste ≥200k (nie v centre), prístavné/logistické pri meste, elektrárne/chémia/oceliarne mimo mesta, bane na nálezisku. Jasná hláška pri zlom mieste.
+- Zoom namiesto regiónov: ďaleko 1 ikonka + počet na krajinu (klik → zoznam mojich firiem s ikonkami), zblízka mestá s názvami a jednotlivé budovy; klik na mesto → čo tam vlastním. 53 vlastných pixel ikoniek (assets/icons).
+- Ikona skratky „Spustiť hru“ = assets/ui/icon.ico.
+- Testy: unit 407 OK (nové j9_*), uitest všetko 1.
+### PRE ONDREJA
+Firmy stavaj: Založiť → Postaviť na mape → vyber typ → klikni na mapu. Koliesko myši = priblíženie (mestá a budovy). Burza je gombík pod mapou. Holding (Burza → Korporácia) zlacní dodávky medzi tvojimi firmami v tej istej krajine.
+
+## Juan10 – Fáza B (2026-10-25)
+- Burza: 124 titulov v 11 sektoroch (Financie, Poľnohospodárstvo, Zbrojárstvo, Energetika, Technológie, Priemysel, Doprava, Médiá, Zdravotníctvo, Spotrebný tovar, Telekom), filter sektora, sektorové indexy a nálada sektora (zbrojárstvo rastie počas vojny). Pri >50 % gombík „Začleniť do korporácie“ (výber korporácie).
+- Burza: živý náhľad obchodu (cena/akcia, spolu, poplatok 0,25 %, podiel po, hotovosť po), Kúpiť sa vypne pri nedostatku peňazí (červená hláška), náhľad predaja.
+- Opravy: Moje firmy sa obnovia hneď po založení; bodka hlavného mesta sa neprekrýva s ikonkou krajiny.
+- #5 Infraštruktúra (gombík pod mapou): diaľnice medzi mestami, letiská (mestá 1,5M+), prístavy (pobrežné mestá), námorné trasy. Nové: Ropná rafinéria (ropa → palivá), Plynáreň (zemný plyn), komodity Palivá a Zemný plyn. Budovy v meste kupuješ len cez vlastnú Realitku v krajine (nájom 0,6 %/mes.).
+- #6 Investičné fondy: fond mesačne investuje 30 % hotovosti, vidno držby (titul, sektor, kusy, hodnota) a čo kúpil.
+- #7 Charita: dar v krajine → popularita (klesajúci výnos, max +5/mes./krajina) + vplyv.
+- #8 Osobné štatistiky (HOI4 lišta nad mapou + okno Impérium): majetok, hotovosť, zamestnanci, vplyv, popularita, bezpečnosť, firmy, krajiny, holdingy, budovy, štáty.
+- #9 Kúpa štátu: cena podľa HDP a stability (napr. SK ~14 mld. €), treba čisté imanie 1,5× ceny; potom zmena politického systému; tvoje firmy tam platia polovičnú daň.
+- HQ korporácie: umiestni sa na mapu do mesta, korporácia platí daň podľa krajiny HQ, presun kedykoľvek za poplatok (1 % hodnoty, min 50k). Finančná divízia: % zo ziskov do rozpočtu, report stratových firiem, upgrady ziskových, voliteľný predaj chronicky stratových, automatické obchodovanie (pod/nad kĺzavým priemerom), preberanie (>50 %) a začleňovanie do korporácie, limity (max na obchod, sektory), log aktivity.
+- Save: všetko vo voliteľnom GameState.ext.emp. Testy: unit 437+ OK (j10_*), uitest bez chýb.
+### PRE ONDREJA
+Pod mapou: Burza, Impérium, Infraštruktúra. V Impériu: kúp štát, daruj, nastav HQ (vyber krajinu na mape → Umiestniť HQ → klikni do mesta) a zapni finančnú divíziu.
+
+## Juan11 – Esc pauza + Portfólio (2026-10-25)
+- Esc v hre už nehádže do hlavného menu: otvorí malé okno v strede (hra pozastavená): Pokračovať, Uložiť hru (sloty 1–3; DEV hra sa neukladá – hláška), Načítať hru (sloty, potvrdenie), Nastavenia (mierka UI, celá obrazovka), Ukončiť hru (Do hlavného menu / Na plochu, s potvrdením a možnosťou najprv uložiť). Druhé Esc okno zavrie.
+- Okno „Impérium“ premenované na „Portfólio“ (titulok „Portfólio a majetok“).
+### PRE ONDREJA
+Esc = pauzové okno. Gombík pod mapou sa teraz volá Portfólio.
+
+## Juan12 – zbalitelný panel + hlboký zoom (2026-10-25)
+- Ovládací panel sa dá skryť gombíkom „◀ Skryť panel“ (pod mapou) alebo klávesou Tab; mapa sa roztiahne na celú šírku, späť „▶ Panel“.
+- Zoom až 300× s plynulým priblížením ku kurzoru (koliesko). Úrovne: krajiny (<3×) → regióny a mestá (3–30×) → detail mesta (30×+): obrys mesta podľa veľkosti, hlavné triedy, pri 100×+ ulice a bloky, budovy na úrovni ulíc. Ukazovateľ „Zoom N× – úroveň“ pod mapou.
+### PRE ONDREJA
+Tab = skryť/ukázať panel. Koliesko myši ťa dovedie až na ulice mesta.
+
+## Juan13 – právnici, závislosť krajín, Pôžičky (2026-10-25)
+- Banka má Právne oddelenie (detail banky): najímanie/prepúšťanie právnikov (6 000 €/mes. každý), školenie (úroveň 1–3, 100k). Každý mesiac žalujú nesplatené dlhy: šanca ~45 % + bonus korporácie (gombík „Začleniť banku do korporácie“, podľa veľkosti) + úroveň + počet právnikov + závislosť krajiny; pri Úplnej závislosti ~99 %. Výhra: 50–80 % vymožené, súdne trovy 10 %; prehra: časť odpísaná, občas reputácia −2. Existuje popri PMC (aj PMC vymôže viac pri vyššej závislosti). Pri úplnej závislosti len satirické správy.
+- Klik na krajinu: „Závislosť na tebe“ 0–100 (Žiadna/Nízka/Stredná/Vysoká/Úplná) z podielu na HDP, surovín/energie (zoznam komodít s množstvom a %), zamestnancov, úverov tvojich bánk, vplyvu; vlastnený štát = 100. Zvyšuje šancu lobingu a vymáhania.
+- Stará záložka Financie (Bid/Ask, nepopísané polia) odstránená. Nová záložka Pôžičky: úver z banky (so zálohou/bez), vysvetlivky, a Dlhopisy – suma, kupón %, splatnosť, náhľad (koľko dostaneš podľa trhového výnosu, kupón ročne, úroky spolu, limit) a zoznam vydaných dlhopisov. Oprava: vlastné vydané dlhopisy sa rátajú ako dlh, nie majetok.
+- Testy: unit 451 OK (j13_*), uitest bez chýb.
+### PRE ONDREJA
+Pôžičky = nová záložka (úvery + dlhopisy). Právnikov najmeš v detaile banky. Závislosť krajiny uvidíš po kliknutí na krajinu.
+
+## Juan14 – oprava klikania na krajinu (t812u)
+- `world_map.gd`: firma sa otvorí iba pri kliku do skutočného polomeru ikonky (`icon_px()*0.6+2`, škáluje so zoomom); predtým bol polomer 9×zoom (pri zoome 8 až 72 px), takže klik do krajiny chytil najbližšiu firmu.
+- Klik mimo ikonky → detail krajiny (Závislosť na tebe + zoznam firiem). Mestský panel len pri zoome ≥12 (detail mesta). Oddialene: agregovaná ikonka krajiny → detail krajiny.
+- Logika kliku v `_click_at()`; uitest `P47_UI_J14_CLICK country/firm/aggregate`.
+### PRE ONDREJA
+Klikni kamkoľvek do krajiny → otvorí sa okno „<Krajina> – závislosť a tvoje firmy“. Firmu otvoríš len kliknutím priamo na jej ikonku.
+
+## Juan15 – DEV ukladanie, Burzová firma, Odberatelia + klik na HQ (t813u…)
+- **DEV save:** odstránené zámky v `main.gd save_game()` a `pause_popup.gd` (_save_dlg, potvrdenie pri odchode). DEV hra sa ukladá do bežných slotov (formát v3), pridá `ext.dev=true`; načítanie obnoví `config.dev`. uitest `P47_UI_J15_DEVSAVE` (uloženie → načítanie → stále DEV).
+- **Burza / obchodník s cennými papiermi** (`stock_broker`, Financie, len v meste, vlastná ikonka): každý týždeň obchoduje akcie všetkých kótovaných firiem z vlastného kapitálu – kupuje pod 8-týždňovým priemerom, predáva nad ním; poplatky 1 500 €/týž. + 0,2 % obratu; občas chybný obchod (strata). V detaile firmy: P/L, poplatky, nerealizovaný zisk, držané akcie, log, prepínače (Obchodovať, Kapitál %, Riziko nízke/stredné/vysoké), vklad/výber 1 M€. Dividenda z nej len zo zisku, kapitál ostáva. Bez dvojitého obchodovania s finančnou divíziou HQ (ticker drží len jeden z nich). Ukladá sa vo firme (`firm.broker`).
+- **Klik na HQ** na mape → Portfólio zamerané na tú korporáciu (HQ má pri kliku prednosť).
+- **Odberatelia** v Portfóliu: kto kupuje od tvojej korporácie / všetkých firiem – krajina, odberateľ (domácnosti a štát, konkrétne AI/zahraničné firmy, ostatné), tovar, množstvo a € za mesiac, triedenie (€, množstvo, krajina, tovar), súčty podľa krajín. Kľúče `ext.emp.cust` / `cust_prev`.
+- Testy: unit `j15_*`, uitest `P47_UI_J15 hq_portfolio/customers/broker`.
+### PRE ONDREJA
+DEV hru už vieš uložiť (Esc → Uložiť hru). Novú firmu „Burza / obchodník“ postavíš cez Založiť → Financie; nastav jej riziko a kapitál v detaile. Klikni na svoju centrálu na mape → uvidíš, kto ti čo kupuje.
+
+## Juan16 – krajšia mapa, mesto zhora, téma, ikonky, menu (t818u)
+- **Mapa** (`world_map.gd`): gradient hĺbky vody, pobrežné plytčiny, terénna paleta krajín podľa zemepisnej šírky (trópy/púšte/mierne pásmo/tundra) + jemný politický odtieň, mäkšie hranice, oranžová žiara okolo krajín, kde máš firmy/štát, hlavné mestá ako svetlé bodky, mestá v regióne ako jemné zastavané plochy.
+- **Mesto zhora** (procedurálne, žiadne reálne satelitné snímky): bloky so strechami rôznych farieb + tiene, ulice, široké hlavné triedy, parky so stromami, rieka, okraj mesta sa rozpadá do polí a záhrad. 3 úrovne detailu podľa zoomu (zoom < 25 / < 100 / ≥ 100). Celé mesto je jeden predpočítaný mesh na mesto+úroveň (cache) → plynulé. Tvoje budovy: ikonka na tmavom podklade so žiarou a oranžovým rámom. Klikanie (JUAN14) bez zmeny.
+- **Téma** (`ui/theme_factorio.tres`): zaoblené rohy, tiene panelov, hover tlačidiel s akcentom, nadpisy s obrysom, jednotné medzery.
+- **Ikonky** (`assets/icons/*.png`, 32×32): jednotný štýl – zaoblený štvorec s prechodom, obrys, tieň, ostrejší glyf, farebný pásik podľa kategórie (malé/stredné/veľké/financie/médiá/šedá zóna).
+- **Hlavné menu**: pixelové tlačidlá s hover „▸“, postupné objavenie tlačidiel, dýchajúca pečať, pulz a tieň titulku.
+- Náhľady: `preview/j16_before_*` vs `preview/j16_after_*` (menu, world, region, city, city_close, panels, icons).
+### PRE ONDREJA
+Priblíž mapu až na mesto – uvidíš strechy, ulice, parky a rieku ako zo satelitu (vymyslené, nie Google). Krajiny, kde podnikáš, žiaria oranžovo.
+
+## Juan17 – mapový mód Odberatelia, opravené ikonky, náhľad HOI4 štýlu (t819u)
+- Tlačidlo **Odberatelia** vedľa Terén/suroviny: krajiny zafarbené podľa toho, koľko od teba (všetky tvoje firmy) kupujú za mesiac (posledný celý mesiac, inak tento doteraz). Plynulý gradient: tmavozelená = najviac → svetlozelená → žltá → oranžová → svetločervená → tmavočervená = nič. Logaritmická škála (aj malý odberateľ nie je červený). Legenda s 8 stupňami a € hodnotami. Tooltip krajiny: € za mesiac + top 3 tovary. Klikanie bez zmeny. `Empire.customers_by_iso()`, `world_map.cust_*`.
+- Ikonky bez symbolu prekreslené: `construction_co` (žltá – žeriav), `nuclear_plant` (žltá – symbol radiácie), `power_coal` (sivá – komín + blesk).
+- **Náhľad HOI4-štýlu mapy** (zatiaľ NEintegrovaný): offline render `/workspace/projekt47/mockup_hoi4/render.py` – procedurálny reliéf s tieňovaním (vlastné hrebene pohorí + šum), tmavomodré more s textúrou, ľad pri póloch, polopriehľadné „maľované" farby krajín s papierovou textúrou a tmavším vnútorným okrajom, veľké zakrivené názvy pozdĺž dlhej osi krajiny. Žiadne cudzie assety.
+- Testy: unit `j17_*`, `P47_UI_J17` (j17_shot).
+### PRE ONDREJA
+Klikni „Odberatelia" dole pri mape – uvidíš, kto ti koľko platí. Pozri náhľady j17_hoi4_mockup_far/close a povedz, či takýto štýl mapy chceš.
+
+## Juan18 – HOI mapa náhľad v2 + prepínač (len DEV)
+- Prepínač „Mapa: Pixelová / HOI" pri mape, viditeľný len v DEV hre; uložený v `user://settings.cfg` [map] style. V normálnej hre vždy pixelová. HOI vykresľovanie zatiaľ NEintegrované (čaká na schválenie). uitest `P47_UI_J18`.
+- Náhľad v2 (`mockup_hoi4/render2.py`): bez medzier medzi krajinami (pevnina z Natural Earth, medzery vyplnené najbližšou krajinou), reálny reliéf z Natural Earth SR_50M (public domain), skaly a sneh na horách, lesy so stromčekmi, púšte s dunami, tundra, rieky a jazerá (NE), mestá ako malé 3D zhluky budov podľa veľkosti.
+
+## Juan19 – železnice, ropovody/plynovody, logistika, plyn, zdroje vstupov, % mesta (2026-10-25, len BOX)
+- Nový autoload `Transport.gd`: stavba tratí „Železnica“ a „Ropovod / plynovod“ (klik A → klik B na mape, cena za km, kapacita, vyťaženie).
+- Firmy hráča: vstupy od vlastného výrobcu (rovnaká korporácia/krajina) = len doprava; inak trhová cena + doprava. Železnica/potrubie/logistické centrum (rádius X km, Y % dopravy zadarmo, rastie s úrovňou) dopravu zlacňujú. Detail firmy: sekcia „ZDROJE VSTUPOV“ (vlastné vs kúpené, doprava, ušetrené).
+- Nová firma „Vrt na zemný plyn“ (ložiská plynu, ikona). Plynová elektráreň a Plynáreň používajú zemný plyn.
+- Klik na mesto: % budov v meste, ktoré vlastní hráč.
+- Neumiestnené firmy sa kreslia blízko hlavného mesta (predtým rad stovky km na východ).
+- DEV prepínač mapy premenovaný na „Mapa: Pixelová / Atlas“. Náhľady Atlasu: 3D izometrické budovy firiem hráča so zvýraznením, diaľnice/cesty, železnice, ropovod, letiská, prístavy, elektrárne a vedenia VN do miest (preview/j19_atlas_*.png) – ČAKÁ NA SCHVÁLENIE, v hre zatiaľ nie je.
+- Testy: unit 477 OK / 0 FAIL, uitest bez chýb.
+### PRE ONDREJA
+Železnicu a potrubie postavíš tlačidlami pod mapou. Plyn: postav vrt na ložisku plynu, elektráreň potom platí len dopravu. Pozri náhľady Atlasu a povedz, či to tak chceš do hry.
+
+## Juan20 – Atlas mapa v hre (2026-10-25, len BOX, Ondrej schválil „Áno“)
+- Prepínač „Mapa: Pixelová / Atlas“ (len DEV; normálna hra vždy pixelová). Uloží sa do user://settings.cfg.
+- Zapečený terén: assets/atlas/world.jpg (2880×1440) + 69 dlaždíc 30°×30° (960×960, 32 px/stupeň), spolu 7,6 MB. Hra ich načíta lenivo raz a drží v pamäti (cache). Skript tools/bake_atlas.py (Natural Earth – public domain, vlastné procedúry; potrebuje dáta NE, v hre netreba).
+- Viac 3D: silnejší hillshade, vrhané tiene (JV), ambient occlusion v horách, stromy s tieňom; mestá ako vyššie izometrické budovy so stenami, oknami a tieňmi; pri CITY_ZOOM prechod do satelitného mesta (pôvodné JUAN16).
+- Firmy hráča: 3D modely podľa typu (baňa, vrt, elektráreň s komínom, jadrovka s chladiacimi vežami, rafinéria s nádržami, farma, logistika s kontajnermi, kancelárska veža, letisko, lodenica, solár) + oranžové zvýraznenie + ikona.
+- Pri priblížení: diaľnice, cesty, železnice, ropovody/plynovody (vrt → najbližšia rafinéria/plynáreň zo save), prístavy, letiská, elektrárne (aj AI firmy zo save) s vedeniami VN a stožiarmi do 2 najbližších miest; postavené trate hráča (JUAN19).
+- Názvy krajín miznú s priblížením, názvy miest sú odsadené od stredu a kreslia sa navrchu.
+- Mapové módy (Terén/Suroviny, Odberatelia) aj kliky (firma vs krajina) fungujú; overené v j20_shot.
+- Naklonená kamera (tilt) NEROBENÁ – rozbila by presné klikanie a výkon; 3D dojem robia izometrické modely + tiene.
+- Výkon (BOX, softvérové OpenGL cez Xvfb, 1024×600; na reálnej GPU bude rýchlejšie): Atlas región 52 ms kreslenie vs Pixel 48 ms, blízko 37 vs 42 ms, mesto 36–40 ms; načítanie dlaždíc spolu 0,24 s raz; výpočet infraštruktúry 0,15 s raz (potom cache).
+- Testy: unit 481 OK / 0 FAIL, uitest OK, j18_ui OK.
+### PRE ONDREJA
+V DEV hre klikni dole na „Mapa: Pixelová“ → prepne sa na Atlas. Priblíž kolieskom: najprv krajiny, potom cesty/železnice/elektrárne, potom mesto zblízka.
+
+## Juan21 – logá, názvy, AI/dátové centrá, premenovanie, výrobky, nehnuteľnosti (2026-10-26, len BOX)
+- Logo korporácie: Portfólio → „Upraviť logo“ (tvar, pozadie, farba symbolu/textu, 10 symbolov, iniciály max 4). Uložené v save (ext.brand.logos). Zobrazuje sa v Portfóliu, na burze (ikona holdingu), na mape na HQ (veľké) a ako malý odznak na firmách korporácie (Pixel aj Atlas).
+- Burza: národné tituly majú parodické názvy (Mikrosoftt, Macrohard, Teslo, Koka-Kola, Goldman Sax…), sektory ostávajú, žiadne skutočné logá; v burze poznámka o satire. Starý save sa premenuje automaticky raz. Nový sektor „AI a dáta“.
+- Nové firmy (Veľké podniky): Dátové centrum (elektrina + elektronika/čipy → výpočtový výkon), AI firma (výpočtový výkon → AI služby pre firmy a štát; +4 % výroby tvojim firmám v krajine za každú, max +12 %), Letecká továreň (lietadlá). Lodenica teraz vyrába lode. Ikony + 3D modely v Atlase.
+- Premenovanie: v detaile firmy pole s názvom + „Premenovať firmu“ / „Premenovať korporáciu“; v Portfóliu aj premenovanie korporácie. Názov sa prenesie aj na burzu.
+- Výrobky: autá, lode, lietadlá – detail firmy ukazuje, v ktorých krajinách skončili (60 % domáci trh, 40 % export podľa veľkých ekonomík); tlačidlo „Ukázať na mape“ kreslí oblúky s počtami.
+- Nehnuteľnosti: typy Kancelárie / Byty / Obchody / Sklady / Prázdna parcela (rôzna cena a nájom; parcela bez nájmu, dá sa zastavať). Staré budovy = kancelárie. Portfólio → NEHNUTEĽNOSTI: súčty, rozpis podľa typu, zoznam podľa mesta/krajiny/typu, filter typu, zoradenie; klik na mesto priblíži mapu.
+- Testy: unit 515 OK / 0 FAIL (34 nových), uitest OK, j20 kliky OK.
+### PRE ONDREJA
+Logo: Portfólio → Upraviť logo. Firmu premenuješ v jej detaile. Nehnuteľnosti kúpiš klikom na mesto (vyber typ), prehľad je v Portfóliu.
+
+## Juan22 – koľko % ľudí používa tvoje médiá a telekom (2026-10-26, len BOX)
+- Telekom, Noviny, Televízia, Sociálna sieť: v detaile firmy riadok „DOSAH: X % obyvateľov krajiny (počet zákazníkov/čitateľov/divákov/používateľov), podiel na trhu, strop, konkurenti“.
+- Výpočet (živý, nič sa neukladá – save v3 bez zmeny): strop typu (telekom 95 %, soc. sieť 80 %, TV 85 %, noviny 35 %) × príjmový faktor krajiny (0,35 + HDP/os./40 000, max 1). Dopyt = populácia × strop. Kapacita firmy = základ typu (2,5 mil./3 mil./1,5 mil./0,4 mil.) × úroveň (+80 % za úroveň) × obsadenosť zamestnancov. Domáci hráči držia kapacitu 60 % dopytu. Používatelia = dopyt × kapacita firmy / (kapacity všetkých firiem typu v krajine + domáci hráči), max kapacita firmy.
+- Portfólio: nová sekcia MÉDIÁ A TELEKOM (každá firma: % obyvateľov, počet, podiel). Detail krajiny aj mesta: riadok TVOJE MÉDIÁ A TELEKOM.
+### PRE ONDREJA
+Postav Telekom/Noviny/Televíziu/Sociálnu sieť – v detaile firmy a v Portfóliu uvidíš, koľko % ľudí v krajine ich používa. Vyššia úroveň a viac zamestnancov = viac ľudí, konkurencia = menej.
+
+## Juan23 – optimalizácia výkonu (2026-10-26, len BOX)
+Meranie: nový režim `-- perf23` (62 firiem hráča v 12 krajinách, 90 firiem spolu, železnica, ropovod, budovy). CPU časy v ms, pred → po:
+- simulácia 1 dňa: 160,9 → ~64 (Transport.discount 30 ms → 0,1 ms; settle 97 → 11)
+- kreslenie mapy Pixel svet/región/detail/mesto: 50,8/56,6/48,2/53,3 → 8,9/17,5/10,2/11,5
+- kreslenie mapy Atlas svet/región/detail/mesto: 33,3/58,8/50,2/48,0 → 6,6/18,7/13,2/12,9
+- hra na rýchlosti 3 (snímka, box bez GPU): priemer 600 → 53, najhoršia 784 → 90 ms (≈1,7 → 19 FPS v softvérovom renderi; na GPU viac)
+Čo sa zmenilo (hrateľnosť a výsledky simulácie rovnaké – stabilitný test aj nový test j23_phased_same dávajú identické čísla; save v3 bez zmeny):
+- Transport: cache polôh firiem, napojenia na trate, logistického hubu a zliav (platí v rámci dňa/snímky; predtým O(n²) a `load()` pri každom volaní).
+- Deň simulácie rozdelený na fázy s časovým rozpočtom na snímku (9 ms, pri rýchlosti 3 14 ms) – obraz sa neseká; pred uložením sa rozpracovaný deň dokončí.
+- UI lišta a prekreslenie mapy po dňoch max. 5× za sekundu (predtým každý snímok).
+- Mapa: krajiny ako predpočítané meshe + kreslenie cez transformáciu (bez prepočtu každého bodu), plytčiny tiež; cache ťažísk, rozmerov textov, hlavných miest, zoznamu firiem.
+- Atlas: priestorová mriežka (kreslí sa len viditeľné), cesty/železnice/diaľnice ako predpočítané polia jedným volaním, 3D mestá a elektrárne v jednom dávkovom volaní, rozloženie budov miest v cache, LOD (z diaľky len veľké mestá), dlaždice terénu sa prednačítajú na pozadí (vlákna) – žiadne seknutie pri posune.
+- Nastavenia → Grafika: automaticky / vysoká / nízka. Automaticky = nízka na integrovanej grafike (AMD Ryzen): bez animácií mapy, plytčín a stožiarov. Limit 60 FPS + VSync (notebook sa neprehrieva).
+- Pamäť: navyše rádovo stovky MB (dlaždice Atlasu ~250 MB, meshe a cache), ďaleko pod limitom 8 GB.
+### PRE ONDREJA
+Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulácie 2,5× rýchlejšie a rozkladá sa do viacerých snímok. Ak by sa ešte sekala, daj v Nastaveniach „Grafika: nízka“. Na rýchlosti 3 môže hra bežať o niečo menej dní za sekundu, ale plynulo.
+
+## Aktualizácia referenčnej sondy (2026-10-27)
+- Referenčný výstup zodpovedá aktuálnemu svetu so 165 krajinami a 28 komoditami; aktualizované sú aj počty aktívnych krajín a firiem. Shellový test ignoruje diagnostický riadok P47_MIN_DATA rovnako ako PowerShellový test.
+- Východisková sonda prešla, stabilita po 365 dňoch bola v pásme 100 %. Jednotkové testy: 527 OK, 1 FAIL (výkonnostný limit 80 ms/deň; namerané 153,7 ms/deň na tomto behu).
+- Testy bežali v oddelenej kópii s vlastnými používateľskými dátami. V kópii bolo vypnuté mazanie dočasných súborov; herná logika ani kontrolné asercie sa nemenili.
+
+## Čiastková optimalizácia trhového dňa (2026-10-27)
+- Výpočty dopytu a ponuky sa v bežiacej hre spracúvajú po dvojiciach komodít; aktualizácia kapacít a plánovanie/vyhodnotenie trás sú oddelené fázy. Poradie výpočtov zostalo zachované. Pri ukladaní sa rozpracovaný deň aj naďalej dokončí.
+- Pevný seed 47, 62 hráčových firiem: úplný uložený stav po 35 dňoch je identický pred úpravou aj po úprave, vrátane simulácie po fázach. Kontrola `j23_phased_same` prešla.
+- Meranie na tomto počítači: priemerný snímok pri rýchlostiach 1/2/3 pred úpravou 30,33/69,13/74,16 ms, po úprave 27,60/44,65/51,36 ms; najhoršie snímky pred 121,07/223,85/179,09 ms, po 112,51/141,18/129,90 ms. Testovací deň v náročnejšom scenári 199,26 → 187,14 ms; toto meranie zahŕňa všetky systémy a je citlivé na záťaž počítača.
+- Sonda a ročná stabilita prešli; jednotkové testy 527 OK, 1 FAIL: výkonový limit 80 ms/deň (127,7 ms v tomto behu). Súborové čistenie bolo pri skúške vypnuté iba v izolovanej testovacej kópii.
+- Optimalizácia ešte nie je dokončená: stále sú výrazné špičky vrátane vykresľovania mapy, aktualizácie panelu a ďalších fáz simulácie.
+
+## Prehľad firiem bez zbytočného prekresľovania (2026-10-27)
+- Počet firiem a bánk sa kontroluje najviac päťkrát za sekundu, nie pri každom snímku. Text a tlačidlá prehľadu sa obnovujú pri viditeľnom paneli, zmene dňa alebo výslovnej zmene; po otvorení panelu či záložky sa obsah obnoví aj v pauze. Signatúra tlačidiel zahŕňa aj názvy bánk.
+- Skúška používateľského rozhrania prešla: opakované obnovenie v tom istom dni využilo existujúci text, premenovanie a návrat na záložku sa zobrazili správne. V scenári so 62 firmami merané pravidelné obnovenie bez zmien približne 29 → 16 ms; výsledok závisí od zaťaženia počítača.
+- Sonda a ročná stabilita prešli, jednotkové testy 527 OK / 1 FAIL (výkonová hranica 80 ms/deň, meranie 130,7 ms/deň). Testovalo sa v izolovanej kópii s vypnutým odstraňovaním testovacích súborov.
+
+## Vyúčtovanie firiem a ochrana rozpracovaného dňa (2026-10-27)
+- Vyúčtovanie firiem sa spracúva v pôvodnom poradí po štyroch firmách; pri bežnej synchrónnej simulácii aj pri simulácii po fázach zostal celý stav po 35 dňoch so seedom 47 identický s pôvodným stavom.
+- Pred klikom alebo klávesovou akciou sa rozpracovaný deň dokončí, aby hráč nemenil firmu alebo trh uprostred vyúčtovania. Dokončenie môže dočasne spôsobiť čakanie pri ovládaní; toto zostáva na ďalšiu optimalizáciu. Pri pauze a priamom ukladaní sa deň dokončí; krok dňa dokončí prípadne rozpracovaný deň bez pridania druhého. Neplatný save už nezahodí rozpracovanú fázu.
+- Opravené obnovenie prehľadu po premenovaní cez detail firmy. Cielený GUI test overil premenovanie, návrat na záložku, pauzu, odmietnutie neplatného savu, klik, krok dňa a uloženie.
+- V skúšobnom meraní boli priemery snímky pri rýchlostiach 1/2/3 25,37/35,44/41,93 ms, najhoršie 110,02/128,43/131,31 ms. Pri rýchlosti 2 prebehlo 9 dní za šesť sekúnd oproti 12 v predchádzajúcom meraní; ide o kompromis medzi plynulosťou a priepustnosťou. Celý deň v náročnom scenári 201,05 ms; rozdiely ovplyvňuje aj záťaž počítača.
+- Sonda a ročná stabilita prešli; jednotkové testy 527 OK / 1 FAIL (výkonová hranica 80 ms/deň, meranie 125,7 ms/deň). Použitá izolovaná kópia bez čistenia testovacích súborov.
+
+## Kreslenie viditeľnej časti mapy (2026-10-27)
+- Hlavné mestá, značky firiem a žiara hraníc sa pri kreslení vynechávajú, ak aj s bezpečnou rezervou ležia mimo okna mapy. Súhrny značiek krajín sa používajú z rovnakého prekreslenia bez opakovaného výpočtu.
+- Osem porovnaných snímok Pixel/Atlas pri rôznych priblíženiach bolo pixelovo zhodných pred a po úprave. Na tomto počítači kreslenie Pixel región 90,56 → 71,39 ms, Pixel detail 48,67 → 33,42 ms, Pixel mesto 45,37 → 30,37 ms; Atlas región 66,84 → 66,03 ms. Merania sú citlivé na záťaž počítača a mapa stále prekračuje cieľ.
+- Sonda a ročná stabilita prešli; jednotkové testy 527 OK / 1 FAIL (výkonová hranica 80 ms/deň, namerané 129,5 ms/deň). Izolovaná kópia nepoužívala mazanie testovacích súborov.
+
+## Výpočet trhových cien (2026-10-27)
+- Pri úprave ceny sa používajú rovnaké vstavané číselné operácie bez opakovaných volaní pomocného autoloadu. Rýchla cesta už pre každú dvojicu krajina/tovar nevytvára prázdny slovník faktorov. Poradie výpočtov a kontrol ostáva rovnaké.
+- Úplný stav po 35 dňoch so seedom 47 zostal v simulácii po fázach bajtovo zhodný s pôvodným stavom. Krátky benchmark celého dňa na tomto počítači pred 131,7 ms, po 122,8 ms; meranie sa mení so záťažou.
+- Sonda a ročná stabilita prešli; jednotkové testy 527 OK / 1 FAIL (výkonová hranica 80 ms/deň, v tomto behu 120,0 ms/deň). Skúšky bežali v oddelenej kópii bez odstraňovania testovacích súborov.
+
+## Slovenské popisy podnikov (2026-10-27)
+- Všetkých 55 typov podnikov má stručný popis činnosti; materiálové vstupy a predávané výstupy sa dopĺňajú priamo z receptov. Obchodná kancelária, obchodník s akciami a banka majú vysvetlené aj špecifické zdroje príjmu. Popisy sú v nápovedách ponuky stavby a v detaile firmy či banky.
+- Do kategórií ponuky stavby doplnené letisko, ropná rafinéria a plynáreň, ktoré už v hre existovali, ale chýbali v zozname. Obmedzenia ich stavby zostávajú zachované.
+- GUI test overil všetkých 55 položiek ponuky, ich receptové vstupy a výstupy, detail firmy aj banky. Úplná sada v izolovanej kópii: 532 OK / 0 FAIL; sonda a ročná stabilita prešli. Výkonový test nameral 58,2 ms/deň v tomto behu; výsledok kolíše so záťažou počítača. Testovacie súbory sa nemažú.
+
+## Vodorovne posúvateľná lišta mapy (2026-10-27)
+- Spodná lišta tlačidiel má vodorovný posuvník a šípky doľava/doprava; pod kurzorom reaguje aj na koliesko a gesto touchpadu. Tlačidlá tak zostávajú dostupné aj pri užšom okne alebo otvorenom bočnom paneli.
+- GUI skúška v okne širokom 1000 px overila obe šípky, gesto, koliesko a dostupnosť tlačidla ropovodu na pravom konci. Úplná sada v izolovanej kópii: 532 OK / 0 FAIL, sonda aj ročná stabilita prešli; výkonový test 59,7 ms/deň v tomto behu. Testovacie súbory sa nemažú.
+
+## Atlas ako mapa celej hry (2026-10-27)
+- Atlas je jediný zobrazovaný štýl mapy v normálnej aj DEV hre; prepínač na pixelovú mapu je skrytý. Staré nastavenie pixelového štýlu sa ignoruje a uložený stav v3 sa nemení. Pôvodné súbory pixelovej mapy zostávajú zachované.
+- GUI skúška overila novú normálnu hru, načítanie stavu v3, DEV mód a vrstvy terénu aj odberateľov. Aktualizovaná staršia UI skúška potvrdila, že pixelový štýl nemožno opäť zapnúť. Výstupy výkonnostnej sondy mapy sa ukladajú v priečinku projektu.
+- Úplná sada v izolovanej kópii: 532 OK / 0 FAIL; sonda a ročná stabilita prešli. Výkonnostný test 57,0 ms/deň v tomto behu; skutočná plynulosť závisí od nastavení grafiky a záťaže.
+
+## Investičné fondy nakupujú budovy (2026-10-27)
+- Fond môže raz mesačne kúpiť budovu v niektorom meste svojej krajiny z vlastnej voľnej hotovosti. Predvolený cieľ je 30 % kapitálu v nehnuteľnostiach a hráč ho môže v detaile fondu nastaviť od 0 do 100 %. Jedna celá budova môže cieľ prekročiť najviac o polovicu svojej ceny; fond nepredáva budovy automaticky.
+- Budovy sa zobrazujú v portfóliu a započítajú do podielu mesta. Ich nájom ide do hotovosti fondu; ak fond prestane patriť hráčovi, budovy zostávajú hráčovi a nájom dostáva priamo. V detaile fondu sú vklady/výbery kapitálu, hodnota budov a nájom. Starý save bez nastavenia fondu dostane predvolený cieľ, verzia savu zostáva v3.
+- Zmena rovnováhy: dividenda fondu je obmedzená na zisk obdobia, aby sa nevyplatil vložený kapitál. Nákupy akcií rešpektujú prevádzkovú rezervu a peniaze potrebné na cieľ budov; nehnuteľnosť sa nekúpi bez dostatočnej hotovosti.
+- Podľa požiadavky na kratšie testovanie vykonaných 22 cielených kontrol (22 OK, 0 FAIL) a jedna grafická skúška cieľa, vkladu, výberu, vlastníctva mesta a portfólia (OK). Overené aj mesačné automatické nákupy, nájom bez dvojitého pripísania, starý stav a načítanie v3. Úplná 532-testová sada sa po tejto zmene nespúšťala.
+
+## 2026-10-27 – Prehľad výroby a predaja podnikov
+
+- Detail hráčovej firmy zobrazuje za posledných 30 dní skutočnú výrobu, predaj a tržby podľa produktu a krajiny trhu, ako aj dodávky vlastnej korporácii a nákupy vstupov s množstvom, jednotkou a cenou. Záznam vzniká pri existujúcom zúčtovaní výroby bez zmeny ekonomických výpočtov; staré uložené hry bez záznamov zostávajú kompatibilné s formátom v3.
+- Trh spája tovar súhrnne, preto nie je možné spoľahlivo označiť konkrétnu kupujúcu korporáciu ani konečnú krajinu po ďalšom vývoze. Zobrazená krajina je krajina trhu predaja; obmedzenie je uvedené aj v hre. Samostatné obchodné pulty bez výrobného receptu nemajú tento výrobný prehľad.
+- Overenie: pred zmenou 22 cielených kontrol fondu bez chyby; po zmene 10 cielených kontrol výroby, trhu a kompatibility uloženia bez chyby. Plná sada nebola spustená podľa aktuálneho limitu testovania.
+
+## 2026-10-27 – Čiastková oprava bánk
+
+- Pri krachu jednej banky sa už neodstraňuje výber inej aktívnej banky; výbery a odliv sporenia sú obmedzené stavom vkladov. Nastavenie spoločnej úrokovej sadzby vkladu a sporenia má teraz jeden ovládací prvok, ktorý zodpovedá existujúcemu modelu.
+- Overenie: pred úpravou 15 bankových kontrol úspešných, po úprave 17 vrátane kontroly aktívnej banky a súvahy. Poradca a štátne úvery zatiaľ nie sú dokončené.
+
+## 2026-10-27 – Rozšírenie prehľadu toku tovaru
+
+- Detail výrobného podniku doplnený o aktuálny sklad výrobkov. Obchodná firma zaznamenáva skutočne vykonaný presun komodity medzi trhmi, deň, množstvo, pôvodnú a cieľovú krajinu, celkové náklady vrátane cla a dopravy, tržbu a obchodnú maržu; prehľad sumarizuje posledných 30 dní. Údaje sa ukladajú do obmedzeného denníka firmy a staršie uloženia v3 fungujú s prázdnymi údajmi.
+- Obmedzenie: súčasná burza používa agregovanú ponuku a dopyt, nepáruje konkrétnych predávajúcich s konkrétnymi kupujúcimi. Nebolo preto možné zaznamenať skutočné meno dodávateľa, odberateľa, kategóriu domácnosti/štát ani konečnú destináciu výrobku po súhrnnom predaji bez zavedenia novej alokácie; tieto informácie sa nevymýšľajú. Burzový broker obchodujúci s akciami nemá evidenciu komoditných obchodov, ak ich v simulácii nevykonáva. Požadovaná úplná evidencia zostáva nedokončená.
+- Overenie: 15 cielených kontrol úspešných, vrátane v3, výpisu skladu a medzinárodnej trasy. Porovnanie pri jednom riadenom obchode so zapnutou a vypnutou evidenciou potvrdilo rovnakú hotovosť a zásoby; kompletné porovnanie celej simulácie a testy individuálneho párovania nie sú vykonateľné bez existujúceho párovania. Jeden prvý test zobrazenia zlyhal pre odlišný názov krajiny v dátach, následne opravený a úspešne opakovaný.
+
+## 2026-10-27 – Konkrétne vnútorné dodávky a porovnanie simulácie
+
+- Pri skutočne odovzdanom tovare medzi podnikmi jednej korporácie sa zaznamenajú konkrétny dodávateľ a príjemca, komodita, množstvo, krajina a deň. Dodávky sa zobrazujú v oboch podnikoch; nezaznamenávajú sa neuskutočnené rezervácie. Evidencia nemení výpočet dodávky ani jej cenu.
+- Overenie: 20 cielených kontrol úspešných vrátane dodávok baňa–elektráreň, obchodnej trasy, zobrazenia a starého save. Tri simulované dni z rovnakého východiskového uloženia so zapnutou a vypnutou evidenciou mali po odstránení samotného denníka zhodný kompletný uložený stav vrátane RNG.
+- Obmedzenie predchádzajúceho zápisu naďalej platí: hromadná burza nemá existujúci individuálny výsledok párovania. Skutočné protistrany a konečné destinácie z nej nemožno rekonštruovať; na ich získanie je potrebná zmena modelu alebo označené dopočítanie, ktoré je iba odhadom.
+
+## 2026-10-27 – Párovanie miestneho trhu (rozpracované)
+
+- Po dennom zúčtovaní sa podľa stabilného poradia priraďujú vykázané nákupy a predaje jednotlivých firiem na rovnakom trhu. Výsledné dvojice, množstvo, deň, ceny oboch strán a krajina sa ukladajú v obmedzenom 30-dňovom denníku; v detaile hráčovej firmy sa zobrazujú aj domácnosti a štát. Trh je sprostredkovateľ a priraďovanie prebieha po existujúcom súhrnnom výpočte, nie ako nové priame finančné zúčtovanie medzi dvoma firmami.
+- Limit: zásoby a medzinárodné prenosy sú stále agregované, takže tento krok nesleduje konečnú krajinu konkrétneho výrobku po vývoze, ani nemení fyzické účtovanie skladu na individuálne zásielky. Plná implementácia zvoleného modelu párovania a výkonu ešte nie je dokončená.
+- Overenie: 28 cielených kontrol úspešných, vrátane viacerých kupujúcich, domácností, súčtov, uchovávania 30 dní a trojdňového porovnania stavu so zapnutou a vypnutou evidenciou. Meranie headless 30 dní: 71,28 ms/deň bez evidencie a 63,16 ms/deň s evidenciou v tomto poradí; poradie a rozptyl zahrievania nedovoľujú tvrdiť, že evidencia hru zrýchlila. Výkon pri vykresľovaní ani zlepšenie využitia CPU neboli overené.
+
+## 2026-10-27 – Záznam medzinárodných presunov
+
+- Denník trhov zaznamenáva reálne presuny spoločných zásob medzi dvoma krajinami a obidve strany skutočného obchodu obchodnej firmy s trhom vrátane dňa, komodity, množstva a cien. Pôvod konkrétnej firmy v spoločnej trhovej zásobe sa týmto neurčuje.
+- Overenie: 31 cielených kontrol vrátane porovnania troch dní simulácie a samostatného merania presunu SK → CZ podľa skutočne zmenených zásob, úspešne. Časť detailnej evidencie individuálneho pôvodu cez spoločné zásoby a viacjadrová optimalizácia zostávajú rozpracované.
+
+## 2026-10-27 – Výpočet vzdialeností na pozadí
+
+- Vzdialenosti medzi krajinami sa predpočítajú z nemenných súradníc na najviac štyroch pracovných úlohách, pričom sa ponechá aspoň jedno logické jadro pre ostatné časti hry. Kým výpočet nie je hotový, doprava používa pôvodný výpočet; výsledky sa nemajú meniť. Atlas a limit 60 FPS zostávajú zachované.
+- Overenie: 33 cielených kontrol úspešných; 495 dvojíc vzdialeností presne zhodných s pôvodnou funkciou a trojdňový stav simulácie po vypnutí a zapnutí evidencie zhodný. Samostatné headless meranie 20 000 výpočtov: pôvodná funkcia 31,90 ms, cache 22,26 ms. Meranie 30 dní: 62,26 ms/deň bez evidencie a 65,31 ms/deň s evidenciou; kolísanie a rozdielny stav zahriatia neumožňujú garantovať zlepšenie FPS. Väčšina simulácie stále beží na hlavnom vlákne a dlhšie záťaže notebooku a jednotlivé snímky neboli týmto meraním overené.
+
+## 2026-10-27 – Uvoľnenie starých záznamov trhu
+
+- Trhový denník odstráni záznamy staršie ako 30 herných dní aj v deň bez nových obchodov. Overenie: 34 cielených kontrol úspešných vrátane prázdneho dňa, starého uloženia a porovnania simulácie.
+
+## 2026-10-27 – Overenie detailov podnikov
+
+- Doplnené cielené kontroly, že existujúci detail továrne/elektrárne skutočne obsahuje záznamy dodávok a že detail obchodnej firmy obsahuje obchodné presuny a maržu. Spolu 36 cielených kontrol úspešných; vizuálny test vykreslenia ani plynulosti tým nie je nahradený.
+
+## 2026-10-27 – Korporácia v prehľade obchodu
+
+- Pri konkrétnom obchodnom partnerovi sa pri dostupnej príslušnosti zobrazuje okrem firmy aj meno jej korporácie. Ide len o zobrazenie existujúcich údajov; neznámy spoločný trh zostáva označený ako trh.
+- Overenie: 37 cielených kontrol úspešných vrátane názvu korporácie, porovnania stavu simulácie a presnosti vzdialeností.
+
+## 2026-10-27 – Chýbajúce ikony komodít
+
+- Pridaných 28 nových 32 × 32 PNG ikon komodít v pixelovom štýle; existujúce ikony podnikov sa nemenili. Ponuka stavby a detail firmy zobrazujú ikony vstupov a výstupov s názvom a jednotkou pri podržaní myši. Načítané obrázky sa opakovane využívajú z cache; stav uloženia hry sa nemení.
+- Overenie pred zmenou: 37 cielených kontrol toku tovaru úspešných. Po zmene: 7 cielených kontrol pokrytia všetkých komodít, rozmerov, cache a výstupov UI úspešných; GUI kontrola 55 typov aj prítomnosti ikon v ponuke a detaile úspešná. GUI test pri ukončení vypísal varovanie o 66 zostávajúcich inštanciách ObjectDB; príčina ešte nebola overená. Ukážka ikon je v tests/goods_icon_preview.png.
+
+## 2026-10-27 – Aktualizácia ikon po výbere stavby
+
+- Pri výbere podniku z ponuky stavieb sa teraz spolu s vybraným druhom aktualizujú aj ikony komodít a nápoveda. Pred úpravou prešlo 7 cielených kontrol ikon a GUI skúška; po úprave prešla GUI skúška aj pri prepnutí banka → kaviareň cez ponuku stavieb. Pri ukončení testu pretrváva upozornenie na 66 inštancií ObjectDB.
+
+## 2026-10-27 – Sadzby existujúcich bankových úverov
+
+- Nové spotrebiteľské, hypotekárne a firemné úvery si ukladajú dohodnutú úrokovú sadzbu; zmena sadzby pre nové úvery už nemení výpočet úrokov a splátok už existujúcich zmlúv. Pri starých uloženiach v3 bez tejto položky sa pri najbližšej mesačnej uzávierke použije aktuálna sadzba banky a následne sa uloží. Súhrnné denné NPC úvery sú naďalej samostatný existujúci model s premenlivou sadzbou.
+- Rovnováha: zmena sadzby teraz ovplyvňuje postupne poskytované nové úvery, nie okamžite celé portfólio; budúce výnosy a riziko sa preto môžu vyvíjať pomalšie. Zobrazenie banky tento rozdiel vysvetľuje.
+- Pred zmenou úspešne prešlo 17 bankových kontrol; po zmene 22 cielených kontrol vrátane sadzieb starých a nových úverov, spotrebiteľského úveru a načítania save v3. Bankový poradca a štátne pôžičky zatiaľ nie sú dokončené.
+
+## 2026-10-27 – Riziko existujúcich spotrebiteľských úverov
+
+- Pri odhade nesplácania konkrétneho spotrebiteľského úveru sa zohľadní sadzba jeho zmluvy, nie nová sadzba banky. Ostatné faktory rizika sa naďalej vyvíjajú podľa stavu krajiny; hypotéky a firemné úvery majú zatiaľ svoje pôvodné súhrnné výpočty rizika.
+- Rovnováha: zmena ponukovej sadzby už okamžite nemení časť rizika existujúcich spotrebiteľských úverov. Pred zmenou prešlo 22 bankových kontrol, po zmene 23 cielených kontrol vrátane rôznych sadzieb a kompatibility save v3.
+
+## 2026-10-27 – Riziko hypoték a firemných úverov
+
+- Mesačné riziko nesplácania hypotéky a firemného úveru sa počíta podľa dohodnutej sadzby konkrétnej zmluvy. Zmena sadzby nových úverov tak okamžite nemení tento faktor pri starších zmluvách; nezamestnanosť a ďalšie podmienky krajiny sa naďalej zohľadňujú.
+- Zmena môže postupne upraviť straty banky pri rozdielnych historických sadzbách. Pred úpravou prešlo 23 cielených bankových kontrol, po úprave 25 vrátane oboch typov zmlúv a starého uloženia.
+
+## 2026-10-27 – Bankový poradca
+
+- Hráč môže v detaile banky najať alebo prepustiť poradcu za 3 500 € mesačne. Plat sa odpočítava z rezerv aj vlastného kapitálu a zobrazuje v mesačných nákladoch; pri nedostatku rezerv poradca odíde. Záznam posledných 24 rozhodnutí sa ukladá k banke a detail ukazuje posledných päť. Staré save v3 bez poradcu zostávajú platné.
+- Poradca mesačne nastavuje vkladové a úverové sadzby, prísnosť podľa nezamestnanosti a politického rizika a cieľ rezerv minimálne podľa zákona. Jeho pravidlá pri nových úveroch zohľadňujú rezervy, sporenie a konzervatívny kapitálový limit. Manuálna zmena hráčom má prednosť 30 dní, po ktorých poradca pokračuje. Schvaľovanie je zatiaľ na úrovni súhrnného modelu úverov, nie individuálnych žiadostí; štátne úvery a ich limity ešte nie sú implementované.
+- Rovnováha: poradca účtuje reálny plat a môže obmedziť objem nových úverov; vyššia prísnosť a rezervy môžu znížiť straty aj príjmy. Zisk nie je garantovaný. V jednom 120-dňovom scenári s počiatočným kapitálom 10,5 mil. € vzrástol kapitál na 10 523 821,05 €.
+- Overenie: pred úpravou 25 cielených bankových kontrol úspešných; po úprave 20 kontrol poradcu, 25 regresných bankových kontrol a GUI skúška najatia a prepustenia úspešné. Pri skončení GUI skúšky pretrváva predchádzajúce upozornenie na 66 inštancií ObjectDB.
+
+## 2026-10-27 – Štátne úvery hráčovej banky
+
+- Banka môže poskytnúť vybranému štátu úver s hráčom zadanou sumou, ročnou sadzbou a splatnosťou 1–120 mesiacov. Minimálna sadzba vychádza z dlhu/HDP, stability a politického rizika. Poskytnutie rešpektuje rezervy a kapitál banky; pohľadávka je v jej bilancii a kapitálovom limite.
+- Štát mesačne spláca istinu a úroky; príslušne sa mení jeho dlh/HDP a mesačný rozpočet. Zriedkavý default závisí od rizika krajiny, banka získa späť polovicu nesplatenej istiny a druhú polovicu odpíše ako stratu. Stav zmlúv sa ukladá v save v3; starý save bez zmlúv používa prázdny zoznam.
+- Poradcovi možno povoliť pôžičky zvolenej krajine s hráčom nastaveným maximálnym rizikom, podielom kapitálu a splatnosťou. Úvery a rozhodnutia sú v detaile banky. Štáty sú zatiaľ zastúpené agregovaným modelom dlhu a rozpočtu; neprebieha individuálne vyjednávanie ani explicitná simulácia štátnych príjmov na úhradu každej splátky.
+- Rovnováha: štátne úvery prinášajú úroky, obsadzujú rezervy a kapitál, vytvárajú štátny dlh a môžu spôsobiť 50 % stratu nesplatenej istiny pri defaulte. Zisk nie je garantovaný.
+- Overenie: pred úpravou úspešných 25 bankových a 20 kontrol poradcu. Po úprave 18 cielených kontrol štátnych úverov a 25 regresných bankových kontrol, všetky úspešné; GUI skúška poskytnutia úveru a uloženia limitov poradcu prešla. Pred úpravou kapitálovej primeranosti prešlo aj 20 regresných kontrol poradcu. GUI test pri ukončení stále hlási 66 inštancií ObjectDB.
+
+## 2026-10-27 – Kalendárna uzávierka štátnych úverov
+
+- Rozšírené cielené overenie mesačnej uzávierky: pri prechode mesiaca sa skutočne spláca štátny úver, úrok vstupuje do grafu banky a povolený poradca poskytne ďalší úver v medziach nastavení. Všetkých 21 kontrol štátnych úverov prešlo.
+
+## 2026-10-27 – Úplnejšia kapitálová primeranosť banky
+
+- Do rizikovo vážených aktív sa započítavajú aj súhrnné úvery NPC a explicitné úvery, nielen spotrebiteľské, hypotéky, firemné a štátne úvery. Tým sa neprehliada časť existujúceho úverového portfólia; poradca a štátne úvery rovnakú položku nezapočítavajú dvakrát.
+- Rovnováha: banka s veľkým existujúcim úverovým portfóliom môže dosiahnuť kapitálový limit skôr, čo obmedzí ďalšie úvery. Pred zmenou prešlo 25 bankových kontrol; po zmene 26 bankových a 21 kontrol štátnych úverov, všetky úspešné.
+
+## 2026-10-27 – Kapitálový limit aj bez poradcu
+
+- Kapitálový limit pri nových denných, spotrebiteľských, hypotekárnych a firemných úveroch platí aj pre banku bez najatého poradcu. Výpočet započítava existujúce rizikovo vážené portfólio a nedovoľuje poskytnutím nových úverov prekročiť limit.
+- Rovnováha: slabšie kapitalizované banky môžu poskytovať menej nových úverov a ich výnosy môžu byť nižšie; obmedzenie znižuje ďalšie prehlbovanie rizika. Pred úpravou prešlo 26 cielených bankových kontrol; po úprave 27 bankových a 20 kontrol poradcu vrátane 120-dňového scenára, všetky úspešné.
+
+## 2026-10-27 – Audit počtu zamestnancov
+
+- V docs/EMPLOYEE_AUDIT_20261027.md je tabuľka aktuálnych pracovných jednotiek a predbežných počtov pre všetkých 55 druhov podnikov, plus návrh pre bankovú pobočku. Ide o prípravu, ktorá nemení hru; počty ešte neboli zavedené ani vyvážené.
+- Zistenie: súčasná hodnota labor naraz ovplyvňuje počet zamestnancov, mzdy aj obsadenosť. Jednoduché navýšenie by násobne zmenilo náklady a následne výrobu a trhové ceny. Migrácia starých save musí zachovať percento obsadenosti a nesmie sa vykonať opakovane. Nevykonávali sa herné testy, keďže sa menila iba dokumentácia.
+
+## 2026-10-27 – Oprava prehľadu zamestnancov
+
+- Celkový počet zamestnancov aj podiel pracovných miest v krajine teraz pri novej firme bez výslovne uloženej hodnoty používajú rovnaký predvolený počet ako detail firmy a simulácia. Výslovne uložená nula alebo čiastočná obsadenosť zostáva zachovaná.
+- Rovnováha: podiel zamestnancov vo výpočte závislosti krajiny sa môže po založení firmy zobraziť vyšší, pretože predtým až do prvej mesačnej uzávierky počítal nulu. Samotná výroba, mzdy a recepty sa touto opravou nemenia; realistické počty z auditu ešte nie sú zavedené.
+- Pred zmenou 22 cielených kontrol fondu úspešných; po zmene 6 cielených kontrol predvoleného, nulového a čiastočného stavu, podielu v krajine a save v3 úspešných.
+
+## 2026-10-27 – Štátne pôžičky v závislosti krajiny
+
+- Výpočet závislosti krajiny zohľadňuje aj zostávajúcu istinu úverov, ktoré hráčove banky poskytli priamo tomuto štátu. Úver sa priradí krajine dlžníka aj vtedy, ak je banka založená inde; nezapočítava sa druhej krajine.
+- Rovnováha: štátna pôžička môže zvýšiť existujúci index závislosti príjemcu, ktorý má v hre ďalšie následky. Samostatný požadovaný panel politickej moci a lobingu tým ešte nie je dokončený.
+- Pred zmenou prešlo 6 cielených kontrol zamestnanosti; po zmene 8 kontrol, vrátane pôžičky z českej banky Slovensku a správneho priradenia krajinám.
+
+## 2026-10-27 – Cache konkurencie pri vyúčtovaní
+
+- Pri vyúčtovaní sa počty otvorených firiem podľa krajiny a odvetvia pripravia raz za deň namiesto opakovaného prechádzania všetkých firiem pri každom lokálnom predaji. Mimo vyúčtovania sa zachová pôvodný výpočet. Zatvorené firmy a prevádzky v inej krajine sú zohľadnené rovnako ako predtým.
+- Pred úpravou prešli cielené kontroly toku tovaru vrátane porovnania simulácie; po úprave prešli 4 cielené kontroly vrátane porovnania celého uloženého stavu po troch dňoch so zapnutou a vypnutou cache, so zhodným výsledkom. Pri 2 000 volaniach v scenári s 24 firmami: pôvodný výpočet 69,29 ms, cache 4,50 ms. Nie je to meranie celej snímky ani záruka 60 FPS.
+
+## 2026-10-27 – Meranie celého dňa po cache konkurencie
+
+- Opakované porovnanie troch dní pri rovnakom štartovom stave a 24 hráčových firmách: pôvodný výpočet 97,73 ms/deň, s cache 97,64 ms/deň. Ide o krátke headless meranie v pevnom poradí, bez kontroly kolísania záťaže; preukazuje zhodný výsledný stav, nie spoľahlivý celkový nárast FPS. Samotných 2 000 výpočtov konkurencie trvalo 65,15 → 4,86 ms. Štyri cielené kontroly prešli.
+
+## 2026-10-27 – Rozdelenie medzinárodných trás po komoditách
+
+- V priebežnej simulácii sa trasy spracúvajú v pôvodnom poradí po troch komoditách; synchronická simulácia zachováva pôvodné celé volanie. Dokončenie rozpracovaného dňa pred uložením a vstupom hráča ostáva zachované.
+- Päť cielených kontrol prešlo: rozdelenie fázy, zhodný celý stav po troch dňoch so seedom 47 vrátane denníka, a dokončenie rozpracovaného dňa. V headless profile 72 hráčových firiem, 10 dní, trasa pred úpravou priemerne 9,85 ms a maximum 16,26 ms na jedno volanie; po rozdelení priemer 0,65 ms a maximum 1,43 ms na čiastkové volanie. Ostatné fázy sa v týchto meraniach menili so záťažou; pred úpravou bol zaznamenaný aj jeden 23,17 ms výkyv inej fázy. Toto nie je meranie kompletnej grafickej snímky ani dôkaz stabilných 60 FPS.
+
+## 2026-10-27 – Rozdelenie plánovania podnikov
+
+- Denné plánovanie a vystavovanie ponúk sa v priebežnej simulácii vykonáva v pôvodnom poradí po štyroch firmách. Príprava vnútropodnikových dodávok zostáva pred plánovaním; synchronická simulácia prejde všetky firmy v jednom volaní.
+- Sedem cielených kontrol prešlo: porovnanie úplného stavu po troch dňoch so seedom 47, rozdelenie oboch fáz a dokončenie rozpracovaného dňa pri plánovaní aj pri obchodných trasách. V headless profile 72 firiem a 10 dní malo samotné plánovanie pred úpravou priemerne 4,65 ms a maximum 5,70 ms na volanie; po úprave priemerne 0,19 ms a maximum 0,38 ms na čiastkové volanie. Príprava vnútorných dodávok sa teraz meria v predchádzajúcej fáze, ktorej maximum bolo 12,07 ms. Ide o čas fáz, nie kompletné snímky; stabilných 60 FPS stále nie je preukázaných.
+
+## 2026-10-27 – Rozdelenie aktualizácie trhových kapacít
+
+- Aktualizácia referenčnej kapacity trhu prebieha v pôvodnom poradí po 12 krajinách. V synchronických volaniach zostáva dostupné spracovanie všetkých krajín naraz.
+- Osem cielených kontrol prešlo vrátane porovnania trhových kníh pri celom a delenom výpočte a celého stavu po troch dňoch. V headless profile so 72 firmami a 10 dňami mala táto fáza pred zmenou priemer 5,76 ms a maximum 10,01 ms na volanie; po rozdelení priemer 0,42 ms a maximum 0,95 ms na čiastkové volanie. Profil nemeria celú grafickú snímku ani dlhodobejšie zaťaženie notebooku.
+
+## 2026-10-27 – Krok 1: Realistické počty zamestnancov
+- Každý recept má nové pole `staff` = počet ľudí pri úrovni 1 (napr. kaviareň 8, automobilka 1 000, jadrová elektráreň 700, rafinéria 650, nákladný prístav 1 200, pobočka banky 25). Tabuľka starých a nových hodnôt je v docs/EMPLOYEE_COUNTS_20261027.md.
+- `labor` ostáva ekonomická pracovná jednotka, takže mzdové náklady, výroba, recepty a save v3 sa nemenia; zachová sa aj obsadenosť (ľudia = cieľ × workers / target_workers). Detail firmy, Portfólio, horný pruh a závislosť krajiny ukazujú skutočných ľudí. Zobrazená mzda je celkový mzdový náklad; mzda na osobu je v hernej mierke nižšia ako v realite (plné prepočítanie by vyžadovalo zmeniť celý trhový model).
+- Aktualizovaný test tests/employment_stats.gd na nové počty (8 kontrol OK).
+
+## 2026-10-27 – Krok 2: Moc a vplyv, lobing, zákony
+- Nový autoload scripts/autoload/Society.gd. Moc v krajine 0–100 %: HDP tvojich firiem (25 b.), pracovné miesta (20), dosah médií (15), štátne úvery tvojich bánk (15), lobing a vzťahy (25, existujúci vplyv z PoliticsSystem). Vlastnený štát = 100 %. Prepočet raz mesačne a pri otvorení panelu.
+- Lobing konkrétnych politikov (líder vlády, ministri, šéfovia frakcií, poslanci podľa strán krajiny): peniaze zvyšujú lojalitu, vplyv rastie postupne každý mesiac, lojalita vyprcháva. Mesačné riziko škandálu podľa výdavkov a typu vlády: pokuta, vplyv −10, reputácia −5.
+- Klik na krajinu: panel „MOC A VPLYV“ (percento, rozpad zdrojov, lobovaní politici, odomknuté akcie). Nad 50 % = kontrola: zákony daňová úľava (×0,75 pre tvoje firmy v krajine), dotácie (1,5 % tržieb mesačne), rýchle povolenia (stavba −15 %), vládne zákazky (mesačná platba podľa HDP), voľné nasadenie PMC.
+
+## 2026-10-27 – Krok 3: PMC, gangy a kriminalita
+- PMC: vojaci = zamestnanci (150 na úrovni 1), 1 jednotka = 10 vojakov, výcvik a vybavenie 0–100 (platené vylepšenie, mesačne mierne klesá), mesačné náklady nasadenia. Nasadenie do mesta len pri kontrole nad 50 % alebo s vládnou bezpečnostnou zmluvou (cena za jednotku, trvanie, max. jednotiek; vláda prijme do limitu podľa kriminality a vplyvu, inak dá protinávrh). Zmluva mesačne platí PMC.
+- Každé mesto má kriminalitu 0–100 (nezamestnanosť, chudoba, slabé inštitúcie, veľkosť mesta, vzdelanie) a 1–3 procedurálne gangy (meno, sila, územie). Mesačné udalosti pre tvoje firmy: krádež, vydieranie, sabotáž, útok na zamestnancov (škoda, nižšia spokojnosť, odchod ľudí). PMC znižuje šancu udalostí, silu a územie gangov. Bez boja, len abstraktne. Orgány/otroctvo len ako zriedkavý satirický text v denníku.
+
+## 2026-10-27 – Krok 4: Spokojnosť zamestnancov
+- Každá tvoja firma má spokojnosť 0–100 (mesačne): základ, pravá ruka, kriminalita mesta (znižuje PMC ochrana), nemocnica/klinika +8, poisťovňa +6, PMC +5, všetky tri +6 navyše, škola +4, akadémia +5, nedávny útok −10. Výhody majú skutočné, ale zľavnené náklady (3 / 2 / 1,5 % mzdového nákladu). Výkon ×0,8–1,2; pod 50 rastie fluktuácia (bez pravej ruky odchádzajú ľudia, s pravou rukou platíš nábor).
+- Zobrazenie v detaile firmy (hodnota, príčiny, náklady benefitov) a v paneli mesta (priemer, výhody). Nová nemocnica (Súkromná nemocnica, 600 ľudí).
+
+## 2026-10-27 – Krok 5: Nákladné prístavy
+- Nový typ Nákladný prístav (9 mil. €, 1 200 ľudí) len pri prímorskom alebo riečnom meste (data/port_cities.json: pobrežie odvodené z polygónov mapy + ručne doplnené prístavy, napr. Bratislava, Hamburg, Rotterdam; odhad). Kapacita 20 000 TEU/mes. (+25 % pri napojení na železnicu/potrubie), poplatky z tovaru tvojho aj konkurencie, tvoje firmy v krajine majú o 20 % lacnejšiu dopravu tovaru, infraštruktúra krajiny +1 % za úroveň (max +3 %). Ikona na Atlas mape a v Portfóliu.
+
+## 2026-10-27 – Krok 6: Súkromné školy
+- Len súkromné: základná škola, stredná škola, univerzita, firemná akadémia. Školné nastavuje majiteľ (vyššie = menej žiakov), štátna dotácia 5–10 % nákladov na žiaka podľa tvojho vplyvu. Učitelia/personál 45 / 70 / 650 / 30, kapacita 400 / 600 / 6 000 / 300.
+- Vzdelanie mesta 0–100 pomaly rastie podľa vážených žiakov; zvyšuje produktivitu firiem v meste, od 55 odomkne kvalifikované miesta (+5 % pre tech/energetiku) a znižuje kriminalitu. Akadémia +4 % produktivity a +5 spokojnosti v meste, univerzita +3 % (max +9 %) pre tech, AI a energetické firmy v krajine, škola +4 spokojnosti. Vzdelanie v paneli mesta, školy na Atlas mape a v Portfóliu.
+- Služby (nemocnica, prístav, školy) nepoužívajú burzu: denné mzdy, nájom, údržba a elektrina; príjem sa prepočíta raz za mesiac. AI štátne firmy a rivali ich nezakladajú (správanie NPC sa nemení).
+
+## 2026-10-27 – Krok 7: Ikony nových podnikov
+- Pridané 32×32 ikony cargo_port, hospital, school_primary, school_high, university, corp_academy v rovnakom štýle (rámik a tieň z port.png, prechod farby, biely glyf, farebný pruh). Generátor scripts/generate_service_icons.py neprepisuje existujúce súbory. Pôvodné ikony (aj PMC) sa nemenili.
+
+## 2026-10-27 – Overenie
+- Podľa limitu najviac 50 testov spolu: 29 cielených kontrol tests/society.gd (29 OK), 8 kontrol zamestnanosti (8 OK), 1 GUI skúška panelov (detail firmy, škola, PMC, Moc a vplyv, mesto, Portfólio, ikony – OK), stabilita 1/30/365 dní (OK, NaN 0, inband 1,000), 1 porovnanie rovnováhy so starou verziou. Úplná sada a sonda sa nespúšťali (golden sonda je zastaraná).
+- Rovnováha (SK, seed 47, 5 firiem, 120 dní): hotovosť hráča 29 824 158 → 29 816 731 €, tržby firiem −1,3 % (spokojnosť/kriminalita), NPC firmy a ceny zhodné, 44,8 → 43,8 ms/deň.
+
+## 2026-10-27 – AI stavia služobné podniky samo (JUAN-P47)
+- Nové: `Society.ai_monthly()` (raz mesačne v `Society.monthly`, žiadna práca za snímku). AI konkurenti (napr. Danubia Holding) aj štátne firmy stavajú nemocnice, prístavy, súkromné školy, univerzity, firemné akadémie, poisťovne a PMC **nezávisle od hráča**.
+- Pravidlá: prístav len v meste z `port_cities.json` (max 1 + HDP/400 mld €, najviac 3 na krajinu, 1 na mesto); univerzita len v meste ≥ 500 tis. obyv. (1 na mesto); nemocnica v meste ≥ 200 tis. (1 + pop/1 mil. na mesto, ráta aj kliniky); ZŠ/SŠ v meste ≥ 100 tis. (1 + pop/300 tis. na typ); akadémia len keď má konkurent ≥ 3 firmy v krajine; poisťovňa 1 a PMC 1 na konkurenta a krajinu (PMC len pri kriminalite ≥ 40).
+- Rozpočet: konkurent stavia len z vlastnej hotovosti s rezervou 30 % (cena × 1,3), max 1 podnik mesačne (šanca 35 % × agresivita), max 5 služobných podnikov spolu. Štát: len nemocnica a prístav (školy sú iba súkromné), 18 krajín ako pri štátnych AI firmách, šanca 12 %/mesiac, max 2 na krajinu, cena ≤ 0,05 % HDP.
+- Odstránené: konkurent už nekopíruje hráčov služobný podnik cez `RivalSystem.found_for` (tam sa ignoruje), takže neexistuje podmienka „až keď to postaví hráč“.
+- Školy konkurencie zvyšujú vzdelanie mesta (`city_services` ráta aj ich študentov); výhody spokojnosti (nemocnica/poisťovňa/PMC) dáva naďalej len vlastná firma.
+- Save v3: nové firmy sú bežné záznamy v `firms` (+ voliteľné kľúče `city`, `ai_svc`, `state_svc`); staré savy fungujú.
+- Test (seed 47, SK, konkurenti zapnutí, 365 dní): AI postavila 21 služobných podnikov – štát 11 nemocníc + 6 prístavov, konkurenti 3 SŠ + 1 akadémia. Konkurenti majú malú hotovosť (3 mil. € a ich pokladnica nerastie), preto zatiaľ nestavajú drahé nemocnice/univerzity.
+- Výkon: rozhodovanie AI spolu ~7 ms za celý rok; beh 365 dní 43–44 ms/deň s AI aj bez nej (rozdiel v šume merania).
+- Kontroly: 9 cielených (prístavy len v prístavných mestách, univerzita len vo veľkom meste, štát bez škôl, limity/rozpočet, niečo postavené, save/load) – všetky OK.
+
+## 2026-10-27 – príjem AI konkurentov (JUAN-P47)
+- `RivalSystem.profit_share()` (mesačne v `RivalSystem.monthly`): 50 % čistého zisku každej firmy konkurenta za posledných 30 dní sa presunie z pokladnice firmy do rozpočtu konkurenta; pri strate rozpočet doplní firmu 50 % straty (rozpočet nikdy pod 0). Navyše holding stiahne polovicu hotovosti firmy nad prevádzkovou rezervou (25 % ceny podniku, min. 90 tis. €). Peniaze sa nevytvárajú, len presúvajú.
+- Nové voliteľné polia konkurenta `income_month`, `income_total` (predvolene 0) – save v3 kompatibilný, staré savy bez nich fungujú.
+- `Society._rival_build`: max 2 podniky rovnakého typu na konkurenta; po 2 lacných službách (školy, akadémia, poisťovňa, PMC) už konkurent šetrí len na nemocnicu/univerzitu/prístav. Ostatné limity bez zmeny (5 služieb, 1 mesačne, rezerva 30 %, MAX_FIRMS 6).
+- Beh seed 47, SK, 1095 dní: príjem konkurentov za 1. rok len 0–0,24 mil. € (hotovosť idú najprv do bežných firiem), za 3 roky 2,6–6,9 mil. €. Danubia Holding skončila so 7,42 mil. € (nemocnica potrebuje 7,8 mil. € s rezervou), takže drahú nemocnicu/univerzitu by postavila až zhruba v 4. roku. Univerzitu na Slovensku nepostaví, lebo Bratislava má < 500 tis. obyvateľov.
+- Výkon: 44 ms/deň ako predtým, rozhodovanie AI ~23 ms za 3 roky.
+- Kontroly: 10 (rozpočet nikdy pod 0 ×2, limity ×2, starý save bez nových polí, save/load) – všetky OK.
+
+## 2026-10-27 – presúvateľné a zväčšiteľné okná (JUAN-P47)
+- Nový spoločný pomocník `scripts/ui/window_drag.gd` (uzol `WindowDrag` v main): okno sa presúva ťahaním za titulný pruh (horných 40 px), zväčšuje/zmenšuje ťahaním za okraje alebo roh (úchyt vpravo dole), má min. veľkosť, drží sa na obrazovke (aj po zmene veľkosti okna hry), kliknuté okno ide navrch. Žiadna práca za snímku – len udalosti myši.
+- Zaregistrované okná: detail firmy/banky, mesto, krajina (závislosť + MOC A VPLYV), Burza, Portfólio, DEV panel. Infraštruktúra nie je okno (prepínač vrstvy mapy), bočný panel je ukotvený.
+- Detail firmy, mesto a krajina majú teraz pevný titulok a posuvný obsah (ScrollContainer), takže sa dajú zmenšiť.
+- Poloha/veľkosť sa pamätá podľa typu okna počas relácie a v nastaveniach `user://ui_windows.cfg` – nie v save v3.
+- Oprava: spodný riadok v okne krajiny (politik + suma + Lobovať, aj riadok zmluvy PMC) je HFlowContainer a pri úzkom okne sa zalomí; zoznam politikov/PMC orezáva dlhý text, tlačidlá firiem tiež.
+- Test (xvfb, 1280×720): 10 kontrol – riadok sa zmestí, aj v úzkom okne, presun, zmena veľkosti rohom, min. veľkosť, orezanie na obrazovku, zápis/čítanie nastavení, všetky okná majú posuv, screenshot `preview/p47_windows_country.png` – OK; „pamäť po zatvorení/otvorení“ zlyhala (uvoľnenie tlačidla mimo okna sa nezapísalo). Opravené (poloha sa ukladá už počas ťahania, ukladá sa aj pri zatvorení), ale znovu netestované – limit 10 testov vyčerpaný.

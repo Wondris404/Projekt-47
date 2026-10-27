@@ -1,0 +1,99 @@
+extends RefCounted
+
+# Prva veta opisuje cinnost; suroviny a vystupy sa beru priamo z hernych receptov.
+const SUMMARY = {
+	"cafe": "Prevádzkuje kaviareň a obsluhuje hostí.",
+	"wheat_farm": "Pestuje pšenicu na farme.",
+	"coffee_farm": "Pestuje kávu na plantáži.",
+	"livestock": "Chová hospodárske zvieratá na mäso.",
+	"oil_well": "Ťaží ropu z ložiska.",
+	"gas_well": "Ťaží zemný plyn z ložiska.",
+	"coal_mine": "Ťaží uhlie z ložiska.",
+	"iron_mine": "Ťaží železnú rudu z ložiska.",
+	"copper_mine": "Ťaží meď z ložiska.",
+	"power_coal": "Spaľuje uhlie v elektrárni.",
+	"steel_mill": "Spracúva rudu a uhlie na oceľ.",
+	"chem_plant": "Spracúva ropu na chemikálie.",
+	"pharma_lab": "Vyrába liečivá v laboratóriu.",
+	"textile_mill": "Vyrába textil.",
+	"electronics_plant": "Vyrába elektronické zariadenia.",
+	"auto_plant": "Vyrába automobily.",
+	"arms_plant": "Vyrába zbrane a muníciu.",
+	"construction_co": "Realizuje stavebné zákazky.",
+	"logistics_hub": "Poskytuje logistiku a prepravu; môže zarábať aj na preprave cez krajinu.",
+	"finance_office": "Poskytuje finančné služby a poradenstvo.",
+	"pmc_unit": "Poskytuje súkromné bezpečnostné služby.",
+	"trade_desk": "Obchoduje s komoditami medzi krajinami.",
+	"restaurant": "Prevádzkuje reštauráciu a pripravuje jedlá.",
+	"bakery": "Pečie chlieb a pečivo.",
+	"gym": "Prevádzkuje fitnescentrum.",
+	"auto_service": "Opravuje a servisuje autá.",
+	"eshop": "Prevádzkuje internetový obchod.",
+	"real_estate": "Sprostredkúva obchod s nehnuteľnosťami.",
+	"hotel": "Poskytuje ubytovanie a služby hosťom.",
+	"supermarket": "Predáva potraviny a ďalší tovar zákazníkom.",
+	"warehouse": "Poskytuje skladovanie a logistiku.",
+	"software": "Vyvíja a predáva softvérové služby.",
+	"ad_agency": "Pripravuje reklamné kampane.",
+	"clinic": "Poskytuje súkromné zdravotné služby.",
+	"chip_fab": "Vyrába polovodičové čipy.",
+	"airline": "Zabezpečuje leteckú dopravu.",
+	"telecom": "Prevádzkuje telekomunikačnú sieť a služby.",
+	"solar_plant": "Vyrába elektrinu v solárnej elektrárni.",
+	"gas_plant": "Vyrába elektrinu zo zemného plynu.",
+	"nuclear_plant": "Prevádzkuje jadrovú elektráreň.",
+	"shipyard": "Stavia lode.",
+	"insurance": "Poskytuje poistné a finančné služby.",
+	"invest_fund": "Poskytuje služby investičného fondu a podľa nastaveného cieľa kupuje nehnuteľnosti.",
+	"tv_station": "Prevádzkuje televízne vysielanie a reklamu.",
+	"social_network": "Prevádzkuje sociálnu sieť a reklamu.",
+	"newspaper": "Vydáva noviny a predáva reklamu.",
+	"casino": "Prevádzkuje kasíno a zábavné služby.",
+	"offshore": "Poskytuje finančné služby cez offshore firmu.",
+	"airport": "Prevádzkuje letisko a poskytuje letecké služby.",
+	"oil_refinery": "Spracúva ropu na palivá.",
+	"gas_works": "Upravuje zemný plyn pre odberateľov.",
+	"stock_broker": "Poskytuje finančné služby a obchoduje s akciami z vlastného kapitálu.",
+	"aircraft_plant": "Vyrába lietadlá.",
+	"data_center": "Poskytuje výpočtový výkon dátového centra.",
+	"ai_firm": "Vyvíja a poskytuje služby umelej inteligencie.",
+	"hospital": "Prevádzkuje súkromnú nemocnicu pre pacientov z mesta.",
+	"cargo_port": "Prevádzkuje nákladný prístav a prekladá kontajnery a tovar.",
+	"school_primary": "Prevádzkuje súkromnú základnú školu.",
+	"school_high": "Prevádzkuje súkromnú strednú školu.",
+	"university": "Prevádzkuje súkromnú univerzitu a výskum.",
+	"corp_academy": "Školí zamestnancov tvojej korporácie.",
+}
+const SERVICE_INCOME = {
+	"hospital": "platby za liečbu pacientov z mesta; tvoji zamestnanci v meste majú starostlivosť zadarmo",
+	"port": "poplatky za tovar (TEU) cez prístav od teba aj konkurencie; lacnejšia doprava tvojich firiem",
+	"school": "školné, ktoré určuješ, a malá štátna dotácia na žiaka (5–10 % nákladov)",
+	"academy": "čiastočné preplatenie a externé kurzy; hlavne vyššia produktivita a spokojnosť tvojich ľudí",
+}
+
+static func describe(industry_id: String) -> String:
+	if industry_id == "bank":
+		return "Banka prijíma vklady a poskytuje úvery. Zarába na úrokoch z úverov, platí úroky za vklady a môže utrpieť straty pri nesplácaní."
+	var ind: Dictionary = DataLoader.industries.get(industry_id, {})
+	if ind.is_empty():
+		return "Popis tohto typu podniku nie je dostupný."
+	var intro = str(SUMMARY.get(industry_id, ind.get("blurb", "")))
+	var recipe: Dictionary = DataLoader.recipes.get(str(ind.get("recipe", "")), {})
+	if recipe.get("trade", false):
+		return intro + " Zarába na rozdiele cien po započítaní cla a dopravy; nakupuje a predáva rôzne komodity."
+	if recipe.has("service"):
+		return "%s Vstupy: elektrina; príjem: %s." % [intro, str(SERVICE_INCOME.get(str(recipe.service), "služby"))]
+	var inputs = _commodity_names(recipe.get("inputs", {}))
+	var outputs = _commodity_names(recipe.get("outputs", {}))
+	var income = "predaj: " + (", ".join(outputs) if not outputs.is_empty() else "služby podniku")
+	if industry_id == "stock_broker":
+		income += "; zisk alebo strata z obchodovania s akciami"
+	elif industry_id == "invest_fund":
+		income += "; nájom z budov fondu"
+	return "%s Materiálové vstupy: %s; príjem: %s." % [intro, ", ".join(inputs) if not inputs.is_empty() else "žiadne", income]
+
+static func _commodity_names(items: Dictionary) -> Array[String]:
+	var names: Array[String] = []
+	for id in items:
+		names.append(str(DataLoader.commodity(str(id)).get("name", id)).to_lower())
+	return names

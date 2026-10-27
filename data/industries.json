@@ -1,0 +1,595 @@
+[
+ {
+  "id": "cafe",
+  "recipe": "cafe",
+  "cost": 80000,
+  "zone": "commercial",
+  "name": "Kaviareň",
+  "blurb": "Malý podnik závislý od lokality, sviatkov a ceny kávy.",
+  "tier": "small"
+ },
+ {
+  "id": "wheat_farm",
+  "recipe": "wheat_farm",
+  "cost": 150000,
+  "zone": "industrial",
+  "name": "Farma",
+  "blurb": "Pšenica. Bez vhodnej klímy je úroda mizivá.",
+  "tier": "small"
+ },
+ {
+  "id": "coffee_farm",
+  "recipe": "coffee_farm",
+  "cost": 170000,
+  "zone": "industrial",
+  "name": "Plantáž",
+  "blurb": "Káva len v trópoch. Exportná plodina.",
+  "tier": "small"
+ },
+ {
+  "id": "livestock",
+  "recipe": "livestock",
+  "cost": 160000,
+  "zone": "industrial",
+  "name": "Chov",
+  "blurb": "Mäso. Žerie obilie a platí sa zaň v bohatších krajinách viac.",
+  "tier": "small"
+ },
+ {
+  "id": "oil_well",
+  "recipe": "oil_well",
+  "cost": 1900000,
+  "zone": "industrial",
+  "name": "Ropný vrt",
+  "blurb": "Ropa. Oplatí sa len tam, kde sú ložiská.",
+  "tier": "large"
+ },
+ {
+  "id": "coal_mine",
+  "recipe": "coal_mine",
+  "cost": 480000,
+  "zone": "industrial",
+  "name": "Uhoľná baňa",
+  "blurb": "Uhlie pre elektrárne a oceliarne.",
+  "tier": "medium"
+ },
+ {
+  "id": "iron_mine",
+  "recipe": "iron_mine",
+  "cost": 520000,
+  "zone": "industrial",
+  "name": "Baňa na rudu",
+  "blurb": "Železná ruda, vstup oceliarne.",
+  "tier": "medium"
+ },
+ {
+  "id": "copper_mine",
+  "recipe": "copper_mine",
+  "cost": 780000,
+  "zone": "industrial",
+  "name": "Medená baňa",
+  "blurb": "Meď pre elektroniku.",
+  "tier": "medium"
+ },
+ {
+  "id": "power_coal",
+  "recipe": "power_coal",
+  "cost": 980000,
+  "zone": "industrial",
+  "name": "Elektráreň",
+  "blurb": "Páli uhlie, predáva elektrinu na domáci trh.",
+  "tier": "medium"
+ },
+ {
+  "id": "steel_mill",
+  "recipe": "steel_mill",
+  "cost": 2100000,
+  "zone": "industrial",
+  "name": "Oceliareň",
+  "blurb": "Ruda a uhlie na oceľ. Citlivé na energiu.",
+  "tier": "large"
+ },
+ {
+  "id": "chem_plant",
+  "recipe": "chem_plant",
+  "cost": 1600000,
+  "zone": "industrial",
+  "name": "Chemička",
+  "blurb": "Z ropy chemikálie. Vojna dvíha dopyt.",
+  "tier": "large"
+ },
+ {
+  "id": "pharma_lab",
+  "recipe": "pharma_lab",
+  "cost": 2300000,
+  "zone": "industrial",
+  "name": "Laboratórium",
+  "blurb": "Liečivá. Drahý kapitál, stabilnejší odbyt.",
+  "tier": "large"
+ },
+ {
+  "id": "textile_mill",
+  "recipe": "textile_mill",
+  "cost": 340000,
+  "zone": "industrial",
+  "name": "Textilka",
+  "blurb": "Lacný vstup do výroby. Sezóna a móda hýbu cenou.",
+  "tier": "medium"
+ },
+ {
+  "id": "electronics_plant",
+  "recipe": "electronics_plant",
+  "cost": 1750000,
+  "zone": "industrial",
+  "name": "Elektronika",
+  "blurb": "Zariadenia. Silné v Ázii a v bohatom dopyte.",
+  "tier": "large"
+ },
+ {
+  "id": "auto_plant",
+  "recipe": "auto_plant",
+  "cost": 5200000,
+  "zone": "industrial",
+  "name": "Automobilka",
+  "blurb": "Veľký závod. Oceľ, čipy, drahá práca.",
+  "tier": "large"
+ },
+ {
+  "id": "arms_plant",
+  "recipe": "arms_plant",
+  "cost": 2800000,
+  "zone": "industrial",
+  "name": "Zbrojovka",
+  "blurb": "Zbrane. Vojna a štátne zákazky dvíhajú cenu aj riziko.",
+  "tier": "large"
+ },
+ {
+  "id": "construction_co",
+  "recipe": "construction_co",
+  "cost": 240000,
+  "zone": "industrial",
+  "name": "Stavbár",
+  "blurb": "Zmluvy viazané na sezónu. V zime mimo trópov spomaľuje.",
+  "tier": "medium"
+ },
+ {
+  "id": "logistics_hub",
+  "recipe": "logistics_hub",
+  "cost": 520000,
+  "zone": "port",
+  "name": "Logistika",
+  "blurb": "Zarába na preprave a na obchode, ktorý tečie cez krajinu.",
+  "tier": "medium"
+ },
+ {
+  "id": "finance_office",
+  "recipe": "finance_office",
+  "cost": 220000,
+  "zone": "commercial",
+  "name": "Finančná kancelária",
+  "blurb": "Poradenstvo a poplatky. Nie je to plná banka.",
+  "tier": "medium"
+ },
+ {
+  "id": "pmc_unit",
+  "recipe": "pmc_unit",
+  "cost": 460000,
+  "zone": "industrial",
+  "name": "Súkromná bezpečnosť",
+  "blurb": "Kontrakty vládam a firmám. V ojnových krajinách drahšie a rizikovejšie.",
+  "tier": "medium"
+ },
+ {
+  "id": "trade_desk",
+  "recipe": "trade_desk",
+  "cost": 65000,
+  "zone": "commercial",
+  "name": "Obchodná kancelária",
+  "blurb": "Skupuje lacno a predáva draho medzi krajinami. Bez vlastnej továrne.",
+  "tier": "small"
+ },
+ {
+  "id": "restaurant",
+  "recipe": "restaurant",
+  "cost": 150000,
+  "zone": "commercial",
+  "name": "Reštaurácia",
+  "blurb": "Jedlo a obsluha. Dopyt podľa príjmov a sviatkov.",
+  "tier": "small",
+  "juan5": true
+ },
+ {
+  "id": "bakery",
+  "recipe": "bakery",
+  "cost": 90000,
+  "zone": "commercial",
+  "name": "Pekáreň",
+  "blurb": "Chlieb a pečivo. Citlivá na cenu pšenice.",
+  "tier": "small",
+  "juan5": true
+ },
+ {
+  "id": "gym",
+  "recipe": "gym",
+  "cost": 70000,
+  "zone": "commercial",
+  "name": "Fitko",
+  "blurb": "Členské poplatky (spotrebiteľské služby).",
+  "tier": "small",
+  "juan5": true
+ },
+ {
+  "id": "auto_service",
+  "recipe": "auto_service",
+  "cost": 110000,
+  "zone": "commercial",
+  "name": "Autoservis",
+  "blurb": "Opravy áut (dopravné služby).",
+  "tier": "small",
+  "juan5": true
+ },
+ {
+  "id": "eshop",
+  "recipe": "eshop",
+  "cost": 20000,
+  "zone": "commercial",
+  "name": "E-shop",
+  "blurb": "Malý internetový obchod z obývačky. Najlacnejší štart.",
+  "tier": "small",
+  "juan5": true
+ },
+ {
+  "id": "real_estate",
+  "recipe": "real_estate",
+  "cost": 60000,
+  "zone": "commercial",
+  "name": "Realitka",
+  "blurb": "Provízie z predaja nehnuteľností.",
+  "tier": "small",
+  "juan5": true
+ },
+ {
+  "id": "hotel",
+  "recipe": "hotel",
+  "cost": 1200000,
+  "zone": "commercial",
+  "name": "Hotel",
+  "blurb": "Turisti a služobné cesty.",
+  "tier": "medium",
+  "juan5": true
+ },
+ {
+  "id": "supermarket",
+  "recipe": "supermarket",
+  "cost": 900000,
+  "zone": "commercial",
+  "name": "Supermarket",
+  "blurb": "Veľa tovaru, nízka marža.",
+  "tier": "medium",
+  "juan5": true
+ },
+ {
+  "id": "warehouse",
+  "recipe": "warehouse",
+  "cost": 800000,
+  "zone": "port",
+  "name": "Logistika a sklady",
+  "blurb": "Sklady a kamióny.",
+  "tier": "medium",
+  "juan5": true
+ },
+ {
+  "id": "software",
+  "recipe": "software",
+  "cost": 600000,
+  "zone": "commercial",
+  "name": "Softvérová firma",
+  "blurb": "Programátori a licencie.",
+  "tier": "medium",
+  "juan5": true
+ },
+ {
+  "id": "ad_agency",
+  "recipe": "ad_agency",
+  "cost": 350000,
+  "zone": "commercial",
+  "name": "Reklamná agentúra",
+  "blurb": "Kampane pre firmy, +reputácia pri vlastných kampaniach.",
+  "tier": "medium",
+  "juan5": true
+ },
+ {
+  "id": "clinic",
+  "recipe": "clinic",
+  "cost": 1100000,
+  "zone": "commercial",
+  "name": "Súkromná klinika",
+  "blurb": "Zdravotné služby (abstraktne ako spotrebiteľské služby).",
+  "tier": "medium",
+  "juan5": true
+ },
+ {
+  "id": "chip_fab",
+  "recipe": "chip_fab",
+  "cost": 8000000,
+  "zone": "industrial",
+  "name": "Výroba čipov",
+  "blurb": "Polovodiče – vstup pre automobilky a elektroniku.",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "airline",
+  "recipe": "airline",
+  "cost": 9000000,
+  "zone": "port",
+  "name": "Letecká spoločnosť",
+  "blurb": "Lietadlá a pasažieri. Citlivá na cenu ropy.",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "telecom",
+  "recipe": "telecom",
+  "cost": 6000000,
+  "zone": "commercial",
+  "name": "Telekom",
+  "blurb": "Siete a paušály.",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "solar_plant",
+  "recipe": "solar_plant",
+  "cost": 2500000,
+  "zone": "industrial",
+  "name": "Solárna elektráreň",
+  "blurb": "Bez paliva, závisí od slnka.",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "gas_plant",
+  "recipe": "gas_plant",
+  "cost": 1500000,
+  "zone": "industrial",
+  "name": "Plynová elektráreň",
+  "blurb": "Elektrina zo zemného plynu (z tvojich vrtov lacnejšie).",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "nuclear_plant",
+  "recipe": "nuclear_plant",
+  "cost": 12000000,
+  "zone": "industrial",
+  "name": "Jadrová elektráreň",
+  "blurb": "Obrovský výkon, drahá údržba.",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "shipyard",
+  "recipe": "shipyard",
+  "cost": 7000000,
+  "zone": "port",
+  "name": "Lodenica",
+  "blurb": "Stavia lode (nákladné, tankery). Uvidíš, do ktorých krajín sa predali.",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "insurance",
+  "recipe": "insurance",
+  "cost": 1500000,
+  "zone": "commercial",
+  "name": "Poisťovňa",
+  "blurb": "Poistné a investovanie rezerv.",
+  "tier": "finance",
+  "juan5": true
+ },
+ {
+  "id": "invest_fund",
+  "recipe": "invest_fund",
+  "cost": 2500000,
+  "zone": "commercial",
+  "name": "Investičný fond",
+  "blurb": "Správa majetku klientov.",
+  "tier": "finance",
+  "juan5": true
+ },
+ {
+  "id": "tv_station",
+  "recipe": "tv_station",
+  "cost": 3000000,
+  "zone": "commercial",
+  "name": "Televízia",
+  "blurb": "Reklama + vplyv: reputácia a šanca lobingu.",
+  "tier": "media",
+  "juan5": true
+ },
+ {
+  "id": "social_network",
+  "recipe": "social_network",
+  "cost": 4000000,
+  "zone": "commercial",
+  "name": "Sociálna sieť",
+  "blurb": "Dáta a reklama + vplyv na politiku.",
+  "tier": "media",
+  "juan5": true
+ },
+ {
+  "id": "newspaper",
+  "recipe": "newspaper",
+  "cost": 400000,
+  "zone": "commercial",
+  "name": "Noviny",
+  "blurb": "Malý vplyv na reputáciu a voľby.",
+  "tier": "media",
+  "juan5": true
+ },
+ {
+  "id": "casino",
+  "recipe": "casino",
+  "cost": 2000000,
+  "zone": "commercial",
+  "name": "Kasíno",
+  "blurb": "Šedá zóna – len s focusom Korupcia. Riziko razie.",
+  "tier": "grey",
+  "juan5": true
+ },
+ {
+  "id": "offshore",
+  "recipe": "offshore",
+  "cost": 500000,
+  "zone": "commercial",
+  "name": "Offshore firma",
+  "blurb": "Šedá zóna – schránka v daňovom raji.",
+  "tier": "grey",
+  "juan5": true
+ },
+ {
+  "id": "airport",
+  "recipe": "airport",
+  "cost": 15000000,
+  "zone": "port",
+  "name": "Letisko",
+  "blurb": "Vyžaduje mesto (≥1 mil. obyv.). Poplatky za lety (tvoje letecké spoločnosti) a pasažierov (turizmus, tvoje hotely).",
+  "tier": "large",
+  "juan5": true,
+  "needs_city": true
+ },
+ {
+  "id": "oil_refinery",
+  "recipe": "oil_refinery",
+  "cost": 2500000,
+  "zone": "industrial",
+  "name": "Ropná rafinéria",
+  "blurb": "Z ropy vyrába benzín a naftu.",
+  "tier": "large",
+  "juan10": true,
+  "juan5": true
+ },
+ {
+  "id": "gas_works",
+  "recipe": "gas_works",
+  "cost": 800000,
+  "zone": "industrial",
+  "name": "Plynáreň",
+  "blurb": "Upravuje zemný plyn z vrtov a predáva ho domácnostiam a firmám v okolí.",
+  "tier": "medium",
+  "juan10": true,
+  "juan5": true
+ },
+ {
+  "id": "stock_broker",
+  "recipe": "stock_broker",
+  "cost": 4000000,
+  "zone": "commercial",
+  "name": "Burza / obchodník s cennými papiermi",
+  "blurb": "Obchoduje akcie všetkých firiem na burze z vlastného kapitálu: kupuje podhodnotené, predáva nadhodnotené, zarába na rozdieloch a poplatkoch. Môže aj prerobiť.",
+  "tier": "finance",
+  "juan5": true
+ },
+ {
+  "id": "gas_well",
+  "recipe": "gas_well",
+  "cost": 1400000,
+  "zone": "industrial",
+  "name": "Vrt na zemný plyn",
+  "blurb": "Ťaží zemný plyn – len na náleziskách plynu. Plynovodom ho lacno dopravíš do elektrárne či plynárne.",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "aircraft_plant",
+  "recipe": "aircraft_plant",
+  "cost": 12000000,
+  "zone": "industrial",
+  "name": "Letecká továreň",
+  "blurb": "Vyrába lietadlá z ocele a elektroniky. Uvidíš, kde lietajú.",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "data_center",
+  "recipe": "data_center",
+  "cost": 5000000,
+  "zone": "industrial",
+  "name": "Dátové centrum",
+  "blurb": "Servery a GPU: z elektriny a čipov robí výpočtový výkon pre AI firmy.",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "ai_firm",
+  "recipe": "ai_firm",
+  "cost": 2500000,
+  "zone": "commercial",
+  "name": "AI firma",
+  "blurb": "Predáva AI služby firmám a štátu. Tvoje firmy v tej istej krajine sú vďaka nej efektívnejšie (+4 % výroby za každú, max +12 %).",
+  "tier": "medium",
+  "juan5": true
+ },
+ {
+  "id": "hospital",
+  "recipe": "hospital",
+  "cost": 6000000,
+  "zone": "commercial",
+  "name": "Súkromná nemocnica",
+  "blurb": "Pacienti z mesta. Tvoji zamestnanci v meste majú zdravotnú starostlivosť zadarmo (spokojnosť).",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "cargo_port",
+  "recipe": "cargo_port",
+  "cost": 9000000,
+  "zone": "port",
+  "name": "Nákladný prístav",
+  "blurb": "Len v prímorskom alebo riečnom meste. Poplatky za tovar cez prístav, lacnejšia doprava tvojich firiem.",
+  "tier": "large",
+  "juan5": true,
+  "needs_port_city": true
+ },
+ {
+  "id": "school_primary",
+  "recipe": "school_primary",
+  "cost": 400000,
+  "zone": "commercial",
+  "name": "Súkromná základná škola",
+  "blurb": "Školné určuješ ty, štát pridá malú dotáciu na žiaka. Zvyšuje vzdelanie mesta.",
+  "tier": "medium",
+  "juan5": true
+ },
+ {
+  "id": "school_high",
+  "recipe": "school_high",
+  "cost": 700000,
+  "zone": "commercial",
+  "name": "Súkromná stredná škola",
+  "blurb": "Gymnázium / odborná škola. Školné, malá štátna dotácia, rast vzdelania mesta.",
+  "tier": "medium",
+  "juan5": true
+ },
+ {
+  "id": "university",
+  "recipe": "university",
+  "cost": 4000000,
+  "zone": "commercial",
+  "name": "Súkromná univerzita",
+  "blurb": "Drahá, ale zvyšuje vzdelanie a dáva výskumný bonus tvojim tech, AI a energetickým firmám v krajine.",
+  "tier": "large",
+  "juan5": true
+ },
+ {
+  "id": "corp_academy",
+  "recipe": "corp_academy",
+  "cost": 500000,
+  "zone": "commercial",
+  "name": "Firemná akadémia",
+  "blurb": "Školí tvojich ľudí v meste: vyššia produktivita a spokojnosť. Skôr náklad ako zisk.",
+  "tier": "medium",
+  "juan5": true
+ }
+]

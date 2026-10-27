@@ -1,0 +1,7 @@
+.godot/
+*.bak_*
+/tools/
+/checkpoints/
+/saves/
+/build/
+*.tmp

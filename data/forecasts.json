@@ -1,0 +1,121 @@
+{
+  "forecasts": [
+    {
+      "id": "F1",
+      "name": "ITER – začiatok výskumnej prevádzky",
+      "class": "ODHAD",
+      "estimate": "ODHAD 2034, plná magnetická energia 2036, deutérium-trícium 2039",
+      "source": "https://www.iter.org/few-lines (nová baseline 2024)",
+      "note": "Rada ITER schválila celkový prístup v 11/2024; harmonogram sa v minulosti posúval",
+      "status": "OVERENE"
+    },
+    {
+      "id": "F2",
+      "name": "Fúzna demo elektráreň (DEMO, komerčná fúzia)",
+      "class": "ODHAD",
+      "estimate": "ODHAD: EU DEMO prevádzka 2051 (EUROfusion), UK STEP 2040",
+      "source": "https://en.wikipedia.org/wiki/DEMOnstration_Power_Plant (IAEA World Fusion Outlook)",
+      "note": "súkromné firmy sľubujú 2030s – NEOVERENE",
+      "status": "OVERENE"
+    },
+    {
+      "id": "F3",
+      "name": "AI na úrovni človeka (HLMI)",
+      "class": "ODHAD",
+      "estimate": "ODHAD 50 % pravdepodobnosť do 2047",
+      "source": "Grace et al. 2024, „Thousands of AI Authors on the Future of AI“ https://arxiv.org/abs/2401.02843",
+      "note": "prieskum medzi výskumníkmi, nie predpoveď faktu",
+      "status": "OVERENE"
+    },
+    {
+      "id": "F4",
+      "name": "AGI podľa Metaculus",
+      "class": "ODHAD",
+      "estimate": "ODHAD 8. 11. 2030 (medián, interval 26. 3. 2028 – 10/2036), odčítané 24. 10. 2026, ~1,9k predpovedí",
+      "source": "https://www.metaculus.com/questions/5121/date-of-artificial-general-intelligence/",
+      "note": "hodnotu pred použitím odčítať aktuálne",
+      "status": "OVERENE"
+    },
+    {
+      "id": "F5",
+      "name": "Kvantový počítač odolný voči chybám",
+      "class": "ODHAD",
+      "estimate": "ODHAD 2029 (IBM Starling, ~200 logických qubitov)",
+      "source": "https://www.ibm.com/quantum/technology",
+      "note": "plán výrobcu, nie nezávislé overenie",
+      "status": "OVERENE"
+    },
+    {
+      "id": "F6",
+      "name": "Kvantové prelomenie RSA-2048",
+      "class": "ODHAD",
+      "estimate": "ODHAD 2030s+, vysoká neistota",
+      "source": "Wikipédia: Post-quantum cryptography (GRI report nedostupný) https://en.wikipedia.org/wiki/Post-quantum_cryptography",
+      "note": "prieskum expertov",
+      "status": "NEOVERENE: zdroj nedostupný (globalriskinst.com neodpovedá)"
+    },
+    {
+      "id": "F7",
+      "name": "Návrat človeka na Mesiac (Artemis)",
+      "class": "ODHAD",
+      "estimate": "Artemis II prebehla 1.–10. 4. 2026 (fakt); Artemis III = test v LEO, ODHAD leto 2027; prvé pristátie Artemis IV ODHAD 2028 (NASA 23. 10. 2026)",
+      "source": "https://www.nasa.gov/missions/artemis/nasas-artemis-iii-mission-to-test-future-moon-lander-operations/",
+      "note": "aktuálny termín pred použitím overiť",
+      "status": "OVERENE"
+    },
+    {
+      "id": "F8",
+      "name": "Koniec ISS, komerčné stanice",
+      "class": "ODHAD",
+      "estimate": "ODHAD 2030 (štart deorbitačného vozidla)",
+      "source": "https://en.wikipedia.org/wiki/International_Space_Station",
+      "note": "",
+      "status": "OVERENE"
+    },
+    {
+      "id": "F9",
+      "name": "Pilotovaný let na Mars",
+      "class": "ODHAD",
+      "estimate": "ODHAD 2040s, NEOVERENE",
+      "source": "NASA Moon to Mars https://www.nasa.gov/moontomars/",
+      "note": "bez pevného termínu",
+      "status": "NEOVERENE: NASA neuvádza pevný rok"
+    },
+    {
+      "id": "F10",
+      "name": "Otepľovanie 1,5 °C prekročené",
+      "class": "ODHAD",
+      "estimate": "ODHAD začiatok 2030s (v krátkodobom horizonte, vo všetkých scenároch pravdepodobne do 2021–2040)",
+      "source": "IPCC AR6 SYR https://www.ipcc.ch/report/ar6/syr/",
+      "note": "",
+      "status": "OVERENE"
+    },
+    {
+      "id": "F11",
+      "name": "Vrchol dopytu po fosílnych palivách",
+      "class": "ODHAD",
+      "estimate": "ODHAD ropa vrchol ~2030 na 102 mb/d (STEPS, WEO 2025); v CPS rastie do 113 mb/d v 2050",
+      "source": "IEA World Energy Outlook https://www.iea.org/reports/world-energy-outlook-2025/stated-policies-scenario",
+      "note": "scenár, nie prognóza; WEO 2025 je najnovšie vydanie k 24. 10. 2026 (NEOVERENE, či nevyšlo WEO 2026)",
+      "status": "OVERENE"
+    },
+    {
+      "id": "F12",
+      "name": "Čisté nulové emisie energetiky",
+      "class": "ODHAD",
+      "estimate": "ODHAD 2050 iba v normatívnom scenári NZE",
+      "source": "IEA Net Zero Roadmap https://www.iea.org/reports/net-zero-roadmap-a-global-pathway-to-keep-the-15-0c-goal-in-reach",
+      "note": "",
+      "status": "OVERENE"
+    },
+    {
+      "id": "F13",
+      "name": "EÚ klimatická neutralita",
+      "class": "ODHAD",
+      "estimate": "cieľ 2050 (zákon)",
+      "source": "https://climate.ec.europa.eu/eu-action/climate-strategies-targets/2050-long-term-strategy_en",
+      "note": "legislatívny cieľ, splnenie je ODHAD",
+      "status": "OVERENE"
+    }
+  ]
+}

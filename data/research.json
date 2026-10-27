@@ -1,0 +1,382 @@
+[
+ {
+  "id": "auto1",
+  "name": "Automatizácia",
+  "cost": 95000,
+  "days": 40,
+  "requires": [],
+  "effects": {
+   "labor_mult": 0.84
+  },
+  "text": "Menej práce na rovnaký výkon.",
+  "branch": "Stroje a automatizácia",
+  "x": 0,
+  "y": 0
+ },
+ {
+  "id": "auto2",
+  "requires": [
+   "auto1"
+  ],
+  "effects": {
+   "labor_mult": 0.74,
+   "yield_factory": 1.06
+  },
+  "name": "Robotické linky",
+  "cost": 180000,
+  "days": 55,
+  "text": "Menej pracovníkov (−26 %), továrne +6 % výkon.",
+  "branch": "Stroje a automatizácia",
+  "x": 0,
+  "y": 1
+ },
+ {
+  "id": "chem1",
+  "name": "Procesná chémia",
+  "cost": 150000,
+  "days": 55,
+  "requires": [],
+  "effects": {
+   "yield_chem": 1.16
+  },
+  "text": "Vyšší výťažok chemikálií a liečiv.",
+  "branch": "Stroje a automatizácia",
+  "x": 0,
+  "y": 2
+ },
+ {
+  "id": "arms1",
+  "name": "Presná výroba",
+  "cost": 190000,
+  "days": 60,
+  "requires": [
+   "auto1"
+  ],
+  "effects": {
+   "yield_weapons": 1.15
+  },
+  "text": "Viac zbraní z rovnakých vstupov.",
+  "branch": "Stroje a automatizácia",
+  "x": 0,
+  "y": 3
+ },
+ {
+  "id": "auto3",
+  "requires": [
+   "auto2"
+  ],
+  "effects": {
+   "labor_mult": 0.62,
+   "yield_factory": 1.14
+  },
+  "name": "Plne automatizovaná továreň",
+  "cost": 420000,
+  "days": 80,
+  "text": "Pracovníci −38 %, továrne +14 %.",
+  "branch": "Stroje a automatizácia",
+  "x": 0,
+  "y": 4
+ },
+ {
+  "id": "agro1",
+  "name": "Odrody",
+  "cost": 52000,
+  "days": 26,
+  "requires": [],
+  "effects": {
+   "yield_agro": 1.18
+  },
+  "text": "Vyššia úroda pšenice, kávy a chovu.",
+  "branch": "Ťažba a suroviny",
+  "x": 1,
+  "y": 0
+ },
+ {
+  "id": "mine1",
+  "requires": [],
+  "effects": {
+   "yield_mining": 1.12
+  },
+  "name": "Moderné vrtné súpravy",
+  "cost": 70000,
+  "days": 35,
+  "text": "Bane a vrty +12 % výnos.",
+  "branch": "Ťažba a suroviny",
+  "x": 1,
+  "y": 1
+ },
+ {
+  "id": "mine2",
+  "requires": [
+   "mine1"
+  ],
+  "effects": {
+   "yield_mining": 1.2,
+   "survey": 1.0
+  },
+  "name": "Geologický prieskum",
+  "cost": 150000,
+  "days": 50,
+  "text": "Výnos baní +20 %, prieskum ložísk: nové náleziská na mape (vyšší dosah stavby baní).",
+  "branch": "Ťažba a suroviny",
+  "x": 1,
+  "y": 2
+ },
+ {
+  "id": "mine3",
+  "requires": [
+   "mine2"
+  ],
+  "effects": {
+   "yield_mining": 1.32
+  },
+  "name": "Hlbinná ťažba",
+  "cost": 320000,
+  "days": 70,
+  "text": "Výnos baní +32 %.",
+  "branch": "Ťažba a suroviny",
+  "x": 1,
+  "y": 3
+ },
+ {
+  "id": "energy1",
+  "name": "Účinnosť",
+  "cost": 85000,
+  "days": 34,
+  "requires": [],
+  "effects": {
+   "power_mult": 0.8
+  },
+  "text": "Prevádzky míňajú menej elektriny.",
+  "branch": "Energetika",
+  "x": 2,
+  "y": 0
+ },
+ {
+  "id": "energy2",
+  "requires": [
+   "energy1"
+  ],
+  "effects": {
+   "power_mult": 0.68
+  },
+  "name": "Plynové turbíny",
+  "cost": 160000,
+  "days": 50,
+  "text": "Energia −32 %.",
+  "branch": "Energetika",
+  "x": 2,
+  "y": 1
+ },
+ {
+  "id": "energy3",
+  "requires": [
+   "energy2"
+  ],
+  "effects": {
+   "power_mult": 0.56
+  },
+  "name": "Obnoviteľné zdroje",
+  "cost": 350000,
+  "days": 75,
+  "text": "Energia −44 %.",
+  "branch": "Energetika",
+  "x": 2,
+  "y": 2
+ },
+ {
+  "id": "logistics1",
+  "name": "Logistika I",
+  "cost": 40000,
+  "days": 28,
+  "requires": [],
+  "effects": {
+   "freight_mult": 0.9
+  },
+  "text": "Preprava lacnejšia o 10 %.",
+  "branch": "Logistika",
+  "x": 3,
+  "y": 0
+ },
+ {
+  "id": "logistics2",
+  "name": "Logistika II",
+  "cost": 130000,
+  "days": 48,
+  "requires": [
+   "logistics1"
+  ],
+  "effects": {
+   "freight_mult": 0.78
+  },
+  "text": "Ďalšie zníženie nákladov na prepravu.",
+  "branch": "Logistika",
+  "x": 3,
+  "y": 1
+ },
+ {
+  "id": "logistics3",
+  "requires": [
+   "logistics2"
+  ],
+  "effects": {
+   "freight_mult": 0.64,
+   "reach_mult": 1.5
+  },
+  "name": "Kontajnerová sieť",
+  "cost": 300000,
+  "days": 70,
+  "text": "Doprava −36 %, dosah obchodu ×1,5.",
+  "branch": "Logistika",
+  "x": 3,
+  "y": 2
+ },
+ {
+  "id": "score1",
+  "name": "Úverový scoring",
+  "cost": 72000,
+  "days": 30,
+  "requires": [],
+  "effects": {
+   "default_mult": 0.7
+  },
+  "text": "Vlastná banka má nižšiu default rate.",
+  "branch": "Financie/IT",
+  "x": 4,
+  "y": 0
+ },
+ {
+  "id": "it1",
+  "requires": [
+   "score1"
+  ],
+  "effects": {
+   "research_speed": 1.2
+  },
+  "name": "Dátové centrum",
+  "cost": 140000,
+  "days": 45,
+  "text": "Výskum o 20 % rýchlejší.",
+  "branch": "Financie/IT",
+  "x": 4,
+  "y": 1
+ },
+ {
+  "id": "fin2",
+  "requires": [
+   "it1"
+  ],
+  "effects": {
+   "default_mult": 0.55,
+   "rate_bonus": -0.004
+  },
+  "name": "Algoritmické hodnotenie úverov",
+  "cost": 260000,
+  "days": 60,
+  "text": "Nesplácanie −45 %, tvoje úvery −0,4 p.b.",
+  "branch": "Financie/IT",
+  "x": 4,
+  "y": 2
+ },
+ {
+  "id": "cons1",
+  "requires": [],
+  "effects": {
+   "yield_consumer": 1.05
+  },
+  "name": "Kontrola kvality",
+  "cost": 60000,
+  "days": 30,
+  "text": "Spotrebné firmy: kvalita, dopyt +5 %.",
+  "branch": "Spotrebné produkty",
+  "x": 5,
+  "y": 0
+ },
+ {
+  "id": "cons2",
+  "requires": [
+   "cons1"
+  ],
+  "effects": {
+   "yield_consumer": 1.11
+  },
+  "name": "Značka a marketing",
+  "cost": 150000,
+  "days": 50,
+  "text": "Dopyt po tvojich produktoch +11 %.",
+  "branch": "Spotrebné produkty",
+  "x": 5,
+  "y": 1
+ },
+ {
+  "id": "cons3",
+  "requires": [
+   "cons2"
+  ],
+  "effects": {
+   "yield_consumer": 1.18
+  },
+  "name": "Prémiová línia",
+  "cost": 330000,
+  "days": 70,
+  "text": "Dopyt +18 %, prémiové ceny.",
+  "branch": "Spotrebné produkty",
+  "x": 5,
+  "y": 2
+ },
+ {
+  "id": "biz_med",
+  "name": "Stredný podnik",
+  "cost": 60000,
+  "days": 30,
+  "requires": [],
+  "effects": {},
+  "text": "Odomkne stredné podniky (hotel, supermarket, sklady, softvér, agentúra, klinika, bane). Treba aj čisté imanie 250 000 €.",
+  "branch": "Podnikanie",
+  "x": 6,
+  "y": 0
+ },
+ {
+  "id": "upg2",
+  "name": "Modernizácia prevádzok",
+  "cost": 120000,
+  "days": 40,
+  "requires": [
+   "biz_med"
+  ],
+  "effects": {},
+  "text": "Upgrade firiem na úroveň 2 (výkon ×1,35).",
+  "branch": "Podnikanie",
+  "x": 6,
+  "y": 1
+ },
+ {
+  "id": "biz_large",
+  "name": "Koncern",
+  "cost": 400000,
+  "days": 80,
+  "requires": [
+   "biz_med"
+  ],
+  "effects": {},
+  "text": "S cieľom „Vlastní dodávatelia“ odomkne veľké podniky (automobilka, čipy, letecká, telekom, elektrárne, lodenica). Treba čisté imanie 2 mil. €.",
+  "branch": "Podnikanie",
+  "x": 6,
+  "y": 2
+ },
+ {
+  "id": "upg3",
+  "name": "Priemysel 4.0",
+  "cost": 300000,
+  "days": 60,
+  "requires": [
+   "upg2",
+   "biz_large"
+  ],
+  "effects": {},
+  "text": "Upgrade firiem na úroveň 3.",
+  "branch": "Podnikanie",
+  "x": 6,
+  "y": 3
+ }
+]

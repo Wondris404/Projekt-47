@@ -1,0 +1,680 @@
+{
+ "_comment": "JUAN-P47 (2026-10-27): mestá, kde sa dá postaviť prístav (pobrežie odvodené z polygónov mapy + ručne doplnené riečne/námorné prístavy). Odhad, nie presné dáta.",
+ "cities": {
+  "SK": [
+   "Bratislava"
+  ],
+  "CZ": [
+   "Praha"
+  ],
+  "DE": [
+   "Berlín",
+   "Hamburg",
+   "Köln",
+   "Frankfurt am Main",
+   "Düsseldorf"
+  ],
+  "PL": [
+   "Varšava",
+   "Wrocław",
+   "Gdańsk",
+   "Szczecin"
+  ],
+  "AT": [
+   "Viedeň",
+   "Linz"
+  ],
+  "HU": [
+   "Budapešť",
+   "Győr"
+  ],
+  "FR": [
+   "Paríž",
+   "Marseille",
+   "Lyon",
+   "Nice",
+   "Nantes",
+   "Strasbourg"
+  ],
+  "UA": [
+   "Kyjev",
+   "Odesa",
+   "Dnipro",
+   "Zaporizhzhya"
+  ],
+  "US": [
+   "New York City",
+   "Los Angeles",
+   "Chicago",
+   "Houston",
+   "Philadelphia",
+   "San Diego"
+  ],
+  "CN": [
+   "Shanghai",
+   "Shenzhen",
+   "Guangzhou",
+   "Tianjin",
+   "Wuhan",
+   "Dongguan"
+  ],
+  "RU": [
+   "Moskva",
+   "Saint Petersburg",
+   "Nizhniy Novgorod",
+   "Kazan"
+  ],
+  "SA": [
+   "Jeddah",
+   "Dammam"
+  ],
+  "NO": [
+   "Oslo",
+   "Bergen",
+   "Trondheim",
+   "Stavanger",
+   "Kristiansand",
+   "Drammen",
+   "Fredrikstad"
+  ],
+  "NL": [
+   "Rotterdam",
+   "Amsterdam",
+   "The Hague",
+   "Groningen"
+  ],
+  "GB": [
+   "Londýn",
+   "Glasgow",
+   "Edinburgh",
+   "Liverpool"
+  ],
+  "BR": [
+   "Rio de Janeiro",
+   "Salvador",
+   "Fortaleza",
+   "Manaus"
+  ],
+  "IT": [
+   "Rím",
+   "Naples",
+   "Palermo",
+   "Genoa"
+  ],
+  "ES": [
+   "Barcelona",
+   "Valencia",
+   "Sevilla",
+   "Málaga",
+   "Murcia",
+   "Palma"
+  ],
+  "SE": [
+   "Štokholm",
+   "Gothenburg",
+   "Malmö",
+   "Umeå"
+  ],
+  "FI": [
+   "Helsinki",
+   "Espoo",
+   "Oulu",
+   "Turku"
+  ],
+  "TR": [
+   "Istanbul",
+   "İzmir",
+   "Adana"
+  ],
+  "JP": [
+   "Tokio",
+   "Osaka",
+   "Nagoya",
+   "Sapporo",
+   "Fukuoka",
+   "Kobe",
+   "Hiroshima"
+  ],
+  "IN": [
+   "Mumbai",
+   "Chennai",
+   "Kolkata",
+   "Surat"
+  ],
+  "AU": [
+   "Sydney",
+   "Melbourne",
+   "Brisbane",
+   "Perth",
+   "Adelaide",
+   "Gold Coast",
+   "Newcastle",
+   "Sunshine Coast"
+  ],
+  "CA": [
+   "Toronto",
+   "Montréal",
+   "Vancouver"
+  ],
+  "MX": [
+   "Tijuana",
+   "Mérida"
+  ],
+  "FJ": [
+   "Suva",
+   "Nasinu",
+   "Lautoka"
+  ],
+  "TZ": [
+   "Dar es Salaam",
+   "Zanzibar"
+  ],
+  "PG": [
+   "Port Moresby",
+   "Lae"
+  ],
+  "ID": [
+   "Jakarta",
+   "Surabaya",
+   "Medan",
+   "Semarang",
+   "Makassar",
+   "Batam"
+  ],
+  "AR": [
+   "Buenos Aires",
+   "Mar del Plata"
+  ],
+  "CL": [
+   "Antofagasta",
+   "Viña del Mar",
+   "Arica",
+   "Concepción"
+  ],
+  "SO": [
+   "Mogadishu",
+   "Borama",
+   "Hargeysa",
+   "Berbera",
+   "Kismayo",
+   "Marka",
+   "El Dibir"
+  ],
+  "KE": [
+   "Mombasa"
+  ],
+  "SD": [
+   "Port Sudan"
+  ],
+  "HT": [
+   "Port-au-Prince",
+   "Port-de-Paix",
+   "Saint-Marc",
+   "Dessalines",
+   "Jacmel",
+   "Cap-Haïtien",
+   "Léogâne",
+   "Arcahaie"
+  ],
+  "DO": [
+   "Santo Domingo",
+   "Santiago de los Caballeros",
+   "San Pedro de Macorís",
+   "La Romana",
+   "Puerto Plata",
+   "San Francisco de Macorís",
+   "Salvaleón de Higüey"
+  ],
+  "BS": [
+   "Nassau",
+   "Lucaya"
+  ],
+  "TL": [
+   "Dili",
+   "Maliana"
+  ],
+  "ZA": [
+   "Cape Town",
+   "Durban",
+   "Gqeberha"
+  ],
+  "UY": [
+   "Montevideo",
+   "Maldonado",
+   "Rivera"
+  ],
+  "PE": [
+   "Lima",
+   "Trujillo",
+   "Piura",
+   "Chiclayo"
+  ],
+  "CO": [
+   "Barranquilla",
+   "Cartagena"
+  ],
+  "PA": [
+   "Panama City",
+   "David"
+  ],
+  "CR": [
+   "Limón"
+  ],
+  "NI": [
+   "Managua",
+   "León",
+   "Masaya",
+   "Chinandega"
+  ],
+  "HN": [
+   "San Pedro Sula",
+   "La Ceiba",
+   "Puerto Cortez",
+   "Olanchito"
+  ],
+  "SV": [
+   "San Salvador",
+   "San Miguel"
+  ],
+  "GT": [
+   "Escuintla"
+  ],
+  "BZ": [
+   "Belize City"
+  ],
+  "VE": [
+   "Caracas",
+   "Maracaibo",
+   "Valencia",
+   "Barcelona",
+   "Maracay"
+  ],
+  "GY": [
+   "Georgetown"
+  ],
+  "SR": [
+   "Paramaribo"
+  ],
+  "EC": [
+   "Guayaquil",
+   "Portoviejo",
+   "Machala"
+  ],
+  "JM": [
+   "Kingston",
+   "Montego Bay"
+  ],
+  "CU": [
+   "Havana",
+   "Santiago de Cuba",
+   "Holguín",
+   "Guantánamo",
+   "Santa Clara",
+   "Las Tunas",
+   "Bayamo"
+  ],
+  "SN": [
+   "Dakar",
+   "Thiès",
+   "Mbour",
+   "Saint-Louis",
+   "Ziguinchor"
+  ],
+  "MR": [
+   "Nouakchott",
+   "Nouadhibou"
+  ],
+  "BJ": [
+   "Cotonou",
+   "Porto-Novo"
+  ],
+  "NG": [
+   "Lagos",
+   "Port Harcourt"
+  ],
+  "TG": [
+   "Lomé"
+  ],
+  "GH": [
+   "Accra",
+   "Takoradi",
+   "Cape Coast",
+   "Ashaiman"
+  ],
+  "CI": [
+   "Abidjan",
+   "San-Pédro"
+  ],
+  "GN": [
+   "Conakry",
+   "Manéah",
+   "Kamsar"
+  ],
+  "GW": [
+   "Bissau"
+  ],
+  "LR": [
+   "Monrovia"
+  ],
+  "SL": [
+   "Freetown"
+  ],
+  "CG": [
+   "Pointe-Noire"
+  ],
+  "GA": [
+   "Libreville",
+   "Port-Gentil"
+  ],
+  "GQ": [
+   "Bata",
+   "Malabo"
+  ],
+  "MZ": [
+   "Maputo",
+   "Beira",
+   "Quelimane",
+   "Nacala"
+  ],
+  "AO": [
+   "Luanda",
+   "Benguela",
+   "Cabinda",
+   "Lobito"
+  ],
+  "IL": [
+   "Jerusalem",
+   "Tel Aviv",
+   "Haifa",
+   "Netanya",
+   "Ashdod",
+   "Beersheba",
+   "Modi‘in Makkabbim Re‘ut"
+  ],
+  "LB": [
+   "Beirut",
+   "Tripoli",
+   "Sidon",
+   "Tyre"
+  ],
+  "MG": [
+   "Toamasina",
+   "Mahajanga",
+   "Toliara",
+   "Antsiranana",
+   "Sambava"
+  ],
+  "GM": [
+   "Banjul",
+   "Serekunda"
+  ],
+  "TN": [
+   "Tunis",
+   "Sfax",
+   "Sousse",
+   "Bizerte",
+   "Gabès",
+   "Hammamet"
+  ],
+  "DZ": [
+   "Algiers",
+   "Oran",
+   "Annaba",
+   "Blida"
+  ],
+  "JO": [
+   "Amman",
+   "Irbid",
+   "‘Ajlūn",
+   "As Salţ",
+   "Mādabā"
+  ],
+  "AE": [
+   "Dubai",
+   "Abu Dhabi",
+   "Sharjah",
+   "Ras Al Khaimah",
+   "Fujairah",
+   "Bani Yas City"
+  ],
+  "QA": [
+   "Doha",
+   "Az̧ Z̧a‘āyin"
+  ],
+  "KW": [
+   "Kuwait City",
+   "Al Aḩmadī",
+   "Ḩawallī"
+  ],
+  "OM": [
+   "Muscat",
+   "Seeb",
+   "Şalālah",
+   "Şaḩam",
+   "Rustaq",
+   "Sohar",
+   "As Suwayq"
+  ],
+  "VU": [
+   "Vanuatu",
+   "Port-Vila"
+  ],
+  "TH": [
+   "Bangkok",
+   "Chon Buri",
+   "Hat Yai",
+   "Lat Krabang",
+   "Surat Thani"
+  ],
+  "MM": [
+   "Mawlamyine",
+   "Pathein"
+  ],
+  "VN": [
+   "Haiphong",
+   "Huế",
+   "Da Nang",
+   "Thanh Hóa"
+  ],
+  "KP": [
+   "Hamhŭng",
+   "Namp’o",
+   "Kaesŏng",
+   "Wŏnsan",
+   "Chongjin"
+  ],
+  "KR": [
+   "Busan",
+   "Incheon",
+   "Gwangju",
+   "Suwon",
+   "Ulsan"
+  ],
+  "BD": [
+   "Chattogram",
+   "Rajshahi",
+   "Comilla",
+   "Mohammadpur"
+  ],
+  "PK": [
+   "Karachi"
+  ],
+  "TM": [
+   "Türkmenbaşy"
+  ],
+  "SY": [
+   "Latakia",
+   "Ţarţūs"
+  ],
+  "BY": [
+   "Homyel'"
+  ],
+  "RO": [
+   "Constanţa"
+  ],
+  "LT": [
+   "Klaipėda"
+  ],
+  "LV": [
+   "Riga"
+  ],
+  "EE": [
+   "Tallinn"
+  ],
+  "BG": [
+   "Varna",
+   "Burgas"
+  ],
+  "GR": [
+   "Athens",
+   "Thessaloníki",
+   "Lárisa",
+   "Irákleion",
+   "Volos"
+  ],
+  "AL": [
+   "Tirana",
+   "Durrës",
+   "Vlorë",
+   "Shkodër"
+  ],
+  "HR": [
+   "Split",
+   "Rijeka"
+  ],
+  "CH": [
+   "Basel"
+  ],
+  "BE": [
+   "Gent",
+   "Charleroi",
+   "Brugge"
+  ],
+  "PT": [
+   "Lisbon",
+   "Porto",
+   "Leiria",
+   "Setúbal",
+   "Funchal"
+  ],
+  "IE": [
+   "Dublin",
+   "Cork",
+   "Galway"
+  ],
+  "SB": [
+   "Honiara"
+  ],
+  "NZ": [
+   "Auckland",
+   "Christchurch",
+   "Wellington",
+   "Tauranga",
+   "Dunedin",
+   "Palmerston North",
+   "New Plymouth"
+  ],
+  "LK": [
+   "Colombo",
+   "Jaffna",
+   "Trincomalee",
+   "Kalmunai",
+   "Galle",
+   "Point Pedro",
+   "Batticaloa"
+  ],
+  "DK": [
+   "Copenhagen",
+   "Århus",
+   "Odense",
+   "Aalborg"
+  ],
+  "IS": [
+   "Reykjavík",
+   "Reykjanesbær"
+  ],
+  "AZ": [
+   "Baku",
+   "Sumgayit",
+   "Lankaran",
+   "Lerik"
+  ],
+  "GE": [
+   "Batumi"
+  ],
+  "PH": [
+   "Manila",
+   "Quezon City",
+   "Davao",
+   "Budta",
+   "Zamboanga",
+   "Cebu City",
+   "Cagayan de Oro",
+   "General Santos",
+   "Calamba"
+  ],
+  "MY": [
+   "Kuala Lumpur",
+   "Johor Bahru",
+   "Ipoh",
+   "Malacca",
+   "Kota Bharu",
+   "Kuantan",
+   "Kota Kuala Muda",
+   "Kota Kinabalu"
+  ],
+  "BN": [
+   "Bandar Seri Begawan",
+   "Kuala Belait"
+  ],
+  "YE": [
+   "Aden",
+   "Al Ḩudaydah",
+   "Mukalla"
+  ],
+  "CY": [
+   "Nicosia",
+   "Limassol"
+  ],
+  "MA": [
+   "Casablanca",
+   "Rabat",
+   "Tangier",
+   "Agadir"
+  ],
+  "EG": [
+   "Alexandria",
+   "Port Said",
+   "Al Mansurah"
+  ],
+  "LY": [
+   "Tripoli",
+   "Benghazi",
+   "Misratah",
+   "Zliten",
+   "Al Khums",
+   "Az Zāwīyah",
+   "Tobruk"
+  ],
+  "DJ": [
+   "Djibouti",
+   "Ali Sabih"
+  ],
+  "MK": [
+   "Skopje",
+   "Kumanovo"
+  ],
+  "RS": [
+   "Leskovac",
+   "Novi Pazar"
+  ],
+  "ME": [
+   "Podgorica"
+  ],
+  "TT": [
+   "Port of Spain",
+   "Chaguanas",
+   "Rio Claro"
+  ]
+ }
+}

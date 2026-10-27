@@ -1,0 +1,825 @@
+{
+  "nodes": [
+    {
+      "id": "T01",
+      "name": "Tranzistor (sériová výroba)",
+      "year": "1951",
+      "category": "IT",
+      "prerequisites": [],
+      "effect": "+5 % výskum",
+      "source": "https://en.wikipedia.org/wiki/Transistor",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T02",
+      "name": "Komerčný počítač (UNIVAC I)",
+      "year": "1951",
+      "category": "IT",
+      "prerequisites": [
+        "T01"
+      ],
+      "effect": "odomyká výpočtové uzly",
+      "source": "https://en.wikipedia.org/wiki/UNIVAC_I",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T03",
+      "name": "Termonukleárna zbraň",
+      "year": "1952",
+      "category": "VOJ",
+      "prerequisites": [],
+      "effect": "odomyká H-bombu, napätie +10",
+      "source": "https://en.wikipedia.org/wiki/Ivy_Mike",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T04",
+      "name": "Štruktúra DNA",
+      "year": "1953",
+      "category": "MED",
+      "prerequisites": [],
+      "effect": "odomyká genetiku",
+      "source": "https://en.wikipedia.org/wiki/Molecular_Structure_of_Nucleic_Acids%3A_A_Structure_for_Deoxyribose_Nucleic_Acid",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T05",
+      "name": "Jadrová elektráreň (Obninsk)",
+      "year": "1954",
+      "category": "ENE",
+      "prerequisites": [
+        "T03"
+      ],
+      "effect": "+energia, nový typ budovy",
+      "source": "https://en.wikipedia.org/wiki/Obninsk_Nuclear_Power_Plant",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T06",
+      "name": "Polio vakcína (Salk)",
+      "year": "1955",
+      "category": "MED",
+      "prerequisites": [
+        "T04"
+      ],
+      "effect": "+rast populácie",
+      "source": "https://en.wikipedia.org/wiki/Polio_vaccine",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T07",
+      "name": "Kontajnerová preprava",
+      "year": "1956",
+      "category": "DOP",
+      "prerequisites": [],
+      "effect": "−20 % náklady obchodu",
+      "source": "https://en.wikipedia.org/wiki/Containerization",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T08",
+      "name": "Prúdové dopravné lietadlo (Boeing 707)",
+      "year": "1958",
+      "category": "DOP",
+      "prerequisites": [],
+      "effect": "+turizmus, rýchly presun",
+      "source": "https://en.wikipedia.org/wiki/Boeing_707",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T09",
+      "name": "ICBM (R-7)",
+      "year": "1957",
+      "category": "VOJ",
+      "prerequisites": [
+        "T03"
+      ],
+      "effect": "jadrové odstrašenie",
+      "source": "https://en.wikipedia.org/wiki/R-7_Semyorka",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T10",
+      "name": "Umelá družica (Sputnik 1)",
+      "year": "1957",
+      "category": "VES",
+      "prerequisites": [
+        "T09"
+      ],
+      "effect": "prestíž +, odomyká vesmír",
+      "source": "https://en.wikipedia.org/wiki/Sputnik_1",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T11",
+      "name": "Integrovaný obvod",
+      "year": "1958",
+      "category": "IT",
+      "prerequisites": [
+        "T01"
+      ],
+      "effect": "+10 % výskum",
+      "source": "https://en.wikipedia.org/wiki/Integrated_circuit",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T12",
+      "name": "Jadrová ponorka (USS Nautilus, prvá plavba na jadrový pohon 17.1.1955)",
+      "year": "1955",
+      "category": "VOJ",
+      "prerequisites": [
+        "T05"
+      ],
+      "effect": "druhý úder",
+      "source": "https://en.wikipedia.org/wiki/USS_Nautilus_%28SSN-571%29",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T13",
+      "name": "Laser",
+      "year": "1960",
+      "category": "IT",
+      "prerequisites": [
+        "T01"
+      ],
+      "effect": "odomyká optiku",
+      "source": "https://en.wikipedia.org/wiki/Laser",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T14",
+      "name": "Pilotovaný let do vesmíru (Gagarin)",
+      "year": "1961",
+      "category": "VES",
+      "prerequisites": [
+        "T10"
+      ],
+      "effect": "prestíž ++",
+      "source": "https://en.wikipedia.org/wiki/Yuri_Gagarin",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T15",
+      "name": "Antikoncepčná pilulka (FDA)",
+      "year": "1960",
+      "category": "MED",
+      "prerequisites": [
+        "T04"
+      ],
+      "effect": "demografia, spoločnosť",
+      "source": "https://en.wikipedia.org/wiki/Combined_oral_contraceptive_pill",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T16",
+      "name": "Zelená revolúcia (vysokoúrodné odrody)",
+      "year": "1965",
+      "category": "MED",
+      "prerequisites": [],
+      "effect": "+40 % potraviny pre rozvojové krajiny",
+      "source": "https://en.wikipedia.org/wiki/Green_Revolution",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T17",
+      "name": "Komunikačná družica (Telstar/Syncom)",
+      "year": "1962",
+      "category": "VES",
+      "prerequisites": [
+        "T10",
+        "T11"
+      ],
+      "effect": "+obchod, propaganda",
+      "source": "https://en.wikipedia.org/wiki/Telstar_1",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T18",
+      "name": "Vysokorýchlostná železnica (Šinkansen)",
+      "year": "1964",
+      "category": "DOP",
+      "prerequisites": [],
+      "effect": "+produktivita",
+      "source": "https://en.wikipedia.org/wiki/Shinkansen",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T19",
+      "name": "Bankomat",
+      "year": "1967",
+      "category": "FIN",
+      "prerequisites": [
+        "T11"
+      ],
+      "effect": "+spotreba",
+      "source": "https://en.wikipedia.org/wiki/ATM",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T20",
+      "name": "Transplantácia srdca",
+      "year": "1967",
+      "category": "MED",
+      "prerequisites": [
+        "T06"
+      ],
+      "effect": "prestíž, zdravotníctvo",
+      "source": "https://en.wikipedia.org/wiki/Heart_transplantation",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T21",
+      "name": "Pristátie na Mesiaci (Apollo 11)",
+      "year": "1969",
+      "category": "VES",
+      "prerequisites": [
+        "T14"
+      ],
+      "effect": "prestíž +++, víťazstvo vo vesmírnych pretekoch",
+      "source": "https://www.nasa.gov/mission/apollo-11/",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T22",
+      "name": "ARPANET",
+      "year": "1969",
+      "category": "IT",
+      "prerequisites": [
+        "T02"
+      ],
+      "effect": "odomyká sieťové uzly",
+      "source": "https://en.wikipedia.org/wiki/ARPANET",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T23",
+      "name": "Mikroprocesor (Intel 4004)",
+      "year": "1971",
+      "category": "IT",
+      "prerequisites": [
+        "T11"
+      ],
+      "effect": "+15 % výskum",
+      "source": "https://en.wikipedia.org/wiki/Intel_4004",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T24",
+      "name": "Vesmírna stanica (Saľut 1)",
+      "year": "1971",
+      "category": "VES",
+      "prerequisites": [
+        "T14"
+      ],
+      "effect": "dlhodobé misie",
+      "source": "https://en.wikipedia.org/wiki/Salyut_1",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T25",
+      "name": "Elektronická burza (NASDAQ)",
+      "year": "1971",
+      "category": "FIN",
+      "prerequisites": [
+        "T02"
+      ],
+      "effect": "+kapitál",
+      "source": "https://en.wikipedia.org/wiki/Nasdaq",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T26",
+      "name": "Rekombinantná DNA",
+      "year": "1973",
+      "category": "MED",
+      "prerequisites": [
+        "T04"
+      ],
+      "effect": "odomyká biotech",
+      "source": "https://en.wikipedia.org/wiki/Recombinant_DNA",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T27",
+      "name": "Mobilný telefón (prototyp)",
+      "year": "1973",
+      "category": "IT",
+      "prerequisites": [
+        "T11"
+      ],
+      "effect": "– (prereq)",
+      "source": "https://en.wikipedia.org/wiki/DynaTAC",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T28",
+      "name": "Presne navádzané zbrane",
+      "year": "1972",
+      "category": "VOJ",
+      "prerequisites": [
+        "T11",
+        "T13"
+      ],
+      "effect": "+útok letectva",
+      "source": "https://en.wikipedia.org/wiki/Guided_bomb",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T29",
+      "name": "Osobný počítač (Apple II)",
+      "year": "1977",
+      "category": "IT",
+      "prerequisites": [
+        "T23"
+      ],
+      "effect": "+produktivita služieb",
+      "source": "https://en.wikipedia.org/wiki/Apple_II",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T30",
+      "name": "Optické vlákno (komerčné)",
+      "year": "1977",
+      "category": "IT",
+      "prerequisites": [
+        "T13"
+      ],
+      "effect": "+komunikácia",
+      "source": "https://en.wikipedia.org/wiki/Optical_fiber",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T31",
+      "name": "VHS – spotrebná elektronika",
+      "year": "1976",
+      "category": "EKO",
+      "prerequisites": [
+        "T23"
+      ],
+      "effect": "+spotrebiteľský priemysel",
+      "source": "https://en.wikipedia.org/wiki/VHS",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T32",
+      "name": "Priemyselný robot (Unimate v GM, 1961)",
+      "year": "1961",
+      "category": "EKO",
+      "prerequisites": [
+        "T02"
+      ],
+      "effect": "−pracovná sila v továrňach",
+      "source": "https://en.wikipedia.org/wiki/Unimate",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T33",
+      "name": "Stealth lietadlo (F-117)",
+      "year": "1981",
+      "category": "VOJ",
+      "prerequisites": [
+        "T28"
+      ],
+      "effect": "+prekvapenie",
+      "source": "https://en.wikipedia.org/wiki/Lockheed_F-117_Nighthawk",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T34",
+      "name": "Raketoplán",
+      "year": "1981",
+      "category": "VES",
+      "prerequisites": [
+        "T21"
+      ],
+      "effect": "lacnejší vynos (v hre)",
+      "source": "https://www.nasa.gov/space-shuttle/",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T35",
+      "name": "Bunkový mobil 1G (NTT Tokio)",
+      "year": "1979",
+      "category": "IT",
+      "prerequisites": [
+        "T27"
+      ],
+      "effect": "+ekonomika",
+      "source": "https://en.wikipedia.org/wiki/1G",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T36",
+      "name": "TCP/IP štandard",
+      "year": "1983",
+      "category": "IT",
+      "prerequisites": [
+        "T22"
+      ],
+      "effect": "odomyká internet",
+      "source": "https://en.wikipedia.org/wiki/Internet_protocol_suite",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T37",
+      "name": "GPS (plná prevádzka)",
+      "year": "1995",
+      "category": "VOJ",
+      "prerequisites": [
+        "T17"
+      ],
+      "effect": "+presnosť, civil. doprava",
+      "source": "https://en.wikipedia.org/wiki/Global_Positioning_System",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T38",
+      "name": "PCR",
+      "year": "1983",
+      "category": "MED",
+      "prerequisites": [
+        "T26"
+      ],
+      "effect": "+diagnostika",
+      "source": "https://en.wikipedia.org/wiki/Polymerase_chain_reaction",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T39",
+      "name": "Dlhodobá stanica (Mir)",
+      "year": "1986",
+      "category": "VES",
+      "prerequisites": [
+        "T24"
+      ],
+      "effect": "–",
+      "source": "https://en.wikipedia.org/wiki/Mir",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T40",
+      "name": "Vesmírny teleskop Hubble",
+      "year": "1990",
+      "category": "VES",
+      "prerequisites": [
+        "T34"
+      ],
+      "effect": "+výskum",
+      "source": "https://science.nasa.gov/mission/hubble/",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T41",
+      "name": "World Wide Web",
+      "year": "1991",
+      "category": "IT",
+      "prerequisites": [
+        "T36"
+      ],
+      "effect": "+20 % služby",
+      "source": "https://en.wikipedia.org/wiki/World_Wide_Web",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T42",
+      "name": "GSM 2G",
+      "year": "1991",
+      "category": "IT",
+      "prerequisites": [
+        "T35"
+      ],
+      "effect": "+ekonomika",
+      "source": "https://en.wikipedia.org/wiki/GSM",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T43",
+      "name": "Lítium-iónová batéria (komerčná)",
+      "year": "1991",
+      "category": "ENE",
+      "prerequisites": [],
+      "effect": "odomyká elektromobilitu",
+      "source": "https://en.wikipedia.org/wiki/Lithium-ion_battery",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T44",
+      "name": "Eurotunel",
+      "year": "1994",
+      "category": "DOP",
+      "prerequisites": [
+        "T18"
+      ],
+      "effect": "+obchod UK–EU",
+      "source": "https://en.wikipedia.org/wiki/Channel_Tunnel",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T45",
+      "name": "Klonovanie (ovca Dolly)",
+      "year": "1996",
+      "category": "MED",
+      "prerequisites": [
+        "T26"
+      ],
+      "effect": "etické napätie",
+      "source": "https://en.wikipedia.org/wiki/Dolly_%28sheep%29",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T46",
+      "name": "GMO plodiny (Flavr Savr, prvá komerčná)",
+      "year": "1994",
+      "category": "MED",
+      "prerequisites": [
+        "T26"
+      ],
+      "effect": "+potraviny, −stabilita EU",
+      "source": "https://en.wikipedia.org/wiki/Flavr_Savr",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T47",
+      "name": "Bojové drony (Predator)",
+      "year": "1995",
+      "category": "VOJ",
+      "prerequisites": [
+        "T37"
+      ],
+      "effect": "odomyká drony",
+      "source": "https://en.wikipedia.org/wiki/General_Atomics_MQ-1_Predator",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T48",
+      "name": "ISS (prvý modul)",
+      "year": "1998",
+      "category": "VES",
+      "prerequisites": [
+        "T39"
+      ],
+      "effect": "medzinárodná spolupráca",
+      "source": "https://www.nasa.gov/international-space-station/",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T49",
+      "name": "Hybridné auto (Prius)",
+      "year": "1997",
+      "category": "DOP",
+      "prerequisites": [
+        "T43"
+      ],
+      "effect": "−spotreba ropy",
+      "source": "https://en.wikipedia.org/wiki/Toyota_Prius",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T50",
+      "name": "Euro (bezhotovostne 1999, hotovosť 2002)",
+      "year": "1999",
+      "category": "FIN",
+      "prerequisites": [],
+      "effect": "menová únia EU",
+      "source": "https://www.ecb.europa.eu/euro/intro/html/index.en.html",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T51",
+      "name": "Ľudský genóm (dokončený)",
+      "year": "2003",
+      "category": "MED",
+      "prerequisites": [
+        "T38"
+      ],
+      "effect": "odomyká personalizovanú medicínu",
+      "source": "https://www.genome.gov/human-genome-project",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T52",
+      "name": "3G mobilný internet",
+      "year": "2001",
+      "category": "IT",
+      "prerequisites": [
+        "T42"
+      ],
+      "effect": "+služby",
+      "source": "https://en.wikipedia.org/wiki/3G",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T53",
+      "name": "Smartfón (iPhone)",
+      "year": "2007",
+      "category": "IT",
+      "prerequisites": [
+        "T52",
+        "T43"
+      ],
+      "effect": "+spotreba, sociálne siete",
+      "source": "https://en.wikipedia.org/wiki/IPhone_%281st_generation%29",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T54",
+      "name": "Frakovanie břidlíc (boom)",
+      "year": "2008",
+      "category": "ENE",
+      "prerequisites": [],
+      "effect": "ropa/plyn USA + (rast ťažby po 2008 = „shale revolution“)",
+      "source": "https://en.wikipedia.org/wiki/Shale_gas_in_the_United_States",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T55",
+      "name": "Bitcoin",
+      "year": "2009",
+      "category": "FIN",
+      "prerequisites": [
+        "T41"
+      ],
+      "effect": "kryptomena, volatilita",
+      "source": "https://en.wikipedia.org/wiki/Bitcoin",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T56",
+      "name": "Cloud computing (AWS)",
+      "year": "2006",
+      "category": "IT",
+      "prerequisites": [
+        "T41"
+      ],
+      "effect": "+IT ekonomika",
+      "source": "https://en.wikipedia.org/wiki/Amazon_Web_Services",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T57",
+      "name": "Lacná fotovoltika / vietor vo veľkom (NEOVERENE ako presný rok – trend)",
+      "year": "2010",
+      "category": "ENE",
+      "prerequisites": [],
+      "effect": "+zelená energia",
+      "source": "https://www.iea.org/energy-system/renewables/solar-pv",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T58",
+      "name": "Hlboké učenie (AlexNet)",
+      "year": "2012",
+      "category": "IT",
+      "prerequisites": [
+        "T56"
+      ],
+      "effect": "+výskum AI",
+      "source": "https://en.wikipedia.org/wiki/AlexNet",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T59",
+      "name": "CRISPR-Cas9",
+      "year": "2012",
+      "category": "MED",
+      "prerequisites": [
+        "T51"
+      ],
+      "effect": "+medicína, +poľnohospodárstvo",
+      "source": "https://en.wikipedia.org/wiki/CRISPR_gene_editing",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T60",
+      "name": "Masový elektromobil (Model S)",
+      "year": "2012",
+      "category": "DOP",
+      "prerequisites": [
+        "T43"
+      ],
+      "effect": "−ropa",
+      "source": "https://en.wikipedia.org/wiki/Tesla_Model_S",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T61",
+      "name": "Opakovane použiteľná raketa (Falcon 9 pristátie)",
+      "year": "2015",
+      "category": "VES",
+      "prerequisites": [
+        "T34"
+      ],
+      "effect": "−90 % cena vynosu (v hre)",
+      "source": "https://en.wikipedia.org/wiki/Falcon_9_flight_20",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T62",
+      "name": "4G LTE",
+      "year": "2009",
+      "category": "IT",
+      "prerequisites": [
+        "T52"
+      ],
+      "effect": "+služby",
+      "source": "https://en.wikipedia.org/wiki/LTE_%28telecommunication%29",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T63",
+      "name": "Hypersonické zbrane (Avangard v službe)",
+      "year": "2019",
+      "category": "VOJ",
+      "prerequisites": [
+        "T09"
+      ],
+      "effect": "obchádza PVO",
+      "source": "https://en.wikipedia.org/wiki/Avangard_%28hypersonic_glide_vehicle%29",
+      "status": "NEOVERENE: Wikipédia uvádza oznámenie 2018, rok nasadenia 2019 nepotvrdený"
+    },
+    {
+      "id": "T64",
+      "name": "5G",
+      "year": "2019",
+      "category": "IT",
+      "prerequisites": [
+        "T62"
+      ],
+      "effect": "+IoT",
+      "source": "https://en.wikipedia.org/wiki/5G",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T65",
+      "name": "mRNA vakcína",
+      "year": "2020",
+      "category": "MED",
+      "prerequisites": [
+        "T59"
+      ],
+      "effect": "rýchla reakcia na pandémie",
+      "source": "https://en.wikipedia.org/wiki/MRNA_vaccine",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T66",
+      "name": "Megakonštelácie (Starlink)",
+      "year": "2019",
+      "category": "VES",
+      "prerequisites": [
+        "T61"
+      ],
+      "effect": "globálny internet, vojenská komunikácia",
+      "source": "https://en.wikipedia.org/wiki/Starlink",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T67",
+      "name": "Veľké jazykové modely (ChatGPT)",
+      "year": "2022",
+      "category": "IT",
+      "prerequisites": [
+        "T58"
+      ],
+      "effect": "+produktivita, dezinformácie",
+      "source": "https://en.wikipedia.org/wiki/ChatGPT",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T68",
+      "name": "Lacné FPV drony vo vojne (Ukrajina)",
+      "year": "2023",
+      "category": "VOJ",
+      "prerequisites": [
+        "T47"
+      ],
+      "effect": "+útok pechoty",
+      "source": "https://en.wikipedia.org/wiki/Drone_warfare",
+      "status": "NEOVERENE: rok masového nasadenia FPV nemá jednoznačný zdroj"
+    },
+    {
+      "id": "T69",
+      "name": "Fúzne zapálenie (NIF, zisk)",
+      "year": "2022",
+      "category": "ENE",
+      "prerequisites": [
+        "T13"
+      ],
+      "effect": "odomyká fúzne uzly po 2026",
+      "source": "https://www.llnl.gov/article/49306/lawrence-livermore-national-laboratory-achieves-fusion-ignition",
+      "status": "OVERENE"
+    },
+    {
+      "id": "T70",
+      "name": "Webbov teleskop (JWST)",
+      "year": "2021",
+      "category": "VES",
+      "prerequisites": [
+        "T40"
+      ],
+      "effect": "+výskum",
+      "source": "https://science.nasa.gov/mission/webb/",
+      "status": "OVERENE"
+    }
+  ]
+}
