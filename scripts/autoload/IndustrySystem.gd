@@ -571,7 +571,7 @@ func settle_chunk(start: int, count: int) -> int:
 		if not firm.has("history") or firm.history == null:
 			firm.history = []
 		firm.history.append({
-			"rev": rev, "cogs": cogs, "wages": wages, "rent": rent,
+			"rev": rev, "cogs": cogs, "wages": wages, "rent": rent, "maintain": maintain,
 			"tax": tax, "profit": profit, "day": GameState.day_index,
 		})
 		if is_pl and record_goods_flow and (not flow.inputs.is_empty() or not flow.outputs.is_empty() or not flow.trades.is_empty()):
@@ -1005,6 +1005,12 @@ const RESERVE_DAYS = 30
 var last_dividends = 0.0  # runtime pre UI: suma poslednej mesacnej vyplaty
 signal dividends_paid(total: float)
 
+func _history_cost(row: Dictionary) -> float:
+	# Older v3 rows omitted maintenance, but net profit already included it.
+	if row.has("rev") and row.has("profit"):
+		return maxf(0.0, float(row.rev) - float(row.profit))
+	return float(row.get("cogs", 0.0)) + float(row.get("wages", 0.0)) + float(row.get("rent", 0.0)) + float(row.get("tax", 0.0)) + float(row.get("maintain", 0.0))
+
 func firm_reserve(firm: Dictionary) -> float:
 	var hist: Array = firm.get("history", [])
 	if hist.is_empty():
@@ -1012,7 +1018,7 @@ func firm_reserve(firm: Dictionary) -> float:
 	var alpha = 2.0 / (30.0 + 1.0)
 	var ema = -1.0
 	for h in hist:
-		var c = float(h.get("cogs", 0.0)) + float(h.get("wages", 0.0)) + float(h.get("rent", 0.0)) + float(h.get("tax", 0.0))
+		var c = _history_cost(h)
 		ema = c if ema < 0.0 else alpha * c + (1.0 - alpha) * ema
 	return max(0.0, ema) * float(RESERVE_DAYS)
 
@@ -1060,7 +1066,7 @@ func firm_summary(firm: Dictionary) -> Dictionary:
 	for i in range(start, hist.size()):
 		var h: Dictionary = hist[i]
 		rev += float(h.get("rev", 0.0))
-		costs += float(h.get("cogs", 0.0)) + float(h.get("wages", 0.0)) + float(h.get("rent", 0.0)) + float(h.get("tax", 0.0))
+		costs += _history_cost(h)
 		profit += float(h.get("profit", 0.0))
 	return {"rev": rev, "costs": costs, "profit": profit, "cash": float(firm.get("cash", 0.0)),
 		"reserve": firm_reserve(firm), "last_dividend": float(firm.get("last_dividend", 0.0))}
