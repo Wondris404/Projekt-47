@@ -5,6 +5,7 @@ func run(u) -> void:
 	_power_input(u)
 	_maintenance(u)
 	_world_caches(u)
+	_transport_index(u)
 
 func _trade_ledger(u) -> void:
 	u._new()
@@ -94,3 +95,35 @@ func _world_caches(u) -> void:
 	GameState.player.cash = 2.0e8
 	GameState.found_firm("cafe", "Nová firma", "SK")
 	u._chk("audit_sales_cache_new_game", str(Empire._player_firm_map()[str(GameState.player_firms()[-1].id)].name) == "Nová firma")
+
+func _transport_index(u) -> void:
+	u._new()
+	GameState.config.progression = false
+	GameState.player.cash = 1.0e10
+	for kind in ["coal_mine", "logistics_hub", "logistics_hub", "cargo_port"]:
+		GameState.found_firm(kind, "Audit " + kind, "SK")
+	var firms = GameState.player_firms()
+	for f in firms: f.pos = [100.0, 100.0]
+	firms[2].facilities[0].scale = 4.0
+	var expected := {}
+	Transport.use_support_index = false
+	Transport.invalidate()
+	for f in firms:
+		for cid in ["coal", "crude_oil", "electricity"]:
+			expected[str(f.id) + cid] = Transport.discount(f, cid).duplicate()
+	Transport.use_support_index = true
+	Transport.invalidate()
+	var identical = true
+	for f in firms:
+		for cid in ["coal", "crude_oil", "electricity"]:
+			if Transport.discount(f, cid) != expected[str(f.id) + cid]: identical = false
+	u._chk("audit_transport_index_exact", identical)
+	var saved = GameState.to_dict().duplicate(true)
+	GameState.from_dict(saved.duplicate(true))
+	Transport.use_support_index = false
+	for i in 3: GameState.simulate_day()
+	var reference = JSON.stringify(GameState.to_dict())
+	GameState.from_dict(saved.duplicate(true))
+	Transport.use_support_index = true
+	for i in 3: GameState.simulate_day()
+	u._chk("audit_transport_simulation_exact", reference == JSON.stringify(GameState.to_dict()))

@@ -72,6 +72,10 @@ var _c_conn := {}
 var _c_disc := {}
 var _c_hub := {}
 var _c_cap := {}
+var use_support_index := true
+var _support_ready := false
+var _support_hubs: Array = []
+var _support_ports := {}
 const _WM = preload("res://scripts/ui/world_map.gd")
 
 func _cache_ok() -> void:
@@ -79,6 +83,9 @@ func _cache_ok() -> void:
 	if sig != _csig:
 		_csig = sig
 		_c_wp.clear(); _c_dpos.clear(); _c_conn.clear(); _c_disc.clear(); _c_hub.clear()
+		_support_ready = false
+		_support_hubs.clear()
+		_support_ports.clear()
 
 func invalidate() -> void:
 	_csig = ""
@@ -154,14 +161,31 @@ func _logi_hub_for0(f: Dictionary) -> Dictionary:
 	var p = firm_wp(f)
 	var best: Dictionary = {}
 	var best_s = 0.0
-	for h in GameState.player_firms():
-		if str(h.get("industry", "")) != "logistics_hub":
-			continue
-		var lp = logi_params(h)
-		if km(p, firm_wp(h)) <= float(lp.km) and float(lp.share) > best_s:
-			best_s = float(lp.share)
-			best = h
+	for candidate in _support_candidates():
+		if km(p, candidate.pos) <= float(candidate.km) and float(candidate.share) > best_s:
+			best_s = float(candidate.share)
+			best = candidate.firm
 	return best
+
+# Preserve original order (including ties), while computing hub geometry once
+# per existing cache lifetime rather than once per firm and commodity.
+func _support_candidates() -> Array:
+	if use_support_index and _support_ready:
+		return _support_hubs
+	var hubs: Array = []
+	var ports := {}
+	for h in GameState.player_firms():
+		var industry = str(h.get("industry", ""))
+		if industry == "cargo_port":
+			ports[str(h.get("country", ""))] = true
+		elif industry == "logistics_hub":
+			var lp = logi_params(h)
+			hubs.append({"firm": h, "pos": firm_wp(h), "km": lp.km, "share": lp.share})
+	if use_support_index:
+		_support_hubs = hubs
+		_support_ports = ports
+		_support_ready = true
+	return hubs
 
 func discount(f: Dictionary, cid: String) -> Dictionary:
 	_cache_ok()
@@ -187,7 +211,13 @@ func _discount0(f: Dictionary, cid: String) -> Dictionary:
 	var hub = logi_hub_for(f)
 	if not hub.is_empty():
 		logi = float(logi_params(hub).share) * LOGI_CUT
-	var port = Society.port_discount(f) if cid in GOODS else 0.0  # JUAN-P47: vlastny nakladny pristav v krajine
+	var port = 0.0
+	if cid in GOODS:
+		if use_support_index:
+			_support_candidates()
+			port = 0.2 if str(f.get("owner", "")) == "player" and _support_ports.has(str(f.get("country", ""))) else 0.0
+		else:
+			port = Society.port_discount(f)
 	var d = 1.0 - (1.0 - rail) * (1.0 - pipe) * (1.0 - logi) * (1.0 - port)
 	return {"d": d, "rail": rail, "pipe": pipe, "logi": logi, "port": port, "hub": str(hub.get("id", ""))}
 
