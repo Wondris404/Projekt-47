@@ -1,0 +1,111 @@
+{
+  "headless_suites": [
+    {
+      "command": "audit_unit",
+      "exit": 0,
+      "seconds": 4.26,
+      "ok_lines": 24,
+      "errors": []
+    },
+    {
+      "command": "unit",
+      "exit": 1,
+      "seconds": 269.71,
+      "ok_lines": 531,
+      "errors": [
+        "ERROR: Parse JSON failed. Error at line 0: Expected key",
+        "P47_UNIT_FAIL catalog_fields_match_brief "
+      ]
+    },
+    {
+      "command": "fund_unit",
+      "exit": 0,
+      "seconds": 2.21,
+      "ok_lines": 22,
+      "errors": []
+    },
+    {
+      "command": "flow_unit",
+      "exit": 0,
+      "seconds": 4.06,
+      "ok_lines": 37,
+      "errors": []
+    },
+    {
+      "command": "goods_icons_unit",
+      "exit": 0,
+      "seconds": 1.73,
+      "ok_lines": 7,
+      "errors": []
+    },
+    {
+      "command": "bank_audit_unit",
+      "exit": 0,
+      "seconds": 6.3,
+      "ok_lines": 27,
+      "errors": []
+    },
+    {
+      "command": "bank_advisor_unit",
+      "exit": 0,
+      "seconds": 8.99,
+      "ok_lines": 20,
+      "errors": []
+    },
+    {
+      "command": "sovereign_unit",
+      "exit": 0,
+      "seconds": 2.48,
+      "ok_lines": 21,
+      "errors": []
+    },
+    {
+      "command": "employment_stats_unit",
+      "exit": 0,
+      "seconds": 2.2,
+      "ok_lines": 8,
+      "errors": []
+    },
+    {
+      "command": "society_unit",
+      "exit": 0,
+      "seconds": 4.54,
+      "ok_lines": 29,
+      "errors": []
+    },
+    {
+      "command": "local_comp_unit",
+      "exit": 0,
+      "seconds": 3.23,
+      "ok_lines": 4,
+      "errors": []
+    },
+    {
+      "command": "phase_routes_unit",
+      "exit": 0,
+      "seconds": 3.6,
+      "ok_lines": 8,
+      "errors": []
+    },
+    {
+      "command": "stability",
+      "exit": 0,
+      "seconds": 26.31,
+      "ok_lines": 1,
+      "errors": []
+    }
+  ],
+  "additional_checks": {
+    "probe": "P47_PROBE_OK; pre-existing resource-in-use shutdown warning",
+    "original_catalog": "catalog_fields_match_brief also fails on original commit; fixture absent",
+    "old_v3": "Original commit generated a v3 save after 105 days; fixed version loaded it and advanced to day 108 with zero invalid numbers",
+    "ui_assertions": [
+      "P47_DESCRIPTIONS_OK industries=61",
+      "P47_TOOLBAR_OK",
+      "P47_ATLAS_ONLY_OK normal=1 saved=1 dev=1 overlays=1",
+      "P47_FUND_UI_OK target=1 deposit=1 withdraw=1 city=1 portfolio=1"
+    ],
+    "ui_method": "Temporary copy only: bypass headless UI startup gate; disable GPU screenshot export and frame_post_draw waits. Original assertions preserved. Not a graphical or pixel comparison.",
+    "new_regression_assertions": 24
+  }
+}

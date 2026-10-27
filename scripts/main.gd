@@ -12,6 +12,7 @@ var _description_test_runner
 var _toolbar_test_runner
 var _atlas_test_runner
 var _fund_test_runner
+var _atlas_visual_runner
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -32,6 +33,14 @@ func _ready() -> void:
 			exit_code = load("res://tests/stability.gd").new().run(days, home_iso)
 		elif args.size() > 0 and str(args[0]) == "unit":
 			exit_code = load("res://tests/unit.gd").new().run()
+		elif args.size() > 0 and str(args[0]) == "camera_unit":
+			var unit = load("res://tests/unit.gd").new()
+			load("res://tests/atlas_camera_regressions.gd").new().run(unit, self)
+			exit_code = 1 if unit.fails > 0 else 0
+		elif args.size() > 0 and str(args[0]) == "audit_unit":
+			var unit = load("res://tests/unit.gd").new()
+			load("res://tests/audit_regressions.gd").new().run(unit)
+			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "fund_unit":
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/fund_realty.gd").new().run(unit)
@@ -68,6 +77,8 @@ func _ready() -> void:
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/local_comp.gd").new().run(unit)
 			exit_code = 1 if unit.fails > 0 else 0
+		elif args.size() > 0 and str(args[0]) == "performance_audit":
+			load("res://tests/performance_audit.gd").new().run()
 		elif args.size() > 0 and str(args[0]) == "profile_sim":
 			load("res://tests/profile_sim.gd").new().run()
 		elif args.size() > 0 and str(args[0]) == "phase_routes_unit":
@@ -748,6 +759,9 @@ func _build_play() -> void:
 		_fund_test_runner.run(self)
 	elif "window_ui" in OS.get_cmdline_user_args():  # JUAN-P47: presuvatelne okna (GUI + screenshot)
 		_window_ui()
+	elif "atlas_visual_audit" in OS.get_cmdline_user_args():
+		_atlas_visual_runner = load("res://tests/atlas_visual_audit.gd").new()
+		_atlas_visual_runner.run(self)
 	elif "perf23" in OS.get_cmdline_user_args():  # JUAN23
 		_perf23()
 	elif "j22_shot" in OS.get_cmdline_user_args():  # JUAN22

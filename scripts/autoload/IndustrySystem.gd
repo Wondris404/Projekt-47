@@ -332,6 +332,7 @@ var use_local_competition_cache := true
 var _local_competition: Dictionary = {}
 var _local_competition_members: Dictionary = {}
 var _local_competition_valid := false
+var _player_ai_counts: Dictionary = {}
 
 func _build_internal_pool() -> void:
 	_internal = {}
@@ -446,12 +447,16 @@ func settle_start() -> void:
 func _prepare_local_competition() -> void:
 	_local_competition.clear()
 	_local_competition_members.clear()
+	_player_ai_counts.clear()
 	for firm in GameState.firms:
 		if firm.get("closed", false):
 			continue
 		var key = str(firm.get("country", "")) + "|" + str(firm.get("industry", ""))
 		_local_competition[key] = int(_local_competition.get(key, 0)) + 1
 		_local_competition_members[str(firm.get("id", ""))] = key
+		if str(firm.get("owner", "")) == "player" and str(firm.get("industry", "")) == "ai_firm":
+			var iso = str(firm.get("country", ""))
+			_player_ai_counts[iso] = int(_player_ai_counts.get(iso, 0)) + 1
 	_local_competition_valid = true
 
 func settle_chunk(start: int, count: int) -> int:
@@ -513,7 +518,7 @@ func settle_chunk(start: int, count: int) -> int:
 					_market_execution(iso, str(in_id), "buyers", firm, bought, cost / bought)
 				if is_pl and record_goods_flow:
 					_flow_add(flow.inputs, str(in_id), {"bought": bought, "internal": own_in, "cost": cost})
-			var applied: Dictionary = apply_recipe(fac.inventory, str(fac.recipe), desired, _yield_mult(firm, str(fac.recipe)))
+			var applied: Dictionary = apply_spec(fac.inventory, _production_spec(firm, recipe), desired, _yield_mult(firm, str(fac.recipe)))
 			var made = float(applied.get("actual", 0.0))
 			for out_id in recipe.get("outputs", {}).keys():
 				var sell_fill = MarketSystem.actor_sell_fill(iso, out_id)
@@ -555,7 +560,9 @@ func settle_chunk(start: int, count: int) -> int:
 				firm.cash = float(firm.cash) + cut
 				rev += cut
 				freight_cut += cut
-		_run_desks(firm, rev, flow)
+		var desk_totals = _run_desks(firm, rev, flow)
+		rev += float(desk_totals.revenue)
+		cogs += float(desk_totals.cost)
 		if str(firm.get("owner", "")) == "player" and not firm.get("manager", {}).is_empty():  # JUAN3: plat pravej ruky
 			var sal = float(firm.manager.get("salary", 0.0)) / 30.0
 			firm.cash = float(firm.cash) - sal
@@ -569,7 +576,7 @@ func settle_chunk(start: int, count: int) -> int:
 		if not firm.has("history") or firm.history == null:
 			firm.history = []
 		firm.history.append({
-			"rev": rev, "cogs": cogs, "wages": wages, "rent": rent,
+			"rev": rev, "cogs": cogs, "wages": wages, "rent": rent, "maintain": maintain,
 			"tax": tax, "profit": profit, "day": GameState.day_index,
 		})
 		if is_pl and record_goods_flow and (not flow.inputs.is_empty() or not flow.outputs.is_empty() or not flow.trades.is_empty()):
@@ -816,7 +823,8 @@ func trade_flow_text(firm: Dictionary) -> String:
 		text += "• %s: %.4f %s; trh %s → trh %s. Náklady %s, tržby %s, obchodný zisk %s (marža %.1f %%).\n" % [str(item.get("name", parts[0])), float(row.qty), str(item.get("unit", "")), src, dst, EconMath.eur(float(row.cost)), EconMath.eur(float(row.revenue)), EconMath.eur(margin), 100.0 * margin / maxf(float(row.revenue), 0.00001)]
 	return text + "Konkrétnych dodávateľov a odberateľov súhrnný trh neurčuje.\n"
 
-func _run_desks(firm: Dictionary, _rev_in: float, flow: Dictionary = {}) -> void:
+func _run_desks(firm: Dictionary, _rev_in: float, flow: Dictionary = {}) -> Dictionary:
+	var totals = {"revenue": 0.0, "cost": 0.0}
 	for fac in firm.facilities:
 		var recipe: Dictionary = DataLoader.recipes.get(fac.get("recipe", ""), {})
 		if not recipe.get("trade", false):
@@ -852,11 +860,14 @@ func _run_desks(firm: Dictionary, _rev_in: float, flow: Dictionary = {}) -> void
 		var cost = qty * unit_cost
 		var gain = qty * dst_px
 		firm.cash = float(firm.cash) - cost + gain
+		totals.revenue += gain
+		totals.cost += cost
 		if record_goods_flow:
 			_direct_trades.append({"day": GameState.day_index, "seller": "@market", "buyer": str(firm.get("id", "")), "cid": cid, "src": src, "dst": src, "qty": qty, "seller_price": src_px, "buyer_price": unit_cost, "kind": "desk_purchase"})
 			_direct_trades.append({"day": GameState.day_index, "seller": str(firm.get("id", "")), "buyer": "@market", "cid": cid, "src": src, "dst": dst, "qty": qty, "seller_price": dst_px, "buyer_price": dst_px, "kind": "desk_sale"})
 		if not flow.is_empty():
 			flow.trades.append({"cid": cid, "src": src, "dst": dst, "qty": qty, "cost": cost, "revenue": gain})
+	return totals
 
 func _best_route(home: String) -> Dictionary:
 	var best = {"cid": "", "dst": "", "score": 0.0}
@@ -918,9 +929,25 @@ func _input_qty(firm: Dictionary, recipe: Dictionary, in_id: String) -> float:
 		q *= float(GameState.player.modifiers.get("power_mult", 1.0))
 	return q
 
+# Planning and production must use the same researched input quantities.
+# Copy only modified inputs; the shared recipe remains immutable.
+func _production_spec(firm: Dictionary, recipe: Dictionary) -> Dictionary:
+	var inputs: Dictionary = recipe.get("inputs", {})
+	if not inputs.has("electricity") or firm.get("owner", "") != "player" or float(GameState.player.modifiers.get("power_mult", 1.0)) == 1.0:
+		return recipe
+	var spec = recipe.duplicate()
+	spec.inputs = inputs.duplicate()
+	spec.inputs.electricity = _input_qty(firm, recipe, "electricity")
+	return spec
+
 func _yield_mult(firm: Dictionary, recipe_id: String) -> float:
 	if firm.get("owner", "") != "player":
 		return 1.0
+	if use_local_competition_cache and _local_competition_valid:
+		var boost = 1.0
+		if not str(firm.get("industry", "")) in ["ai_firm", "data_center"]:
+			boost += minf(Brand.AI_BOOST_MAX, Brand.AI_BOOST_EACH * int(_player_ai_counts.get(str(firm.get("country", "")), 0)))
+		return _yield_mult0(firm, recipe_id) * boost
 	return _yield_mult0(firm, recipe_id) * Brand.ai_boost(firm)  # JUAN21: AI firma v krajine zvysuje vykon
 
 func _yield_mult0(firm: Dictionary, recipe_id: String) -> float:
@@ -988,6 +1015,12 @@ const RESERVE_DAYS = 30
 var last_dividends = 0.0  # runtime pre UI: suma poslednej mesacnej vyplaty
 signal dividends_paid(total: float)
 
+func _history_cost(row: Dictionary) -> float:
+	# Older v3 rows omitted maintenance, but net profit already included it.
+	if row.has("rev") and row.has("profit"):
+		return maxf(0.0, float(row.rev) - float(row.profit))
+	return float(row.get("cogs", 0.0)) + float(row.get("wages", 0.0)) + float(row.get("rent", 0.0)) + float(row.get("tax", 0.0)) + float(row.get("maintain", 0.0))
+
 func firm_reserve(firm: Dictionary) -> float:
 	var hist: Array = firm.get("history", [])
 	if hist.is_empty():
@@ -995,7 +1028,7 @@ func firm_reserve(firm: Dictionary) -> float:
 	var alpha = 2.0 / (30.0 + 1.0)
 	var ema = -1.0
 	for h in hist:
-		var c = float(h.get("cogs", 0.0)) + float(h.get("wages", 0.0)) + float(h.get("rent", 0.0)) + float(h.get("tax", 0.0))
+		var c = _history_cost(h)
 		ema = c if ema < 0.0 else alpha * c + (1.0 - alpha) * ema
 	return max(0.0, ema) * float(RESERVE_DAYS)
 
@@ -1043,7 +1076,7 @@ func firm_summary(firm: Dictionary) -> Dictionary:
 	for i in range(start, hist.size()):
 		var h: Dictionary = hist[i]
 		rev += float(h.get("rev", 0.0))
-		costs += float(h.get("cogs", 0.0)) + float(h.get("wages", 0.0)) + float(h.get("rent", 0.0)) + float(h.get("tax", 0.0))
+		costs += _history_cost(h)
 		profit += float(h.get("profit", 0.0))
 	return {"rev": rev, "costs": costs, "profit": profit, "cash": float(firm.get("cash", 0.0)),
 		"reserve": firm_reserve(firm), "last_dividend": float(firm.get("last_dividend", 0.0))}

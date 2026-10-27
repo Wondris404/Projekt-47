@@ -1004,15 +1004,17 @@ const STATE_SVC_MAX = 2
 const STATE_COUNTRIES = 18  # rovnake krajiny ako statne AI firmy (AgentSystem)
 var _npc_cache: Array = []
 var _npc_cache_day := -1
+var _npc_cache_revision := -1
 
 func _npc_service_firms() -> Array:
-	if _npc_cache_day == GameState.day_index and _npc_cache_day >= 0:
+	if _npc_cache_day == GameState.day_index and _npc_cache_day >= 0 and _npc_cache_revision == GameState.state_revision:
 		return _npc_cache
 	_npc_cache = []
 	for f in GameState.firms:
 		if str(f.get("owner", "")) != "player" and not bool(f.get("closed", false)) and str(f.get("industry", "")) in AI_SVC_IND:
 			_npc_cache.append(f)
 	_npc_cache_day = GameState.day_index
+	_npc_cache_revision = GameState.state_revision
 	return _npc_cache
 
 func _count(iso: String, city_name: String, ind: String) -> int:
