@@ -95,7 +95,9 @@ static func _rect(m: CanvasItem, r: Rect2, col: Color, filled: bool = true, w: f
 # cache rozlozenia budov mesta (nahodne cisla + triedenie sa nepocitaju kazdy snimok)
 static var _city_lay := {}
 static var use_city_geometry_cache := true
-const CITY_GEOMETRY_LIMIT = 128
+# A European regional view contains more than 128 towns; a smaller FIFO
+# thrashes on every redraw. Keep the cache bounded while fitting that view.
+const CITY_GEOMETRY_LIMIT = 512
 static var _city_geometry := {}
 
 static func _shade(c: Color, k: float) -> Color:
