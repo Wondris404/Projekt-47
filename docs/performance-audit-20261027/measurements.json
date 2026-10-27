@@ -1,0 +1,437 @@
+{
+  "baseline_commit": "526f79264aaa91e1a5dfd8531466af35a157dbfd",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "simulation_runs": [
+    {
+      "tag": "baseline",
+      "repeat": 0,
+      "cpu": 0,
+      "exit": 0,
+      "countries": 165,
+      "days": 100,
+      "max_ms": 158.23,
+      "mean_ms": 89.33354,
+      "p50_ms": 84.482,
+      "p95_ms": 121.74,
+      "player_firms": 72,
+      "total_firms": 110,
+      "warmup": 5
+    },
+    {
+      "tag": "after",
+      "repeat": 0,
+      "cpu": 0,
+      "exit": 0,
+      "countries": 165,
+      "days": 100,
+      "max_ms": 133.319,
+      "mean_ms": 81.42582,
+      "p50_ms": 75.643,
+      "p95_ms": 112.311,
+      "player_firms": 72,
+      "total_firms": 110,
+      "warmup": 5
+    },
+    {
+      "tag": "after",
+      "repeat": 1,
+      "cpu": 0,
+      "exit": 0,
+      "countries": 165,
+      "days": 100,
+      "max_ms": 137.58,
+      "mean_ms": 97.78831,
+      "p50_ms": 102.258,
+      "p95_ms": 113.794,
+      "player_firms": 72,
+      "total_firms": 110,
+      "warmup": 5
+    },
+    {
+      "tag": "baseline",
+      "repeat": 1,
+      "cpu": 0,
+      "exit": 0,
+      "countries": 165,
+      "days": 100,
+      "max_ms": 157.794,
+      "mean_ms": 117.01182,
+      "p50_ms": 118.833,
+      "p95_ms": 139.908,
+      "player_firms": 72,
+      "total_firms": 110,
+      "warmup": 5
+    },
+    {
+      "tag": "baseline",
+      "repeat": 2,
+      "cpu": 0,
+      "exit": 0,
+      "countries": 165,
+      "days": 100,
+      "max_ms": 130.782,
+      "mean_ms": 95.21911,
+      "p50_ms": 92.535,
+      "p95_ms": 119.954,
+      "player_firms": 72,
+      "total_firms": 110,
+      "warmup": 5
+    },
+    {
+      "tag": "after",
+      "repeat": 2,
+      "cpu": 0,
+      "exit": 0,
+      "countries": 165,
+      "days": 100,
+      "max_ms": 135.576,
+      "mean_ms": 84.58387,
+      "p50_ms": 80.816,
+      "p95_ms": 107.379,
+      "player_firms": 72,
+      "total_firms": 110,
+      "warmup": 5
+    }
+  ],
+  "ui_cpu_runs": [
+    {
+      "tag": "baseline",
+      "repeat": 0,
+      "exit": 0,
+      "views": {
+        "world": 20.98,
+        "region": 55.39,
+        "detail": 17.77,
+        "city": 12.85
+      }
+    },
+    {
+      "tag": "after",
+      "repeat": 0,
+      "exit": 0,
+      "views": {
+        "world": 26.47,
+        "region": 16.33,
+        "detail": 12.63,
+        "city": 13.23
+      }
+    },
+    {
+      "tag": "baseline",
+      "repeat": 1,
+      "exit": 0,
+      "views": {
+        "world": 22.81,
+        "region": 24.74,
+        "detail": 16.27,
+        "city": 12.15
+      }
+    },
+    {
+      "tag": "after",
+      "repeat": 1,
+      "exit": 0,
+      "views": {
+        "world": 23.37,
+        "region": 15.41,
+        "detail": 14.79,
+        "city": 12.39
+      }
+    },
+    {
+      "tag": "baseline",
+      "repeat": 2,
+      "exit": 0,
+      "views": {
+        "world": 18.82,
+        "region": 21.71,
+        "detail": 17.35,
+        "city": 14.44
+      }
+    },
+    {
+      "tag": "after",
+      "repeat": 2,
+      "exit": 0,
+      "views": {
+        "world": 19.86,
+        "region": 17.04,
+        "detail": 11.64,
+        "city": 12.45
+      }
+    }
+  ],
+  "initial_scoped_profile": [
+    {
+      "max_ms": 58.681,
+      "mean_ms": 28.51623,
+      "n": 100,
+      "name": "MarketSystem.begin_day",
+      "p50_ms": 27.14,
+      "p95_ms": 38.347,
+      "total_ms": 2851.623
+    },
+    {
+      "max_ms": 0.003,
+      "mean_ms": 0.00215,
+      "n": 100,
+      "name": "GeopoliticsSystem.daily",
+      "p50_ms": 0.002,
+      "p95_ms": 0.003,
+      "total_ms": 0.215
+    },
+    {
+      "max_ms": 11.134,
+      "mean_ms": 4.93874,
+      "n": 100,
+      "name": "IndustrySystem.plan_and_post",
+      "p50_ms": 4.826,
+      "p95_ms": 6.457,
+      "total_ms": 493.874
+    },
+    {
+      "max_ms": 17.893,
+      "mean_ms": 5.99738,
+      "n": 100,
+      "name": "MarketSystem.trade_routes",
+      "p50_ms": 5.58,
+      "p95_ms": 8.692,
+      "total_ms": 599.738
+    },
+    {
+      "max_ms": 44.329,
+      "mean_ms": 17.92494,
+      "n": 100,
+      "name": "MarketSystem.clear_all",
+      "p50_ms": 17.04,
+      "p95_ms": 21.888,
+      "total_ms": 1792.494
+    },
+    {
+      "max_ms": 1.878,
+      "mean_ms": 0.00234599488289727,
+      "n": 10162,
+      "name": "IndustrySystem._plan_for",
+      "p50_ms": 0.002,
+      "p95_ms": 0.003,
+      "total_ms": 23.840000000002
+    },
+    {
+      "max_ms": 3.104,
+      "mean_ms": 0.0377483763038766,
+      "n": 10162,
+      "name": "IndustrySystem._yield_mult",
+      "p50_ms": 0.049,
+      "p95_ms": 0.07,
+      "total_ms": 383.598999999994
+    },
+    {
+      "max_ms": 0.133,
+      "mean_ms": 0.00258807321393437,
+      "n": 10162,
+      "name": "IndustrySystem._local_mult",
+      "p50_ms": 0.002,
+      "p95_ms": 0.005,
+      "total_ms": 26.300000000001
+    },
+    {
+      "max_ms": 3.087,
+      "mean_ms": 0.0426863888888895,
+      "n": 7200,
+      "name": "Brand.ai_boost",
+      "p50_ms": 0.042,
+      "p95_ms": 0.065,
+      "total_ms": 307.342000000005
+    },
+    {
+      "max_ms": 76.653,
+      "mean_ms": 38.1131,
+      "n": 100,
+      "name": "IndustrySystem.settle",
+      "p50_ms": 36.048,
+      "p95_ms": 51.785,
+      "total_ms": 3811.31
+    },
+    {
+      "max_ms": 4.407,
+      "mean_ms": 0.54578,
+      "n": 100,
+      "name": "BankingSystem.daily",
+      "p50_ms": 0.18,
+      "p95_ms": 3.066,
+      "total_ms": 54.578
+    },
+    {
+      "max_ms": 1.567,
+      "mean_ms": 0.49997,
+      "n": 100,
+      "name": "GameState._tick_research",
+      "p50_ms": 0.411,
+      "p95_ms": 1.01,
+      "total_ms": 49.997
+    },
+    {
+      "max_ms": 0.004,
+      "mean_ms": 0.00243,
+      "n": 100,
+      "name": "PoliticsSystem.daily",
+      "p50_ms": 0.002,
+      "p95_ms": 0.003,
+      "total_ms": 0.243
+    },
+    {
+      "max_ms": 42.012,
+      "mean_ms": 1.90483,
+      "n": 100,
+      "name": "GameState._finish_day",
+      "p50_ms": 0.794,
+      "p95_ms": 5.26,
+      "total_ms": 190.483
+    },
+    {
+      "max_ms": 195.631,
+      "mean_ms": 97.95386,
+      "n": 100,
+      "name": "GameState.simulate_day",
+      "p50_ms": 93.338,
+      "p95_ms": 123.06,
+      "total_ms": 9795.386
+    },
+    {
+      "max_ms": 0.006,
+      "mean_ms": 0.00426666666666667,
+      "n": 15,
+      "name": "StockMarket.weekly",
+      "p50_ms": 0.004,
+      "p95_ms": 0.006,
+      "total_ms": 0.064
+    },
+    {
+      "max_ms": 0.088,
+      "mean_ms": 0.0601333333333333,
+      "n": 15,
+      "name": "Empire.weekly",
+      "p50_ms": 0.056,
+      "p95_ms": 0.088,
+      "total_ms": 0.902
+    },
+    {
+      "max_ms": 3.4,
+      "mean_ms": 2.053,
+      "n": 3,
+      "name": "GameState._macro",
+      "p50_ms": 1.392,
+      "p95_ms": 3.4,
+      "total_ms": 6.159
+    },
+    {
+      "max_ms": 0.947,
+      "mean_ms": 0.762,
+      "n": 3,
+      "name": "Society.ai_monthly",
+      "p50_ms": 0.716,
+      "p95_ms": 0.947,
+      "total_ms": 2.286
+    },
+    {
+      "max_ms": 18.046,
+      "mean_ms": 12.6266666666667,
+      "n": 3,
+      "name": "Society.monthly",
+      "p50_ms": 10.209,
+      "p95_ms": 18.046,
+      "total_ms": 37.88
+    },
+    {
+      "max_ms": 2.566,
+      "mean_ms": 1.26,
+      "n": 3,
+      "name": "IndustrySystem.close_month",
+      "p50_ms": 0.78,
+      "p95_ms": 2.566,
+      "total_ms": 3.78
+    },
+    {
+      "max_ms": 0.631,
+      "mean_ms": 0.408666666666667,
+      "n": 6,
+      "name": "BankingSystem.update_rates",
+      "p50_ms": 0.514,
+      "p95_ms": 0.631,
+      "total_ms": 2.452
+    },
+    {
+      "max_ms": 0.002,
+      "mean_ms": 0.002,
+      "n": 3,
+      "name": "BankingSystem.process_monthly_interest",
+      "p50_ms": 0.002,
+      "p95_ms": 0.002,
+      "total_ms": 0.006
+    },
+    {
+      "max_ms": 4.242,
+      "mean_ms": 2.35566666666667,
+      "n": 3,
+      "name": "BankingSystem.monthly",
+      "p50_ms": 1.909,
+      "p95_ms": 4.242,
+      "total_ms": 7.067
+    },
+    {
+      "max_ms": 0.246,
+      "mean_ms": 0.233666666666667,
+      "n": 3,
+      "name": "GeopoliticsSystem.monthly",
+      "p50_ms": 0.228,
+      "p95_ms": 0.246,
+      "total_ms": 0.701
+    },
+    {
+      "max_ms": 2.98,
+      "mean_ms": 1.49466666666667,
+      "n": 3,
+      "name": "AgentSystem.monthly",
+      "p50_ms": 0.804,
+      "p95_ms": 2.98,
+      "total_ms": 4.484
+    },
+    {
+      "max_ms": 0.01,
+      "mean_ms": 0.00666666666666667,
+      "n": 3,
+      "name": "PoliticsSystem.monthly",
+      "p50_ms": 0.005,
+      "p95_ms": 0.01,
+      "total_ms": 0.02
+    },
+    {
+      "max_ms": 0.599,
+      "mean_ms": 0.452666666666667,
+      "n": 3,
+      "name": "RivalSystem.monthly",
+      "p50_ms": 0.421,
+      "p95_ms": 0.599,
+      "total_ms": 1.358
+    },
+    {
+      "max_ms": 0.007,
+      "mean_ms": 0.006,
+      "n": 3,
+      "name": "StockMarket.monthly",
+      "p50_ms": 0.006,
+      "p95_ms": 0.007,
+      "total_ms": 0.018
+    },
+    {
+      "max_ms": 0.142,
+      "mean_ms": 0.104,
+      "n": 3,
+      "name": "Empire.monthly",
+      "p50_ms": 0.118,
+      "p95_ms": 0.142,
+      "total_ms": 0.312
+    }
+  ],
+  "fixed_code_tree": "2c8b51dcb751b2125c9b3724810a7e5aa05abda6"
+}
