@@ -7,6 +7,7 @@ func run(u) -> void:
 	_world_caches(u)
 	_transport_index(u)
 	_atlas_cache(u)
+	_atlas_geometry(u)
 
 func _trade_ledger(u) -> void:
 	u._new()
@@ -161,3 +162,28 @@ func _atlas_cache(u) -> void:
 		if p[0] == Vector2(200.0, 200.0): ghost = true
 	u._chk("audit_atlas_closed_power", not ghost)
 	map.free()
+
+func _atlas_geometry(u) -> void:
+	var ad = load("res://scripts/ui/atlas_draw.gd")
+	var city = {"name": "Audit mesto", "iso": "SK", "pop": 500000.0, "r": 3.0}
+	var same = true
+	for view in [[Vector2(100, 100), 4.0, 1.0], [Vector2(110, 120), 4.0, 1.0], [Vector2(110, 120), 8.0, 0.5]]:
+		ad.use_city_geometry_cache = false
+		ad.begin_batch()
+		ad.city(null, city, view[0], view[1], view[2])
+		var vertices: PackedVector2Array = ad.B_v.duplicate()
+		var colors: PackedColorArray = ad.B_c.duplicate()
+		ad.use_city_geometry_cache = true
+		for repeat in 2:
+			ad.begin_batch()
+			ad.city(null, city, view[0], view[1], view[2])
+			if ad.B_v != vertices or ad.B_c != colors: same = false
+	u._chk("audit_atlas_geometry_exact_pan_zoom_fade", same)
+	for i in ad.CITY_GEOMETRY_LIMIT + 2:
+		city.name = "Audit mesto %d" % i
+		ad.begin_batch()
+		ad.city(null, city, Vector2.ZERO, 4.0, 1.0)
+	u._chk("audit_atlas_geometry_bounded", ad._city_geometry.size() <= ad.CITY_GEOMETRY_LIMIT)
+	ad.B_on = false
+	ad.B_v.clear()
+	ad.B_c.clear()

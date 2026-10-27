@@ -94,6 +94,9 @@ static func _rect(m: CanvasItem, r: Rect2, col: Color, filled: bool = true, w: f
 
 # cache rozlozenia budov mesta (nahodne cisla + triedenie sa nepocitaju kazdy snimok)
 static var _city_lay := {}
+static var use_city_geometry_cache := true
+const CITY_GEOMETRY_LIMIT = 128
+static var _city_geometry := {}
 
 static func _shade(c: Color, k: float) -> Color:
 	return Color(c.r * k, c.g * k, c.b * k, c.a)
@@ -125,12 +128,20 @@ static func shadow(m: CanvasItem, p: Vector2, hw: float, h: float, a: float = 1.
 
 # mesto ako zhluk vysokych budov (velkost podla obyvatelov)
 static func city(m: CanvasItem, c: Dictionary, cp: Vector2, sc: float, a: float) -> void:
+	var ck = str(c.name) + str(c.get("iso", ""))
+	var signature = [cp, sc, a, float(c.pop), float(c.r)]
+	if B_on and use_city_geometry_cache and _city_geometry.has(ck):
+		var cached: Dictionary = _city_geometry[ck]
+		if cached.signature == signature:
+			B_v.append_array(cached.vertices)
+			B_c.append_array(cached.colors)
+			return
+	var first_vertex = B_v.size()
 	var pop = float(c.pop)
 	var n = clampi(int(log(maxf(pop, 10.0)) / log(10.0) * 2.6 - 9.0), 2, 14)
 	var r_px = clampf(float(c.r) * sc * 0.55, 6.0, 140.0)
 	var hw = clampf(r_px / 5.0, 2.0, 16.0)
 	_circle(m, cp + Vector2(0, hw * 0.4), r_px * 0.9, Color(0.78, 0.74, 0.66, 0.22 * a))
-	var ck = str(c.name) + str(c.get("iso", ""))
 	if not _city_lay.has(ck):
 		var rng = RandomNumberGenerator.new()
 		rng.seed = hash(ck)
@@ -150,6 +161,10 @@ static func city(m: CanvasItem, c: Dictionary, cp: Vector2, sc: float, a: float)
 	for b in bs:
 		var roof: Color = ROOF[b[3]] if b[2] < b[1] * 2.4 else Color("D8D4CA")
 		box(m, b[0], b[1], b[2], Color("D2C9B6"), roof, a)
+	if B_on and use_city_geometry_cache:
+		if not _city_geometry.has(ck) and _city_geometry.size() >= CITY_GEOMETRY_LIMIT:
+			_city_geometry.erase(_city_geometry.keys()[0])
+		_city_geometry[ck] = {"signature": signature, "vertices": B_v.slice(first_vertex), "colors": B_c.slice(first_vertex)}
 
 # modely firiem podla typu
 static func kind_of(ind: String) -> String:
