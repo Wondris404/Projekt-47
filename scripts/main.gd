@@ -32,6 +32,10 @@ func _ready() -> void:
 			exit_code = load("res://tests/stability.gd").new().run(days, home_iso)
 		elif args.size() > 0 and str(args[0]) == "unit":
 			exit_code = load("res://tests/unit.gd").new().run()
+		elif args.size() > 0 and str(args[0]) == "audit_unit":
+			var unit = load("res://tests/unit.gd").new()
+			load("res://tests/audit_regressions.gd").new().run(unit)
+			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "fund_unit":
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/fund_realty.gd").new().run(unit)

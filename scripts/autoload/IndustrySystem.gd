@@ -555,7 +555,9 @@ func settle_chunk(start: int, count: int) -> int:
 				firm.cash = float(firm.cash) + cut
 				rev += cut
 				freight_cut += cut
-		_run_desks(firm, rev, flow)
+		var desk_totals = _run_desks(firm, rev, flow)
+		rev += float(desk_totals.revenue)
+		cogs += float(desk_totals.cost)
 		if str(firm.get("owner", "")) == "player" and not firm.get("manager", {}).is_empty():  # JUAN3: plat pravej ruky
 			var sal = float(firm.manager.get("salary", 0.0)) / 30.0
 			firm.cash = float(firm.cash) - sal
@@ -816,7 +818,8 @@ func trade_flow_text(firm: Dictionary) -> String:
 		text += "• %s: %.4f %s; trh %s → trh %s. Náklady %s, tržby %s, obchodný zisk %s (marža %.1f %%).\n" % [str(item.get("name", parts[0])), float(row.qty), str(item.get("unit", "")), src, dst, EconMath.eur(float(row.cost)), EconMath.eur(float(row.revenue)), EconMath.eur(margin), 100.0 * margin / maxf(float(row.revenue), 0.00001)]
 	return text + "Konkrétnych dodávateľov a odberateľov súhrnný trh neurčuje.\n"
 
-func _run_desks(firm: Dictionary, _rev_in: float, flow: Dictionary = {}) -> void:
+func _run_desks(firm: Dictionary, _rev_in: float, flow: Dictionary = {}) -> Dictionary:
+	var totals = {"revenue": 0.0, "cost": 0.0}
 	for fac in firm.facilities:
 		var recipe: Dictionary = DataLoader.recipes.get(fac.get("recipe", ""), {})
 		if not recipe.get("trade", false):
@@ -852,11 +855,14 @@ func _run_desks(firm: Dictionary, _rev_in: float, flow: Dictionary = {}) -> void
 		var cost = qty * unit_cost
 		var gain = qty * dst_px
 		firm.cash = float(firm.cash) - cost + gain
+		totals.revenue += gain
+		totals.cost += cost
 		if record_goods_flow:
 			_direct_trades.append({"day": GameState.day_index, "seller": "@market", "buyer": str(firm.get("id", "")), "cid": cid, "src": src, "dst": src, "qty": qty, "seller_price": src_px, "buyer_price": unit_cost, "kind": "desk_purchase"})
 			_direct_trades.append({"day": GameState.day_index, "seller": str(firm.get("id", "")), "buyer": "@market", "cid": cid, "src": src, "dst": dst, "qty": qty, "seller_price": dst_px, "buyer_price": dst_px, "kind": "desk_sale"})
 		if not flow.is_empty():
 			flow.trades.append({"cid": cid, "src": src, "dst": dst, "qty": qty, "cost": cost, "revenue": gain})
+	return totals
 
 func _best_route(home: String) -> Dictionary:
 	var best = {"cid": "", "dst": "", "score": 0.0}
