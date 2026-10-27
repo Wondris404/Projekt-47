@@ -6,6 +6,7 @@ func run(u) -> void:
 	_maintenance(u)
 	_world_caches(u)
 	_transport_index(u)
+	_atlas_cache(u)
 
 func _trade_ledger(u) -> void:
 	u._new()
@@ -137,3 +138,26 @@ func _transport_index(u) -> void:
 	IndustrySystem.use_local_competition_cache = true
 	for i in 3: GameState.simulate_day()
 	u._chk("audit_transport_simulation_exact", reference == JSON.stringify(GameState.to_dict()))
+
+func _atlas_cache(u) -> void:
+	u._new()
+	GameState.config.progression = false
+	GameState.player.cash = 2.0e8
+	GameState.found_firm("power_coal", "Atlas test", "SK")
+	var firm: Dictionary = GameState.player_firms()[-1]
+	firm.pos = [100.0, 100.0]
+	var map = load("res://scripts/ui/world_map.gd").new()
+	map.atlas_infra()
+	firm.pos = [200.0, 200.0]
+	var moved = map.atlas_infra()
+	var found = false
+	for p in moved.power:
+		if p[0] == Vector2(200.0, 200.0): found = true
+	u._chk("audit_atlas_moved_power", found)
+	firm.closed = true
+	var closed = map.atlas_infra()
+	var ghost = false
+	for p in closed.power:
+		if p[0] == Vector2(200.0, 200.0): ghost = true
+	u._chk("audit_atlas_closed_power", not ghost)
+	map.free()

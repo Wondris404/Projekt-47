@@ -34,6 +34,7 @@ var atlas: bool = false  # JUAN20: Atlas mapa (len DEV)
 var _atlas_layer: Node2D
 var _ainfra: Dictionary = {}
 var _ainfra_key := -1
+var _ainfra_layout: Array = []
 var _ainfra_static: Dictionary = {}
 var last_draw_ms := 0.0
 const AD = preload("res://scripts/ui/atlas_draw.gd")
@@ -424,13 +425,15 @@ func type_icon(ind: String) -> Texture2D:
 	return _icons[ind]
 
 var _ms_f := -1
+var _ms_revision := -1
 var _ms_c: Array = []
 func _my_sites() -> Array:  # JUAN23: raz za snimok
 	var fr = Engine.get_process_frames()
-	if fr == _ms_f:
+	if fr == _ms_f and _ms_revision == GameState.state_revision:
 		return _ms_c
 	_ms_c = _my_sites0()
 	_ms_f = fr
+	_ms_revision = GameState.state_revision
 	return _ms_c
 
 func _my_sites0() -> Array:
@@ -1467,10 +1470,19 @@ func atlas_infra() -> Dictionary:
 			mid.append(c.pos)
 		var base = infra_data()
 		_ainfra_static = {"highways": _nearest_links(big, 2, 26.0), "rails": _nearest_links(mid, 1, 16.0), "roads": base.roads, "ports": base.ports.duplicate(), "airports": base.airports.duplicate(), "towns": _all_cities(30000.0), "ms": Time.get_ticks_msec() - t0}
-	var key = GameState.firms.size() * 7 + Transport.lines().size()
-	if key == _ainfra_key and not _ainfra.is_empty():
+	var layout: Array = [GameState.state_revision]
+	for f in GameState.firms:
+		var ind = str(f.get("industry", ""))
+		if not bool(f.get("closed", false)) and (ind in POWER_IND or ind in WELL_IND or ind in PIPE_DEST or ind in ["shipyard", "airport"]):
+			layout.append([str(f.get("id", "")), ind, firm_world_pos(f)])
+	if layout == _ainfra_layout and not _ainfra.is_empty():
 		return _ainfra
-	_ainfra_key = key
+	_ainfra_layout = layout
+	_ainfra_key += 1
+	# Old spatial grids reference the previous infrastructure geometry.
+	for grid_name in _grids.keys():
+		if str(grid_name).begins_with("plines"):
+			_grids.erase(grid_name)
 	var power: Array = []
 	var wells: Array = []
 	var dests: Array = []
