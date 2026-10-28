@@ -964,3 +964,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Linuxový beh `40696718198` a Windowsový `40696717980` prešli `audit_unit` 36 OK / 0 FAIL. Presný serializovaný stav po 62 dňoch sa zhodoval pri pôvodnej aj novej ceste v scenári s viacerými mestami; Linuxová stabilita 1/30/365 prešla. Úplná `unit` ešte beží.
 - Jedna testovacia konfigurácia nedokazuje zhodu všetkých savov; časová úspora sa ešte musí zmerať na rovnakom runneri.
+
+
+## 2026-10-28 – Párový profil mestských služieb
+
+- Pridaný profil porovnávajúci pôvodnú a optimalizovanú cestu mestských služieb na rovnakom runneri v poradí pred/po/po/pred. Meria celú mestskú časť aj samotné služby počas dvoch mesačných uzávierok; meracie zásahy zostávajú v dočasnej kópii. Výsledky zatiaľ nie sú potvrdené.
