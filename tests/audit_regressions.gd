@@ -1,6 +1,7 @@
 extends RefCounted
 
 func run(u) -> void:
+	_detached_map_ready(u)
 	_save_size_limit(u)
 	_trade_ledger(u)
 	_power_input(u)
@@ -204,3 +205,9 @@ func _save_size_limit(u) -> void:
 	u._chk("audit_save_limit_rejects_oversize", error == SaveSystem.last_error and error.contains("limit"))
 	u._chk("audit_save_limit_preserves_slot", exists and FileAccess.get_file_as_string(path) == previous)
 	SaveSystem.base_dir = previous_dir
+
+func _detached_map_ready(u) -> void:
+	var map = load("res://scripts/ui/world_map.gd").new()
+	map._ready()
+	u._chk("audit_detached_map_ready", not map.is_inside_tree() and map._atlas_layer != null)
+	map.free()

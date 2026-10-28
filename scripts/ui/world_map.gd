@@ -81,7 +81,9 @@ func _ready() -> void:
 	_build()
 	item_rect_changed.connect(_preserve_camera_layout)
 	set_notify_transform(true)
-	get_window().focus_exited.connect(_cancel_drag)
+	var window = get_window()
+	if window != null:
+		window.focus_exited.connect(_cancel_drag)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
