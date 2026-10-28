@@ -923,3 +923,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Výpočet vplyvu môže použiť rovnaký súčet zamestnancov, ktorý bezprostredne predtým vypočíta pre závislosť krajiny. Referenčná cesta pôvodného výpočtu zostáva dostupná na porovnanie; poradie ostatných výpočtov a ich vedľajšie účinky zostávajú zachované.
 - Pridané kontroly prípravy scenára a presnej zhody celého uloženého stavu po 62 dňoch pri pevnom seed-e, cez dve mesačné uzávierky. Výsledok testov, prípadné zrýchlenie a výkon notebooku ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Zhoda simulácie po optimalizácii vplyvu
+
+- Linuxový `audit_unit` v behu `40695557618` prešiel vrátane porovnania celého serializovaného stavu po 62 dňoch a dvoch mesačných uzávierkach s pôvodnou aj optimalizovanou cestou. Stabilita 1/30/365 prešla; úplná `unit` a Windows kontrola ešte bežia.
+- Rýchlosť novej cesty sa musí porovnať na tom istom runneri. Zhoda jedného scenára nie je dôkazom totožnosti pre každú možnú uloženú hru. https://github.com/Wondris404/Projekt-47/actions/runs/40695557618
