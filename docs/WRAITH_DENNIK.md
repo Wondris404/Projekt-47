@@ -1071,3 +1071,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Interný súhrn mediálneho dosahu preskakuje vytváranie zoznamu konkurentov, keďže z detailu používa iba počet používateľov. Bežný detail média naďalej počíta a zobrazuje konkurentov; výpočet dosahu a ostatné údaje sa nemenia.
 - Pridané kontroly plného detailu, zhodných hodnôt súhrnu a presného stavu simulácie po 62 dňoch. Testy, časová úspora a správanie na rozsiahlejších savoch ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Zhoda mediálneho súhrnu
+
+- Linuxový `40702803419` a Windowsový `40702803147` prešli `audit_unit` 46 OK / 0 FAIL. Detail média si zachoval počet konkurentov, používané hodnoty sú rovnaké a úplný stav po 62 dňoch sa zhodoval s referenčným výpočtom. Stabilita 1/30/365 prešla; úplná `unit` a párové meranie ešte bežia. https://github.com/Wondris404/Projekt-47/actions/runs/40702803419
