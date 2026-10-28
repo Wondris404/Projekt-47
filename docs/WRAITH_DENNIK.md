@@ -969,3 +969,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Párový profil mestských služieb
 
 - Pridaný profil porovnávajúci pôvodnú a optimalizovanú cestu mestských služieb na rovnakom runneri v poradí pred/po/po/pred. Meria celú mestskú časť aj samotné služby počas dvoch mesačných uzávierok; meracie zásahy zostávajú v dočasnej kópii. Výsledky zatiaľ nie sú potvrdené.
+
+
+## 2026-10-28 – Párový výsledok mestských služieb
+
+- Beh `40697119316` na rovnakom runneri, poradie pred/po/po/pred a štyri mesačné vzorky: samotné služby pred úpravou 1,188; 1,212; 1,181; 1,191 ms, po úprave 0,420; 0,405; 0,402; 0,408 ms. Priemery sú približne 1,19 a 0,41 ms. Priemer celej mestskej časti bol približne 4,84 a 4,03 ms.
+- Najdlhší jednotlivý krok ukončenia dňa bol pred úpravou 20,64 a 20,39 ms, po úprave 19,37 a 19,39 ms. Ide o krátku headless sondu so 72 hráčovými firmami a meracou réžiou, nie o FPS notebooku ani o dôkaz odstránenia všetkého sekania. Zhodu celého stavu po 62 dňoch overili Linux aj Windows. https://github.com/Wondris404/Projekt-47/actions/runs/40697119316
