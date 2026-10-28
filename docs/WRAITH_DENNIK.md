@@ -772,3 +772,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Workflow `40671103738` zopakoval tú istú grafickú skúšku na pôvodnom a opravenom formulári. Pôvodný formulár mal 1 zo 4 kontrol úspešnú, opravený 4 zo 4. Pridané súbory `audit/screenshots/bank-audit/bank_before20261028.png`, `bank_after20261028.png` a `bank_comparison20261028.png` ukazujú oba stavy aj vedľa seba.
 - Snímky vznikli cez Xvfb/llvmpipe a zatiaľ neboli vizuálne posúdené. https://github.com/Wondris404/Projekt-47/actions/runs/40671103738
+
+
+## 2026-10-28 – Párové výsledky výkonu bankovej opravy
+
+- Beh `40671193033` na tom istom runneri: pred 85,94 a 85,72 ms/deň, po 85,87 a 85,38 ms/deň; priemery dvojíc sú približne 85,83 a 85,63 ms/deň. V tejto krátkej headless sonde sa zhoršenie neprejavilo, rozdiel nie je dôkazom zrýchlenia a nemeria FPS ani notebook. https://github.com/Wondris404/Projekt-47/actions/runs/40671193033
