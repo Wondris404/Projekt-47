@@ -667,3 +667,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - GitHub Actions `40653443499` na kóde `bdbdc442094361c8741c47741b5a88b4ba138b24`: `unit` 531 OK / 1 FAIL (`catalog_fields_match_brief`, chýbajúca referencia). Predchádzajúce tri `SCRIPT ERROR` pri vytvorení mapy mimo stromu sa v samotnom teste už nevyskytli. `audit_unit` 29 OK, stabilita 1/30/365 prešla, výkonnostná sonda dokončená; celý workflow ostáva červený kvôli testu katalógu.
 - V priebehu importu čerstvej kópie Godot vypisuje chyby o zdrojoch, ktoré ešte nie sú importované; treba ich samostatne preveriť. Výsledok nepovažovať za úplne čistý beh ani za vizuálnu kontrolu hry.
+
+
+## 2026-10-28 – Vzdialené grafické meranie
+
+- Pridaný samostatný GitHub Actions workflow pre východiskové snímky Atlasu cez Xvfb a Mesa softvérové vykresľovanie. Používa existujúci `atlas_visual_audit`, nový tag snímok a izolované dáta; do hry ani existujúcich UI ikon nezasahuje. Výsledky ukladá ako artefakty behu; pri samotných grafických úpravách bude ešte potrebné uložiť porovnania pred/po do `audit/screenshots/` v repozitári.
+- Beh `40654081381` sa začal; úspech snímok, vizuálna kontrola a kompletné porovnania pred/po zatiaľ nie sú potvrdené. FPS softvérového renderera nereprezentuje výkon notebooku.
