@@ -1,0 +1,73 @@
+name: Incomplete save validation probe
+on:
+  push:
+    branches:
+      - codex/audit-ux-20261028
+    paths:
+      - .github/workflows/incomplete-save-probe.yml
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install verified Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 --output godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum --check
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+          echo "XDG_DATA_HOME=$RUNNER_TEMP/p47-user-data" >> "$GITHUB_ENV"
+          echo "XDG_CONFIG_HOME=$RUNNER_TEMP/p47-user-config" >> "$GITHUB_ENV"
+          echo "XDG_CACHE_HOME=$RUNNER_TEMP/p47-user-cache" >> "$GITHUB_ENV"
+      - name: Import assets
+        run: Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path "$GITHUB_WORKSPACE" --import
+      - name: Probe validation in temporary test game
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("tests/audit_regressions.gd")
+          text = p.read_text()
+          marker = "func run(u) -> void:\n"
+          assert text.count(marker) == 1
+          text = text.replace(marker, marker + "\t_probe_missing_cash(u)\n")
+          text += """
+          func _probe_missing_cash(u) -> void:
+          \tu._new()
+          \tGameState.config.progression = false
+          \tGameState.player.cash = 2.0e8
+          \tvar founded = GameState.found_firm("cafe", "Audit", "SK")
+          \tvar original = GameState.to_dict().duplicate(true)
+          \tvar player_missing = original.duplicate(true)
+          \tplayer_missing.player.erase("cash")
+          \tvar player_err = GameState.from_dict(player_missing)
+          \tprint("P47_SAVE_PROBE player_accepted=%s missing_committed=%s" % [player_err == "", not GameState.player.has("cash")])
+          \tGameState.from_dict(original.duplicate(true))
+          \tvar firm_missing = original.duplicate(true)
+          \tfirm_missing.firms[-1].erase("cash")
+          \tvar firm_err = GameState.from_dict(firm_missing)
+          \tprint("P47_SAVE_PROBE firm_accepted=%s missing_committed=%s setup_ok=%s" % [firm_err == "", not GameState.firms[-1].has("cash"), founded == ""])
+          \tGameState.from_dict(original.duplicate(true))
+          """
+          p.write_text(text)
+          PY
+          timeout 600 Godot_v4.7.2-stable_linux.x86_64 --headless --path "$GITHUB_WORKSPACE" -- audit_unit 2>&1 | tee "$RUNNER_TEMP/p47-save-probe.log"
+          ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/p47-save-probe.log"
+          test "$(grep -c '^P47_SAVE_PROBE ' "$RUNNER_TEMP/p47-save-probe.log")" -eq 2
+      - name: Save probe output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-incomplete-save-probe
+          path: ${{ runner.temp }}/p47-save-probe.log
+          if-no-files-found: warn
