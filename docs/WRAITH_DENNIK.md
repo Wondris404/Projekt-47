@@ -848,3 +848,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Grafický beh `40674500224` overil normálne načítanie, obnovenie stavu zo zálohy a oznámenie hráčovi: všetky tri kontroly prešli. Šesť kontrol banky aj desať kontrol okien tiež prešlo. Windows `audit_unit` v behu `40674500295` prešiel; stabilita a auditná sada na Linuxe tiež prešli, úplná sada ešte beží.
 - Pridaný workflow na párové snímky hlásenia obnovy; jeho výsledok a vizuálne posúdenie zatiaľ nie sú potvrdené.
+
+
+## 2026-10-28 – Menej nadbytočných testov
+
+- Úplný auditný workflow sa už automaticky nespúšťa pri commitoch, ktoré menia iba workflowy, snímky auditu alebo dokumentáciu. Pri zmene herného kódu či testov sa naďalej spúšťa; samostatné grafické, Windows a porovnávacie workflowy majú vlastné spúšťače. Zmena upravuje len pravidlá spúšťania, nie hru.
