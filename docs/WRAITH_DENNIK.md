@@ -793,3 +793,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - V grafickom behu `40671536677` prešlo všetkých šesť kontrol, vrátane skutočného mesačného rozhodnutia poradcu a zachovania písaného textu v aktívnom políčku. https://github.com/Wondris404/Projekt-47/actions/runs/40671536677
 - História GitHubu obsahuje pre `GameState.gd` iba pôvodný import projektu a neskoršiu opravu cache; neurčuje, či existovali ešte staršie platné v3 savy bez povinných polí. Zmena validácie preto zostáva otvorená.
+
+
+## 2026-10-28 – Riziko prepísania savu na Windowse
+
+- Audit zdrojového kódu Godotu 4.7.2 zistil, že jeho Windows implementácia pri premenovaní na existujúci cieľ najprv odstráni cieľ a potom presunie nový súbor. Ak druhý krok zlyhá, hra môže prísť o predchádzajúci slot. Nález a návrh pred opravou sú v `docs/AUDIT_UX_20261028.md`.
+- Pripravuje sa overovaná kópia pôvodného slotu a načítanie pri chýbajúcom origináli, bez zmeny JSON formátu v3. Zatiaľ neopravené a netestované na Windowse.
