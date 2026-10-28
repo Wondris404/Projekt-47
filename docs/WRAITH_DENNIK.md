@@ -952,3 +952,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Úplná sada po optimalizácii vplyvu
 
 - Linuxový beh `40695557618` dokončil `unit` s 531 OK / 1 FAIL na chýbajúcej referencii katalógu; `audit_unit` 35 OK a stabilita 1/30/365 prešli. Windowsový auditný beh mal tiež 35 OK. Stav optimalizácie a párové meranie boli doplnené do pull requestu. https://github.com/Wondris404/Projekt-47/actions/runs/40695557618
+
+
+## 2026-10-28 – Skupiny firiem pri mesačných službách
+
+- Mesačný výpočet služieb môže použiť už vytvorené skupiny hráčových firiem podľa mesta; pri iných volaniach sa zachová pôvodný úplný prechod. Referenčná cesta zostáva dostupná na porovnanie a ekonomické výpočty ani ich poradie sa nemenia.
+- Skúška bola rozšírená o viac miest a samostatné porovnanie celého stavu po 62 dňoch pri pôvodnej a optimalizovanej ceste. Výsledky, časová úspora a správanie na rozsiahlych savoch ešte nie sú potvrdené.
