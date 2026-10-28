@@ -874,3 +874,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Výsledok skúšky straty fokusu
 
 - Grafický beh `40692508020` mal desať úspešných kontrol okien a jednu neúspešnú: test nezaevidoval ukončenie presunu po strate fokusu. Treba ešte oddeliť, či sa simulovaný presun naozaj začal, od samotného spracovania straty fokusu; oprava zatiaľ nie je urobená. https://github.com/Wondris404/Projekt-47/actions/runs/40692508020
+
+
+## 2026-10-28 – Diagnostika skúšky fokusu
+
+- Grafický workflow do dočasnej testovacej kópie doplní výpis, či sa presun začal a aký režim zostal po strate fokusu. Produkčný kód hry sa touto diagnostikou nemení. Výsledok zatiaľ čaká na beh.
