@@ -1,0 +1,102 @@
+name: Country panel screenshot comparison
+on:
+  push:
+    branches:
+      - codex/audit-ux-20261028
+    paths:
+      - .github/workflows/country-comparison.yml
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install verified Godot and software renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri imagemagick
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 --output godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum --check
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+          echo "XDG_DATA_HOME=$RUNNER_TEMP/p47-user-data" >> "$GITHUB_ENV"
+          echo "XDG_CONFIG_HOME=$RUNNER_TEMP/p47-user-config" >> "$GITHUB_ENV"
+          echo "XDG_CACHE_HOME=$RUNNER_TEMP/p47-user-cache" >> "$GITHUB_ENV"
+      - name: Import assets
+        run: Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path "$GITHUB_WORKSPACE" --import
+      - name: Capture before and after in identical conditions
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          set -euo pipefail
+          mkdir -p audit/screenshots/window-audit
+          cp scripts/main.gd "$RUNNER_TEMP/after-main.gd"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/before-main.gd" https://raw.githubusercontent.com/Wondris404/Projekt-47/4d85efb8e7a410159d90625e2394574801c0ade2/scripts/main.gd
+          for version in before after; do
+            cp "$RUNNER_TEMP/$version-main.gd" scripts/main.gd
+            export P47_SHOT_VERSION="$version"
+            python3 -c 'from pathlib import Path; import os; p=Path("scripts/main.gd"); s=p.read_text(); a="\tres[\"remembered\"] = Rect2(country_win.position, country_win.size).is_equal_approx(keep)"; assert s.count(a)==1; n="\tawait RenderingServer.frame_post_draw\n\tget_viewport().get_texture().get_image().save_png(\"res://audit/screenshots/window-audit/country_"+os.environ["P47_SHOT_VERSION"]+"_20261028.png\")\n"; p.write_text(s.replace(a,n+a))'
+            set +e
+            timeout 300 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- window_ui "$version" > "$RUNNER_TEMP/$version-window.log" 2>&1
+            result=$?
+            set -e
+            cat "$RUNNER_TEMP/$version-window.log"
+            test -s "audit/screenshots/window-audit/country_${version}_20261028.png"
+            ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/$version-window.log"
+            if [ "$version" = before ]; then
+              test "$result" -eq 1
+              test "$(grep -c '^P47_UNIT_FAIL' "$RUNNER_TEMP/$version-window.log")" -eq 1
+              grep -q '^P47_UNIT_FAIL win_remembered' "$RUNNER_TEMP/$version-window.log"
+            else
+              test "$result" -eq 0
+              test "$(grep -c '^P47_UNIT_OK win_' "$RUNNER_TEMP/$version-window.log")" -eq 10
+              ! grep -q '^P47_UNIT_FAIL' "$RUNNER_TEMP/$version-window.log"
+            fi
+          done
+          convert audit/screenshots/window-audit/country_before_20261028.png audit/screenshots/window-audit/country_after_20261028.png +append audit/screenshots/window-audit/country_comparison_20261028.png
+      - name: Upload comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: country-comparison-20261028
+          path: |
+            audit/screenshots/window-audit/country_before_20261028.png
+            audit/screenshots/window-audit/country_after_20261028.png
+            audit/screenshots/window-audit/country_comparison_20261028.png
+          if-no-files-found: error
+  commit:
+    needs: render
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/audit-ux-20261028
+      - uses: actions/download-artifact@v4
+        with:
+          name: country-comparison-20261028
+          path: ${{ runner.temp }}/p47-comparison
+      - name: Add only new screenshots to the working branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p audit/screenshots/window-audit
+          for name in country_before_20261028.png country_after_20261028.png country_comparison_20261028.png; do
+            test -s "$RUNNER_TEMP/p47-comparison/$name"
+            test ! -e "audit/screenshots/window-audit/$name"
+            cp "$RUNNER_TEMP/p47-comparison/$name" "audit/screenshots/window-audit/$name"
+            git add "audit/screenshots/window-audit/$name"
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "audit: add country window before and after screenshots"
+          git push origin HEAD:codex/audit-ux-20261028
