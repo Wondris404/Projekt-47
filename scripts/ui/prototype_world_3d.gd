@@ -13,6 +13,7 @@ var _cities: Array = []
 var _firms: Array = []
 var _firm_key: Array = []
 var _firm_layer: MultiMeshInstance3D
+var _city_layer: MultiMeshInstance3D
 
 func setup(source_map: Control) -> void:
 	_map = source_map
@@ -24,6 +25,15 @@ func setup(source_map: Control) -> void:
 	add_child(_viewport)
 	var world = Node3D.new()
 	_viewport.add_child(world)
+	var lighting = WorldEnvironment.new()
+	var environment = Environment.new()
+	environment.background_mode = Environment.BG_COLOR
+	environment.background_color = Color("16263a")
+	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	environment.ambient_light_color = Color.WHITE
+	environment.ambient_light_energy = 1.0
+	lighting.environment = environment
+	world.add_child(lighting)
 	var converter = load("res://scripts/ui/map_mesh_3d.gd")
 	for shape in _map.shapes:
 		var mesh: ArrayMesh = converter.convert(shape.mesh)
@@ -93,21 +103,29 @@ func _add_cities(world: Node3D) -> void:
 		for city in TerrainSystem.cities(str(iso)):
 			_cities.append(city)
 	if _cities.is_empty(): return
-	var building = BoxMesh.new()
-	building.size = Vector3(1.1, 0.9, 1.1)
-	var material = StandardMaterial3D.new()
-	material.albedo_color = Color("dbc8a8")
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	building.material = material
+	var building: Mesh
+	var model_path = "res://assets/models/city_kenney/building-a.glb"
+	if ResourceLoader.exists(model_path):
+		var scene: PackedScene = load(model_path)
+		if scene != null:
+			var model = scene.instantiate()
+			var parts = model.find_children("*", "MeshInstance3D", true, false)
+			if not parts.is_empty(): building = parts[0].mesh
+			model.free()
+	if building == null:
+		var fallback = BoxMesh.new()
+		fallback.size = Vector3(1.1, 0.9, 1.1)
+		building = fallback
 	var instances = MultiMesh.new()
 	instances.transform_format = MultiMesh.TRANSFORM_3D
 	instances.mesh = building
 	instances.instance_count = _cities.size()
 	for i in _cities.size():
 		var p: Vector2 = _cities[i].pos
-		instances.set_instance_transform(i, Transform3D(Basis.IDENTITY, Vector3(p.x, 0.45, p.y)))
+		instances.set_instance_transform(i, Transform3D(Basis.IDENTITY, Vector3(p.x, 0.0, p.y)))
 	var layer = MultiMeshInstance3D.new()
 	layer.multimesh = instances
+	_city_layer = layer
 	world.add_child(layer)
 
 func _city_at(local_pos: Vector2) -> Dictionary:
@@ -126,7 +144,7 @@ func _city_at(local_pos: Vector2) -> Dictionary:
 func sync_from_map() -> void:
 	var center: Vector2 = _map._to_world(_map.size * 0.5)
 	_camera.size = _map.size.y / maxf(_map._fit() * _map.zoom, 0.0001)
-	_camera.position = Vector3(center.x, 1200, center.y)
+	_camera.position = Vector3(center.x, 1200, center.y + 600)
 	_camera.look_at(Vector3(center.x, 0, center.y), Vector3.FORWARD)
 
 func restore_map_camera() -> void:
@@ -136,7 +154,7 @@ func restore_map_camera() -> void:
 	_map._zoom_target = _map.zoom
 	var map_size = Vector2(float(DataLoader.map.get("w", 1440)), float(DataLoader.map.get("h", 720)))
 	var scale: float = fit * _map.zoom
-	var center = Vector2(_camera.position.x, _camera.position.z)
+	var center = _ground(size * 0.5)
 	_map.pan = _map.size * 0.5 - ( _map.size - map_size * scale) * 0.5 - center * scale
 	_map.queue_redraw()
 
@@ -176,4 +194,4 @@ func _input_3d(event: InputEvent) -> void:
 		if delta.length() > 0.1: _moved = true
 		var move = delta * (_camera.size / maxf(size.y, 1.0))
 		_camera.position.x -= move.x
-		_camera.position.z -= move.y
+		_camera.position.z -= move.y / 0.89442719
