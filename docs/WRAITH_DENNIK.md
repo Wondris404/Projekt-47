@@ -975,3 +975,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Beh `40697119316` na rovnakom runneri, poradie pred/po/po/pred a štyri mesačné vzorky: samotné služby pred úpravou 1,188; 1,212; 1,181; 1,191 ms, po úprave 0,420; 0,405; 0,402; 0,408 ms. Priemery sú približne 1,19 a 0,41 ms. Priemer celej mestskej časti bol približne 4,84 a 4,03 ms.
 - Najdlhší jednotlivý krok ukončenia dňa bol pred úpravou 20,64 a 20,39 ms, po úprave 19,37 a 19,39 ms. Ide o krátku headless sondu so 72 hráčovými firmami a meracou réžiou, nie o FPS notebooku ani o dôkaz odstránenia všetkého sekania. Zhodu celého stavu po 62 dňoch overili Linux aj Windows. https://github.com/Wondris404/Projekt-47/actions/runs/40697119316
+
+
+## 2026-10-28 – Úplná sada po optimalizácii mestských služieb
+
+- Beh `40696718198`: `unit` 531 OK / 1 FAIL na chýbajúcej referencii katalógu, `audit_unit` 36 OK / 0 FAIL a stabilita 1/30/365 prešla. Výsledok optimalizácie a párové meranie boli doplnené do pull requestu. https://github.com/Wondris404/Projekt-47/actions/runs/40696718198
