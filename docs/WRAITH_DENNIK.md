@@ -1076,3 +1076,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Zhoda mediálneho súhrnu
 
 - Linuxový `40702803419` a Windowsový `40702803147` prešli `audit_unit` 46 OK / 0 FAIL. Detail média si zachoval počet konkurentov, používané hodnoty sú rovnaké a úplný stav po 62 dňoch sa zhodoval s referenčným výpočtom. Stabilita 1/30/365 prešla; úplná `unit` a párové meranie ešte bežia. https://github.com/Wondris404/Projekt-47/actions/runs/40702803419
+
+
+## 2026-10-28 – Párový profil mediálneho súhrnu
+
+- Pridaný profil pôvodného a nového mediálneho súhrnu na rovnakom runneri v poradí pred/po/po/pred, s pevným seed-om a dvoma mesačnými uzávierkami. Výsledok ešte nie je známy; nejde o meranie FPS notebooku.
