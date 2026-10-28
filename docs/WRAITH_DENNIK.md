@@ -998,3 +998,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Opravený profil `40698325056` prešiel. Pri dvoch mesačných uzávierkach nameral výpočet obdobného zisku 1,11 a 2,09 ms, výpočet rezerv 0,70 a 0,94 ms a prevod dividend 0,25 a 0,24 ms. Merania zahŕňajú réžiu časovačov a nemerajú snímky ani výkon notebooku.
 - Správy v Gmaile boli iba prečítané; príčiny jednotlivých neúspešných behov sa zhodujú s auditným logom. https://github.com/Wondris404/Projekt-47/actions/runs/40698325056
+
+
+## 2026-10-28 – Overenie upozornenia na katalóg
+
+- Beh `40698639465` prešiel siedmimi syntetickými kontrolami klasifikácie a potom spustil celú `unit` sadu. Log obsahuje 531 OK / 1 FAIL (`catalog_fields_match_brief`); GitHub zobrazuje výslovné varovanie, že referencia chýba a katalóg nie je overený. `audit_unit`, stabilita a sonda výkonu prešli.
+- Testy klasifikácie overili, že ďalšie zlyhanie, chyba skriptu, timeout, nedokončená sada a zlyhanie pri existujúcej referencii zostávajú neúspešné. Toto je dočasné odlíšenie známeho problému, nie oprava referencie katalógu. https://github.com/Wondris404/Projekt-47/actions/runs/40698639465
