@@ -1149,6 +1149,20 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Beh `40715336351` úspešne zostavil Windows hru, vykonal headless skúšku 10 dní a odovzdal artefakt `Projekt-47-Windows`. Nový postup odovzdáva súbory hry priamo do artefaktu namiesto vnútorného ZIPu. Automatické spustenie na `main` sa prejaví až po zlúčení; grafické spustenie a uloženie z balíka zostávajú neoverené. https://github.com/Wondris404/Projekt-47/actions/runs/40715336351
 
 
+## 2026-10-28 – Skúška malého viewportu
+
+- Pridaná diagnostika `tests/small_viewport_probe.gd`. Pri lokálnom Windows headless spustení v izolovaných používateľských dátach ukázala: fyzické okno 240 × 150 má logický viewport 1280 × 800, zatiaľ čo umelý podviewport 240 × 150 vytvorí panel 300 × 180 mimo jeho hraníc.
+- Sonda nemení herný stav ani ekonomiku. Nie je to dôkaz chyby pri bežnom hraní; grafické zobrazenie, škálovanie a obsah okien treba ďalej overiť. Úprava panelov zatiaľ nebola vykonaná. Lokálna verzia testu prešla s návratovým kódom 0; úplná testovacia sada sa pri tejto čisto diagnostickej zmene nespúšťala.
+
+- Nezávislé čítanie kódu potvrdilo logický základ 1280 × 720 a režim `canvas_items`/`expand`. Pri bežnej zmene veľkosti sa nenašiel dôkaz logického viewportu pod minimami panelov; titulky a zatváracie tlačidlá ležia mimo posúvaného obsahu a niektoré prvky majú vlastné minimá. Samotné zmenšenie panelov by preto nemuselo sprístupniť celý obsah.
+
+
+## 2026-10-28 – Grafická skúška malého okna na notebooku
+
+- Po súhlase používateľa sa lokálna izolovaná kópia hry spustila cez OpenGL Compatibility na AMD Radeon Graphics. Pri fyzických veľkostiach 800 × 450 a 480 × 270 bol logický viewport 1280 × 720. V testovanej scéne bol panel krajiny vrátane tlačidla zatvorenia v hraniciach viewportu. Snímky sa vizuálne skontrolovali; pri 480 × 270 je text veľmi drobný.
+- Počiatočná snímka obsahovala úvodné logo, nie hru; nepoužíva sa ako dôkaz. Opakovaná skúška po ukončení úvodnej obrazovky zachytila herný panel. Toto nie je test všetkých panelov, systémových mierok DPI ani skutočného kliknutia; hranica umelého SubViewportu zostáva. Save a ekonomika sa nemenili.
+
+- Následná grafická skúška poslala udalosti stlačenia a uvoľnenia myši cez vstupný systém Godotu na tlačidlo zatvorenia panelu krajiny. Panel sa zavrel pri oboch rozmeroch 800 × 450 a 480 × 270. Nejde o fyzické kliknutie ani o test ostatných panelov či systémového škálovania.
 ## 2026-10-28 – Diagnostika dát mimo zdrojov hry
 
 - Overený nález z dokumentu od Copilota: `DataLoader._log_data` zapisoval pri proxy dátach do `res://docs/DATA.md`. V izolovanej kópii Windows sonda pred opravou potvrdila zmenu projektového súboru a neprítomnosť používateľského logu.
