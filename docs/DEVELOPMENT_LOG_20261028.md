@@ -60,3 +60,5 @@ Po porovnaní súbežnej vetvy je aj tu pevný limit 64 viditeľných aktívnych
 82 PNG (54 herných snímok, 27 párov a kontaktný list) bolo dekódovaných bez chyby. Na PC treba potvrdiť čitateľnosť modelov, grafický výkon, zoom/kliknutia a starý reálny save. Výsledky softvérového renderera sa neprezentujú ako FPS Radeon grafiky. Detailný report: `docs/ATLAS_COMPLETION_20261028.md`.
 
 Kontrola pôvodného základu rovnakým izolovaným Juan5/Juan9 scenárom: 77,9 ms/deň (limit prešiel), tri rovnaké pôvodné chyby chýbajúceho okna sa reprodukovali. Po oprave okna je v opakovaných sekciách nula script errors. Rozdiel časových behov je zachovaný ako otvorený limit overenia, nie skrytý zvýšením prahu; párové výsledky ani FPS sa nezovšeobecňujú na ľubovoľný save.
+
+Pri záverečnej kontrole diffu sa odstránili iba koncové medzery z testových logov; správy a namerané čísla sa nemenili. Draft PR #2 obsahuje celú pracovnú vetvu a galériu, bez zlúčenia do main.

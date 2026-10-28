@@ -1,25 +1,25 @@
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-P47_UNIT_OK bond_fill 
+P47_UNIT_OK bond_fill
 P47_UNIT_OK bond_coupon_sane 0.0620875
 P47_UNIT_OK bond_face_cash { "country": "SK", "face": 100.0, "coupon": 0.0620875, "years_left": 5.0 }
 P47_UNIT_OK bond_value_near_par 100.0
 P47_UNIT_OK bond_daily_coupon_small 0.01701027397212
-P47_UNIT_OK bond_value_years_left 
-P47_UNIT_OK bond_band_reject_1 
-P47_UNIT_OK bond_band_reject_10000 
+P47_UNIT_OK bond_value_years_left
+P47_UNIT_OK bond_band_reject_1
+P47_UNIT_OK bond_band_reject_10000
 P47_UNIT_OK bond_face_eq_cost_50 face 50000.000000 paid 50000.000000
 P47_UNIT_OK bond_gain_le_cost_yield_50 3104.375000 vs 3104.375000
 P47_UNIT_OK bond_face_eq_cost_150 face 150000.000000 paid 150000.000000
 P47_UNIT_OK bond_gain_le_cost_yield_150 9313.125000 vs 9313.125000
 P47_UNIT_OK bond_face_eq_cost_100 face 100000.000000 paid 100000.000000
 P47_UNIT_OK bond_gain_le_cost_yield_100 6208.750000 vs 6208.750000
-P47_UNIT_OK bond_reject_nan 
+P47_UNIT_OK bond_reject_nan
 P47_UNIT_OK save_ok_path /home/agent/.local/share/godot/app_userdata/Projekt-47/test_tmp_saves/slot_7.json
-P47_UNIT_OK save_no_tmp_left 
-P47_UNIT_OK load_ok 
+P47_UNIT_OK save_no_tmp_left
+P47_UNIT_OK load_ok
 P47_UNIT_OK rng_state_restored -4452153119404345795 vs -4452153119404345795
-P47_UNIT_OK date_ints 
+P47_UNIT_OK date_ints
 P47_UNIT_OK save_load_deterministic 30|0.000000|213.646838|0.050000|1635502184 vs 30|0.000000|213.646838|0.050000|1635502184
 P47_UNIT_OK reject_player_not_dict prijate
 P47_UNIT_OK reject_month_13 prijate
@@ -31,8 +31,8 @@ P47_UNIT_OK reject_firm_row_bad prijate
 P47_UNIT_OK reject_neg_day prijate
 P47_UNIT_OK reject_bad_rng prijate
 P47_UNIT_OK reject_market_bad prijate
-P47_UNIT_OK reject_nan 
-P47_UNIT_OK live_state_untouched 
+P47_UNIT_OK reject_nan
+P47_UNIT_OK live_state_untouched
 ERROR: Parse JSON failed. Error at line 0: Expected key
    at: parse_string (core/io/json.cpp:624)
    GDScript backtrace (most recent call first):
@@ -40,27 +40,27 @@ ERROR: Parse JSON failed. Error at line 0: Expected key
        [1] _save (res://tests/unit.gd:126)
        [2] run (res://tests/unit.gd:25)
        [3] _ready (res://scripts/main.gd:35)
-P47_UNIT_OK reject_broken_file 
-P47_UNIT_OK live_state_untouched2 
-P47_UNIT_OK accept_missing_countries 
-P47_UNIT_OK repaired_world 
-P47_UNIT_OK sim_after_repair 
-P47_UNIT_OK accept_no_version 
-P47_UNIT_OK accept_json_roundtrip 
-P47_UNIT_OK save_version_current 
-P47_UNIT_OK reject_bond_no_country 
-P47_UNIT_OK reject_bond_face_zero 
-P47_UNIT_OK reject_bond_coupon_neg 
-P47_UNIT_OK reject_bond_coupon_gt1_v2 
-P47_UNIT_OK reject_bond_years_neg 
-P47_UNIT_OK reject_bond_not_dict 
-P47_UNIT_OK reject_empty_player 
-P47_UNIT_OK reject_missing_player 
-P47_UNIT_OK v1_load_ok 
+P47_UNIT_OK reject_broken_file
+P47_UNIT_OK live_state_untouched2
+P47_UNIT_OK accept_missing_countries
+P47_UNIT_OK repaired_world
+P47_UNIT_OK sim_after_repair
+P47_UNIT_OK accept_no_version
+P47_UNIT_OK accept_json_roundtrip
+P47_UNIT_OK save_version_current
+P47_UNIT_OK reject_bond_no_country
+P47_UNIT_OK reject_bond_face_zero
+P47_UNIT_OK reject_bond_coupon_neg
+P47_UNIT_OK reject_bond_coupon_gt1_v2
+P47_UNIT_OK reject_bond_years_neg
+P47_UNIT_OK reject_bond_not_dict
+P47_UNIT_OK reject_empty_player
+P47_UNIT_OK reject_missing_player
+P47_UNIT_OK v1_load_ok
 P47_UNIT_OK v1_migrated_coupon [{ "country": "SK", "face": 100.0, "coupon": 0.0620875, "years_left": 4.0 }, { "country": "SK", "face": 100.0, "coupon": 0.0620875, "years_left": 4.0 }, { "country": "SK", "face": 100.0, "coupon": 0.04, "years_left": 4.0 }, { "country": "SK", "face": 500.0, "coupon": 0.9, "years_left": 2.0, "issuer": "player" }]
-P47_UNIT_OK v1_small_coupon_kept 
-P47_UNIT_OK v1_player_issue_kept 
-P47_UNIT_OK reject_future_version 
+P47_UNIT_OK v1_small_coupon_kept
+P47_UNIT_OK v1_player_issue_kept
+P47_UNIT_OK reject_future_version
 P47_UNIT_OK deep_reject_world_population_str prijate
 P47_UNIT_OK deep_reject_firm_cash_str prijate
 P47_UNIT_OK deep_reject_market_price_str prijate
@@ -72,15 +72,15 @@ P47_UNIT_OK deep_reject_date_29_feb_nonleap prijate
 P47_UNIT_OK deep_reject_market_price_negative prijate
 P47_UNIT_OK deep_reject_world_inflation_str prijate
 P47_UNIT_OK deep_reject_central_policy_str prijate
-P47_UNIT_OK deep_live_untouched 
-P47_UNIT_OK deep_accept_legacy_no_v_no_rng 
-P47_UNIT_OK deep_legacy_rng_untouched 
-P47_UNIT_OK deep_accept_good 
-P47_UNIT_OK deep_accept_int_number 
+P47_UNIT_OK deep_live_untouched
+P47_UNIT_OK deep_accept_legacy_no_v_no_rng
+P47_UNIT_OK deep_legacy_rng_untouched
+P47_UNIT_OK deep_accept_good
+P47_UNIT_OK deep_accept_int_number
 P47_UNIT_OK war_ids_unique ["w0", "w2", "w3"]
 P47_UNIT_OK war_days_single_count 40
-P47_UNIT_OK war_monthly_days_unchanged 
-P47_UNIT_OK war_monthly_ids_unique 
+P47_UNIT_OK war_monthly_days_unchanged
+P47_UNIT_OK war_monthly_ids_unique
 P47_UNIT_OK share_sums_to_one 0.0
 P47_UNIT_OK share_missing_country_positive SK
 P47_UNIT_OK demand_not_pop_squared dopyt CN/SK 105.6, HDP CN/SK 133.9
@@ -94,215 +94,215 @@ P47_UNIT_OK e1_no_oscillation_food_service min 0.973 max 1.017
 P47_UNIT_OK e1_no_oscillation_electronics min 0.974 max 1.016
 P47_UNIT_OK e1_no_oscillation_automobiles min 0.976 max 1.016
 P47_UNIT_OK e1_cpi_weights_sum_1 1.0
-P47_UNIT_OK e1_cpi_weights_not_equal 
-P47_UNIT_OK e1_cpi_base_is_one 
-P47_UNIT_OK e1_cpi_weighted 
-P47_UNIT_OK e1_cpi_month_average 
+P47_UNIT_OK e1_cpi_weights_not_equal
+P47_UNIT_OK e1_cpi_base_is_one
+P47_UNIT_OK e1_cpi_weighted
+P47_UNIT_OK e1_cpi_month_average
 P47_UNIT_OK e1_cpi_yoy_from_averages 0.018503 vs 0.018503
 P47_UNIT_OK e1_cpi_clamp_max 0.18
 P47_UNIT_OK e1_cpi_short_history_decays_input 0.050000 -> 0.035000
 P47_UNIT_OK e1_taylor_slope_gt_1 sklon cielovej sadzby 2.50
-P47_UNIT_OK e1_rate_idempotent_same_day 
+P47_UNIT_OK e1_rate_idempotent_same_day
 P47_UNIT_OK e1_rate_smoothing 0.078
 P47_UNIT_OK e1_rate_ceiling 0.4
 P47_UNIT_OK e1_rate_not_stuck_at_ceiling 0.04500000366162
 P47_UNIT_OK e1_rate_floor 0.002
-P47_UNIT_OK e1_war_recovery_flags 
+P47_UNIT_OK e1_war_recovery_flags
 P47_UNIT_OK e1_war_shock_visible pocas vojny pasmo SK 0.68 pszenica 1.17
 P47_UNIT_OK e1_war_recovers_2y po 2 rokoch vsetky 1.000 SK/CZ 1.000
 P47_UNIT_OK e1_drought_spike_and_recovery vrchol 1.09 po 240 dnoch 1.00
 P47_UNIT_OK e1_sanction_recovers 1.000
 P47_UNIT_OK e1_end_war_news Prímerie: Slovensko – Cesko.
-P47_UNIT_OK e1_two_wars_penalty 
-P47_UNIT_OK e1_two_wars_after_first 
+P47_UNIT_OK e1_two_wars_penalty
+P47_UNIT_OK e1_two_wars_after_first
 P47_UNIT_OK e1_two_wars_after_second 0.016
-P47_UNIT_OK e1_war_recovery_old_save 
-P47_UNIT_OK e1_load_v2_without_new_fields 
-P47_UNIT_OK e1_load_defaults_filled 
-P47_UNIT_OK e1_load_v2_then_runs 
-P47_UNIT_OK e1_reject_cpi_hist_str 
-P47_UNIT_OK e1_reject_cpi_hist_elem_str 
-P47_UNIT_OK e1_reject_cpi_hist_negative 
-P47_UNIT_OK e1_reject_cpi_hist_nan 
-P47_UNIT_OK e1_reject_cpi_hist_inf 
-P47_UNIT_OK e1_reject_cpi_hist_huge_len 
-P47_UNIT_OK e1_reject_cpi_acc_str 
-P47_UNIT_OK e1_reject_cpi_n_str 
-P47_UNIT_OK e1_reject_cpi_n_negative 
-P47_UNIT_OK e1_reject_cpi_n_fraction 
-P47_UNIT_OK e1_reject_war_gdp_pen_str 
-P47_UNIT_OK e1_reject_prev_rate_str 
-P47_UNIT_OK e1_reject_prev_rate_range 
-P47_UNIT_OK e1_reject_prev_rate_nan 
-P47_UNIT_OK e1_reject_upd_day_str 
-P47_UNIT_OK e1_reject_upd_day_fraction 
-P47_UNIT_OK e1_reject_keeps_live_state 
-P47_UNIT_OK e1_embargo_blocks 
+P47_UNIT_OK e1_war_recovery_old_save
+P47_UNIT_OK e1_load_v2_without_new_fields
+P47_UNIT_OK e1_load_defaults_filled
+P47_UNIT_OK e1_load_v2_then_runs
+P47_UNIT_OK e1_reject_cpi_hist_str
+P47_UNIT_OK e1_reject_cpi_hist_elem_str
+P47_UNIT_OK e1_reject_cpi_hist_negative
+P47_UNIT_OK e1_reject_cpi_hist_nan
+P47_UNIT_OK e1_reject_cpi_hist_inf
+P47_UNIT_OK e1_reject_cpi_hist_huge_len
+P47_UNIT_OK e1_reject_cpi_acc_str
+P47_UNIT_OK e1_reject_cpi_n_str
+P47_UNIT_OK e1_reject_cpi_n_negative
+P47_UNIT_OK e1_reject_cpi_n_fraction
+P47_UNIT_OK e1_reject_war_gdp_pen_str
+P47_UNIT_OK e1_reject_prev_rate_str
+P47_UNIT_OK e1_reject_prev_rate_range
+P47_UNIT_OK e1_reject_prev_rate_nan
+P47_UNIT_OK e1_reject_upd_day_str
+P47_UNIT_OK e1_reject_upd_day_fraction
+P47_UNIT_OK e1_reject_keeps_live_state
+P47_UNIT_OK e1_embargo_blocks
 P47_UNIT_OK e1_lift_sanction_does_not_lift_embargo Žiadna sankcia.
-P47_UNIT_OK e1_lift_embargo_unblocks 
+P47_UNIT_OK e1_lift_embargo_unblocks
 P47_UNIT_OK e1_embargo_sanction_recovers pasmo po 365 d 1.000; openness SK 1.000 -> 0.953 pocas, pasmo SK pocas 1.00
-P47_UNIT_OK e1_save_version_is_3 
-P47_UNIT_OK e1_load_v1 
-P47_UNIT_OK e1_v1_migrated_fields 
-P47_UNIT_OK e1_load_v2 
-P47_UNIT_OK e1_migration_idempotent 
-P47_UNIT_OK e1_v2_loaded_runs_and_dref_initialized 
-P47_UNIT_OK e1_load_v3 
-P47_UNIT_OK e1_reject_v3_missing_cpi_hist 
-P47_UNIT_OK e1_reject_v3_missing_dref 
-P47_UNIT_OK e1_reject_v3_missing_prev_rate 
-P47_UNIT_OK e1_reject_v3_missing_upd_day 
-P47_UNIT_OK e1_reject_v3_cpi_hist_str 
-P47_UNIT_OK e1_reject_v3_dref_str 
-P47_UNIT_OK e1_reject_v3_future_v4 
+P47_UNIT_OK e1_save_version_is_3
+P47_UNIT_OK e1_load_v1
+P47_UNIT_OK e1_v1_migrated_fields
+P47_UNIT_OK e1_load_v2
+P47_UNIT_OK e1_migration_idempotent
+P47_UNIT_OK e1_v2_loaded_runs_and_dref_initialized
+P47_UNIT_OK e1_load_v3
+P47_UNIT_OK e1_reject_v3_missing_cpi_hist
+P47_UNIT_OK e1_reject_v3_missing_dref
+P47_UNIT_OK e1_reject_v3_missing_prev_rate
+P47_UNIT_OK e1_reject_v3_missing_upd_day
+P47_UNIT_OK e1_reject_v3_cpi_hist_str
+P47_UNIT_OK e1_reject_v3_dref_str
+P47_UNIT_OK e1_reject_v3_future_v4
 P47_UNIT_OK e1_two_wars_rate_stable_after_12m rozsah 0.0013 (min 0.0020 max 0.0033), sadzba pri konci vojen 0.0651, infl -0.0190
 P47_UNIT_OK e1_drought_decomposition vrchol SK pszenica 1.085 kava 0.993 maso 0.991 ; DE pszenica 0.958
 P47_UNIT_OK ai_firm_spawn_deterministic 28
-P47_UNIT_OK ai_firms_in_save_roundtrip 
-P47_UNIT_OK minister_data_not_nan 
-P47_UNIT_OK history_catalog_errors 
-P47_UNIT_OK tech_t01 
-P47_UNIT_OK tech_t05_req 
-P47_UNIT_OK tech_t12_year 
-P47_UNIT_OK tech_t21 
-P47_UNIT_OK tech_t50_year 
-P47_UNIT_OK tech_t57 
-P47_UNIT_OK tech_t63_note 
-P47_UNIT_OK tech_t68_note 
-P47_UNIT_OK focus_mutual_exclusion 
-P47_UNIT_OK focus_bloc_exclusion 
-P47_UNIT_OK focus_g6_options 
-P47_UNIT_OK focus_g7_options 
-P47_UNIT_OK focus_trhova_g10 
-P47_UNIT_OK forecasts_odhad 
-P47_UNIT_OK forecast_f3_name 
-P47_UNIT_OK forecast_f10_name 
-P47_UNIT_OK forecast_f13_name 
-P47_UNIT_OK forecast_names_present 
-P47_UNIT_OK forecast_all_names 
-P47_UNIT_OK forecast_f1_source 
-P47_UNIT_OK forecast_f2_source 
-P47_UNIT_OK forecast_f3_source 
-P47_UNIT_OK forecast_f6_source 
-P47_UNIT_OK forecast_f9_source 
-P47_UNIT_OK forecast_f10_source 
-P47_UNIT_OK forecast_f11_source 
-P47_UNIT_OK forecast_f12_source 
-P47_UNIT_FAIL catalog_fields_match_brief 
-P47_UNIT_OK logistics1_freight_still_0_9 
+P47_UNIT_OK ai_firms_in_save_roundtrip
+P47_UNIT_OK minister_data_not_nan
+P47_UNIT_OK history_catalog_errors
+P47_UNIT_OK tech_t01
+P47_UNIT_OK tech_t05_req
+P47_UNIT_OK tech_t12_year
+P47_UNIT_OK tech_t21
+P47_UNIT_OK tech_t50_year
+P47_UNIT_OK tech_t57
+P47_UNIT_OK tech_t63_note
+P47_UNIT_OK tech_t68_note
+P47_UNIT_OK focus_mutual_exclusion
+P47_UNIT_OK focus_bloc_exclusion
+P47_UNIT_OK focus_g6_options
+P47_UNIT_OK focus_g7_options
+P47_UNIT_OK focus_trhova_g10
+P47_UNIT_OK forecasts_odhad
+P47_UNIT_OK forecast_f3_name
+P47_UNIT_OK forecast_f10_name
+P47_UNIT_OK forecast_f13_name
+P47_UNIT_OK forecast_names_present
+P47_UNIT_OK forecast_all_names
+P47_UNIT_OK forecast_f1_source
+P47_UNIT_OK forecast_f2_source
+P47_UNIT_OK forecast_f3_source
+P47_UNIT_OK forecast_f6_source
+P47_UNIT_OK forecast_f9_source
+P47_UNIT_OK forecast_f10_source
+P47_UNIT_OK forecast_f11_source
+P47_UNIT_OK forecast_f12_source
+P47_UNIT_FAIL catalog_fields_match_brief
+P47_UNIT_OK logistics1_freight_still_0_9
 P47_UNIT_OK juan2_firms_founded n=4 ids=[]
-P47_UNIT_OK juan2_firm_income 
+P47_UNIT_OK juan2_firm_income
 P47_UNIT_OK juan2_dividend_paid P47_DIVIDEND d30=4036200 d60=4194037 paid=157837
-P47_UNIT_OK juan2_dividend_never_below_reserve 
-P47_UNIT_OK juan2_dividend_loss_zero 
+P47_UNIT_OK juan2_dividend_never_below_reserve
+P47_UNIT_OK juan2_dividend_loss_zero
 P47_UNIT_OK juan2_dividend_full_surplus reserve 9000.00 cash 9000.00
 P47_UNIT_OK juan2_save_load_roundtrip err= cash 4174848/4174848 firms 4 date { "y": 2024, "m": 2, "d": 5 }
-P47_UNIT_OK juan2_save_keeps_last_div_day 
+P47_UNIT_OK juan2_save_keeps_last_div_day
 P47_UNIT_OK juan3_annuity 888.49
-P47_UNIT_OK juan3_annuity_zero_rate 
-P47_UNIT_OK juan3_bank_found 
+P47_UNIT_OK juan3_annuity_zero_rate
+P47_UNIT_OK juan3_bank_found
 P47_UNIT_OK juan3_loans_issued new 250000
 P47_UNIT_OK juan3_loans_interest i 2077.73 exp 2077.73
-P47_UNIT_OK juan3_loans_defaults 
-P47_UNIT_OK juan3_loans_equity 
-P47_UNIT_OK juan3_rate_cuts_demand_raises_risk 
+P47_UNIT_OK juan3_loans_defaults
+P47_UNIT_OK juan3_loans_equity
+P47_UNIT_OK juan3_rate_cuts_demand_raises_risk
 P47_UNIT_OK juan3_loan_amortizes paid 3498
-P47_UNIT_OK juan3_baseline_management 
-P47_UNIT_OK juan3_candidates 
-P47_UNIT_OK juan3_manager_eff 
-P47_UNIT_OK juan3_manager_hires 
+P47_UNIT_OK juan3_baseline_management
+P47_UNIT_OK juan3_candidates
+P47_UNIT_OK juan3_manager_eff
+P47_UNIT_OK juan3_manager_hires
 P47_UNIT_OK juan3_salary_cost wages 224.30
-P47_UNIT_OK juan3_fire_keeps_baseline_staff 
+P47_UNIT_OK juan3_fire_keeps_baseline_staff
 P47_UNIT_OK juan3_manager_more_revenue 8175 vs 6987
-P47_UNIT_OK juan3_needs_listed 
+P47_UNIT_OK juan3_needs_listed
 P47_UNIT_OK juan3_month_hist n=2
-P47_UNIT_OK juan3_month_hist_cap24 
-P47_UNIT_OK juan3_save_hist_manager_pos 
-P47_UNIT_OK juan3_old_save_loads 
-P47_UNIT_OK juan3_old_save_runs 
-P47_UNIT_OK juan3_place_cafe_pos 
-P47_UNIT_OK juan3_place_office 
-P47_UNIT_OK juan3_place_bank_pos 
-P47_UNIT_OK juan3_place_no_money 
-P47_UNIT_OK juan3_place_bad_kind 
-P47_UNIT_OK j4_diff_default_neutral 
-P47_UNIT_OK j4_diff_hard 
+P47_UNIT_OK juan3_month_hist_cap24
+P47_UNIT_OK juan3_save_hist_manager_pos
+P47_UNIT_OK juan3_old_save_loads
+P47_UNIT_OK juan3_old_save_runs
+P47_UNIT_OK juan3_place_cafe_pos
+P47_UNIT_OK juan3_place_office
+P47_UNIT_OK juan3_place_bank_pos
+P47_UNIT_OK juan3_place_no_money
+P47_UNIT_OK juan3_place_bad_kind
+P47_UNIT_OK j4_diff_default_neutral
+P47_UNIT_OK j4_diff_hard
 P47_UNIT_OK j4_diff_cost 122000 vs 78080
-P47_UNIT_OK j4_diff_cash 
+P47_UNIT_OK j4_diff_cash
 P47_UNIT_OK j4_cities_sk Bratislava
-P47_UNIT_OK j4_no_mine_in_city 
+P47_UNIT_OK j4_no_mine_in_city
 P47_UNIT_OK j4_no_coal_moscow Moskva
-P47_UNIT_OK j4_cafe_in_city 
-P47_UNIT_OK j4_sk_iron_deposit 
-P47_UNIT_OK j4_cafe_not_on_field 
-P47_UNIT_OK j4_iron_ok 
-P47_UNIT_OK j4_place_mine 
-P47_UNIT_OK j4_place_cafe_outside_city_refused 
-P47_UNIT_OK j4_valid_spots 
+P47_UNIT_OK j4_cafe_in_city
+P47_UNIT_OK j4_sk_iron_deposit
+P47_UNIT_OK j4_cafe_not_on_field
+P47_UNIT_OK j4_iron_ok
+P47_UNIT_OK j4_place_mine
+P47_UNIT_OK j4_place_cafe_outside_city_refused
+P47_UNIT_OK j4_valid_spots
 P47_UNIT_OK j4_terrain_north_tundra tundra
-P47_UNIT_OK j4_pol_setup 
-P47_UNIT_OK j4_lobby_tax 
-P47_UNIT_OK j4_bribe_locked 
-P47_UNIT_OK j4_bribe_scandal 
-P47_UNIT_OK j4_bribe_riskier 
-P47_UNIT_OK j4_lobby_needs_cash 
+P47_UNIT_OK j4_pol_setup
+P47_UNIT_OK j4_lobby_tax
+P47_UNIT_OK j4_bribe_locked
+P47_UNIT_OK j4_bribe_scandal
+P47_UNIT_OK j4_bribe_riskier
+P47_UNIT_OK j4_lobby_needs_cash
 P47_UNIT_OK j4_election green
-P47_UNIT_OK j4_lobby_peace 
-P47_UNIT_OK j4_pol_monthly_runs 
-P47_UNIT_OK j4_focus_locked 
-P47_UNIT_OK j4_focus_start 
-P47_UNIT_OK j4_focus_done 
-P47_UNIT_OK j4_focus_bonus 
-P47_UNIT_OK j4_focus_cost 
-P47_UNIT_OK j4_focus_durations 
-P47_UNIT_OK j4_focus_progress 
-P47_UNIT_OK j4_focus_excl_running 
-P47_UNIT_OK j4_focus_progress_half 
-P47_UNIT_OK j4_focus_on_done 
-P47_UNIT_OK j4_focus_exclusive 
-P47_UNIT_OK j4_rivals_setup 
-P47_UNIT_OK j4_rival_found 
+P47_UNIT_OK j4_lobby_peace
+P47_UNIT_OK j4_pol_monthly_runs
+P47_UNIT_OK j4_focus_locked
+P47_UNIT_OK j4_focus_start
+P47_UNIT_OK j4_focus_done
+P47_UNIT_OK j4_focus_bonus
+P47_UNIT_OK j4_focus_cost
+P47_UNIT_OK j4_focus_durations
+P47_UNIT_OK j4_focus_progress
+P47_UNIT_OK j4_focus_excl_running
+P47_UNIT_OK j4_focus_progress_half
+P47_UNIT_OK j4_focus_on_done
+P47_UNIT_OK j4_focus_exclusive
+P47_UNIT_OK j4_rivals_setup
+P47_UNIT_OK j4_rival_found
 P47_UNIT_OK j4_market_share { "player": 1.0, "rivals": 0.0, "total": 8676.64480140744 }
-P47_UNIT_OK j4_rival_text 
-P47_UNIT_OK j4_save_ext 
-P47_UNIT_OK j4_old_save_no_ext 
-P47_UNIT_OK j4_intro_gender 
-P47_UNIT_OK j4_intro_parody 
-P47_UNIT_OK j4_bank_placed 
-P47_UNIT_OK j4_bank_defaults 
+P47_UNIT_OK j4_rival_text
+P47_UNIT_OK j4_save_ext
+P47_UNIT_OK j4_old_save_no_ext
+P47_UNIT_OK j4_intro_gender
+P47_UNIT_OK j4_intro_parody
+P47_UNIT_OK j4_bank_placed
+P47_UNIT_OK j4_bank_defaults
 P47_UNIT_OK j4_bank_mortgage_corp 215141.795555555
-P47_UNIT_OK j4_bank_mort_safer 
-P47_UNIT_OK j4_bank_car 
-P47_UNIT_OK j4_bank_car_blocks 
-P47_UNIT_OK j4_bank_no_new_when_car_low 
-P47_UNIT_OK j4_bank_set_rates 
-P47_UNIT_OK j4_bank_savings_inflow 
+P47_UNIT_OK j4_bank_mort_safer
+P47_UNIT_OK j4_bank_car
+P47_UNIT_OK j4_bank_car_blocks
+P47_UNIT_OK j4_bank_no_new_when_car_low
+P47_UNIT_OK j4_bank_set_rates
+P47_UNIT_OK j4_bank_savings_inflow
 P47_UNIT_OK j4_bank_history 2
-P47_UNIT_OK j4_bank_text 
-P47_UNIT_OK j4_bank_save 
-P47_UNIT_OK j4_bank_placed 
-P47_UNIT_OK j4_pmc_needs_pmc 
-P47_UNIT_OK j4_pmc_built 
+P47_UNIT_OK j4_bank_text
+P47_UNIT_OK j4_bank_save
+P47_UNIT_OK j4_bank_placed
+P47_UNIT_OK j4_pmc_needs_pmc
+P47_UNIT_OK j4_pmc_built
 P47_UNIT_OK j4_pmc_distance 89.4473074347017
 P47_UNIT_OK j4_pmc_needs_focus Najprv splň cieľ „Kontakty v miestnej vláde“ (záložka Ciele).
-P47_UNIT_OK j4_pmc_needs_bribe 
-P47_UNIT_OK j4_pmc_ready 
-P47_UNIT_OK j4_pmc_collect 
-P47_UNIT_OK j4_pmc_no_double 
-P47_UNIT_OK j4_pmc_scandal 
+P47_UNIT_OK j4_pmc_needs_bribe
+P47_UNIT_OK j4_pmc_ready
+P47_UNIT_OK j4_pmc_collect
+P47_UNIT_OK j4_pmc_no_double
+P47_UNIT_OK j4_pmc_scandal
 P47_UNIT_OK j4_pmc_too_far Tvoja najbližšia PMC je 1792 km ďaleko (max 300 km).
-P47_UNIT_OK j4_gender_male_authority 
-P47_UNIT_OK j4_gender_campaign 
-P47_UNIT_OK j4_gender_cooldown 
-P47_UNIT_OK j4_gender_male_no_charm 
+P47_UNIT_OK j4_gender_male_authority
+P47_UNIT_OK j4_gender_campaign
+P47_UNIT_OK j4_gender_cooldown
+P47_UNIT_OK j4_gender_male_no_charm
 P47_UNIT_OK j4_gender_charm_discount 89792 97600
-P47_UNIT_OK j4_gender_female_entrepreneur 
-P47_UNIT_OK j4_gender_other_neutral 
-P47_UNIT_OK j4_gfocus_male_only 
-P47_UNIT_OK j4_gfocus_oldboys 
-P47_UNIT_OK j4_gfocus_negotiator 
-P47_UNIT_OK j4_gfocus_female_only 
-P47_UNIT_OK j4_gfocus_network 
+P47_UNIT_OK j4_gender_female_entrepreneur
+P47_UNIT_OK j4_gender_other_neutral
+P47_UNIT_OK j4_gfocus_male_only
+P47_UNIT_OK j4_gfocus_oldboys
+P47_UNIT_OK j4_gfocus_negotiator
+P47_UNIT_OK j4_gfocus_female_only
+P47_UNIT_OK j4_gfocus_network
 P47_UNIT_OK j4_gfocus_media_icon pol=true r0=55 r=56 g=žena
 P47_UNIT_OK j4_countries 165
 P47_UNIT_OK j5_165_countries 165
@@ -316,105 +316,105 @@ SCRIPT ERROR: Invalid access to property or key 'focus_exited' on a base object 
               [3] run (res://tests/unit.gd:46)
               [4] _ready (res://scripts/main.gd:35)
 P47_UNIT_OK j5_map_clickable 163/165
-P47_UNIT_OK j5_no_tw_xk 
+P47_UNIT_OK j5_no_tw_xk
 P47_UNIT_OK j5_tier1_count 70
-P47_UNIT_OK j5_core_tier1 
-P47_UNIT_OK j5_big_in_tier1 
+P47_UNIT_OK j5_core_tier1
+P47_UNIT_OK j5_big_in_tier1
 P47_UNIT_OK j5_small_tier2 VU
-P47_UNIT_OK j5_promote_on_firm 
+P47_UNIT_OK j5_promote_on_firm
 P47_UNIT_OK j5_tier2_updates FJ
 P47_UNIT_OK j5_promote_on_war SS
 P47_J5_BENCH countries=165 tier1=70 ms_per_day=72.3
 P47_UNIT_OK j5_bench_ms_per_day 72.3 ms
-P47_UNIT_OK j5_old_save_26_loads 
-P47_UNIT_OK j5_old_save_runs 
-P47_UNIT_OK j5_old_save_politics 
+P47_UNIT_OK j5_old_save_26_loads
+P47_UNIT_OK j5_old_save_runs
+P47_UNIT_OK j5_old_save_politics
 P47_UNIT_OK j5_pol_all_gov_types ["democracy", "hybrid", "communist", "autocracy", "monarchy"]
-P47_UNIT_OK j5_pol_gov_examples 
-P47_UNIT_OK j5_pol_no_elections_autocracy 
-P47_UNIT_OK j5_pol_bribe_cost_by_gov 
-P47_UNIT_OK j5_pol_scandal_by_gov 
+P47_UNIT_OK j5_pol_gov_examples
+P47_UNIT_OK j5_pol_no_elections_autocracy
+P47_UNIT_OK j5_pol_bribe_cost_by_gov
+P47_UNIT_OK j5_pol_scandal_by_gov
 P47_UNIT_OK j5_fund_party Nemecko: strana Konzervatívci (líder Polly Vetoson) má +6 % popularity.
-P47_UNIT_OK j5_fund_party_weaker_autocracy 
-P47_UNIT_OK j5_war_support_needs_war 
+P47_UNIT_OK j5_fund_party_weaker_autocracy
+P47_UNIT_OK j5_war_support_needs_war
 P47_UNIT_OK j5_war_support Polsko: tvoja podpora dorazila. Vzťahy +20, s nepriateľmi −15. PMC kontrakt podpísaný. Príjem z kontraktov 171 000 €.
-P47_UNIT_OK j5_lobby_sanction 
-P47_UNIT_OK j5_lobby_trade 
-P47_UNIT_OK j5_strike_scandal 
-P47_UNIT_OK j5_pol_text 
-P47_UNIT_OK j5_pol_monthly_165 
+P47_UNIT_OK j5_lobby_sanction
+P47_UNIT_OK j5_lobby_trade
+P47_UNIT_OK j5_strike_scandal
+P47_UNIT_OK j5_pol_text
+P47_UNIT_OK j5_pol_monthly_165
 P47_UNIT_OK j5_research_branches ["Stroje a automatizácia", "Ťažba a suroviny", "Energetika", "Logistika", "Financie/IT", "Spotrebné produkty", "Podnikanie"]
-P47_UNIT_OK j5_research_slots_1 
-P47_UNIT_OK j5_research_prereq 
-P47_UNIT_OK j5_research_start 
-P47_UNIT_OK j5_research_queue_when_full 
-P47_UNIT_OK j5_rnd_center 
-P47_UNIT_OK j5_research_parallel 
-P47_UNIT_OK j5_research_done 
-P47_UNIT_OK j5_research_focus_slot 
-P47_UNIT_OK j5_research_best_value 
-P47_UNIT_OK j5_research_save 
-P47_UNIT_OK j5_research_view 
-P47_UNIT_OK j5_names_all_countries 
+P47_UNIT_OK j5_research_slots_1
+P47_UNIT_OK j5_research_prereq
+P47_UNIT_OK j5_research_start
+P47_UNIT_OK j5_research_queue_when_full
+P47_UNIT_OK j5_rnd_center
+P47_UNIT_OK j5_research_parallel
+P47_UNIT_OK j5_research_done
+P47_UNIT_OK j5_research_focus_slot
+P47_UNIT_OK j5_research_best_value
+P47_UNIT_OK j5_research_save
+P47_UNIT_OK j5_research_view
+P47_UNIT_OK j5_names_all_countries
 P47_UNIT_OK j5_name_sk_female Lucia Kováčová
 P47_UNIT_OK j5_name_ru_female Irina Ivanova
 P47_UNIT_OK j5_name_pl_female Ewa Wiśniewska
-P47_UNIT_OK j5_name_jp_family_first 
-P47_UNIT_OK j5_name_deterministic 
+P47_UNIT_OK j5_name_jp_family_first
+P47_UNIT_OK j5_name_deterministic
 P47_UNIT_OK j5_manager_names_by_country ["Takahashi Rin", "Tanaka Kaito", "Suzuki Yuki"]
-P47_UNIT_OK j5_manager_gender_saved 
-P47_UNIT_OK j5_leader_puns 
-P47_UNIT_OK j5_hotel_exists 
-P47_UNIT_OK j5_airport_tier 
-P47_UNIT_OK j5_airport_city 
+P47_UNIT_OK j5_manager_gender_saved
+P47_UNIT_OK j5_leader_puns
+P47_UNIT_OK j5_hotel_exists
+P47_UNIT_OK j5_airport_tier
+P47_UNIT_OK j5_airport_city
 P47_UNIT_OK j5_airport_needs_city FJ
 P47_UNIT_OK j5_airport_fees 186282 465704 495059
-P47_UNIT_OK j5_airport_monthly 
+P47_UNIT_OK j5_airport_monthly
 P47_UNIT_OK j5_limit_start 150000.0
-P47_UNIT_OK j5_prog_small_ok 
-P47_UNIT_OK j5_prog_medium_locked 
-P47_UNIT_OK j5_prog_large_locked 
+P47_UNIT_OK j5_prog_small_ok
+P47_UNIT_OK j5_prog_medium_locked
+P47_UNIT_OK j5_prog_large_locked
 P47_UNIT_OK j5_unsecured { "ok": true, "reason": "", "rate": 0.1317125, "amount": 30000.0, "payment": 1013.29487531588 }
 P47_UNIT_OK j5_haircut 552000
-P47_UNIT_OK j5_secured_cap 
+P47_UNIT_OK j5_secured_cap
 P47_UNIT_OK j5_secured_ok { "ok": true, "reason": "", "rate": 0.0917125, "amount": 496800.0, "payment": 10354.0904321862, "value": 552000.0, "limit": 840500.0 }
-P47_UNIT_OK j5_pledged_no_sell 
-P47_UNIT_OK j5_pledged_twice 
+P47_UNIT_OK j5_pledged_no_sell
+P47_UNIT_OK j5_pledged_twice
 P47_UNIT_OK j5_seized bank:ai_b0
 P47_UNIT_OK j5_cash_release { "ok": true, "reason": "", "rate": 0.0917125, "amount": 50000.0, "payment": 1042.07834462421, "value": 70000.0, "limit": 378500.0 }
 P47_UNIT_OK j5_stock_listings 123
-P47_UNIT_OK j5_stock_no_tier2 
-P47_UNIT_OK j5_stock_hist 
-P47_UNIT_OK j5_stock_buy_div 
-P47_UNIT_OK j5_takeover_needs_50 
-P47_UNIT_OK j5_takeover 
-P47_UNIT_OK j5_hostile_rival 
-P47_UNIT_OK j5_ipo_min_size 
-P47_UNIT_OK j5_ipo 
-P47_UNIT_OK j5_ipo_once 
-P47_UNIT_OK j5_lose_control 
-P47_UNIT_OK j5_corp_needs2 
-P47_UNIT_OK j5_corp_value 
-P47_UNIT_OK j5_corp_add 
-P47_UNIT_OK j5_corp_ipo 
-P47_UNIT_OK j5_spinoff 
-P47_UNIT_OK j5_stock_saved 
+P47_UNIT_OK j5_stock_no_tier2
+P47_UNIT_OK j5_stock_hist
+P47_UNIT_OK j5_stock_buy_div
+P47_UNIT_OK j5_takeover_needs_50
+P47_UNIT_OK j5_takeover
+P47_UNIT_OK j5_hostile_rival
+P47_UNIT_OK j5_ipo_min_size
+P47_UNIT_OK j5_ipo
+P47_UNIT_OK j5_ipo_once
+P47_UNIT_OK j5_lose_control
+P47_UNIT_OK j5_corp_needs2
+P47_UNIT_OK j5_corp_value
+P47_UNIT_OK j5_corp_add
+P47_UNIT_OK j5_corp_ipo
+P47_UNIT_OK j5_spinoff
+P47_UNIT_OK j5_stock_saved
 P47_UNIT_OK j8_media_influence { "ok": true, "success": true, "scandal": false, "text": "Nemecko: tvoja mediálna kampaň zabrala, máš tu väčší vplyv.", "cost": 345629.62962963 }
-P47_UNIT_OK j8_influence_chance 
+P47_UNIT_OK j8_influence_chance
 P47_UNIT_OK j8_relief { "ok": true, "success": true, "scandal": false, "text": "Nemecko znížila clá voči Francuzsko.", "cost": 561648.148148148 }
-P47_UNIT_OK j8_embargo 
-P47_UNIT_OK j8_needs_target 
-P47_UNIT_OK j8_scandal_hurts 
-P47_UNIT_OK j8_bribe_locked 
-P47_UNIT_OK j8_saved 
+P47_UNIT_OK j8_embargo
+P47_UNIT_OK j8_needs_target
+P47_UNIT_OK j8_scandal_hurts
+P47_UNIT_OK j8_bribe_locked
+P47_UNIT_OK j8_saved
 P47_UNIT_OK j9_two_banks |
-P47_UNIT_OK j9_one_deposit_rate 
-P47_UNIT_OK j9_help_text 
+P47_UNIT_OK j9_one_deposit_rate
+P47_UNIT_OK j9_help_text
 P47_UNIT_OK j9_no_corp_market 0.0
 P47_UNIT_OK j9_corp_same_country_internal C1 coal=1.57
 P47_UNIT_OK j9_other_country_market 0.0
 P47_UNIT_OK j9_electricity_internal 0.12218945454545
-P47_UNIT_OK j9_transport_cost_only 
+P47_UNIT_OK j9_transport_cost_only
 SCRIPT ERROR: Invalid access to property or key 'focus_exited' on a base object of type 'null instance'.
           at: WorldMap._ready (res://scripts/ui/world_map.gd:89)
           GDScript backtrace (most recent call first):
@@ -423,28 +423,28 @@ SCRIPT ERROR: Invalid access to property or key 'focus_exited' on a base object 
               [2] run (res://tests/juan9.gd:9)
               [3] run (res://tests/unit.gd:47)
               [4] _ready (res://scripts/main.gd:35)
-P47_UNIT_OK j9_cap_is_city 
+P47_UNIT_OK j9_cap_is_city
 P47_UNIT_OK j9_place_any_type { "ok": true, "reason": "", "id": "f1" }
 P47_UNIT_OK j9_nuke_not_in_city Jadrová elektráreň nemôže stáť v meste Bratislava (bezpečnosť, hluk). Klikni mimo mesta.
-P47_UNIT_OK j9_cafe_needs_city 
+P47_UNIT_OK j9_cafe_needs_city
 P47_UNIT_OK j9_airport_msg Letisko nemôže byť priamo v centre mesta Bratislava – klikni kúsok vedľa.
 P47_UNIT_OK j9_bank_is_map_firm { "ok": true, "reason": "", "id": "pb1" }
 P47_UNIT_OK j9_country_aggregate { "n": 2, "types": { "hotel": 1, "bank": 1 } }
 P47_UNIT_OK j9_icon_every_type []
 P47_UNIT_OK j10_100_listed 124
 P47_UNIT_OK j10_sectors ["ai", "transport", "consumer", "tech", "industry", "agri", "energy", "health", "bank", "arms", "media", "telecom"]
-P47_UNIT_OK j10_sector_index 
-P47_UNIT_OK j10_no_absorb_small 
+P47_UNIT_OK j10_sector_index
+P47_UNIT_OK j10_no_absorb_small
 P47_UNIT_OK j10_absorb_ready  stake 0.60
-P47_UNIT_OK j10_absorbed 
-P47_UNIT_OK j10_absorb_once 
+P47_UNIT_OK j10_absorbed
+P47_UNIT_OK j10_absorb_once
 P47_UNIT_OK j10_quote_poor Nemáš dosť peňazí: treba 650 799 €, máš 100 €.
-P47_UNIT_OK j10_quote_matches_buy 
-P47_UNIT_OK j10_quote_matches_sell 
-P47_UNIT_OK j10_building_needs_realty 
-P47_UNIT_OK j10_building_buy 
-P47_UNIT_OK j10_building_rent 
-P47_UNIT_OK j10_refinery_gasworks 
+P47_UNIT_OK j10_quote_matches_buy
+P47_UNIT_OK j10_quote_matches_sell
+P47_UNIT_OK j10_building_needs_realty
+P47_UNIT_OK j10_building_buy
+P47_UNIT_OK j10_building_rent
+P47_UNIT_OK j10_refinery_gasworks
 SCRIPT ERROR: Invalid access to property or key 'focus_exited' on a base object of type 'null instance'.
           at: WorldMap._ready (res://scripts/ui/world_map.gd:89)
           GDScript backtrace (most recent call first):
@@ -455,112 +455,112 @@ SCRIPT ERROR: Invalid access to property or key 'focus_exited' on a base object 
               [4] _ready (res://scripts/main.gd:35)
 P47_UNIT_OK j10_infra r609 p198 a177 l121
 P47_UNIT_OK j10_charity  55->57
-P47_UNIT_OK j10_charity_cap 
-P47_UNIT_OK j10_stats 
+P47_UNIT_OK j10_charity_cap
+P47_UNIT_OK j10_stats
 P47_UNIT_OK j10_state_price 14 085 685 185 €
-P47_UNIT_OK j10_state_too_poor 
-P47_UNIT_OK j10_state_buy 
-P47_UNIT_OK j10_state_gov 
-P47_UNIT_OK j10_hq_needs_city 
-P47_UNIT_OK j10_hq_set 
-P47_UNIT_OK j10_hq_own_state_tax 
-P47_UNIT_OK j10_hq_move_fee 
+P47_UNIT_OK j10_state_too_poor
+P47_UNIT_OK j10_state_buy
+P47_UNIT_OK j10_state_gov
+P47_UNIT_OK j10_hq_needs_city
+P47_UNIT_OK j10_hq_set
+P47_UNIT_OK j10_hq_own_state_tax
+P47_UNIT_OK j10_hq_move_fee
 P47_UNIT_OK j10_fin_budget b=10000 flags=1
 P47_UNIT_OK j10_fin_acquire_merge abs=1 log=["1.1.2024: prevzatie a začlenenie Open AJ (ARAI)", "1.1.2024: rozpočet +10 000 € (10 % zo ziskov)"]
-P47_UNIT_OK j10_fund_holdings 
-P47_UNIT_OK j10_save_ext 
+P47_UNIT_OK j10_fund_holdings
+P47_UNIT_OK j10_save_ext
 P47_UNIT_OK j13_dep_none 0.0
 P47_UNIT_OK j13_dep_grows 31.4 { "HDP": 16.3705263157895, "Suroviny/energia": 0.04131454472909, "Zamestnanci": 15.0, "Úvery": 0.0, "Vplyv": 0.0 }
-P47_UNIT_OK j13_dep_text 
+P47_UNIT_OK j13_dep_text
 P47_UNIT_OK j13_dep_lobby 0.25 0.34
 P47_UNIT_OK j13_legal_base 0.45
-P47_UNIT_OK j13_legal_none 
-P47_UNIT_OK j13_legal_level 
+P47_UNIT_OK j13_legal_none
+P47_UNIT_OK j13_legal_level
 P47_UNIT_OK j13_legal_win { "cost": 12000.0, "got": 418015.275150537, "text": "Právnici vymohli 418 015 € z 625 000 € (trovy 41 802 €).", "chance": 0.54 }
-P47_UNIT_OK j13_legal_lose 
-P47_UNIT_OK j13_legal_corp 
-P47_UNIT_OK j13_legal_full_dep 
-P47_UNIT_OK j13_bond_discount 
+P47_UNIT_OK j13_legal_lose
+P47_UNIT_OK j13_legal_corp
+P47_UNIT_OK j13_legal_full_dep
+P47_UNIT_OK j13_bond_discount
 P47_UNIT_OK j13_bond_issue  nw 4792814->4784043
-P47_UNIT_OK j13_bond_limit 
-P47_UNIT_OK j15_broker_found 
+P47_UNIT_OK j13_bond_limit
+P47_UNIT_OK j15_broker_found
 P47_UNIT_OK j15_broker_buys own=4 cash=7248866
-P47_UNIT_OK j15_broker_fee 
-P47_UNIT_OK j15_no_double 
+P47_UNIT_OK j15_broker_fee
+P47_UNIT_OK j15_no_double
 P47_UNIT_OK j15_broker_sells pl=6341349
-P47_UNIT_OK j15_broker_text 
-P47_UNIT_OK j15_broker_off 
+P47_UNIT_OK j15_broker_text
+P47_UNIT_OK j15_broker_off
 P47_UNIT_OK j15_customers [{ "corp": "", "iso": "SK", "country": "Slovensko", "good": "Elektrina", "buyer": "Domácnosti a štát", "qty": 7.0, "eur": 350.0 }, { "corp": "", "iso": "SK", "country": "Slovensko", "good": "Elektrina", "buyer": "Zahraničná firma", "qty": 3.0, "eur": 150.0 }]
-P47_UNIT_OK j15_customers_month 
-P47_UNIT_OK j15_save_ext 
+P47_UNIT_OK j15_customers_month
+P47_UNIT_OK j15_save_ext
 P47_UNIT_OK j17_by_iso { "SK": { "eur": 500.0, "goods": { "Elektrina": 500.0 } }, "CZ": { "eur": 50.0, "goods": { "Elektrina": 50.0 } } }
-P47_UNIT_OK j17_ramp 
-P47_UNIT_OK j19_gas_plant_uses_gas 
-P47_UNIT_OK j19_gas_well_deposit 
+P47_UNIT_OK j17_ramp
+P47_UNIT_OK j19_gas_plant_uses_gas
+P47_UNIT_OK j19_gas_well_deposit
 P47_UNIT_OK j19_inputs_known []
-P47_UNIT_OK j19_mill 
+P47_UNIT_OK j19_mill
 P47_UNIT_OK j19_buys_from_market_plus_transport { "iron_ore": { "own": 0.0, "bought": 13.3535618181818, "transport": 75.3725099343833, "saved": 0.0 }, "coal": { "own": 0.0, "bought": 4.39882036363636, "transport": 28.7474865282893, "saved": 0.0 }, "electricity": { "own": 0.0, "bought": 7.06953272727273, "transport": 0.0, "saved": 0.0 } }
 P47_UNIT_OK j19_rail  { "d": 0.6, "rail": 0.6, "pipe": 0.0, "logi": 0.0, "port": 0.0, "hub": "" }
-P47_UNIT_OK j19_rail_not_electricity 
-P47_UNIT_OK j19_pipe 
+P47_UNIT_OK j19_rail_not_electricity
+P47_UNIT_OK j19_pipe
 P47_UNIT_OK j19_utilization 17.1149579351414
 P47_UNIT_OK j19_logi { "km": 150.0, "share": 0.3 }
-P47_UNIT_OK j19_logi_scales 
-P47_UNIT_OK j19_text 
-P47_UNIT_OK j19_save 
-P47_UNIT_OK j19_short_line 
-P47_UNIT_OK j20_world_tex 
-P47_UNIT_OK j20_tile_europe 
-P47_UNIT_OK j20_kinds 
-P47_UNIT_OK j20_kinds_all 
+P47_UNIT_OK j19_logi_scales
+P47_UNIT_OK j19_text
+P47_UNIT_OK j19_save
+P47_UNIT_OK j19_short_line
+P47_UNIT_OK j20_world_tex
+P47_UNIT_OK j20_tile_europe
+P47_UNIT_OK j20_kinds
+P47_UNIT_OK j20_kinds_all
 P47_UNIT_OK j21_parody 120/120
-P47_UNIT_OK j21_parody_sector_kept 
-P47_UNIT_OK j21_parody_once 
+P47_UNIT_OK j21_parody_sector_kept
+P47_UNIT_OK j21_parody_once
 P47_UNIT_OK j21_new_firms ["auto_plant", "shipyard", "real_estate", "steel_mill", "ai_firm", "data_center", "aircraft_plant"]
-P47_UNIT_OK j21_icons 
-P47_UNIT_OK j21_ai_chain 
-P47_UNIT_OK j21_corp 
-P47_UNIT_OK j21_logo_default 
-P47_UNIT_OK j21_logo_set 
-P47_UNIT_OK j21_logo_bad 
-P47_UNIT_OK j21_logo_saved 
-P47_UNIT_OK j21_logo_tex 
-P47_UNIT_OK j21_rename_firm 
-P47_UNIT_OK j21_rename_short 
-P47_UNIT_OK j21_rename_corp 
-P47_UNIT_OK j21_rename_not_mine 
-P47_UNIT_OK j21_makes_vehicles 
+P47_UNIT_OK j21_icons
+P47_UNIT_OK j21_ai_chain
+P47_UNIT_OK j21_corp
+P47_UNIT_OK j21_logo_default
+P47_UNIT_OK j21_logo_set
+P47_UNIT_OK j21_logo_bad
+P47_UNIT_OK j21_logo_saved
+P47_UNIT_OK j21_logo_tex
+P47_UNIT_OK j21_rename_firm
+P47_UNIT_OK j21_rename_short
+P47_UNIT_OK j21_rename_corp
+P47_UNIT_OK j21_rename_not_mine
+P47_UNIT_OK j21_makes_vehicles
 P47_UNIT_OK j21_track [{ "cid": "automobiles", "iso": "SK", "qty": 6.0 }, { "cid": "automobiles", "iso": "AE", "qty": 2.0 }, { "cid": "automobiles", "iso": "NL", "qty": 2.0 }]
-P47_UNIT_OK j21_track_text 
-P47_UNIT_OK j21_track_nonvehicle 
+P47_UNIT_OK j21_track_text
+P47_UNIT_OK j21_track_nonvehicle
 P47_UNIT_OK j21_ai_boost 1.04
-P47_UNIT_OK j21_old_type 
-P47_UNIT_OK j21_buy_shop 
-P47_UNIT_OK j21_buy_apt 
-P47_UNIT_OK j21_buy_plot 
-P47_UNIT_OK j21_buy_bad 
-P47_UNIT_OK j21_shop_rent 
-P47_UNIT_OK j21_plot_no_rent 
-P47_UNIT_OK j21_develop 
-P47_UNIT_OK j21_develop_twice 
+P47_UNIT_OK j21_old_type
+P47_UNIT_OK j21_buy_shop
+P47_UNIT_OK j21_buy_apt
+P47_UNIT_OK j21_buy_plot
+P47_UNIT_OK j21_buy_bad
+P47_UNIT_OK j21_shop_rent
+P47_UNIT_OK j21_plot_no_rent
+P47_UNIT_OK j21_develop
+P47_UNIT_OK j21_develop_twice
 P47_UNIT_OK j21_realty_type ["office", "shop", "apartments", "warehouse"]
-P47_UNIT_OK j21_realty_city 
-P47_UNIT_OK j21_realty_filter 
-P47_UNIT_OK j21_save 
+P47_UNIT_OK j21_realty_city
+P47_UNIT_OK j21_realty_filter
+P47_UNIT_OK j21_save
 P47_UNIT_OK j22_telecom { "users": 2265099.04778925, "pct": 0.41729901396265, "share": 0.45637622853058, "cap_pct": 0.914375, "pop": 5428000.0, "competitors": 0 }
-P47_UNIT_OK j22_news_lower 
-P47_UNIT_OK j22_not_media 
-P47_UNIT_OK j22_text 
+P47_UNIT_OK j22_news_lower
+P47_UNIT_OK j22_not_media
+P47_UNIT_OK j22_text
 P47_UNIT_OK j22_competition 0.417299 0.286532
-P47_UNIT_OK j22_level_up 
-P47_UNIT_OK j22_country 
-P47_UNIT_OK j22_cap_small_country 
+P47_UNIT_OK j22_level_up
+P47_UNIT_OK j22_country
+P47_UNIT_OK j22_cap_small_country
 P47_UNIT_OK j23_phased_same [12, 984941990.6, 596.5069, 104.7133] vs [12, 984941990.6, 596.5069, 104.7133]
-P47_UNIT_OK j23_finish_pending 
+P47_UNIT_OK j23_finish_pending
 P47_UNIT_OK j23_discount_cache { "d": 0.27, "rail": 0.0, "pipe": 0.0, "logi": 0.27, "port": 0.0, "hub": "f3" } { "d": 0.27, "rail": 0.0, "pipe": 0.0, "logi": 0.27, "port": 0.0, "hub": "f3" }
-P47_UNIT_OK j23_gfx_setting 
+P47_UNIT_OK j23_gfx_setting
 P47_UNIT_OK j23_mesh_count 165
 P47_UNIT_OK descriptions_all_industries []
 P47_UNIT_OK descriptions_match_recipes []
 P47_UNIT_OK descriptions_build_menu_coverage []
-P47_UNIT_OK description_bank 
+P47_UNIT_OK description_bank

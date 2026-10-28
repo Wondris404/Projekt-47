@@ -1,11 +1,11 @@
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-P47_UNIT_OK camera_panel_world_position 
-P47_UNIT_OK camera_panel_scale_and_lod 
-P47_UNIT_OK camera_panel_roundtrip 
-P47_UNIT_OK camera_window_resize 
-P47_UNIT_OK camera_zoom_one_keeps_anchor 
-P47_UNIT_OK camera_zoom_in_keeps_anchor 
-P47_UNIT_OK camera_click_transform_roundtrip 
-P47_UNIT_OK camera_click_release_coordinate 
-P47_UNIT_OK camera_focus_loss_cancels_drag 
+P47_UNIT_OK camera_panel_world_position
+P47_UNIT_OK camera_panel_scale_and_lod
+P47_UNIT_OK camera_panel_roundtrip
+P47_UNIT_OK camera_window_resize
+P47_UNIT_OK camera_zoom_one_keeps_anchor
+P47_UNIT_OK camera_zoom_in_keeps_anchor
+P47_UNIT_OK camera_click_transform_roundtrip
+P47_UNIT_OK camera_click_release_coordinate
+P47_UNIT_OK camera_focus_loss_cancels_drag

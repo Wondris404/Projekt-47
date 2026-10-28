@@ -1,24 +1,24 @@
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-P47_UNIT_OK camera_detached_initialization 
-P47_UNIT_OK traffic_idle 
-P47_UNIT_OK traffic_density 
-P47_UNIT_OK traffic_cap 
-P47_UNIT_OK traffic_partial_train_has_empty_wagons 
-P47_UNIT_OK traffic_full_train 
-P47_UNIT_OK traffic_offscreen 
-P47_UNIT_OK traffic_extreme_zoom_clip 
-P47_UNIT_OK traffic_zero_segment 
-P47_UNIT_OK all_catalog_map_models 
-P47_UNIT_OK baseline_full_efficiency 
-P47_UNIT_OK baseline_full_purchase 
-P47_UNIT_OK baseline_replenishes_workers 
-P47_UNIT_OK manager_v3_roundtrip 
-P47_UNIT_OK manager_original_bonus 
-P47_UNIT_OK manager_never_penalizes 
-P47_UNIT_OK firing_restores_baseline 
-P47_UNIT_OK v3_missing_manager_loads 
-P47_UNIT_OK v3_missing_manager_runs 
-P47_UNIT_OK camera_smooth_layout_anchor 
+P47_UNIT_OK camera_detached_initialization
+P47_UNIT_OK traffic_idle
+P47_UNIT_OK traffic_density
+P47_UNIT_OK traffic_cap
+P47_UNIT_OK traffic_partial_train_has_empty_wagons
+P47_UNIT_OK traffic_full_train
+P47_UNIT_OK traffic_offscreen
+P47_UNIT_OK traffic_extreme_zoom_clip
+P47_UNIT_OK traffic_zero_segment
+P47_UNIT_OK all_catalog_map_models
+P47_UNIT_OK baseline_full_efficiency
+P47_UNIT_OK baseline_full_purchase
+P47_UNIT_OK baseline_replenishes_workers
+P47_UNIT_OK manager_v3_roundtrip
+P47_UNIT_OK manager_original_bonus
+P47_UNIT_OK manager_never_penalizes
+P47_UNIT_OK firing_restores_baseline
+P47_UNIT_OK v3_missing_manager_loads
+P47_UNIT_OK v3_missing_manager_runs
+P47_UNIT_OK camera_smooth_layout_anchor
 P47_UNIT_OK camera_click_visible_roof roof=(384.5, 249.5) ground=(400.0, 300.0) selected=f1 expected=f1 zoom=60.0 sites=[{ "id": "f1", "ind": "nuclear_plant", "iso": "SK", "wp": (708.0456, 264.0228), "name": "Kaviareň Slovensko" }]
-P47_UNIT_OK camera_model_transparency 
+P47_UNIT_OK camera_model_transparency
