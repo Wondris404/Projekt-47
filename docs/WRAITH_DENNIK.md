@@ -1153,3 +1153,5 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Pridaná diagnostika `tests/small_viewport_probe.gd`. Pri lokálnom Windows headless spustení v izolovaných používateľských dátach ukázala: fyzické okno 240 × 150 má logický viewport 1280 × 800, zatiaľ čo umelý podviewport 240 × 150 vytvorí panel 300 × 180 mimo jeho hraníc.
 - Sonda nemení herný stav ani ekonomiku. Nie je to dôkaz chyby pri bežnom hraní; grafické zobrazenie, škálovanie a obsah okien treba ďalej overiť. Úprava panelov zatiaľ nebola vykonaná. Lokálna verzia testu prešla s návratovým kódom 0; úplná testovacia sada sa pri tejto čisto diagnostickej zmene nespúšťala.
+
+- Nezávislé čítanie kódu potvrdilo logický základ 1280 × 720 a režim `canvas_items`/`expand`. Pri bežnej zmene veľkosti sa nenašiel dôkaz logického viewportu pod minimami panelov; titulky a zatváracie tlačidlá ležia mimo posúvaného obsahu a niektoré prvky majú vlastné minimá. Samotné zmenšenie panelov by preto nemuselo sprístupniť celý obsah.
