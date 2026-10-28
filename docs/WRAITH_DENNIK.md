@@ -701,3 +701,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Diagnostika pamäte okna
 
 - Grafický workflow do dočasnej kópie pri teste doplní výpis polohy, uloženej polohy a minimálnej veľkosti pred a po znovuotvorení okna. Zdrojový kód hry sa tým nemení. Beh `40655073099` prebieha; záver ešte nie je známy.
+
+
+## 2026-10-28 – Výsledok diagnostiky okna krajiny
+
+- Beh `40655073099` nameral pred otvorením inej krajiny obdĺžnik (940, 500; 340 × 220), rovnaký ako v pamäti. Po otvorení mal panel šírku 477 px pre minimálnu šírku obsahu; jeho pravý okraj tak presahoval viewport široký 1280 px. Deväť ďalších kontrol prešlo. Konkrétny vnútorný prvok sa ešte zisťuje; oprava zatiaľ nie je urobená.
+- Nadväzujúca diagnostika vo workﬂow vypisuje aj vnútorné ovládacie prvky so širokým minimom; mení len dočasnú kópiu na runneri. https://github.com/Wondris404/Projekt-47/actions/runs/40655073099
