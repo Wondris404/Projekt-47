@@ -5,7 +5,8 @@ on:
       - codex/audit-ux-20261028
     paths-ignore:
       - 'docs/**'
-      - '.github/workflows/visual-audit.yml'
+      - '.github/workflows/**'
+      - 'audit/screenshots/**'
   workflow_dispatch:
 permissions:
   contents: read
