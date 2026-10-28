@@ -654,3 +654,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - `WorldMap._ready` kontroluje existenciu okna pred pripojením signálu straty fokusu. Bežný pripojený viewport používa rovnaký postup ako predtým; vzhľad, kamera aj herné pravidlá sa nemenia.
 - Pred opravou úplná sada na GitHube: 531 OK / 1 FAIL (chýbajúca referencia katalógu) a tri chyby `focus_exited` pri testoch mimo stromu. Pridaná jedna cielená kontrola a CI kontrola výpisu `SCRIPT ERROR`; výsledok po oprave ešte musí dobehnúť.
+
+
+## 2026-10-28 – Priebežné overenie kontroly okna mapy
+
+- GitHub Actions pre commit `bdbdc442094361c8741c47741b5a88b4ba138b24`: `audit_unit` 29 OK / 0 FAIL vrátane vytvorenia mapy mimo stromu a kontroly výpisu GDScript chýb; stabilita 1, 30 a 365 dní prešla. Úplná `unit` sada pri tomto zápise ešte beží.
+- Headless výkonnostná sonda 100 dní na 72 firmách: 62,52 ms/deň; predchádzajúce behy na iných cloudových runneroch namerali 87,79 a 77,65 ms/deň. Rozdiel môže byť záťažou runnera a nedokazuje zrýchlenie ani FPS na notebooku. Prvá úprava kontroly chybového výpisu mala chybné formátovanie workflow, opravené v samostatnom commite pred týmto behom.
+- Vyhľadanie `tests/catalog_field_lock.txt` v troch ďalších vetvách ani v histórii tohto súboru na main nevrátilo referenciu. Aktuálny katalóg nebol použitý na vytvorenie novej referencie.
