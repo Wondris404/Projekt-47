@@ -363,16 +363,19 @@ func power_value(iso: String) -> float:
 func has_control(iso: String) -> bool:
 	return power_value(iso) > CONTROL
 
+var use_power_headcount_cache := true  # porovnávateľná referenčná cesta pre testy
+
 func _power0(iso: String) -> Dictionary:
 	if Empire.owns_state(iso):
 		return {"value": 100.0, "parts": {"Vlastníš štát": 100.0}, "control": true, "owned": true}
-	var d: Dictionary = Empire.dependency(iso)
+	var d: Dictionary = Empire.dependency(iso, use_power_headcount_cache)
 	var w: Dictionary = GameState.world.get(iso, {})
 	var pop = maxf(1.0, float(w.get("population", 1e6)))
-	var people = 0.0
-	for f in GameState.player_firms():
-		if str(f.get("country", "")) == iso:
-			people += IndustrySystem.headcount(f)
+	var people = float(d.get("_headcount", 0.0)) if use_power_headcount_cache else 0.0
+	if not use_power_headcount_cache:
+		for f in GameState.player_firms():
+			if str(f.get("country", "")) == iso:
+				people += IndustrySystem.headcount(f)
 	var jobs = people / (pop * 0.5)
 	var media = 0.0
 	for r in Brand.country_media(iso):

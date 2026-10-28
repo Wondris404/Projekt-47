@@ -4,6 +4,7 @@ func run(u) -> void:
 	_detached_map_ready(u)
 	_save_size_limit(u)
 	_save_replace_backup(u)
+	_society_power_headcount(u)
 	_trade_ledger(u)
 	_power_input(u)
 	_maintenance(u)
@@ -238,3 +239,29 @@ func _save_replace_backup(u) -> void:
 	var refusal = SaveSystem.save_slot(2)
 	u._chk("audit_backup_failure_preserves_slot", blocked and refusal == SaveSystem.last_error and refusal.contains("záložná") and FileAccess.get_sha256(path2) == hash2)
 	SaveSystem.base_dir = previous_dir
+
+func _society_power_headcount(u) -> void:
+	u._new()
+	GameState.config.progression = false
+	GameState.player.cash = 1.0e10
+	var setup_ok = true
+	for iso in ["SK", "CZ", "DE", "US"]:
+		for ind in ["wheat_farm", "coal_mine", "telecom", "school_high", "hospital"]:
+			if GameState.found_firm(ind, "Audit vplyvu " + ind, iso) != "":
+				setup_ok = false
+	var made_bank: Dictionary = BankingSystem.create_bank(0.02, 0.08, 0.8)
+	setup_ok = setup_ok and bool(made_bank.get("ok", false))
+	var snapshot = GameState.to_dict().duplicate(true)
+	Society.use_power_headcount_cache = false
+	var first_error = GameState.from_dict(snapshot.duplicate(true))
+	for i in 62:
+		GameState.simulate_day()
+	var expected = JSON.stringify(GameState.to_dict())
+	Society.use_power_headcount_cache = true
+	var second_error = GameState.from_dict(snapshot.duplicate(true))
+	for i in 62:
+		GameState.simulate_day()
+	var actual = JSON.stringify(GameState.to_dict())
+	Society.use_power_headcount_cache = true
+	u._chk("audit_society_power_setup", setup_ok and first_error == "" and second_error == "")
+	u._chk("audit_society_power_exact_62_days", expected == actual)
