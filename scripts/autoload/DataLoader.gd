@@ -347,15 +347,14 @@ func _proxy(kind: String):
 	return []
 
 func _log_data(line: String) -> void:
-	var path = ProjectSettings.globalize_path("res://docs/DATA.md")
-	var prev = ""
-	if FileAccess.file_exists(path):
-		var rf = FileAccess.open(path, FileAccess.READ)
-		if rf:
-			prev = rf.get_as_text()
-	var wf = FileAccess.open(path, FileAccess.WRITE)
+	var path = "user://data_warnings.log"
+	var mode = FileAccess.READ_WRITE if FileAccess.file_exists(path) else FileAccess.WRITE
+	var wf = FileAccess.open(path, mode)
 	if wf:
-		wf.store_string(prev + line + "\n")
+		wf.seek_end()
+		wf.store_string(line + "\n")
+	else:
+		push_warning("Nepodarilo sa zapísať diagnostiku dát: %s" % line)
 
 func _read(path: String):
 	if not FileAccess.file_exists(path):
