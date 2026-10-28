@@ -810,3 +810,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Windows test ukladania
 
 - Pridaný samostatný GitHub Actions beh na Windows pre auditné a nové kontroly zálohy slotu. Používa oficiálny Godot 4.7.2 s overeným SHA-256 a izolovaný dočasný runner. Výsledok zatiaľ nie je známy; chýbajúci slot sa v teste simuluje presunutím súboru, nie skutočným zlyhaním Windows API.
+
+
+## 2026-10-28 – Priebežné overenie ochrany slotu
+
+- Linuxový `audit_unit` v behu `40673444595` prešiel vrátane všetkých štyroch nových kontrol uloženia; stabilita 1/30/365 a headless výkonnostná sonda tiež prešli, úplná `unit` ešte beží. Windows kontrola zatiaľ prebieha.
+- Pri prepise sa navyše číta a zapisuje predchádzajúci save a čítajú sa jeho kontrolné súčty; veľké savy preto môžu trvať dlhšie a zaberajú miesto aj v jednej záložnej kópii na slot. Výpadok napájania, chyby disku a skutočné zlyhanie presunu na Windowse test nedokazuje. https://github.com/Wondris404/Projekt-47/actions/runs/40673444595
