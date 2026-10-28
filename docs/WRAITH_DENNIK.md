@@ -900,3 +900,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Úplné testy po oprave fokusu
 
 - Beh `40693779778`: `audit_unit` 33 OK / 0 FAIL, stabilita 1/30/365 prešla, `unit` 531 OK / 1 FAIL na tej istej chýbajúcej referencii katalógu. Headless sonda uviedla priemer 80,46 ms/deň; hodnoty z rozdielnych runnerov nemožno považovať za dôkaz zmeny výkonu notebooku. https://github.com/Wondris404/Projekt-47/actions/runs/40693779778
+
+
+## 2026-10-28 – Výsledok profilu mesačnej uzávierky
+
+- Headless beh `40694620596`, pevný seed, 70 dní a 72 hráčových firiem: maximálny meraný jednotlivý krok fázy ukončenia dňa bol 16,322 ms; pri dvoch mesačných uzávierkach systém `Society.monthly` trval 8,539 a 8,654 ms, dividendy 1,859 a 2,838 ms, makro 0,968 a 0,990 ms. Najvyššie maximá ostatných fáz boli pod 5,6 ms.
+- Časy obsahujú réžiu diagnostiky a dva mesačné vzorky na cloudovom CPU; nejde o čas celej vykreslenej snímky, FPS notebooku ani dôkaz, že sa náročnejší save správa rovnako. Profil nemenil herné výsledky ani produkčný kód. https://github.com/Wondris404/Projekt-47/actions/runs/40694620596
