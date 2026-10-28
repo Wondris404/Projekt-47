@@ -12,6 +12,7 @@ var _description_test_runner
 var _toolbar_test_runner
 var _atlas_test_runner
 var _fund_test_runner
+var _bank_controls_test_runner
 var _atlas_visual_runner
 
 func _ready() -> void:
@@ -757,6 +758,9 @@ func _build_play() -> void:
 	elif "fund_ui_test" in OS.get_cmdline_user_args():
 		_fund_test_runner = load("res://tests/fund_ui.gd").new()
 		_fund_test_runner.run(self)
+	elif "bank_controls_ui_test" in OS.get_cmdline_user_args():
+		_bank_controls_test_runner = load("res://tests/bank_controls_ui.gd").new()
+		_bank_controls_test_runner.run(self)
 	elif "window_ui" in OS.get_cmdline_user_args():  # JUAN-P47: presuvatelne okna (GUI + screenshot)
 		_window_ui()
 	elif "atlas_visual_audit" in OS.get_cmdline_user_args():
