@@ -32,3 +32,7 @@ Pridaných 17 kontrol: limit/hustota vlakov, orezanie tratí, úplnosť modelov,
 ## Náklad jednotlivých vagónov — Codex (GPT-6)
 
 Po vizuálnej kontrole sa náklad rozdeľuje medzi vagóny: pri 50 % je prvý plný, druhý polovičný a tretí prázdny. Dve ďalšie regresné kontroly overujú túto vizuálnu požiadavku (spolu 28 kontrol vrátane kamery). Mení sa len prezentácia agregovaného vyťaženia.
+
+## Obnovenie dôkazov kamery — Codex (GPT-6)
+
+Pri dekódovaní zdedených PNG boli tri zo štyroch obrázkov `camera_*_before.png` poškodené. Namiesto použitia nečitateľných dôkazov sa scenár znovu vykreslil cez llvmpipe na pôvodnom kóde kamery `08381a7` v oddelenej dočasnej pracovnej kópii. Posun pred opravou: panel 662,31 px, resize 40 px; po oprave na aktuálnej vetve: oba 0 px. Pôvodné poškodené bajty zostávajú v histórii Git. Nové screenshoty sú dekódovateľné, páry sa vytvárajú reprodukovateľným skriptom. FPS sa neinterpretuje ako výkon používateľovho GPU.
