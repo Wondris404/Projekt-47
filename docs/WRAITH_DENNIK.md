@@ -679,3 +679,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Vzdialený beh `40654081381` skončil úspešne cez Xvfb, OpenGL a Mesa llvmpipe. Uložil 27 nových východiskových snímok v artefakte `p47-atlas-baseline`; scenáre pokrývajú kameru, dopravu a modely budov. Pri zatvorení/otvorení panelu a zmene veľkosti okna zaznamenal drift 0 px.
 - Obrázky zatiaľ nie sú vizuálne posúdené ani uložené ako porovnania pred/po v repozitári. Import čerstvého projektu vypísal pred dokončením importu chyby zdrojov; samotný vizuálny beh nemal `SCRIPT ERROR`. FPS llvmpipe nie sú meraním notebooku. Beh: https://github.com/Wondris404/Projekt-47/actions/runs/40654081381.
+
+
+## 2026-10-28 – Menej opakovaných testovacích behov
+
+- GitHub Actions pre celý audit ignoruje commity meniace iba dokumentáciu alebo samostatný grafický workflow; herné a testovacie zmeny ho naďalej spúšťajú a zostáva dostupné ručné spustenie. Pred zmenou prešiel audit_unit a stabilita; úprava mení len spúšťanie workflow a po zápise sa ešte neoverilo každé pravidlo spúšťania.
