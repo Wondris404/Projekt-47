@@ -1004,3 +1004,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Beh `40698639465` prešiel siedmimi syntetickými kontrolami klasifikácie a potom spustil celú `unit` sadu. Log obsahuje 531 OK / 1 FAIL (`catalog_fields_match_brief`); GitHub zobrazuje výslovné varovanie, že referencia chýba a katalóg nie je overený. `audit_unit`, stabilita a sonda výkonu prešli.
 - Testy klasifikácie overili, že ďalšie zlyhanie, chyba skriptu, timeout, nedokončená sada a zlyhanie pri existujúcej referencii zostávajú neúspešné. Toto je dočasné odlíšenie známeho problému, nie oprava referencie katalógu. https://github.com/Wondris404/Projekt-47/actions/runs/40698639465
+
+
+## 2026-10-28 – Audit základných finančných polí savu
+
+- Zaznamenané podozrenie, že validácia považuje chýbajúcu hotovosť hráča alebo firmy za prijateľnú, hoci niektoré herné funkcie tieto údaje očakávajú. Pred zmenou treba reprodukovať správanie a preveriť kompatibilitu pôvodných verzií savov. Zatiaľ bez úpravy.
