@@ -707,3 +707,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Beh `40655073099` nameral pred otvorením inej krajiny obdĺžnik (940, 500; 340 × 220), rovnaký ako v pamäti. Po otvorení mal panel šírku 477 px pre minimálnu šírku obsahu; jeho pravý okraj tak presahoval viewport široký 1280 px. Deväť ďalších kontrol prešlo. Konkrétny vnútorný prvok sa ešte zisťuje; oprava zatiaľ nie je urobená.
 - Nadväzujúca diagnostika vo workﬂow vypisuje aj vnútorné ovládacie prvky so širokým minimom; mení len dočasnú kópiu na runneri. https://github.com/Wondris404/Projekt-47/actions/runs/40655073099
+
+
+## 2026-10-28 – Zalomenie správy v paneli krajiny
+
+- Diagnostika `40655287108` ukázala, že minimálnu šírku 449 px vytvoril text v krajine bez hráčových firiem. Správa sa teraz zalamuje, aby nevyžadovala široký panel. Herné pravidlá, dáta ani existujúce ikony sa nemenia.
+- Grafický workflow bol rozšírený o snímku znovuotvoreného panelu a automatické spustenie po zmene hlavného UI. Overenie po oprave a porovnanie snímok ešte prebieha; nie je potvrdené, že oprava funguje.
