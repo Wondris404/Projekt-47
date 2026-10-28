@@ -940,3 +940,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Oprava meracej sondy
 
 - Prvý párový profil `40695893182` sa pred meraním zastavil na 404, pretože v adrese pôvodnej revízie bol preklep. Adresa bola opravená na skutočného rodiča optimalizačného commitu; meranie sa opakuje. Tento neúspešný beh nevypovedá o výkone hry. https://github.com/Wondris404/Projekt-47/actions/runs/40695893182
+
+
+## 2026-10-28 – Párový výsledok výpočtu vplyvu
+
+- Beh `40696075993` na jednom cloudovom runneri, poradie pred/po/po/pred: štyri mesačné merania výpočtu vplyvu pred úpravou 6,816; 6,622; 6,355; 6,562 ms, po úprave 5,426; 5,514; 5,748; 5,520 ms. Priemery sú približne 6,59 a 5,55 ms, teda o 1,04 ms menej v tomto scenári.
+- Najdlhší jednotlivý krok ukončenia dňa mal v týchto behoch pred úpravou 21,76 a 20,79 ms, po úprave 19,57 a 19,99 ms. Meranie používalo 70 dní, 72 hráčových firiem a diagnostické výpisy; má málo mesačných vzoriek, nezahŕňa vykreslenú snímku ani výkon notebooku a nedokazuje odstránenie sekania. https://github.com/Wondris404/Projekt-47/actions/runs/40696075993
+- Linux aj Windows prešli porovnaním celého serializovaného stavu po 62 dňoch pri použití starej a novej cesty. Úplná základná sada ešte beží; optimalizáciu treba preveriť aj na rozsiahlejšom uloženom stave.
