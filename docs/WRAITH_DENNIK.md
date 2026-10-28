@@ -787,3 +787,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Kontrola validácie starých savov
 
 - Audit zaznamenal neistotu pri povinných poliach v3: validácia ich vyžaduje, hoci opravná funkcia pozná predvolené hodnoty, a existujúce testy kontrolujú ich povinnosť. Zatiaľ nie je známe, či niektorá vydaná v3 takéto polia nemala; preto sa validácia ani testy nemenili. Nález a ďalší postup sú v `docs/AUDIT_UX_20261028.md`.
+
+
+## 2026-10-28 – Výsledok rozšírenej skúšky banky
+
+- V grafickom behu `40671536677` prešlo všetkých šesť kontrol, vrátane skutočného mesačného rozhodnutia poradcu a zachovania písaného textu v aktívnom políčku. https://github.com/Wondris404/Projekt-47/actions/runs/40671536677
+- História GitHubu obsahuje pre `GameState.gd` iba pôvodný import projektu a neskoršiu opravu cache; neurčuje, či existovali ešte staršie platné v3 savy bez povinných polí. Zmena validácie preto zostáva otvorená.
