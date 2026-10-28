@@ -743,3 +743,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Grafický beh `40668251403` potvrdil reprodukciu: po zmene sadzieb zvonka sa nezmenené vstupné polia neobnovili a stlačenie uloženia prepísalo aktuálne sadzby starými hodnotami. Kontrola zachovania rozpracovanej hodnoty prešla. Zmena sa zatiaľ v simulácii vykonala len v izolovanej testovacej hre.
 - Oprava ešte nie je vykonaná. Pri návrhu treba zachovať manuálne editované hodnoty a neprepisovať presné automatické sadzby zaokrúhlenými hodnotami z formulára. https://github.com/Wondris404/Projekt-47/actions/runs/40668251403
+
+
+## 2026-10-28 – Presnosť a snímka nastavení banky
+
+- Reprodukcia bankového formulára doplnená o kontrolu, že sa nezmenená presná sadzba neprepíše zaokrúhlenou hodnotou políčka. Test vie tiež v izolovanom grafickom behu uložiť snímku otvorených nastavení.
+- Workflow pripravuje východiskovú snímku pred opravou; výsledok rozšírenej skúšky a snímky ešte nie je potvrdený.
