@@ -673,3 +673,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Pridaný samostatný GitHub Actions workflow pre východiskové snímky Atlasu cez Xvfb a Mesa softvérové vykresľovanie. Používa existujúci `atlas_visual_audit`, nový tag snímok a izolované dáta; do hry ani existujúcich UI ikon nezasahuje. Výsledky ukladá ako artefakty behu; pri samotných grafických úpravách bude ešte potrebné uložiť porovnania pred/po do `audit/screenshots/` v repozitári.
 - Beh `40654081381` sa začal; úspech snímok, vizuálna kontrola a kompletné porovnania pred/po zatiaľ nie sú potvrdené. FPS softvérového renderera nereprezentuje výkon notebooku.
+
+
+## 2026-10-28 – Východiskové snímky Atlasu
+
+- Vzdialený beh `40654081381` skončil úspešne cez Xvfb, OpenGL a Mesa llvmpipe. Uložil 27 nových východiskových snímok v artefakte `p47-atlas-baseline`; scenáre pokrývajú kameru, dopravu a modely budov. Pri zatvorení/otvorení panelu a zmene veľkosti okna zaznamenal drift 0 px.
+- Obrázky zatiaľ nie sú vizuálne posúdené ani uložené ako porovnania pred/po v repozitári. Import čerstvého projektu vypísal pred dokončením importu chyby zdrojov; samotný vizuálny beh nemal `SCRIPT ERROR`. FPS llvmpipe nie sú meraním notebooku. Beh: https://github.com/Wondris404/Projekt-47/actions/runs/40654081381.
