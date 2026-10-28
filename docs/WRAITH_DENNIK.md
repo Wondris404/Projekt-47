@@ -1043,3 +1043,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Pri mesačnom prepočte sa vytvoria skupiny hráčových firiem podľa krajiny a použijú pri výpočte závislosti a mediálneho dosahu. Ostatné volania ponechávajú pôvodný prechod; výpočty majú rovnaké poradie a referenčná cesta zostáva dostupná na porovnanie.
 - Skúška presnej zhody stavu po 62 dňoch bola rozšírená o samostatné porovnanie tejto cesty. Testy aj párové meranie ešte nie sú potvrdené; výkon notebooku zostáva neoverený.
+
+
+## 2026-10-28 – Zhoda skupín firiem podľa krajiny
+
+- Linuxový beh `40701608943` aj Windowsový `40701609001` prešli `audit_unit` 44 OK / 0 FAIL. Porovnanie celého stavu po 62 dňoch prešlo samostatne pre všetky tri optimalizačné cesty. Stabilita 1/30/365 prešla; úplná `unit` a párové meranie ešte prebiehajú.
+- Zhoda testovacieho scenára nezaručuje zhodu všetkých reálnych savov. https://github.com/Wondris404/Projekt-47/actions/runs/40701608943
