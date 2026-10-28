@@ -12,3 +12,7 @@ Záloha ani Google Drive sa nepoužívajú. Save v3 a UI ikony zachovávame. Ani
 ## Železnice — Codex (GPT-6)
 
 Samostatná vrstva vykresľuje najviac štyri vlaky na viditeľnú trať pri 10 Hz. Hustota a frekvencia rastú s existujúcim vyťažením, náklad vo vagónoch sa plní po dĺžke interiéru. Pri nulovom toku nejazdí vlak; pod zoomom 4 a v nízkej grafike sú animácie vypnuté. Oba smery sú vizuálne, smer dodávok nie je v dátach. Podvaly a spojky sa počítajú len pre orezaný viditeľný úsek a majú pevný limit. Statický Atlas sa kvôli pohybu vlakov neprekresľuje.
+
+## Potrubia — Codex (GPT-6)
+
+Pulzy zobrazujú existujúce zaťaženie potrubia: intenzita, hustota a rýchlosť rastú, preťaženie je červené. Najviac 24 značiek na viditeľnú líniu. Ide o agregovaný prietok, nie o potvrdený smer konkrétnej komodity. Ekonomika, kapacita a save zostali bez zmeny.

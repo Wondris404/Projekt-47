@@ -65,6 +65,15 @@ func _draw() -> void:
 				var p = a.lerp(b, t)
 				if not Rect2(Vector2.ZERO, map.size).grow(40).has_point(p): continue
 				_train(p, direction if forward else -direction, normal, clampf(u, 0.0, 1.0))
+		else:
+			var count = clampi(int(visible[0].distance_to(visible[1]) / 32.0), 1, MAX_MARKERS)
+			var phase = fposmod(map.anim_time * (0.25 + minf(u, 1.0) * 0.65), 1.0)
+			var col = Color("D95A39") if u > 1.0 else Color("59D8BD").lerp(Color("F4D164"), minf(u, 1.0))
+			for i in count:
+				var p = visible[0].lerp(visible[1], (i + phase) / count)
+				# Symmetric pulse: explicitly no claim about physical flow direction.
+				draw_circle(p, 1.5 + minf(u, 1.0) * 2.0, Color(col, 0.4 + 0.6 * sin(phase * PI)))
+
 func _train(p: Vector2, direction: Vector2, normal: Vector2, load: float) -> void:
 	var scale_px = clampf(map.zoom / 10.0, 0.8, 1.5)
 	for car in (4 if map.zoom >= 12.0 else 2):
