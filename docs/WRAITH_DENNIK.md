@@ -755,3 +755,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Pred opravou rozšírená grafická skúška `40668639338`: nezmenené polia sa neobnovili, uloženie prepísalo aktuálne sadzby a zaokrúhlilo inú presnú sadzbu; zachovanie editovaného poľa prešlo. Snímka pred opravou je zatiaľ v artefakte behu.
 - Úprava obnovuje iba polia, ktoré hráč nezmenil, a ponecháva rozpracované pole aj pole práve editované. Pri ukladaní pre nezmenené polia používa presné aktuálne hodnoty banky. Existujúca funkcia manuálneho zásahu do práce poradcu zostáva zachovaná. Výsledky po oprave ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Overenie nastavení banky po oprave
+
+- Grafický beh `40668934073`: všetky štyri kontroly prešli (obnovenie nezmeneného poľa, zachovanie úpravy, uloženie aktuálnych sadzieb, presnosť sadzby). Prešlo aj 10 kontrol okna krajiny. Pridaný workflow pripravuje snímky banky pred/po a ich porovnanie; jeho výsledok ešte nie je potvrdený.
+- Headless beh `40668934094`: `audit_unit` 29 OK / 0 FAIL, stabilita 1/30/365 prešla, `unit` 531 OK / 1 FAIL na chýbajúcom súbore referencie katalógu. Sonda výkonu 93,91 ms/deň oproti pôvodným 87,79 ms/deň; rozdiel na rozdielnych runneroch nedokazuje ani nevyvracia regresiu, preto treba porovnanie na rovnakom stroji. https://github.com/Wondris404/Projekt-47/actions/runs/40668934094
