@@ -72,6 +72,17 @@ func register(panel: Control, key: String, default_rect: Callable, title_h: floa
 	panel.gui_input.connect(_on_input.bind(key))
 	panel.draw.connect(_draw_grip.bind(panel))
 	panel.visibility_changed.connect(_on_vis.bind(key))
+	panel.minimum_size_changed.connect(_on_minimum_changed.bind(key))
+
+func _on_minimum_changed(key: String) -> void:
+	call_deferred("_clamp_one", key)
+
+func _clamp_one(key: String) -> void:
+	if not wins.has(key):
+		return
+	var panel: Control = wins[key].panel
+	if is_instance_valid(panel) and panel.visible:
+		_apply(key, Rect2(panel.position, panel.size))
 
 func _on_vis(key: String) -> void:
 	var p: Control = wins[key].panel
@@ -95,7 +106,8 @@ func _apply(key: String, r: Rect2) -> void:
 	var w = wins[key]
 	var p: Control = w.panel
 	var vp = p.get_viewport_rect().size if p.is_inside_tree() else Vector2(1280, 720)
-	var mn: Vector2 = w.min
+	p.custom_minimum_size = Vector2.ZERO
+	var mn: Vector2 = w.min.max(p.get_combined_minimum_size())
 	var sz = Vector2(clampf(r.size.x, mn.x, maxf(mn.x, vp.x)), clampf(r.size.y, mn.y, maxf(mn.y, vp.y - 8.0)))
 	var pos = Vector2(clampf(r.position.x, 0.0, maxf(0.0, vp.x - sz.x)), clampf(r.position.y, 0.0, maxf(0.0, vp.y - sz.y)))
 	p.custom_minimum_size = Vector2.ZERO

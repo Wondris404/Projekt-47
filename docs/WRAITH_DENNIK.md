@@ -1149,6 +1149,20 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Beh `40715336351` úspešne zostavil Windows hru, vykonal headless skúšku 10 dní a odovzdal artefakt `Projekt-47-Windows`. Nový postup odovzdáva súbory hry priamo do artefaktu namiesto vnútorného ZIPu. Automatické spustenie na `main` sa prejaví až po zlúčení; grafické spustenie a uloženie z balíka zostávajú neoverené. https://github.com/Wondris404/Projekt-47/actions/runs/40715336351
 
 
+## 2026-10-28 – Skúška malého viewportu
+
+- Pridaná diagnostika `tests/small_viewport_probe.gd`. Pri lokálnom Windows headless spustení v izolovaných používateľských dátach ukázala: fyzické okno 240 × 150 má logický viewport 1280 × 800, zatiaľ čo umelý podviewport 240 × 150 vytvorí panel 300 × 180 mimo jeho hraníc.
+- Sonda nemení herný stav ani ekonomiku. Nie je to dôkaz chyby pri bežnom hraní; grafické zobrazenie, škálovanie a obsah okien treba ďalej overiť. Úprava panelov zatiaľ nebola vykonaná. Lokálna verzia testu prešla s návratovým kódom 0; úplná testovacia sada sa pri tejto čisto diagnostickej zmene nespúšťala.
+
+- Nezávislé čítanie kódu potvrdilo logický základ 1280 × 720 a režim `canvas_items`/`expand`. Pri bežnej zmene veľkosti sa nenašiel dôkaz logického viewportu pod minimami panelov; titulky a zatváracie tlačidlá ležia mimo posúvaného obsahu a niektoré prvky majú vlastné minimá. Samotné zmenšenie panelov by preto nemuselo sprístupniť celý obsah.
+
+
+## 2026-10-28 – Grafická skúška malého okna na notebooku
+
+- Po súhlase používateľa sa lokálna izolovaná kópia hry spustila cez OpenGL Compatibility na AMD Radeon Graphics. Pri fyzických veľkostiach 800 × 450 a 480 × 270 bol logický viewport 1280 × 720. V testovanej scéne bol panel krajiny vrátane tlačidla zatvorenia v hraniciach viewportu. Snímky sa vizuálne skontrolovali; pri 480 × 270 je text veľmi drobný.
+- Počiatočná snímka obsahovala úvodné logo, nie hru; nepoužíva sa ako dôkaz. Opakovaná skúška po ukončení úvodnej obrazovky zachytila herný panel. Toto nie je test všetkých panelov, systémových mierok DPI ani skutočného kliknutia; hranica umelého SubViewportu zostáva. Save a ekonomika sa nemenili.
+
+- Následná grafická skúška poslala udalosti stlačenia a uvoľnenia myši cez vstupný systém Godotu na tlačidlo zatvorenia panelu krajiny. Panel sa zavrel pri oboch rozmeroch 800 × 450 a 480 × 270. Nejde o fyzické kliknutie ani o test ostatných panelov či systémového škálovania.
 ## 2026-10-28 – Diagnostika dát mimo zdrojov hry
 
 - Overený nález z dokumentu od Copilota: `DataLoader._log_data` zapisoval pri proxy dátach do `res://docs/DATA.md`. V izolovanej kópii Windows sonda pred opravou potvrdila zmenu projektového súboru a neprítomnosť používateľského logu.
@@ -1162,3 +1176,31 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Pridaný `docs/PREBETA_09_VIZUALNY_INVENTAR.md`: východiskový zoznam 61 podnikových typov a 28 komodít z GitHub main `5d8f407`, plus ďalšie skupiny na inventarizáciu 3D podkladov.
 - Kontrola katalógov pred tvorbou a kontrola pokrytia ID v uloženom dokumente prešli; ID sú jedinečné a názvy neprázdne. Stav modelov a licencií je zatiaľ neoverený, nejde o zoznam hotových modelov. Zmena je iba dokumentačná, bez zmien hry alebo ekonomiky.
 - Ďalej: overiť geografické údaje, zostaviť vizuálnu špecifikáciu, vybrať referenčnú oblasť a vytvoriť hrateľný 3D prototyp s meraním výkonu. Kompletný inventár UI a správ ešte chýba.
+## Pre-Beta-0.9 — úvodné zmapovanie a lokálna sonda (2026-10-28)
+
+- Schválený zámer: strategická 3D mapa, obnoviteľný pixelový režim, nové rozhranie a slovník, 3D modely a optimalizácia. Implementácia ešte nezačala.
+- GitHub main používa GL Compatibility; PR #8 pre škálovanie okien je stále rozpracované. Testovací `tests/run_all.sh` má pascu, ktorá maže dočasný priečinok; vzhľadom na zákaz mazania sa nespúšťal.
+- Existujúci `tests/profile_sim.gd` sa spustil v lokálnom projekte (ktorý nie je overenou kópiou aktuálneho main), Godot 4.7.2, seed 47, 72 firiem a 10 dní, izolované používateľské dáta. Dokončil sa s exit 0. Súčet priemerov fáz podľa vypísaných vzoriek je približne 263,45 ms/deň; najdlhšie volanie fázy 20,415 ms. Ide o jednu headless vzorku bez merania FPS alebo grafiky, nie porovnanie výkonu verzií.
+- Ďalej: zosúladiť čistý pracovný základ s GitHub main bez zásahu do existujúcich zmien, zmerať snímky v reálnom grafickom okne pri všetkých rýchlostiach, vykonať cielené testy a vybudovať hrateľný prototyp. 3D mapa ani modely zatiaľ nie sú hotové.
+
+
+## Pre-Beta-0.9 — návrat voľby pixelovej mapy (2026-10-28)
+
+- V hernej lište je opäť prepínač Atlas / Pixelová mapa; zmena sa ukladá do používateľských nastavení a predvolenou mapou starých nastavení je Atlas. Poloha kamery a herný stav sa pri prepnutí nemenia. Nový 3D režim zatiaľ neexistuje.
+- Izolovaný pracovný základ vychádza z lokálneho commitu PR #3; zmenené herné skripty oproti GitHub main boli porovnané pomocou Git blob SHA a DataLoader bol doplnený z main. Nejde o úplne totožnú git históriu GitHub main.
+- Pred zmenou prešiel headless `audit_unit` (exit 0; zámerná chyba vytvorenia zálohy v teste sa vypísala ako ERROR). Po zmene na notebooku s AMD Radeon Graphics a rendererom Compatibility prešli dve grafické sondy: prepnutie, zachovanie kamery, uloženie a obnovenie nastavenia; test načítania v3 a mapových vrstiev. Godot pri ukončení sond uviedol úniky ObjectDB (33 a 57); nie je potvrdené, či sa prejavujú počas hry. FPS a reálne systémové DPI sa v tomto kroku nemerali.
+- Ďalej: grafický prototyp 3D mapy a výkonové merania; celá Pre-Beta-0.9 ešte nie je dokončená.
+## 2026-10-28 – Kontrola a rozpracovaná oprava panelov pri mierke
+
+- Na notebooku s AMD Radeon Graphics sa pri veľkostiach okna 1280 × 720, 800 × 450 a 480 × 270 kontrolovali panely krajiny, mesta, firmy, burzy a portfólia: hranice, dostupnosť tlačidla, simulované zatvorenie cez Godot a nastavenie zvislého posuvu. V týchto scenároch prešli všetky kombinácie, text v najmenšom okne bol veľmi drobný.
+- Pri simulácii mierky Godotu 100 %, 125 % a 150 % (nie zmeny systémového DPI Windows) sa pri 150 % potvrdil presah panelov Burza a Portfólio a čiastočne skryté zatvorenie. Ich obsah má väčšiu vnútornú minimálnu šírku než bola použitá pri výpočte polohy.
+- Rozpracovaná oprava na vetve `codex/fix-scaled-window-position` zohľadňuje minimálnu veľkosť obsahu a pri jej zmene opätovne upraví polohu okna. Lokálna grafická sonda na notebooku po oprave vykázala úspešných 15 kombinácií panelov a mierok; pred/po snímky sú zatiaľ len v lokálnom testovacom priečinku. Pridaná samostatná regresná sonda sa ešte musí samostatne spustiť, celá sada ani dopad na FPS neboli po zmene overené. Skutočné systémové DPI a panely nad rámec uvedených piatich zostávajú neoverené.
+
+
+## Overenie presnej sondy PR #8 (2026-10-28)
+
+- Presné súbory `tests/scaled_panels_ui.gd` a `scripts/ui/window_drag.gd` z vetvy PR #8 sa spustili v samostatnej lokálnej kópii projektu na AMD Radeon Graphics s Godot 4.7.2 a GL Compatibility. Všetkých 15 kombinácií piatich panelov a faktorov Godotu 100/125/150 % prešlo: rám a tlačidlo zatvorenia v logickom viewporte, posúvanie a simulované zavretie; exit 0.
+- Prvý pokus pred importom zdrojov neprešiel, keďže čistá kópia nemala importované textúry. Po importe bol test spustený znova úspešne; prvý import vypísal známe chyby zdrojov pri inicializácii.
+- GitHub kontrola `windows-demo` pre head 5f4fd484 prešla. Systémové DPI Windows, fyzické kliknutie, presun a zmena veľkosti po oprave a výkon ešte nie sú týmto testom overené. PR zostáva rozpracované.
+
+- Následne na rovnakej izolovanej kópii s presným kódom PR prešlo 12 existujúcich GUI kontrol vrátane simulovaného ťahania, zmeny veľkosti, obmedzenia na viewport a straty fokusu (`window_ui`, exit 0). Pridané sú lokálne snímky Burzy pred/po pri faktore Godotu 150 % z predchádzajúcej lokálnej experimentálnej sondy; nejde o snímky zo systémového DPI Windows.

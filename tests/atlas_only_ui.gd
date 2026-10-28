@@ -5,23 +5,25 @@ func run(host: Node) -> void:
 	await host.get_tree().process_frame
 	await host.get_tree().process_frame
 	var errors: Array[String] = []
-	if not host.map.atlas or host.map_style() != "hoi" or host.map_style_b.visible:
-		errors.append("normal game did not start with Atlas only")
+	host.set_map_style("hoi")
+	if not host.map.atlas or host.map_style() != "hoi" or not host.map_style_b.visible:
+		errors.append("Atlas or map selector unavailable")
 	host.set_map_style("pixel")
-	if not host.map.atlas or host.map_style() != "hoi":
-		errors.append("old pixel setting changed the map")
+	if host.map.atlas or host.map_style() != "pixel":
+		errors.append("pixel setting did not change the map")
 	var saved: Dictionary = GameState.to_dict()
 	var load_error = GameState.from_dict(saved)
 	if load_error != "":
 		errors.append("v3 save failed: " + load_error)
-	host.map.atlas = false
+	host.map.atlas = true
 	host._refresh_label()
-	if not host.map.atlas:
-		errors.append("loaded game did not return to Atlas")
+	if host.map.atlas:
+		errors.append("loaded game did not retain pixel mode")
 	GameState.config.dev = true
 	host._refresh_label()
-	if not host.map.atlas or host.map_style_b.visible:
-		errors.append("DEV game exposes the old map switch")
+	if host.map.atlas or not host.map_style_b.visible:
+		errors.append("DEV game did not retain pixel selector")
+	host.set_map_style("hoi")
 	var terrain: Button = host.find_child("TerrainToggle", true, false)
 	terrain.button_pressed = true
 	if not host.map.overlay:
