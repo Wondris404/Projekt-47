@@ -749,3 +749,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Reprodukcia bankového formulára doplnená o kontrolu, že sa nezmenená presná sadzba neprepíše zaokrúhlenou hodnotou políčka. Test vie tiež v izolovanom grafickom behu uložiť snímku otvorených nastavení.
 - Workflow pripravuje východiskovú snímku pred opravou; výsledok rozšírenej skúšky a snímky ešte nie je potvrdený.
+
+
+## 2026-10-28 – Obnovenie nastavení banky
+
+- Pred opravou rozšírená grafická skúška `40668639338`: nezmenené polia sa neobnovili, uloženie prepísalo aktuálne sadzby a zaokrúhlilo inú presnú sadzbu; zachovanie editovaného poľa prešlo. Snímka pred opravou je zatiaľ v artefakte behu.
+- Úprava obnovuje iba polia, ktoré hráč nezmenil, a ponecháva rozpracované pole aj pole práve editované. Pri ukladaní pre nezmenené polia používa presné aktuálne hodnoty banky. Existujúca funkcia manuálneho zásahu do práce poradcu zostáva zachovaná. Výsledky po oprave ešte nie sú potvrdené.
