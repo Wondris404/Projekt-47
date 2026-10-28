@@ -799,3 +799,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Audit zdrojového kódu Godotu 4.7.2 zistil, že jeho Windows implementácia pri premenovaní na existujúci cieľ najprv odstráni cieľ a potom presunie nový súbor. Ak druhý krok zlyhá, hra môže prísť o predchádzajúci slot. Nález a návrh pred opravou sú v `docs/AUDIT_UX_20261028.md`.
 - Pripravuje sa overovaná kópia pôvodného slotu a načítanie pri chýbajúcom origináli, bez zmeny JSON formátu v3. Zatiaľ neopravené a netestované na Windowse.
+
+
+## 2026-10-28 – Ochrana pred stratou slotu pri prepise
+
+- Pred nahradením existujúceho slotu sa vytvorí jeho kópia `.backup` a porovná sa SHA-256 oboch súborov. Ak kópiu nemožno overiť, uloženie sa zastaví ešte pred premenovaním. Ak hlavný slot po neúspešnom presune chýba, vyhľadávanie slotu používa záložnú kópiu. Formát JSON a verzia v3 sa nemenia.
+- Pridané štyri kontroly: obsah zálohy, prednosť aktuálneho slotu, obnova v3 pri chýbajúcom hlavnom súbore a zachovanie slotu pri neúspešnom vytvorení zálohy. Scenár chýbajúceho súboru sa simuluje presunutím, bez vymazania. Výsledky po úprave zatiaľ nie sú potvrdené; pri behu na Linuxe sa nesimuluje skutočné Windows API ani výpadok napájania.
