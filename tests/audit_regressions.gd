@@ -3,6 +3,7 @@ extends RefCounted
 func run(u) -> void:
 	_detached_map_ready(u)
 	_save_size_limit(u)
+	_save_replace_backup(u)
 	_trade_ledger(u)
 	_power_input(u)
 	_maintenance(u)
@@ -211,3 +212,29 @@ func _detached_map_ready(u) -> void:
 	map._ready()
 	u._chk("audit_detached_map_ready", not map.is_inside_tree() and map._atlas_layer != null)
 	map.free()
+
+func _save_replace_backup(u) -> void:
+	u._new()
+	var previous_dir = SaveSystem.base_dir
+	SaveSystem.base_dir = "user://audit_backup_%d" % Time.get_ticks_usec()
+	var path = SaveSystem.save_slot(1)
+	var original_cash = float(GameState.player.cash)
+	var original_hash = FileAccess.get_sha256(path)
+	GameState.player.cash = original_cash + 12345.0
+	var saved = SaveSystem.save_slot(1)
+	u._chk("audit_backup_written", saved == path and not original_hash.is_empty() and FileAccess.get_sha256(path + ".backup") == original_hash)
+	GameState.player.cash = 0.0
+	var err = SaveSystem.load_slot(1)
+	u._chk("audit_backup_current_preferred", err == "" and is_equal_approx(float(GameState.player.cash), original_cash + 12345.0))
+	# Presun stranou napodobní chýbajúci cieľ po neúspešnom nahradení, bez mazania.
+	var moved = DirAccess.rename_absolute(path, path + ".held") == OK
+	GameState.player.cash = 0.0
+	err = SaveSystem.load_slot(1)
+	u._chk("audit_backup_recovery_v3", moved and err == "" and is_equal_approx(float(GameState.player.cash), original_cash) and GameState.SAVE_VERSION == 3)
+	var path2 = SaveSystem.save_slot(2)
+	var hash2 = FileAccess.get_sha256(path2)
+	var blocked = DirAccess.make_dir_absolute(path2 + ".backup") == OK
+	GameState.player.cash = original_cash + 54321.0
+	var refusal = SaveSystem.save_slot(2)
+	u._chk("audit_backup_failure_preserves_slot", blocked and refusal == SaveSystem.last_error and refusal.contains("záložná") and FileAccess.get_sha256(path2) == hash2)
+	SaveSystem.base_dir = previous_dir

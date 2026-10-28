@@ -55,9 +55,18 @@ func save_slot(slot: int) -> String:
 		DirAccess.remove_absolute(tmp)
 		last_error = "Save zlyhal (nezhodná veľkosť)."
 		return last_error
+	# Godot na Windowse pri premenovaní najprv odstráni existujúci cieľ.
+	# Pred nahradením preto overíme samostatnú kópiu posledného slotu.
+	var had_previous = FileAccess.file_exists(path)
+	var backup = path + ".backup"
+	if had_previous:
+		var original_hash = FileAccess.get_sha256(path)
+		if original_hash == "" or DirAccess.copy_absolute(path, backup) != OK or FileAccess.get_sha256(backup) != original_hash:
+			last_error = "Save zlyhal (záložná kópia sa nedá bezpečne vytvoriť); pôvodný slot zostal zachovaný."
+			return last_error
 	if DirAccess.rename_absolute(tmp, path) != OK:
 		DirAccess.remove_absolute(tmp)
-		last_error = "Save zlyhal (premenovanie)."
+		last_error = "Save zlyhal (premenovanie); predchádzajúci slot je v záložnej kópii." if had_previous else "Save zlyhal (premenovanie)."
 		return last_error
 	return path
 
@@ -65,6 +74,8 @@ func _find_slot(slot: int) -> String:
 	var p = saves_dir().path_join(_slot_name(slot))
 	if FileAccess.file_exists(p):
 		return p
+	if FileAccess.file_exists(p + ".backup"):
+		return p + ".backup"  # obnova, keď presun nového slotu po odstránení cieľa zlyhal
 	if base_dir == TEST_DIR:
 		return ""  # test nesmie citat skutocne ani legacy sloty
 	var legacy = legacy_dir().path_join(_slot_name(slot))
