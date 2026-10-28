@@ -1104,3 +1104,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Ukončenie starého profilu médií
 
 - Pôvodný beh `40703252724` skončil neúspešne; išlo o už spustenú starú verziu meracieho postupu. Opravený opakovaný beh `40704325707` prešiel a jeho čísla sú uvedené vyššie. https://github.com/Wondris404/Projekt-47/actions/runs/40703252724
+
+
+## 2026-10-28 – Základná sonda na notebooku
+
+- Po povolení používateľa bol spustený lokálny Godot 4.7.2, existujúca lokálna kópia projektu a test `profile_sim` s 72 firmami a 10 dňami. Používateľské dáta boli smerované do samostatného priečinka `audit/laptop_profile_userdata`. Lokálna kópia nie je Git repozitár a nebola zamenená za vetvu PR.
+- Najdlhšie namerané jednotlivé volanie fázy malo 17,815 ms (fáza 6); súčet priemerných časov fáz je približne 261 ms na simulovaný deň. Toto je headless profil bez renderovania a mesačnej uzávierky, nie meranie snímok, FPS ani porovnanie aktuálneho PR. https://github.com/Wondris404/Projekt-47/pull/3
