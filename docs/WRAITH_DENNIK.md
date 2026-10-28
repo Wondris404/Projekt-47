@@ -1161,3 +1161,5 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Po súhlase používateľa sa lokálna izolovaná kópia hry spustila cez OpenGL Compatibility na AMD Radeon Graphics. Pri fyzických veľkostiach 800 × 450 a 480 × 270 bol logický viewport 1280 × 720. V testovanej scéne bol panel krajiny vrátane tlačidla zatvorenia v hraniciach viewportu. Snímky sa vizuálne skontrolovali; pri 480 × 270 je text veľmi drobný.
 - Počiatočná snímka obsahovala úvodné logo, nie hru; nepoužíva sa ako dôkaz. Opakovaná skúška po ukončení úvodnej obrazovky zachytila herný panel. Toto nie je test všetkých panelov, systémových mierok DPI ani skutočného kliknutia; hranica umelého SubViewportu zostáva. Save a ekonomika sa nemenili.
+
+- Následná grafická skúška poslala udalosti stlačenia a uvoľnenia myši cez vstupný systém Godotu na tlačidlo zatvorenia panelu krajiny. Panel sa zavrel pri oboch rozmeroch 800 × 450 a 480 × 270. Nejde o fyzické kliknutie ani o test ostatných panelov či systémového škálovania.
