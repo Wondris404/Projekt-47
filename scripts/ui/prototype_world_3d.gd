@@ -2,6 +2,7 @@ extends SubViewportContainer
 
 signal country_selected(iso: String)
 signal city_selected(iso: String, city: String)
+signal firm_selected(id: String)
 
 var _map: Control
 var _camera: Camera3D
@@ -9,6 +10,9 @@ var _viewport: SubViewport
 var _dragging := false
 var _moved := false
 var _cities: Array = []
+var _firms: Array = []
+var _firm_key: Array = []
+var _firm_layer: MultiMeshInstance3D
 
 func setup(source_map: Control) -> void:
 	_map = source_map
@@ -34,6 +38,7 @@ func setup(source_map: Control) -> void:
 		item.material_override = material
 		world.add_child(item)
 	_add_cities(world)
+	_add_firms(world)
 	_camera = Camera3D.new()
 	_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	_camera.far = 5000.0
@@ -41,6 +46,47 @@ func setup(source_map: Control) -> void:
 	sync_from_map()
 	_camera.current = true
 	gui_input.connect(_input_3d)
+
+func _add_firms(world: Node3D) -> void:
+	var building = BoxMesh.new()
+	building.size = Vector3(1.2, 1.8, 1.2)
+	var material = StandardMaterial3D.new()
+	material.albedo_color = Color("efad43")
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	building.material = material
+	var instances = MultiMesh.new()
+	instances.transform_format = MultiMesh.TRANSFORM_3D
+	instances.mesh = building
+	_firm_layer = MultiMeshInstance3D.new()
+	_firm_layer.multimesh = instances
+	world.add_child(_firm_layer)
+	refresh_firms()
+
+func refresh_firms() -> void:
+	var entries: Array = []
+	for firm in GameState.player_firms():
+		entries.append({"id": str(firm.id), "pos": _map.firm_world_pos(firm)})
+	if entries == _firm_key: return
+	_firm_key = entries.duplicate(true)
+	_firms = entries
+	var mesh = _firm_layer.multimesh
+	mesh.instance_count = entries.size()
+	for i in entries.size():
+		var p: Vector2 = entries[i].pos
+		mesh.set_instance_transform(i, Transform3D(Basis.IDENTITY, Vector3(p.x, 0.9, p.y)))
+
+func _firm_at(local_pos: Vector2) -> String:
+	if _camera.size > 150.0: return ""
+	var best = ""
+	var distance = 12.0
+	for firm in _firms:
+		var pos: Vector2 = firm.pos
+		var screen = _camera.unproject_position(Vector3(pos.x, 0.9, pos.y)) * size / Vector2(_viewport.size)
+		var d = screen.distance_to(local_pos)
+		if d < distance:
+			distance = d
+			best = firm.id
+	return best
 
 func _add_cities(world: Node3D) -> void:
 	for iso in DataLoader.country_ids:
@@ -119,7 +165,10 @@ func _input_3d(event: InputEvent) -> void:
 					var point = _ground(event.position)
 					var iso = _map.region_at_world(point)
 					var city = _city_at(event.position)
-					if not city.is_empty():
+					var firm = _firm_at(event.position)
+					if firm != "":
+						firm_selected.emit(firm)
+					elif not city.is_empty():
 						city_selected.emit(str(city.iso), str(city.name))
 					elif iso != "": country_selected.emit(iso)
 	elif event is InputEventMouseMotion and _dragging:

@@ -1852,6 +1852,7 @@ func _toggle_3d_prototype() -> void:
 			GameState.selected_iso = iso
 			_on_country_picked(iso)
 			open_city_panel(iso, city))
+		_prototype_3d.firm_selected.connect(open_firm_detail)
 		map.visible = false
 	else:
 		_prototype_3d.restore_map_camera()
@@ -1896,6 +1897,8 @@ func _on_line_requested(kind: String, a: Vector2, b: Vector2) -> void:  # JUAN19
 
 func _refresh_label(force_firm_list: bool = true) -> void:
 	_sync_map_style()
+	if _prototype_3d != null:
+		_prototype_3d.refresh_firms()
 	if cash_label == null or not GameState.running:
 		return
 	if stat_strip:
