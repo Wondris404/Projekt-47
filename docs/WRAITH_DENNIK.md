@@ -826,3 +826,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Úplná sada po oprave ochrany slotu
 
 - Linuxový beh `40673444595`: `unit` 531 OK / 1 FAIL na chýbajúcej referencii katalógu, `audit_unit` 33 OK / 0 FAIL, stabilita 1/30/365 prešla. Samotný test nevypísal GDScript chybu; pri úvodnom importe zdrojov sa opäť objavili dosiaľ nevyšetrené chyby načítania. Headless sonda uviedla 62,68 ms/deň; iné runnery sa líšia a nejde o FPS notebooku.
+
+
+## 2026-10-28 – Reprodukcia hlásenia pri obnove slotu
+
+- Pridaná grafická skúška, ktorá vytvorí dve verzie testovacieho savu, presunutím hlavného súboru vyvolá načítanie zálohy a kontroluje obnovený stav aj informáciu pre hráča. Vie uložiť snímku obrazovky; testovacie súbory sú v izolovanom profile runnera. Výsledok pred doplnením hlásenia sa overuje.
