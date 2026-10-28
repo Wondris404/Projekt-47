@@ -1037,3 +1037,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Úplná sada po oprave neúplného savu
 
 - Beh `40700401490`: `unit` 531 OK / 1 FAIL kvôli chýbajúcej referencii katalógu, ktorú GitHub označil viditeľným varovaním; `audit_unit` 43 OK, stabilita 1/30/365 a výkonnostná sonda prešli. Rovnakých 43 auditných kontrol prešlo aj na Windowse. Referencia katalógu zostáva neoverená. https://github.com/Wondris404/Projekt-47/actions/runs/40700401490
+
+
+## 2026-10-28 – Skupiny firiem pri mesačnom vplyve
+
+- Pri mesačnom prepočte sa vytvoria skupiny hráčových firiem podľa krajiny a použijú pri výpočte závislosti a mediálneho dosahu. Ostatné volania ponechávajú pôvodný prechod; výpočty majú rovnaké poradie a referenčná cesta zostáva dostupná na porovnanie.
+- Skúška presnej zhody stavu po 62 dňoch bola rozšírená o samostatné porovnanie tejto cesty. Testy aj párové meranie ešte nie sú potvrdené; výkon notebooku zostáva neoverený.
