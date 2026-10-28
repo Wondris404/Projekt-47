@@ -502,7 +502,7 @@ func settle_chunk(start: int, count: int) -> int:
 				firm.cash = float(firm.cash) - own_cost
 				cogs += own_cost
 				have += own_in
-				var bought = max(0.0, need - have) * buy_fill * buy_share(firm)  # JUAN3: bez pravej ruky sa nakupuje len cast
+				var bought = max(0.0, need - have) * buy_fill * buy_share(firm)  # zakladny manazment aj prava ruka obstaraju vstupy
 				var cost = bought * MarketSystem.price(iso, in_id)
 				if is_pl:  # JUAN19: kupene od konkurencie = cena + doprava (zlava zeleznica/ropovod/logistika)
 					var mt = cost * (Transport.MARKET_TRANSPORT if in_id in Transport.GOODS else 0.0)
@@ -1089,9 +1089,9 @@ func firm_summary(firm: Dictionary) -> Dictionary:
 const BUILD_KINDS = {"cafe": "cafe", "office": "finance_office", "bank": "bank", "coal_mine": "coal_mine", "iron_mine": "iron_mine", "copper_mine": "copper_mine", "oil_well": "oil_well", "farm": "wheat_farm", "pmc": "pmc_unit"}
 const BUILD_NAMES = {"cafe": "Kaviareň", "office": "Kancelária", "bank": "Banka", "coal_mine": "Uhoľná baňa", "iron_mine": "Baňa na rudu", "copper_mine": "Medená baňa", "oil_well": "Ropný vrt", "farm": "Farma", "pmc": "PMC (súkromná bezpečnostná firma)"}
 const MONTH_HIST_MAX = 24
-const NO_MANAGER_EFF = 0.8      # bez pravej ruky ide firma na 80 %
-const NO_MANAGER_BUY = 0.5      # bez pravej ruky sa dokupi len polovica materialu
-const NO_MANAGER_QUIT = 0.05    # bez pravej ruky odide kazdy mesiac 5 % ludi a nikto ich nenahradi
+const NO_MANAGER_EFF = 1.0      # zakladny manazment bez povinneho najmu
+const NO_MANAGER_BUY = 1.0      # zakladny manazment nakupuje vsetky potrebne vstupy
+const NO_MANAGER_QUIT = 0.0     # samotna absencia pravej ruky nesposobuje odchody
 const MANAGER_NAMES = ["Ján Kováč", "Petra Horváthová", "Marek Szabó", "Eva Nagyová", "Tomáš Baláž", "Lucia Molnárová", "Martin Varga", "Zuzana Tóthová", "Peter Lukáč", "Katarína Bieliková"]
 
 func build_cost(kind: String) -> float:
@@ -1189,7 +1189,7 @@ func has_manager(firm: Dictionary) -> bool:
 	var m = firm.get("manager", {})
 	return typeof(m) == TYPE_DICTIONARY and not m.is_empty()
 
-# Efektivita vyroby: NPC firmy 1.0; hrac bez pravej ruky 0.8 * obsadenost; s pravou rukou 0.9 + 0.3 * skill.
+# Zakladny manazment: 1.0; prava ruka pridava bonus, nikdy penalizaciu.
 func firm_efficiency(firm: Dictionary) -> float:
 	if str(firm.get("owner", "")) != "player":
 		return 1.0
@@ -1197,7 +1197,7 @@ func firm_efficiency(firm: Dictionary) -> float:
 	var staff = 1.0 if tgt <= 0.0 else clampf(workers(firm) / tgt, 0.0, 1.0)
 	var soc = float(firm.get("soc_mult", 1.0))  # JUAN-P47: spokojnost, vzdelanie, akademia, univerzita (mesacne)
 	if has_manager(firm):
-		return (0.9 + 0.3 * clampf(float(firm.manager.get("skill", 0.5)), 0.0, 1.0)) * staff * soc
+		return maxf(1.0, 0.9 + 0.3 * clampf(float(firm.manager.get("skill", 0.5)), 0.0, 1.0)) * staff * soc
 	return NO_MANAGER_EFF * staff * soc
 
 func buy_share(firm: Dictionary) -> float:
@@ -1246,10 +1246,7 @@ func close_month(y: int, m: int) -> void:
 		firm["month_hist"] = mh
 		firm["month_acc"] = {}
 		var tgt = target_workers(firm)
-		if has_manager(firm):
-			firm["workers"] = tgt  # prava ruka doplni/prepusti ludi na ciel
-		else:
-			firm["workers"] = max(0.0, workers(firm) * (1.0 - NO_MANAGER_QUIT))
+		firm["workers"] = tgt  # zakladny manazment aj prava ruka udrziavaju cielovy stav
 
 # Co firma musi kupovat (mesacne pri aktualnom tempe).
 func firm_needs(firm: Dictionary) -> Array:

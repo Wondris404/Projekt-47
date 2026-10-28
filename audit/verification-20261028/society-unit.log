@@ -1,0 +1,31 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+P47_UNIT_OK soc_staff_all_recipes
+P47_UNIT_OK soc_staff_ranges
+P47_UNIT_OK soc_headcount_nuclear
+P47_UNIT_OK soc_headcount_keeps_fill
+P47_UNIT_OK soc_school_found
+P47_UNIT_OK soc_school_price_elastic ref=52 st0=297 st1=99
+P47_UNIT_OK soc_school_subsidy_range
+P47_UNIT_OK soc_port_city
+P47_UNIT_OK soc_port_landlocked_refused KZ
+P47_UNIT_OK soc_port_not_kosice
+P47_UNIT_OK soc_port_discount
+P47_UNIT_OK soc_port_stats
+P47_UNIT_OK soc_power_range
+P47_UNIT_OK soc_lobby_spend
+P47_UNIT_OK soc_lobby_raises_influence 0.0 -> 1.7
+P47_UNIT_OK soc_law_needs_control
+P47_UNIT_OK soc_law_tax_mult
+P47_UNIT_OK soc_pmc_units
+P47_UNIT_OK soc_pmc_deploy_blocked
+P47_UNIT_OK soc_contract_counter
+P47_UNIT_OK soc_contract_signed Zmluva podpísaná.
+P47_UNIT_OK soc_contract_max_units  | Zmluva dovoľuje najviac 3 jednotiek v krajine.
+P47_UNIT_OK soc_happy_bundle h=74.5
+P47_UNIT_OK soc_mult_bounds m=1.101
+P47_UNIT_OK soc_city_crime_gangs
+P47_UNIT_OK soc_school_edu_rises 45.62 -> 45.87
+P47_UNIT_OK soc_sim_finite
+P47_UNIT_OK soc_save_roundtrip
+P47_UNIT_OK soc_old_save_defaults

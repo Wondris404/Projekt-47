@@ -978,7 +978,7 @@ func _juan3_firm() -> Dictionary:
 func _juan3_manager() -> void:
 	var f = _juan3_firm()
 	var e0 = IndustrySystem.firm_efficiency(f)
-	_chk("juan3_no_manager_worse", abs(e0 - IndustrySystem.NO_MANAGER_EFF) < 0.001 and IndustrySystem.buy_share(f) == IndustrySystem.NO_MANAGER_BUY)
+	_chk("juan3_baseline_management", abs(e0 - IndustrySystem.NO_MANAGER_EFF) < 0.001 and IndustrySystem.buy_share(f) == IndustrySystem.NO_MANAGER_BUY)
 	var cands = IndustrySystem.manager_candidates(f)
 	_chk("juan3_candidates", cands.size() == 3 and float(cands[0].salary) > 0.0)
 	IndustrySystem.hire_manager(str(f.id), {"name": "A", "skill": 0.8, "salary": 3000.0})
@@ -996,7 +996,7 @@ func _juan3_manager() -> void:
 	IndustrySystem.fire_manager(str(f.id))
 	var w0 = float(f.workers)
 	IndustrySystem.close_month(2024, 2)
-	_chk("juan3_fire_and_quit", not IndustrySystem.has_manager(f) and float(f.workers) < w0 and abs(IndustrySystem.firm_efficiency(f) - IndustrySystem.NO_MANAGER_EFF * 0.95) < 0.001)
+	_chk("juan3_fire_keeps_baseline_staff", not IndustrySystem.has_manager(f) and is_equal_approx(float(f.workers), w0) and is_equal_approx(IndustrySystem.firm_efficiency(f), 1.0))
 	# porovnanie produkcie s/bez pravej ruky
 	var f2 = _juan3_firm()
 	for _i in 20:

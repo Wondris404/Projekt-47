@@ -1,0 +1,233 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+P47_UNIT_OK j5_165_countries 165
+P47_UNIT_OK j5_map_all_countries 165 tvarov
+P47_UNIT_OK j5_map_clickable 163/165
+P47_UNIT_OK j5_no_tw_xk
+P47_UNIT_OK j5_tier1_count 70
+P47_UNIT_OK j5_core_tier1
+P47_UNIT_OK j5_big_in_tier1
+P47_UNIT_OK j5_small_tier2 VU
+P47_UNIT_OK j5_promote_on_firm
+P47_UNIT_OK j5_tier2_updates FJ
+P47_UNIT_OK j5_promote_on_war SS
+P47_J5_BENCH countries=165 tier1=70 ms_per_day=88.3
+P47_UNIT_FAIL j5_bench_ms_per_day 88.3 ms
+P47_UNIT_OK j5_old_save_26_loads
+P47_UNIT_OK j5_old_save_runs
+P47_UNIT_OK j5_old_save_politics
+P47_UNIT_OK j5_pol_all_gov_types ["democracy", "hybrid", "communist", "autocracy", "monarchy"]
+P47_UNIT_OK j5_pol_gov_examples
+P47_UNIT_OK j5_pol_no_elections_autocracy
+P47_UNIT_OK j5_pol_bribe_cost_by_gov
+P47_UNIT_OK j5_pol_scandal_by_gov
+P47_UNIT_OK j5_fund_party Nemecko: strana Konzervatívci (líder Polly Vetoson) má +6 % popularity.
+P47_UNIT_OK j5_fund_party_weaker_autocracy
+P47_UNIT_OK j5_war_support_needs_war
+P47_UNIT_OK j5_war_support Polsko: tvoja podpora dorazila. Vzťahy +20, s nepriateľmi −15. PMC kontrakt podpísaný. Príjem z kontraktov 171 000 €.
+P47_UNIT_OK j5_lobby_sanction
+P47_UNIT_OK j5_lobby_trade
+P47_UNIT_OK j5_strike_scandal
+P47_UNIT_OK j5_pol_text
+P47_UNIT_OK j5_pol_monthly_165
+P47_UNIT_OK j5_research_branches ["Stroje a automatizácia", "Ťažba a suroviny", "Energetika", "Logistika", "Financie/IT", "Spotrebné produkty", "Podnikanie"]
+P47_UNIT_OK j5_research_slots_1
+P47_UNIT_OK j5_research_prereq
+P47_UNIT_OK j5_research_start
+P47_UNIT_OK j5_research_queue_when_full
+P47_UNIT_OK j5_rnd_center
+P47_UNIT_OK j5_research_parallel
+P47_UNIT_OK j5_research_done
+P47_UNIT_OK j5_research_focus_slot
+P47_UNIT_OK j5_research_best_value
+P47_UNIT_OK j5_research_save
+P47_UNIT_OK j5_research_view
+P47_UNIT_OK j5_names_all_countries
+P47_UNIT_OK j5_name_sk_female Lucia Kováčová
+P47_UNIT_OK j5_name_ru_female Irina Ivanova
+P47_UNIT_OK j5_name_pl_female Ewa Wiśniewska
+P47_UNIT_OK j5_name_jp_family_first
+P47_UNIT_OK j5_name_deterministic
+P47_UNIT_OK j5_manager_names_by_country ["Takahashi Rin", "Tanaka Kaito", "Suzuki Yuki"]
+P47_UNIT_OK j5_manager_gender_saved
+P47_UNIT_OK j5_leader_puns
+P47_UNIT_OK j5_hotel_exists
+P47_UNIT_OK j5_airport_tier
+P47_UNIT_OK j5_airport_city
+P47_UNIT_OK j5_airport_needs_city FJ
+P47_UNIT_OK j5_airport_fees 186282 465704 495059
+P47_UNIT_OK j5_airport_monthly
+P47_UNIT_OK j5_limit_start 150000.0
+P47_UNIT_OK j5_prog_small_ok
+P47_UNIT_OK j5_prog_medium_locked
+P47_UNIT_OK j5_prog_large_locked
+P47_UNIT_OK j5_unsecured { "ok": true, "reason": "", "rate": 0.1317125, "amount": 30000.0, "payment": 1013.29487531588 }
+P47_UNIT_OK j5_haircut 552000
+P47_UNIT_OK j5_secured_cap
+P47_UNIT_OK j5_secured_ok { "ok": true, "reason": "", "rate": 0.0917125, "amount": 496800.0, "payment": 10354.0904321862, "value": 552000.0, "limit": 840500.0 }
+P47_UNIT_OK j5_pledged_no_sell
+P47_UNIT_OK j5_pledged_twice
+P47_UNIT_OK j5_seized bank:ai_b0
+P47_UNIT_OK j5_cash_release { "ok": true, "reason": "", "rate": 0.0917125, "amount": 50000.0, "payment": 1042.07834462421, "value": 70000.0, "limit": 378500.0 }
+P47_UNIT_OK j5_stock_listings 123
+P47_UNIT_OK j5_stock_no_tier2
+P47_UNIT_OK j5_stock_hist
+P47_UNIT_OK j5_stock_buy_div
+P47_UNIT_OK j5_takeover_needs_50
+P47_UNIT_OK j5_takeover
+P47_UNIT_OK j5_hostile_rival
+P47_UNIT_OK j5_ipo_min_size
+P47_UNIT_OK j5_ipo
+P47_UNIT_OK j5_ipo_once
+P47_UNIT_OK j5_lose_control
+P47_UNIT_OK j5_corp_needs2
+P47_UNIT_OK j5_corp_value
+P47_UNIT_OK j5_corp_add
+P47_UNIT_OK j5_corp_ipo
+P47_UNIT_OK j5_spinoff
+P47_UNIT_OK j5_stock_saved
+P47_UNIT_OK j8_media_influence { "ok": true, "success": true, "scandal": false, "text": "Nemecko: tvoja mediálna kampaň zabrala, máš tu väčší vplyv.", "cost": 345629.62962963 }
+P47_UNIT_OK j8_influence_chance
+P47_UNIT_OK j8_relief { "ok": true, "success": true, "scandal": false, "text": "Nemecko znížila clá voči Francuzsko.", "cost": 561648.148148148 }
+P47_UNIT_OK j8_embargo
+P47_UNIT_OK j8_needs_target
+P47_UNIT_OK j8_scandal_hurts
+P47_UNIT_OK j8_bribe_locked
+P47_UNIT_OK j8_saved
+P47_UNIT_OK j9_two_banks |
+P47_UNIT_OK j9_one_deposit_rate
+P47_UNIT_OK j9_help_text
+P47_UNIT_OK j9_no_corp_market 0.0
+P47_UNIT_OK j9_corp_same_country_internal C1 coal=1.57
+P47_UNIT_OK j9_other_country_market 0.0
+P47_UNIT_OK j9_electricity_internal 0.12218945454545
+P47_UNIT_OK j9_transport_cost_only
+P47_UNIT_OK j9_cap_is_city
+P47_UNIT_OK j9_place_any_type { "ok": true, "reason": "", "id": "f1" }
+P47_UNIT_OK j9_nuke_not_in_city Jadrová elektráreň nemôže stáť v meste Bratislava (bezpečnosť, hluk). Klikni mimo mesta.
+P47_UNIT_OK j9_cafe_needs_city
+P47_UNIT_OK j9_airport_msg Letisko nemôže byť priamo v centre mesta Bratislava – klikni kúsok vedľa.
+P47_UNIT_OK j9_bank_is_map_firm { "ok": true, "reason": "", "id": "pb1" }
+P47_UNIT_OK j9_country_aggregate { "n": 2, "types": { "hotel": 1, "bank": 1 } }
+P47_UNIT_OK j9_icon_every_type []
+P47_UNIT_OK j10_100_listed 124
+P47_UNIT_OK j10_sectors ["ai", "transport", "consumer", "tech", "industry", "agri", "energy", "health", "bank", "arms", "media", "telecom"]
+P47_UNIT_OK j10_sector_index
+P47_UNIT_OK j10_no_absorb_small
+P47_UNIT_OK j10_absorb_ready  stake 0.60
+P47_UNIT_OK j10_absorbed
+P47_UNIT_OK j10_absorb_once
+P47_UNIT_OK j10_quote_poor Nemáš dosť peňazí: treba 650 799 €, máš 100 €.
+P47_UNIT_OK j10_quote_matches_buy
+P47_UNIT_OK j10_quote_matches_sell
+P47_UNIT_OK j10_building_needs_realty
+P47_UNIT_OK j10_building_buy
+P47_UNIT_OK j10_building_rent
+P47_UNIT_OK j10_refinery_gasworks
+P47_UNIT_OK j10_infra r609 p198 a177 l121
+P47_UNIT_OK j10_charity  55->57
+P47_UNIT_OK j10_charity_cap
+P47_UNIT_OK j10_stats
+P47_UNIT_OK j10_state_price 14 085 685 185 €
+P47_UNIT_OK j10_state_too_poor
+P47_UNIT_OK j10_state_buy
+P47_UNIT_OK j10_state_gov
+P47_UNIT_OK j10_hq_needs_city
+P47_UNIT_OK j10_hq_set
+P47_UNIT_OK j10_hq_own_state_tax
+P47_UNIT_OK j10_hq_move_fee
+P47_UNIT_OK j10_fin_budget b=10000 flags=1
+P47_UNIT_OK j10_fin_acquire_merge abs=1 log=["1.1.2024: prevzatie a začlenenie Open AJ (ARAI)", "1.1.2024: rozpočet +10 000 € (10 % zo ziskov)"]
+P47_UNIT_OK j10_fund_holdings
+P47_UNIT_OK j10_save_ext
+P47_UNIT_OK j13_dep_none 0.0
+P47_UNIT_OK j13_dep_grows 31.4 { "HDP": 16.3705263157895, "Suroviny/energia": 0.04131454472909, "Zamestnanci": 15.0, "Úvery": 0.0, "Vplyv": 0.0 }
+P47_UNIT_OK j13_dep_text
+P47_UNIT_OK j13_dep_lobby 0.25 0.34
+P47_UNIT_OK j13_legal_base 0.45
+P47_UNIT_OK j13_legal_none
+P47_UNIT_OK j13_legal_level
+P47_UNIT_OK j13_legal_win { "cost": 12000.0, "got": 418015.275150537, "text": "Právnici vymohli 418 015 € z 625 000 € (trovy 41 802 €).", "chance": 0.54 }
+P47_UNIT_OK j13_legal_lose
+P47_UNIT_OK j13_legal_corp
+P47_UNIT_OK j13_legal_full_dep
+P47_UNIT_OK j13_bond_discount
+P47_UNIT_OK j13_bond_issue  nw 4792814->4784043
+P47_UNIT_OK j13_bond_limit
+P47_UNIT_OK j15_broker_found
+P47_UNIT_OK j15_broker_buys own=4 cash=7248866
+P47_UNIT_OK j15_broker_fee
+P47_UNIT_OK j15_no_double
+P47_UNIT_OK j15_broker_sells pl=6341349
+P47_UNIT_OK j15_broker_text
+P47_UNIT_OK j15_broker_off
+P47_UNIT_OK j15_customers [{ "corp": "", "iso": "SK", "country": "Slovensko", "good": "Elektrina", "buyer": "Domácnosti a štát", "qty": 7.0, "eur": 350.0 }, { "corp": "", "iso": "SK", "country": "Slovensko", "good": "Elektrina", "buyer": "Zahraničná firma", "qty": 3.0, "eur": 150.0 }]
+P47_UNIT_OK j15_customers_month
+P47_UNIT_OK j15_save_ext
+P47_UNIT_OK j17_by_iso { "SK": { "eur": 500.0, "goods": { "Elektrina": 500.0 } }, "CZ": { "eur": 50.0, "goods": { "Elektrina": 50.0 } } }
+P47_UNIT_OK j17_ramp
+P47_UNIT_OK j19_gas_plant_uses_gas
+P47_UNIT_OK j19_gas_well_deposit
+P47_UNIT_OK j19_inputs_known []
+P47_UNIT_OK j19_mill
+P47_UNIT_OK j19_buys_from_market_plus_transport { "iron_ore": { "own": 0.0, "bought": 13.3535618181818, "transport": 75.3725099343833, "saved": 0.0 }, "coal": { "own": 0.0, "bought": 4.39882036363636, "transport": 28.7474865282893, "saved": 0.0 }, "electricity": { "own": 0.0, "bought": 7.06953272727273, "transport": 0.0, "saved": 0.0 } }
+P47_UNIT_OK j19_rail  { "d": 0.6, "rail": 0.6, "pipe": 0.0, "logi": 0.0, "port": 0.0, "hub": "" }
+P47_UNIT_OK j19_rail_not_electricity
+P47_UNIT_OK j19_pipe
+P47_UNIT_OK j19_utilization 17.1149579351414
+P47_UNIT_OK j19_logi { "km": 150.0, "share": 0.3 }
+P47_UNIT_OK j19_logi_scales
+P47_UNIT_OK j19_text
+P47_UNIT_OK j19_save
+P47_UNIT_OK j19_short_line
+P47_UNIT_OK j20_world_tex
+P47_UNIT_OK j20_tile_europe
+P47_UNIT_OK j20_kinds
+P47_UNIT_OK j20_kinds_all
+P47_UNIT_OK j21_parody 120/120
+P47_UNIT_OK j21_parody_sector_kept
+P47_UNIT_OK j21_parody_once
+P47_UNIT_OK j21_new_firms ["auto_plant", "shipyard", "real_estate", "steel_mill", "ai_firm", "data_center", "aircraft_plant"]
+P47_UNIT_OK j21_icons
+P47_UNIT_OK j21_ai_chain
+P47_UNIT_OK j21_corp
+P47_UNIT_OK j21_logo_default
+P47_UNIT_OK j21_logo_set
+P47_UNIT_OK j21_logo_bad
+P47_UNIT_OK j21_logo_saved
+P47_UNIT_OK j21_logo_tex
+P47_UNIT_OK j21_rename_firm
+P47_UNIT_OK j21_rename_short
+P47_UNIT_OK j21_rename_corp
+P47_UNIT_OK j21_rename_not_mine
+P47_UNIT_OK j21_makes_vehicles
+P47_UNIT_OK j21_track [{ "cid": "automobiles", "iso": "SK", "qty": 6.0 }, { "cid": "automobiles", "iso": "AE", "qty": 2.0 }, { "cid": "automobiles", "iso": "NL", "qty": 2.0 }]
+P47_UNIT_OK j21_track_text
+P47_UNIT_OK j21_track_nonvehicle
+P47_UNIT_OK j21_ai_boost 1.04
+P47_UNIT_OK j21_old_type
+P47_UNIT_OK j21_buy_shop
+P47_UNIT_OK j21_buy_apt
+P47_UNIT_OK j21_buy_plot
+P47_UNIT_OK j21_buy_bad
+P47_UNIT_OK j21_shop_rent
+P47_UNIT_OK j21_plot_no_rent
+P47_UNIT_OK j21_develop
+P47_UNIT_OK j21_develop_twice
+P47_UNIT_OK j21_realty_type ["office", "shop", "apartments", "warehouse"]
+P47_UNIT_OK j21_realty_city
+P47_UNIT_OK j21_realty_filter
+P47_UNIT_OK j21_save
+P47_UNIT_OK j22_telecom { "users": 2265099.04778925, "pct": 0.41729901396265, "share": 0.45637622853058, "cap_pct": 0.914375, "pop": 5428000.0, "competitors": 0 }
+P47_UNIT_OK j22_news_lower
+P47_UNIT_OK j22_not_media
+P47_UNIT_OK j22_text
+P47_UNIT_OK j22_competition 0.417299 0.286532
+P47_UNIT_OK j22_level_up
+P47_UNIT_OK j22_country
+P47_UNIT_OK j22_cap_small_country
+P47_UNIT_OK j23_phased_same [12, 984941990.6, 596.5069, 104.7133] vs [12, 984941990.6, 596.5069, 104.7133]
+P47_UNIT_OK j23_finish_pending
+P47_UNIT_OK j23_discount_cache { "d": 0.27, "rail": 0.0, "pipe": 0.0, "logi": 0.27, "port": 0.0, "hub": "f3" } { "d": 0.27, "rail": 0.0, "pipe": 0.0, "logi": 0.27, "port": 0.0, "hub": "f3" }
+P47_UNIT_OK j23_gfx_setting
+P47_UNIT_OK j23_mesh_count 165
