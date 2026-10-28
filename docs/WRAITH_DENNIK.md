@@ -1136,3 +1136,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Prvý pokus skončil chybou, pretože release export neobsahoval konzolový spúšťač testu. Exportný profil bol upravený; opakovaný beh `40712990280` úspešne overil kontrolné súčty, zostavil hru a z exportu vykonal 10 dní simulácie bez GDScript chyby.
 - GitHub vytvoril artefakt `Projekt-47-Windows`, dostupný 30 dní v danom behu. Artefakt je ZIP obsahujúci ďalší ZIP hry, takže treba rozbaliť oba. Jeho stiahnutie môže vyžadovať prihlásenie do GitHubu. Grafické spustenie na notebooku a ukladanie z exportu ešte neboli overené; chyby pri prvom importe zdrojov zostávajú otvorené. https://github.com/Wondris404/Projekt-47/actions/runs/40712990280
+
+
+## 2026-10-28 – Oprava prípravy Windows balíka po zlúčení
+
+- Všetky štyri existujúce PR sú zlúčené. Staršie neúspešné behy exportu a profilu boli opravené a ich opakované behy prešli; referencia katalógu zostáva neoverená.
+- Postup zostavenia Windows balíka bol upravený, aby sa spustil aj po relevantnej zmene hlavnej vetvy a artefakt tvoril jediný ZIP s hrou a návodom. Test zmeneného postupu a grafické spustenie na notebooku ešte nie sú potvrdené.
