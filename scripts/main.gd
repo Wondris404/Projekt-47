@@ -2168,7 +2168,7 @@ func firm_detail_text(firm: Dictionary) -> String:
 		out += IndustrySystem.trade_flow_text(firm)
 	out += "\n" + Transport.supply_text(firm)  # JUAN19
 	if not IndustrySystem.has_manager(firm):
-		out += "\nBez pravej ruky: firma ide na %d %%, dokúpi len %d %% materiálu a každý mesiac odíde %d %% ľudí.\n" % [int(IndustrySystem.NO_MANAGER_EFF * 100), int(IndustrySystem.NO_MANAGER_BUY * 100), int(IndustrySystem.NO_MANAGER_QUIT * 100)]
+		out += "\nZákladný manažment zabezpečuje nákup materiálu a dopĺňanie ľudí. Pravá ruka je voliteľný bonus k výkonu a spokojnosti.\n"
 	return out
 
 func _fill_firm_detail() -> void:
@@ -2190,12 +2190,12 @@ func _fill_firm_detail() -> void:
 	_detail_mgr.add_child(goods_row)
 	GoodsIcons.fill(goods_row, str(firm.get("industry", "")))
 	var head = Label.new()
-	head.text = "PRAVÁ RUKA"
+	head.text = "PRAVÁ RUKA (VOLITEĽNÁ)"
 	_detail_mgr.add_child(head)
 	if IndustrySystem.has_manager(firm):
 		var m: Dictionary = firm.manager
 		var l = Label.new()
-		l.text = "%s, schopnosť %d/100, plat %s mesačne. Nakupuje materiál a dopĺňa ľudí." % [str(m.name), int(float(m.skill) * 100), EconMath.eur(float(m.salary))]
+		l.text = "%s, schopnosť %d/100, plat %s mesačne. Prináša bonus k výkonu a spokojnosti." % [str(m.name), int(float(m.skill) * 100), EconMath.eur(float(m.salary))]
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_detail_mgr.add_child(l)
 		var fb = Button.new()

@@ -16,3 +16,7 @@ Samostatná vrstva vykresľuje najviac štyri vlaky na viditeľnú trať pri 10 
 ## Potrubia — Codex (GPT-6)
 
 Pulzy zobrazujú existujúce zaťaženie potrubia: intenzita, hustota a rýchlosť rastú, preťaženie je červené. Najviac 24 značiek na viditeľnú líniu. Ide o agregovaný prietok, nie o potvrdený smer konkrétnej komodity. Ekonomika, kapacita a save zostali bez zmeny.
+
+## Voliteľná pravá ruka — Codex (GPT-6)
+
+Základný manažment nakupuje 100 % dostupných potrebných vstupov, udržiava cieľový počet pracovníkov a nemá automatickú 20 % penalizáciu výkonu. Najatý manažér stále poberá pôvodnú mzdu a má pôvodný bonus spokojnosti; výkon je najmenej na úrovni základu (pôvodný vzorec sa orezáva zdola na 1). Existujúce mená, schopnosti a platy sa nemigrujú. Fluktuácia z nespokojnosti/kriminality zostáva zachovaná a základný manažment stav pri mesačnej uzávierke doplní. Je to jediná autorizovaná zmena balansu.
