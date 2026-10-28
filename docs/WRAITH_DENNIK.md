@@ -986,3 +986,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Opakované chyby `Projekt-47 audit / baseline (unit)` pochádzajú z existujúceho testu s chýbajúcim referenčným súborom; nejde o nasadenie hry. Pri každom spustení vygeneroval GitHub nové upozornenie.
 - Samostatný profil `40695893182` predtým zlyhal kvôli preklepu v revízii a po oprave prešiel. Novší profil `40697719549` zlyhal v meracom skripte: po optimalizácii sa zmenilo volanie mestských služieb a diagnostika hľadala jeho starý presný text. Skript bol upravený, nový beh ešte nie je potvrdený. Produkčný kód hry týmto chybným meraním zmenený nebol.
+
+
+## 2026-10-28 – Menej opakovaných upozornení na známu chybu
+
+- `unit` sa naďalej celý spúšťa. Ak sa dokončí a jeho jediným zlyhaním je `catalog_fields_match_brief` pri neprítomnom `tests/catalog_field_lock.txt`, workflow túto známu neoverenú referenciu zobrazí ako varovanie namiesto opakovaného neúspešného behu. Výsledok testu zostáva v logu 531 OK / 1 FAIL; nejde o opravenie ani overenie katalógu.
+- Iné zlyhanie, chyba GDScriptu, timeout, nedokončená sada alebo chyba pri existujúcej referencii zostáva chybou. Pridaná samostatná kontrola siedmich scenárov klasifikácie; reálny beh a samokontrola sa ešte overujú.
