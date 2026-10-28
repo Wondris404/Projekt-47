@@ -1155,3 +1155,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Diagnostika sa teraz pripája do `user://data_warnings.log`; pri chybe zápisu sa zobrazí varovanie. Po oprave sonda potvrdila nezmenený projektový súbor a obe pridané správy, exit 0. Log sa môže časom zväčšovať; rotácia nie je zavedená. Ekonomické výpočty a save sa nemenia. Ďalšia auditná sada sa ešte vykonáva.
 
 - Po oprave prešla na Windowse lokálna auditná sada `audit_unit` (46 kontrol, exit 0), vrátane porovnania stavu po 62 dňoch. Kontrola chyby zálohy zámerne vyvolala chybu otvorenia izolovaného súboru a potvrdila ochranu slotu. Úplná jednotková sada nebola v tomto kroku spustená.
+
+
+## 2026-10-28 – Kontrola a rozpracovaná oprava panelov pri mierke
+
+- Na notebooku s AMD Radeon Graphics sa pri veľkostiach okna 1280 × 720, 800 × 450 a 480 × 270 kontrolovali panely krajiny, mesta, firmy, burzy a portfólia: hranice, dostupnosť tlačidla, simulované zatvorenie cez Godot a nastavenie zvislého posuvu. V týchto scenároch prešli všetky kombinácie, text v najmenšom okne bol veľmi drobný.
+- Pri simulácii mierky Godotu 100 %, 125 % a 150 % (nie zmeny systémového DPI Windows) sa pri 150 % potvrdil presah panelov Burza a Portfólio a čiastočne skryté zatvorenie. Ich obsah má väčšiu vnútornú minimálnu šírku než bola použitá pri výpočte polohy.
+- Rozpracovaná oprava na vetve `codex/fix-scaled-window-position` zohľadňuje minimálnu veľkosť obsahu a pri jej zmene opätovne upraví polohu okna. Lokálna grafická sonda na notebooku po oprave vykázala úspešných 15 kombinácií panelov a mierok; pred/po snímky sú zatiaľ len v lokálnom testovacom priečinku. Pridaná samostatná regresná sonda sa ešte musí samostatne spustiť, celá sada ani dopad na FPS neboli po zmene overené. Skutočné systémové DPI a panely nad rámec uvedených piatich zostávajú neoverené.
