@@ -24,3 +24,7 @@ Základný manažment nakupuje 100 % dostupných potrebných vstupov, udržiava 
 ## Mapové modely — Codex (GPT-6)
 
 62 pôvodných pixelových modelov pokrýva celý katalóg 61 odvetví a banku. Nemocnice/klinika majú kríž, školy školské krídla a vlajku/hodiny, univerzita stĺporadie, prístav mólo, loď a kontajnery, jadrová elektráreň chladiace veže. Výrobné prevádzky majú vybavenie svojho odvetvia. Generátor v `tools/generate_map_models.py` umožňuje reprodukciu. Modely sú samostatné PNG s nearest filtrovaním na Atlase; UI ikony sa nemenia. Textúry sa načítajú raz na typ, kreslenie modelu je jedno texture volanie.
+
+## Regresné kontroly — Codex (GPT-6)
+
+Pridaných 17 kontrol: limit/hustota vlakov, orezanie tratí, úplnosť modelov, plný nákup a personál bez manažéra, zachovanie v3 manažéra a prevádzka bez poľa manager, bonus aj po prepustení a plynulý zoom pri zmene rodičovského layoutu. Existujúce testy manažmentu sa prispôsobili výslovne požadovanej mechanike; žiadna kontrola nebola vymazaná. Spolu s deviatimi zdedenými testmi kamery je to 26 nových kontrol tejto mapovej úlohy.

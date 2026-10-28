@@ -42,6 +42,7 @@ func run(p_host: Node) -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
 	host._on_menu_dev()
 	GameState.paused = true
+	if host.map._traffic_layer != null: host.map._traffic_layer.set_process(false)
 	preload("res://scripts/gfx.gd")._low = 0
 	await _frames(8)
 	caption = Label.new()
@@ -106,6 +107,9 @@ func _transport() -> void:
 		await _snap("transport_" + kind + "_motion", "Tok a doprava v neskoršom čase; údaj predstavuje vyťaženie, nie druh komodity")
 		Transport.st().lines.clear()
 	_center(1.0)
+	var pa = map._to_world(Vector2(180, 250))
+	var pb = map._to_world(Vector2(1000, 400))
+	Transport.st().lines.append({"id":"distant", "kind":"rail", "a":[pa.x,pa.y], "b":[pb.x,pb.y], "km":Transport.km(pa,pb), "cap":600.0, "used_prev":600.0})
 	await _snap("transport_distant", "Vzdialený pohľad: animácia dopravy má byť vypnutá")
 
 func _models() -> void:
