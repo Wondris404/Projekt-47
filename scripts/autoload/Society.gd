@@ -345,11 +345,11 @@ func _withdraw_without_right(iso: String) -> void:
 				d.erase(k)
 
 # ===================== moc a vplyv =====================
-func power(iso: String, force: bool = false) -> Dictionary:
+func power(iso: String, force: bool = false, country_firms = null) -> Dictionary:
 	var cache: Dictionary = st().power
 	if not force and cache.has(iso) and GameState.day_index - int(cache[iso].get("day", -999)) < 30:
 		return cache[iso]
-	var r = _power0(iso)
+	var r = _power0(iso, country_firms)
 	r["day"] = GameState.day_index
 	cache[iso] = r
 	return r
@@ -363,19 +363,25 @@ func power_value(iso: String) -> float:
 func has_control(iso: String) -> bool:
 	return power_value(iso) > CONTROL
 
-func _power0(iso: String) -> Dictionary:
+var use_power_headcount_cache := true  # porovnávateľná referenčná cesta pre testy
+var use_monthly_city_groups := true  # porovnávateľná referenčná cesta pre testy
+var use_monthly_country_groups := true  # porovnávateľná referenčná cesta pre testy
+
+func _power0(iso: String, country_firms = null) -> Dictionary:
 	if Empire.owns_state(iso):
 		return {"value": 100.0, "parts": {"Vlastníš štát": 100.0}, "control": true, "owned": true}
-	var d: Dictionary = Empire.dependency(iso)
+	var d: Dictionary = Empire.dependency(iso, use_power_headcount_cache, country_firms)
 	var w: Dictionary = GameState.world.get(iso, {})
 	var pop = maxf(1.0, float(w.get("population", 1e6)))
-	var people = 0.0
-	for f in GameState.player_firms():
-		if str(f.get("country", "")) == iso:
-			people += IndustrySystem.headcount(f)
+	var people = float(d.get("_headcount", 0.0)) if use_power_headcount_cache else 0.0
+	if not use_power_headcount_cache:
+		var candidates: Array = GameState.player_firms() if country_firms == null else country_firms
+		for f in candidates:
+			if str(f.get("country", "")) == iso:
+				people += IndustrySystem.headcount(f)
 	var jobs = people / (pop * 0.5)
 	var media = 0.0
-	for r in Brand.country_media(iso):
+	for r in Brand.country_media(iso, country_firms):
 		media = maxf(media, float(r.pct))
 	var c_gdp = clampf(float(d.gdp_share) / 0.15, 0.0, 1.0) * 25.0
 	var c_job = clampf(jobs / 0.08, 0.0, 1.0) * 20.0
@@ -614,12 +620,13 @@ func port_discount(f: Dictionary) -> float:
 			return 0.2
 	return 0.0
 
-func city_services(iso: String, city_name: String) -> Dictionary:
+func city_services(iso: String, city_name: String, player_city_firms = null) -> Dictionary:
 	var out = {"hospital": 0, "insurance": 0, "pmc": 0, "school": 0, "academy": 0, "university": 0, "students": 0.0}
 	for nf in _npc_service_firms():  # skoly konkurencie tiez vzdelavaju mesto (vyhody pre ludi len z vlastnych firiem)
 		if str(nf.get("country", "")) == iso and str(nf.get("city", "")) == city_name and str(nf.get("industry", "")) in ["school_primary", "school_high", "university"]:
 			out.students = float(out.students) + students(nf) * float(recipe_of(nf).get("edu", 1.0))
-	for f in GameState.player_firms():
+	var candidates: Array = GameState.player_firms() if player_city_firms == null else player_city_firms
+	for f in candidates:
 		if bool(f.get("closed", false)) or str(f.get("country", "")) != iso or firm_city(f) != city_name:
 			continue
 		var ind = str(f.get("industry", ""))
@@ -723,8 +730,14 @@ func monthly(_y: int = 0, _m: int = 0) -> void:
 	var s = st()
 	# 1) moc v krajinach, kde hrac nieco ma
 	var isos: Dictionary = {}
+	var grouped_firms: Dictionary = {}
 	for f in GameState.player_firms():
-		isos[str(f.get("country", ""))] = true
+		var iso = str(f.get("country", ""))
+		isos[iso] = true
+		if use_monthly_country_groups:
+			if not grouped_firms.has(iso):
+				grouped_firms[iso] = []
+			grouped_firms[iso].append(f)
 	for b in BankingSystem.player_banks():
 		isos[str(b.get("country", ""))] = true
 		for loan in b.get("sovereign_loans", []):
@@ -737,7 +750,7 @@ func monthly(_y: int = 0, _m: int = 0) -> void:
 	monthly_lobby()
 	for iso in isos.keys():
 		if GameState.world.has(str(iso)):
-			power(str(iso), true)
+			power(str(iso), true, grouped_firms.get(str(iso), []) if use_monthly_country_groups else null)
 	_npc_cache_day = -1
 	ai_monthly()  # AI konkurenti a statne firmy stavaju sluzbove podniky samy
 	# 2) zakony a zmluvy
@@ -750,7 +763,7 @@ func monthly(_y: int = 0, _m: int = 0) -> void:
 		var iso = str(cw[k].iso)
 		var cname = str(cw[k].city)
 		var crow = city(iso, cname)
-		var svc = city_services(iso, cname)
+		var svc = city_services(iso, cname, cw[k].firms if use_monthly_city_groups else null)
 		var prot = protection(iso, cname)
 		_update_city(iso, cname, crow, svc, prot)
 		for f in cw[k].firms:

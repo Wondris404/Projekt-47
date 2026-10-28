@@ -1,0 +1,58 @@
+name: Paired simulation performance
+on:
+  push:
+    branches:
+      - codex/audit-ux-20261028
+    paths:
+      - .github/workflows/performance-paired.yml
+permissions:
+  contents: read
+jobs:
+  paired:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install verified Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 --output godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum --check
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+          echo "XDG_DATA_HOME=$RUNNER_TEMP/p47-user-data" >> "$GITHUB_ENV"
+          echo "XDG_CONFIG_HOME=$RUNNER_TEMP/p47-user-config" >> "$GITHUB_ENV"
+          echo "XDG_CACHE_HOME=$RUNNER_TEMP/p47-user-cache" >> "$GITHUB_ENV"
+      - name: Import assets
+        run: Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path "$GITHUB_WORKSPACE" --import
+      - name: Compare same runner in alternating order
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp scripts/main.gd "$RUNNER_TEMP/after-main.gd"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/before-main.gd" https://raw.githubusercontent.com/Wondris404/Projekt-47/6f47a12b6bfdac12202d94b302b1189bf5048e74/scripts/main.gd
+          for run_name in before1 after1 after2 before2; do
+            version="${run_name%?}"
+            cp "$RUNNER_TEMP/$version-main.gd" scripts/main.gd
+            timeout 300 Godot_v4.7.2-stable_linux.x86_64 --headless --path "$GITHUB_WORKSPACE" -- performance_audit > "$RUNNER_TEMP/$run_name.log" 2>&1
+            ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/$run_name.log"
+            grep '^P47_BENCHMARK ' "$RUNNER_TEMP/$run_name.log"
+            printf 'P47_PERF_RUN %s ' "$run_name"
+            grep '^P47_BENCHMARK ' "$RUNNER_TEMP/$run_name.log"
+          done
+      - name: Upload measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paired-performance-logs
+          path: |
+            ${{ runner.temp }}/before1.log
+            ${{ runner.temp }}/after1.log
+            ${{ runner.temp }}/after2.log
+            ${{ runner.temp }}/before2.log
+          if-no-files-found: warn

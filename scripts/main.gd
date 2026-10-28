@@ -12,6 +12,8 @@ var _description_test_runner
 var _toolbar_test_runner
 var _atlas_test_runner
 var _fund_test_runner
+var _bank_controls_test_runner
+var _save_recovery_test_runner
 var _atlas_visual_runner
 
 func _ready() -> void:
@@ -768,6 +770,12 @@ func _build_play() -> void:
 	elif "fund_ui_test" in OS.get_cmdline_user_args():
 		_fund_test_runner = load("res://tests/fund_ui.gd").new()
 		_fund_test_runner.run(self)
+	elif "bank_controls_ui_test" in OS.get_cmdline_user_args():
+		_bank_controls_test_runner = load("res://tests/bank_controls_ui.gd").new()
+		_bank_controls_test_runner.run(self)
+	elif "save_recovery_ui_test" in OS.get_cmdline_user_args():
+		_save_recovery_test_runner = load("res://tests/save_recovery_ui.gd").new()
+		_save_recovery_test_runner.run(self)
 	elif "window_ui" in OS.get_cmdline_user_args():  # JUAN-P47: presuvatelne okna (GUI + screenshot)
 		_window_ui()
 	elif "atlas_visual_audit" in OS.get_cmdline_user_args():
@@ -1255,7 +1263,8 @@ func _on_menu_load(slot: int) -> void:
 	if main_menu:
 		main_menu.visible = false
 	_refresh_label()
-	_feedback("Hra načítaná (slot %d). Pauza – stlač 1." % slot, true)
+	var loaded_message = "Hra načítaná zo záložnej kópie" if SaveSystem.last_load_from_backup else "Hra načítaná"
+	_feedback("%s (slot %d). Pauza – stlač 1." % [loaded_message, slot], true)
 
 func _on_menu_quit() -> void:
 	get_tree().quit()
@@ -2373,6 +2382,7 @@ func _juan3_ui_checks() -> void:
 # ===================== JUAN4 =====================
 var _detail_bank = false
 var _bank_ctrl_built = false
+var _bank_displayed_values: Dictionary = {}
 var _bank_info: Label
 var _bank_cons: SpinBox
 var _bank_dep: SpinBox
@@ -2419,6 +2429,38 @@ func bank_detail_text(b: Dictionary) -> String:
 		out += "\n• %s: %s, úrok %s, zostáva %d mesiacov" % [str(GameState.world.get(iso, {}).get("name_sk", iso)), EconMath.eur(float(loan.get("remaining", 0.0))), EconMath.pct(float(loan.get("rate", 0.0))), int(loan.get("months", 0))]
 	return out
 
+# Zapamätané hodnoty polí oddelia automatickú zmenu od rozpracovaného vstupu hráča.
+func _bank_fields(b: Dictionary) -> Array:
+	return [
+		["cons", _bank_cons, BankingSystem.consumer_rate(b) * 100.0],
+		["sav", _bank_sav, float(b.sav_rate) * 100.0],
+		["mort", _bank_mort, float(b.mort_rate) * 100.0],
+		["corp", _bank_corp, float(b.corp_rate) * 100.0],
+		["res", _bank_res, float(b.reserve_target) * 100.0],
+		["strict", _bank_strict, float(b.get("strictness", 0.5))]
+	]
+
+func _remember_bank_fields(b: Dictionary) -> void:
+	_bank_displayed_values.clear()
+	for field in _bank_fields(b):
+		var control: Range = field[1]
+		_bank_displayed_values[field[0]] = control.value
+
+func _sync_bank_fields(b: Dictionary) -> void:
+	for field in _bank_fields(b):
+		var control: Range = field[1]
+		var key: String = field[0]
+		if control is SpinBox and (control as SpinBox).get_line_edit().has_focus():
+			continue
+		if _bank_displayed_values.has(key) and is_equal_approx(control.value, float(_bank_displayed_values[key])):
+			control.set_value_no_signal(float(field[2]))
+			_bank_displayed_values[key] = control.value
+
+func _bank_edited_value(key: String, control: Range, actual: float, scale: float = 100.0) -> float:
+	if _bank_displayed_values.has(key) and is_equal_approx(control.value, float(_bank_displayed_values[key])):
+		return actual
+	return control.value / scale
+
 func _fill_bank_detail() -> void:
 	var b: Dictionary = BankingSystem._player_bank()
 	if b.is_empty():
@@ -2431,6 +2473,7 @@ func _fill_bank_detail() -> void:
 	_detail_info.tooltip_text = BankingSystem.HELP
 	_detail_info.mouse_filter = Control.MOUSE_FILTER_PASS
 	if _bank_ctrl_built and _bank_info:
+		_sync_bank_fields(b)
 		_bank_info.text = bank_detail_text(b)
 		if _bank_advisor_button:
 			_bank_advisor_button.text = "Prepustiť bankového poradcu" if bool(b.get("advisor", {}).get("hired", false)) else "Najať bankového poradcu (%s/mes.)" % EconMath.eur(BankingSystem.ADVISOR_SALARY)
@@ -2485,6 +2528,7 @@ func _fill_bank_detail() -> void:
 	_bank_strict.step = 0.05
 	_bank_strict.value = float(b.get("strictness", 0.5))
 	_detail_mgr.add_child(_bank_strict)
+	_remember_bank_fields(b)
 	var ab = Button.new()
 	ab.text = "Uložiť nastavenia banky"
 	ab.name = "BankApply"
@@ -2591,9 +2635,17 @@ func _on_bank_apply() -> void:
 	var b: Dictionary = BankingSystem._player_bank()
 	if b.is_empty():
 		return
-	BankingSystem.set_consumer_rate(float(_bank_cons.value) / 100.0)
-	BankingSystem.set_player_bank(float(_bank_sav.value) / 100.0, float(b.get("lending_rate", 0.05)), float(_bank_strict.value))
-	BankProducts.set_rates(b, float(_bank_sav.value) / 100.0, float(_bank_mort.value) / 100.0, float(_bank_corp.value) / 100.0, float(_bank_res.value) / 100.0)
+	_sync_bank_fields(b)
+	var cons = _bank_edited_value("cons", _bank_cons, BankingSystem.consumer_rate(b))
+	var sav = _bank_edited_value("sav", _bank_sav, float(b.sav_rate))
+	var mort = _bank_edited_value("mort", _bank_mort, float(b.mort_rate))
+	var corp = _bank_edited_value("corp", _bank_corp, float(b.corp_rate))
+	var reserves = _bank_edited_value("res", _bank_res, float(b.reserve_target))
+	var strict = _bank_edited_value("strict", _bank_strict, float(b.get("strictness", 0.5)), 1.0)
+	BankingSystem.set_consumer_rate(cons)
+	BankingSystem.set_player_bank(sav, float(b.get("lending_rate", 0.05)), strict)
+	BankProducts.set_rates(b, sav, mort, corp, reserves)
+	_remember_bank_fields(b)
 	BankingSystem.advisor_override(b)
 	_feedback("Banka: úrok pre ľudí %s, vklady %s, prísnosť %d %%." % [EconMath.pct(BankingSystem.consumer_rate(b)), EconMath.pct(float(b.deposit_rate)), int(float(b.strictness) * 100)], true)
 	_bank_info.text = bank_detail_text(b)
@@ -3257,6 +3309,7 @@ func open_country_firms(iso: String) -> void:
 	if rows.is_empty():
 		var l = Label.new()
 		l.text = "Tu zatiaľ nič nemáš. Založ firmu: Založiť → Postaviť na mape."
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		v.add_child(l)
 	var sc = ScrollContainer.new()
 	sc.custom_minimum_size = Vector2(260, mini(rows.size(), 8) * 32)
@@ -4599,6 +4652,25 @@ func _window_ui() -> void:
 	await _drag(country_win.position + Vector2(40, 16), Vector2(vp.x + 500, vp.y + 500))
 	var r = country_win.get_global_rect()
 	res["clamped"] = r.position.x >= 0.0 and r.position.y >= 0.0 and r.end.x <= vp.x + 0.5 and r.end.y <= vp.y + 0.5
+	# Strata fokusu počas presunu musí ukončiť ťahanie aj bez doručeného uvoľnenia.
+	var focus_point = country_win.position + Vector2(40, 16)
+	_mouse(false, false, focus_point)
+	_mouse(true, true, focus_point)
+	await get_tree().process_frame
+	var started_drag = win_mgr._mode == 1
+	get_window().focus_exited.emit()
+	res["drag_stops_on_focus_loss"] = started_drag and win_mgr._mode == 0
+	_mouse(true, false, focus_point)
+	await get_tree().process_frame
+	var resize_point = country_win.position + country_win.size - Vector2(3, 3)
+	_mouse(false, false, resize_point)
+	_mouse(true, true, resize_point)
+	await get_tree().process_frame
+	var started_resize = win_mgr._mode == 2
+	get_window().focus_exited.emit()
+	res["resize_stops_on_focus_loss"] = started_resize and win_mgr._mode == 0
+	_mouse(true, false, resize_point)
+	await get_tree().process_frame
 	# 5) pamat podla typu okna (zavriet/otvorit inu krajinu)
 	var keep = Rect2(country_win.position, country_win.size)
 	country_win.visible = false
@@ -4635,7 +4707,11 @@ func _window_ui() -> void:
 		await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	var img = get_viewport().get_texture().get_image()
-	var shot = "/workspace/projekt47/preview/p47_windows_country.png"
+	var shot_dir = ProjectSettings.globalize_path("res://audit/screenshots/window-audit")
+	DirAccess.make_dir_recursive_absolute(shot_dir)
+	var args = OS.get_cmdline_user_args()
+	var tag = str(args[1]) if args.size() > 1 else "baseline"
+	var shot = shot_dir.path_join("country_" + tag + ".png")
 	img.save_png(shot)
 	res["screenshot"] = FileAccess.file_exists(shot) and img.get_width() > 100
 	var fails = 0

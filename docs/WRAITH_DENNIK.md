@@ -618,3 +618,509 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Poloha/veľkosť sa pamätá podľa typu okna počas relácie a v nastaveniach `user://ui_windows.cfg` – nie v save v3.
 - Oprava: spodný riadok v okne krajiny (politik + suma + Lobovať, aj riadok zmluvy PMC) je HFlowContainer a pri úzkom okne sa zalomí; zoznam politikov/PMC orezáva dlhý text, tlačidlá firiem tiež.
 - Test (xvfb, 1280×720): 10 kontrol – riadok sa zmestí, aj v úzkom okne, presun, zmena veľkosti rohom, min. veľkosť, orezanie na obrazovku, zápis/čítanie nastavení, všetky okná majú posuv, screenshot `preview/p47_windows_country.png` – OK; „pamäť po zatvorení/otvorení“ zlyhala (uvoľnenie tlačidla mimo okna sa nezapísalo). Opravené (poloha sa ukladá už počas ťahania, ukladá sa aj pri zatvorení), ale znovu netestované – limit 10 testov vyčerpaný.
+
+
+## 2026-10-28 – Úvodný audit hrateľnosti a UI
+
+- Na GitHube vytvorená vetva `codex/audit-ux-20261028` z main `88849d621ee983c4b9c26f9777e8aa78d6941a95`; prvotné nálezy s prioritami boli oznámené pred opravami a sú uložené v `docs/AUDIT_UX_20261028.md`.
+- Čítaním aktuálneho kódu overené riziko vnútorných dodávok bez konkrétneho dodávateľa a doplnené riziko neaktuálnych polí nastavení pri činnosti bankového poradcu. Nálezy vyžadujú reprodukciu a overenie; herný kód ani grafika v tomto kroku zmenené neboli.
+- Nové testy ani merania zatiaľ neboli spustené. Predchádzajúce výsledky z `docs/PERFORMANCE_AUDIT_20261027.md` pochádzajú z iného východiskového commitu a nepreukazujú stav novej vetvy. Na GitHube zatiaľ nebol nájdený pripravený workflow ani uložený spúšťač Godot testov.
+
+
+## 2026-10-28 – Kontrola limitu uložených hier
+
+- Do `docs/AUDIT_UX_20261028.md` pridaný staticky zistený rozdiel: ukladanie neoveruje 64 MiB limit, ktorý neskôr uplatňuje načítanie; navyše doterajšia kontrola zápisu porovnáva znaky a nie bajty. Oprava ani reprodukcia v Godote zatiaľ neprebehla. Herný kód a existujúce savy sa nemenili.
+
+
+## 2026-10-28 – Vzdialený testovací beh na GitHube
+
+- Na auditnej vetve pridaný GitHub Actions workflow pre existujúce `unit`, `audit_unit`, `stability 1 30 365` a `performance_audit`. Beží na oddelených Linux runneroch s Godotom 4.7.2 z oficiálneho vydania, overeným SHA-256, a používa samostatné dočasné používateľské dáta. Herné súbory sa nemenili.
+- Prvá verzia workflow zlyhala pred spustením úloh pre chybný kontext ciest runnera; konfigurácia bola opravená. Beh 40652483767 sa už spustil, výsledky zatiaľ nie sú uzavreté. Toto nie je grafické overenie cez Xvfb ani meranie FPS na notebooku.
+
+
+## 2026-10-28 – Ochrana pred príliš veľkým savom (overovanie prebieha)
+
+- Ukladanie pred zápisom kontroluje rovnaký limit 64 MiB v UTF-8 bajtoch ako načítanie. Pri prekročení vráti chybu ešte pred vytvorením dočasného súboru, takže predchádzajúci slot ostane zachovaný. Formát v3 ani pravidlá hry sa nemenia.
+- Pridané štyri cielené regresné kontroly hranice viacbajtového textu, úspešného uloženia, odmietnutia veľkého stavu a zachovania slotu. GitHub Actions beh po zmene ešte musí potvrdiť výsledok; záznam sa po dokončení aktualizuje.
+
+
+## 2026-10-28 – Výsledky ochrany saveu
+
+- GitHub Actions na commite `dee8a650c4eb5873bde77b6f01d94ef5dd3d611e`: `audit_unit` 28 OK / 0 FAIL, vrátane štyroch nových kontrol veľkého saveu; stabilita 1, 30 a 365 dní prešla. Úplná sada `unit` v čase zápisu ešte beží. Pred opravou audit_unit aj stabilita prešli; úplná sada mala 531 OK / 1 FAIL kvôli chýbajúcej referencii katalógu a navyše tri runtime chyby testov mapy mimo stromu.
+- Headless benchmark 100 dní, 72 hráčových firiem: pred 87,79 ms/deň, po 77,65 ms/deň; jednotlivé vzdialené runnery majú rôznu záťaž, preto výsledok nedokazuje celkové zrýchlenie ani výkon notebooku. Beh: https://github.com/Wondris404/Projekt-47/actions/runs/40652812617.
+
+
+## 2026-10-28 – Mapa vytvorená mimo stromu scény (overovanie prebieha)
+
+- `WorldMap._ready` kontroluje existenciu okna pred pripojením signálu straty fokusu. Bežný pripojený viewport používa rovnaký postup ako predtým; vzhľad, kamera aj herné pravidlá sa nemenia.
+- Pred opravou úplná sada na GitHube: 531 OK / 1 FAIL (chýbajúca referencia katalógu) a tri chyby `focus_exited` pri testoch mimo stromu. Pridaná jedna cielená kontrola a CI kontrola výpisu `SCRIPT ERROR`; výsledok po oprave ešte musí dobehnúť.
+
+
+## 2026-10-28 – Priebežné overenie kontroly okna mapy
+
+- GitHub Actions pre commit `bdbdc442094361c8741c47741b5a88b4ba138b24`: `audit_unit` 29 OK / 0 FAIL vrátane vytvorenia mapy mimo stromu a kontroly výpisu GDScript chýb; stabilita 1, 30 a 365 dní prešla. Úplná `unit` sada pri tomto zápise ešte beží.
+- Headless výkonnostná sonda 100 dní na 72 firmách: 62,52 ms/deň; predchádzajúce behy na iných cloudových runneroch namerali 87,79 a 77,65 ms/deň. Rozdiel môže byť záťažou runnera a nedokazuje zrýchlenie ani FPS na notebooku. Prvá úprava kontroly chybového výpisu mala chybné formátovanie workflow, opravené v samostatnom commite pred týmto behom.
+- Vyhľadanie `tests/catalog_field_lock.txt` v troch ďalších vetvách ani v histórii tohto súboru na main nevrátilo referenciu. Aktuálny katalóg nebol použitý na vytvorenie novej referencie.
+
+
+## 2026-10-28 – Výsledok úplnej sady po oprave mapy
+
+- GitHub Actions `40653443499` na kóde `bdbdc442094361c8741c47741b5a88b4ba138b24`: `unit` 531 OK / 1 FAIL (`catalog_fields_match_brief`, chýbajúca referencia). Predchádzajúce tri `SCRIPT ERROR` pri vytvorení mapy mimo stromu sa v samotnom teste už nevyskytli. `audit_unit` 29 OK, stabilita 1/30/365 prešla, výkonnostná sonda dokončená; celý workflow ostáva červený kvôli testu katalógu.
+- V priebehu importu čerstvej kópie Godot vypisuje chyby o zdrojoch, ktoré ešte nie sú importované; treba ich samostatne preveriť. Výsledok nepovažovať za úplne čistý beh ani za vizuálnu kontrolu hry.
+
+
+## 2026-10-28 – Vzdialené grafické meranie
+
+- Pridaný samostatný GitHub Actions workflow pre východiskové snímky Atlasu cez Xvfb a Mesa softvérové vykresľovanie. Používa existujúci `atlas_visual_audit`, nový tag snímok a izolované dáta; do hry ani existujúcich UI ikon nezasahuje. Výsledky ukladá ako artefakty behu; pri samotných grafických úpravách bude ešte potrebné uložiť porovnania pred/po do `audit/screenshots/` v repozitári.
+- Beh `40654081381` sa začal; úspech snímok, vizuálna kontrola a kompletné porovnania pred/po zatiaľ nie sú potvrdené. FPS softvérového renderera nereprezentuje výkon notebooku.
+
+
+## 2026-10-28 – Východiskové snímky Atlasu
+
+- Vzdialený beh `40654081381` skončil úspešne cez Xvfb, OpenGL a Mesa llvmpipe. Uložil 27 nových východiskových snímok v artefakte `p47-atlas-baseline`; scenáre pokrývajú kameru, dopravu a modely budov. Pri zatvorení/otvorení panelu a zmene veľkosti okna zaznamenal drift 0 px.
+- Obrázky zatiaľ nie sú vizuálne posúdené ani uložené ako porovnania pred/po v repozitári. Import čerstvého projektu vypísal pred dokončením importu chyby zdrojov; samotný vizuálny beh nemal `SCRIPT ERROR`. FPS llvmpipe nie sú meraním notebooku. Beh: https://github.com/Wondris404/Projekt-47/actions/runs/40654081381.
+
+
+## 2026-10-28 – Menej opakovaných testovacích behov
+
+- GitHub Actions pre celý audit ignoruje commity meniace iba dokumentáciu alebo samostatný grafický workflow; herné a testovacie zmeny ho naďalej spúšťajú a zostáva dostupné ručné spustenie. Pred zmenou prešiel audit_unit a stabilita; úprava mení len spúšťanie workflow a po zápise sa ešte neoverilo každé pravidlo spúšťania.
+
+
+## 2026-10-28 – Prenositeľný výstup testu okien
+
+- Grafická skúška `window_ui` ukladá snímku do `audit/screenshots/window-audit/` v skúšanej kópii namiesto pevnej cesty z iného počítača; snímka má odlíšiteľný tag. GitHub Actions spúšťa existujúce kontroly presunu, veľkosti a pamäte okien cez Xvfb a ukladá výslednú snímku a log ako artefakty. Herné rozhranie a jeho správanie sa nemenili.
+- Pred úpravou prešla grafická sonda Atlasu; výsledok skúšky okien na tejto verzii ešte nie je potvrdený. Artefakt treba vizuálne skontrolovať; nie je to automatické porovnanie pred/po.
+
+
+## 2026-10-28 – Grafická skúška okien
+
+- Vzdialený beh `40654635533` preveril 10 existujúcich kontrol okna krajiny: deväť prešlo, kontrola presnej polohy a veľkosti po zatvorení a znovuotvorení zlyhala. Príčina sa ešte skúma; nejde zatiaľ o potvrdenie konkrétnej chyby herného kódu. Východisková snímka a log sú uložené ako artefakty behu https://github.com/Wondris404/Projekt-47/actions/runs/40654635533.
+- Test používal Xvfb a softvérové vykresľovanie, preto nepotvrdzuje vzhľad ani výkon na notebooku. Beh Atlasu prešiel, ale jeho snímky zatiaľ neboli vizuálne posúdené.
+
+
+## 2026-10-28 – Diagnostika pamäte okna
+
+- Grafický workflow do dočasnej kópie pri teste doplní výpis polohy, uloženej polohy a minimálnej veľkosti pred a po znovuotvorení okna. Zdrojový kód hry sa tým nemení. Beh `40655073099` prebieha; záver ešte nie je známy.
+
+
+## 2026-10-28 – Výsledok diagnostiky okna krajiny
+
+- Beh `40655073099` nameral pred otvorením inej krajiny obdĺžnik (940, 500; 340 × 220), rovnaký ako v pamäti. Po otvorení mal panel šírku 477 px pre minimálnu šírku obsahu; jeho pravý okraj tak presahoval viewport široký 1280 px. Deväť ďalších kontrol prešlo. Konkrétny vnútorný prvok sa ešte zisťuje; oprava zatiaľ nie je urobená.
+- Nadväzujúca diagnostika vo workﬂow vypisuje aj vnútorné ovládacie prvky so širokým minimom; mení len dočasnú kópiu na runneri. https://github.com/Wondris404/Projekt-47/actions/runs/40655073099
+
+
+## 2026-10-28 – Zalomenie správy v paneli krajiny
+
+- Diagnostika `40655287108` ukázala, že minimálnu šírku 449 px vytvoril text v krajine bez hráčových firiem. Správa sa teraz zalamuje, aby nevyžadovala široký panel. Herné pravidlá, dáta ani existujúce ikony sa nemenia.
+- Grafický workflow bol rozšírený o snímku znovuotvoreného panelu a automatické spustenie po zmene hlavného UI. Overenie po oprave a porovnanie snímok ešte prebieha; nie je potvrdené, že oprava funguje.
+
+
+## 2026-10-28 – Overenie panelu krajiny po oprave
+
+- V grafickom behu `40667390401` prešlo všetkých 10 existujúcich kontrol. Po otvorení inej krajiny zostal panel na (940, 500) s veľkosťou 340 × 220 px; minimálna šírka obsahu klesla zo 477 na 288 px. Testované cez Xvfb/llvmpipe pri viewporte 1280 × 720.
+- Pridaný workflow `country-comparison.yml` pripravuje samostatné snímky pred/po a obraz vedľa seba, a po úspešnej kontrole ich má uložiť do vetvy. Výsledok vytvorenia snímok a ich vizuálna kontrola zatiaľ nie sú potvrdené. https://github.com/Wondris404/Projekt-47/actions/runs/40667390401
+
+
+## 2026-10-28 – Testy po zalomení textu
+
+- Beh `40667327638`: `audit_unit` 29 OK / 0 FAIL, stabilita 1/30/365 prešla, `unit` 531 OK / 1 FAIL na tej istej chýbajúcej referencii katalógu ako pred zmenou. Testovacia vetva teda stále nemá úplne zelenú základnú sadu.
+- Headless sonda s rovnakým scenárom uvádza priemer 59,52 ms/deň, medián 58,92 ms, p95 67,65 ms a maximum 72,95 ms. Pôvodný beh mal 87,79 ms/deň; rozdielne vyťaženie vzdialených runnerov neumožňuje z toho dokázať zrýchlenie ani vylúčiť zhoršenie na notebooku. Nejde o meranie času snímky. https://github.com/Wondris404/Projekt-47/actions/runs/40667327638
+
+
+## 2026-10-28 – Snímky okna pred a po
+
+- Workflow `40667619876` zopakoval rovnaký scenár na kóde pred opravou a po nej: pred opravou zlyhalo zapamätanie okna, po oprave prešlo všetkých desať kontrol. Tri nové obrázky sú v `audit/screenshots/window-audit/`: `country_before_20261028.png`, `country_after_20261028.png` a `country_comparison_20261028.png` (vedľa seba).
+- Obrázky vznikli cez Xvfb/llvmpipe. Ich vizuálne posúdenie zatiaľ nie je potvrdené; nejde o meranie výkonu GPU notebooku. https://github.com/Wondris404/Projekt-47/actions/runs/40667619876
+
+
+## 2026-10-28 – Príprava reprodukcie nastavení banky
+
+- Pridaná grafická skúška detailu banky s tromi kontrolami: obnovenie nezmenených polí po externej zmene, zachovanie rozpracovanej úpravy a uloženie aktuálnych hodnôt. Test vykonáva zmeny len v izolovanej testovacej hre, nemení bankovú mechaniku v bežnom hraní.
+- Grafický workflow test spúšťa a ukladá jeho log. Výsledok prvého behu ešte nie je potvrdený; možná chyba nastavení zostáva otvorená.
+
+
+## 2026-10-28 – Potvrdená chyba nastavení banky
+
+- Grafický beh `40668251403` potvrdil reprodukciu: po zmene sadzieb zvonka sa nezmenené vstupné polia neobnovili a stlačenie uloženia prepísalo aktuálne sadzby starými hodnotami. Kontrola zachovania rozpracovanej hodnoty prešla. Zmena sa zatiaľ v simulácii vykonala len v izolovanej testovacej hre.
+- Oprava ešte nie je vykonaná. Pri návrhu treba zachovať manuálne editované hodnoty a neprepisovať presné automatické sadzby zaokrúhlenými hodnotami z formulára. https://github.com/Wondris404/Projekt-47/actions/runs/40668251403
+
+
+## 2026-10-28 – Presnosť a snímka nastavení banky
+
+- Reprodukcia bankového formulára doplnená o kontrolu, že sa nezmenená presná sadzba neprepíše zaokrúhlenou hodnotou políčka. Test vie tiež v izolovanom grafickom behu uložiť snímku otvorených nastavení.
+- Workflow pripravuje východiskovú snímku pred opravou; výsledok rozšírenej skúšky a snímky ešte nie je potvrdený.
+
+
+## 2026-10-28 – Obnovenie nastavení banky
+
+- Pred opravou rozšírená grafická skúška `40668639338`: nezmenené polia sa neobnovili, uloženie prepísalo aktuálne sadzby a zaokrúhlilo inú presnú sadzbu; zachovanie editovaného poľa prešlo. Snímka pred opravou je zatiaľ v artefakte behu.
+- Úprava obnovuje iba polia, ktoré hráč nezmenil, a ponecháva rozpracované pole aj pole práve editované. Pri ukladaní pre nezmenené polia používa presné aktuálne hodnoty banky. Existujúca funkcia manuálneho zásahu do práce poradcu zostáva zachovaná. Výsledky po oprave ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Overenie nastavení banky po oprave
+
+- Grafický beh `40668934073`: všetky štyri kontroly prešli (obnovenie nezmeneného poľa, zachovanie úpravy, uloženie aktuálnych sadzieb, presnosť sadzby). Prešlo aj 10 kontrol okna krajiny. Pridaný workflow pripravuje snímky banky pred/po a ich porovnanie; jeho výsledok ešte nie je potvrdený.
+- Headless beh `40668934094`: `audit_unit` 29 OK / 0 FAIL, stabilita 1/30/365 prešla, `unit` 531 OK / 1 FAIL na chýbajúcom súbore referencie katalógu. Sonda výkonu 93,91 ms/deň oproti pôvodným 87,79 ms/deň; rozdiel na rozdielnych runneroch nedokazuje ani nevyvracia regresiu, preto treba porovnanie na rovnakom stroji. https://github.com/Wondris404/Projekt-47/actions/runs/40668934094
+
+
+## 2026-10-28 – Párové meranie výkonu
+
+- Pridaný vzdialený workflow porovnávajúci predchádzajúci a opravený `main.gd` na rovnakom runneri v poradí pred, po, po, pred. Používa existujúcu 100-dňovú headless sondu a nemení súbory ani nastavenia hráča. Výsledky zatiaľ nie sú potvrdené; sú to časy simulácie, nie FPS na notebooku.
+
+
+## 2026-10-28 – Snímky nastavení banky pred a po
+
+- Workflow `40671103738` zopakoval tú istú grafickú skúšku na pôvodnom a opravenom formulári. Pôvodný formulár mal 1 zo 4 kontrol úspešnú, opravený 4 zo 4. Pridané súbory `audit/screenshots/bank-audit/bank_before20261028.png`, `bank_after20261028.png` a `bank_comparison20261028.png` ukazujú oba stavy aj vedľa seba.
+- Snímky vznikli cez Xvfb/llvmpipe a zatiaľ neboli vizuálne posúdené. https://github.com/Wondris404/Projekt-47/actions/runs/40671103738
+
+
+## 2026-10-28 – Párové výsledky výkonu bankovej opravy
+
+- Beh `40671193033` na tom istom runneri: pred 85,94 a 85,72 ms/deň, po 85,87 a 85,38 ms/deň; priemery dvojíc sú približne 85,83 a 85,63 ms/deň. V tejto krátkej headless sonde sa zhoršenie neprejavilo, rozdiel nie je dôkazom zrýchlenia a nemeria FPS ani notebook. https://github.com/Wondris404/Projekt-47/actions/runs/40671193033
+
+
+## 2026-10-28 – Ďalšie kontroly bankového formulára
+
+- Grafická skúška bola rozšírená o skutočný mesačný zásah poradcu a o zachovanie textu v práve editovanom políčku. Workflow teraz spúšťa grafickú kontrolu aj po zmene testu. Testy používajú izolovanú testovaciu hru; výsledok rozšírenej skúšky sa ešte overuje.
+
+
+## 2026-10-28 – Kontrola validácie starých savov
+
+- Audit zaznamenal neistotu pri povinných poliach v3: validácia ich vyžaduje, hoci opravná funkcia pozná predvolené hodnoty, a existujúce testy kontrolujú ich povinnosť. Zatiaľ nie je známe, či niektorá vydaná v3 takéto polia nemala; preto sa validácia ani testy nemenili. Nález a ďalší postup sú v `docs/AUDIT_UX_20261028.md`.
+
+
+## 2026-10-28 – Výsledok rozšírenej skúšky banky
+
+- V grafickom behu `40671536677` prešlo všetkých šesť kontrol, vrátane skutočného mesačného rozhodnutia poradcu a zachovania písaného textu v aktívnom políčku. https://github.com/Wondris404/Projekt-47/actions/runs/40671536677
+- História GitHubu obsahuje pre `GameState.gd` iba pôvodný import projektu a neskoršiu opravu cache; neurčuje, či existovali ešte staršie platné v3 savy bez povinných polí. Zmena validácie preto zostáva otvorená.
+
+
+## 2026-10-28 – Riziko prepísania savu na Windowse
+
+- Audit zdrojového kódu Godotu 4.7.2 zistil, že jeho Windows implementácia pri premenovaní na existujúci cieľ najprv odstráni cieľ a potom presunie nový súbor. Ak druhý krok zlyhá, hra môže prísť o predchádzajúci slot. Nález a návrh pred opravou sú v `docs/AUDIT_UX_20261028.md`.
+- Pripravuje sa overovaná kópia pôvodného slotu a načítanie pri chýbajúcom origináli, bez zmeny JSON formátu v3. Zatiaľ neopravené a netestované na Windowse.
+
+
+## 2026-10-28 – Ochrana pred stratou slotu pri prepise
+
+- Pred nahradením existujúceho slotu sa vytvorí jeho kópia `.backup` a porovná sa SHA-256 oboch súborov. Ak kópiu nemožno overiť, uloženie sa zastaví ešte pred premenovaním. Ak hlavný slot po neúspešnom presune chýba, vyhľadávanie slotu používa záložnú kópiu. Formát JSON a verzia v3 sa nemenia.
+- Pridané štyri kontroly: obsah zálohy, prednosť aktuálneho slotu, obnova v3 pri chýbajúcom hlavnom súbore a zachovanie slotu pri neúspešnom vytvorení zálohy. Scenár chýbajúceho súboru sa simuluje presunutím, bez vymazania. Výsledky po úprave zatiaľ nie sú potvrdené; pri behu na Linuxe sa nesimuluje skutočné Windows API ani výpadok napájania.
+
+
+## 2026-10-28 – Windows test ukladania
+
+- Pridaný samostatný GitHub Actions beh na Windows pre auditné a nové kontroly zálohy slotu. Používa oficiálny Godot 4.7.2 s overeným SHA-256 a izolovaný dočasný runner. Výsledok zatiaľ nie je známy; chýbajúci slot sa v teste simuluje presunutím súboru, nie skutočným zlyhaním Windows API.
+
+
+## 2026-10-28 – Priebežné overenie ochrany slotu
+
+- Linuxový `audit_unit` v behu `40673444595` prešiel vrátane všetkých štyroch nových kontrol uloženia; stabilita 1/30/365 a headless výkonnostná sonda tiež prešli, úplná `unit` ešte beží. Windows kontrola zatiaľ prebieha.
+- Pri prepise sa navyše číta a zapisuje predchádzajúci save a čítajú sa jeho kontrolné súčty; veľké savy preto môžu trvať dlhšie a zaberajú miesto aj v jednej záložnej kópii na slot. Výpadok napájania, chyby disku a skutočné zlyhanie presunu na Windowse test nedokazuje. https://github.com/Wondris404/Projekt-47/actions/runs/40673444595
+
+
+## 2026-10-28 – Windows overenie ochrany slotu
+
+- Windows GitHub Actions `40673584344` s oficiálnym Godotom 4.7.2: `audit_unit` 33 OK / 0 FAIL vrátane všetkých štyroch kontrol kópie, prednosti hlavného slotu, obnovy v3 a zastavenia pri chybe kópie. Správanie po skutočnom zlyhaní systémového presunu ani po výpadku napájania nie je týmto simulovaným testom dokázané. https://github.com/Wondris404/Projekt-47/actions/runs/40673584344
+
+
+## 2026-10-28 – Úplná sada po oprave ochrany slotu
+
+- Linuxový beh `40673444595`: `unit` 531 OK / 1 FAIL na chýbajúcej referencii katalógu, `audit_unit` 33 OK / 0 FAIL, stabilita 1/30/365 prešla. Samotný test nevypísal GDScript chybu; pri úvodnom importe zdrojov sa opäť objavili dosiaľ nevyšetrené chyby načítania. Headless sonda uviedla 62,68 ms/deň; iné runnery sa líšia a nejde o FPS notebooku.
+
+
+## 2026-10-28 – Reprodukcia hlásenia pri obnove slotu
+
+- Pridaná grafická skúška, ktorá vytvorí dve verzie testovacieho savu, presunutím hlavného súboru vyvolá načítanie zálohy a kontroluje obnovený stav aj informáciu pre hráča. Vie uložiť snímku obrazovky; testovacie súbory sú v izolovanom profile runnera. Výsledok pred doplnením hlásenia sa overuje.
+
+
+## 2026-10-28 – Výsledok reprodukcie hlásenia obnovy
+
+- Grafický beh `40674124613` úspešne načítal stav zo záložnej kópie, no potvrdil chýbajúce upozornenie pre hráča. Východisková snímka a log sú v artefakte `p47-save-recovery-ui`; po úprave bude treba kontrolu a snímky zopakovať. https://github.com/Wondris404/Projekt-47/actions/runs/40674124613
+
+
+## 2026-10-28 – Hlásenie pri obnove zálohy
+
+- Po úspešnom načítaní záložného slotu hra hlási „Hra načítaná zo záložnej kópie“; pri bežnom slote zachováva pôvodné hlásenie. Príznak zdroja načítania je iba pre aktuálnu reláciu, neukladá sa do v3 JSON a pri začatí ďalšieho načítania sa vymaže.
+- Testy kontrolujú aj správny príznak pri hlavnom slote a zálohe a normálne hlásenie pri štandardnom načítaní. Výsledky po zmene a snímky pred/po zatiaľ nie sú potvrdené.
+
+
+## 2026-10-28 – Overenie hlásenia obnovy
+
+- Grafický beh `40674500224` overil normálne načítanie, obnovenie stavu zo zálohy a oznámenie hráčovi: všetky tri kontroly prešli. Šesť kontrol banky aj desať kontrol okien tiež prešlo. Windows `audit_unit` v behu `40674500295` prešiel; stabilita a auditná sada na Linuxe tiež prešli, úplná sada ešte beží.
+- Pridaný workflow na párové snímky hlásenia obnovy; jeho výsledok a vizuálne posúdenie zatiaľ nie sú potvrdené.
+
+
+## 2026-10-28 – Menej nadbytočných testov
+
+- Úplný auditný workflow sa už automaticky nespúšťa pri commitoch, ktoré menia iba workflowy, snímky auditu alebo dokumentáciu. Pri zmene herného kódu či testov sa naďalej spúšťa; samostatné grafické, Windows a porovnávacie workflowy majú vlastné spúšťače. Zmena upravuje len pravidlá spúšťania, nie hru.
+
+
+## 2026-10-28 – Snímky hlásenia obnovy
+
+- V behu `40674747084` na pôvodnom stave prešli dve kontroly načítania a zlyhalo upozornenie, po oprave prešli všetky tri. Snímky `recovery_before20261028.png`, `recovery_after20261028.png` a `recovery_comparison20261028.png` sú v `audit/screenshots/save-audit/`.
+- Snímky z Xvfb/llvmpipe zatiaľ neboli vizuálne posúdené. https://github.com/Wondris404/Projekt-47/actions/runs/40674747084
+
+
+## 2026-10-28 – Kontrola straty fokusu počas presunu okna
+
+- Grafický test okna bol rozšírený o začatie presunu a vyvolanie straty fokusu pred udalosťou uvoľnenia myši. Overuje, či sa presun zastaví; nejde o zmenu správania hry. Pôvodný audit toto riziko evidoval ako neoverené. Výsledok reprodukcie zatiaľ nie je známy.
+
+
+## 2026-10-28 – Pull request na kontrolu zmien
+
+- Existujúci pull request č. 3 pre pracovnú vetvu bol doplnený o prehľad opráv, testov, meraní, otvorených obmedzení a odkazy na porovnávacie snímky. Ďalšie commity tejto vetvy sa v ňom zobrazia automaticky. https://github.com/Wondris404/Projekt-47/pull/3
+
+
+## 2026-10-28 – Výsledok skúšky straty fokusu
+
+- Grafický beh `40692508020` mal desať úspešných kontrol okien a jednu neúspešnú: test nezaevidoval ukončenie presunu po strate fokusu. Treba ešte oddeliť, či sa simulovaný presun naozaj začal, od samotného spracovania straty fokusu; oprava zatiaľ nie je urobená. https://github.com/Wondris404/Projekt-47/actions/runs/40692508020
+
+
+## 2026-10-28 – Diagnostika skúšky fokusu
+
+- Grafický workflow do dočasnej testovacej kópie doplní výpis, či sa presun začal a aký režim zostal po strate fokusu. Produkčný kód hry sa touto diagnostikou nemení. Výsledok zatiaľ čaká na beh.
+
+
+## 2026-10-28 – Ukončenie presunu okna pri strate fokusu
+
+- Diagnostika `40693049934` potvrdila, že simulovaný presun sa začal a po strate fokusu zostal aktívny (`started=true`, `mode_after=1`). Správca okien teraz pri strate fokusu zastaví aktívny presun alebo zmenu veľkosti a zapamätá si posledný obdĺžnik.
+- Grafická skúška bola doplnená aj o zmenu veľkosti; výsledky po oprave sa ešte overujú. https://github.com/Wondris404/Projekt-47/actions/runs/40693049934
+
+
+## 2026-10-28 – Overenie straty fokusu
+
+- Grafický beh `40693779749` prešiel všetkými 12 kontrolami okien: po strate fokusu sa zastavil presun aj zmena veľkosti. Prešlo aj 6 kontrol banky a 3 kontroly obnovy savu. Popis pull requestu bol doplnený o túto opravu a výsledky. https://github.com/Wondris404/Projekt-47/actions/runs/40693779749
+
+
+## 2026-10-28 – Profil mesačnej uzávierky
+
+- Pridaný vzdialený headless profil s pevným seed-om, 72 hráčovými firmami a 70 dňami. V dočasnej kópii dopĺňa merania jednotlivých mesačných systémov a fáz simulácie, aby zachytil dva prechody mesiaca. Produkčný kód ani ekonomiku nemení. Výsledok ešte nie je známy a nepôjde o meranie FPS notebooku.
+
+
+## 2026-10-28 – Úplné testy po oprave fokusu
+
+- Beh `40693779778`: `audit_unit` 33 OK / 0 FAIL, stabilita 1/30/365 prešla, `unit` 531 OK / 1 FAIL na tej istej chýbajúcej referencii katalógu. Headless sonda uviedla priemer 80,46 ms/deň; hodnoty z rozdielnych runnerov nemožno považovať za dôkaz zmeny výkonu notebooku. https://github.com/Wondris404/Projekt-47/actions/runs/40693779778
+
+
+## 2026-10-28 – Výsledok profilu mesačnej uzávierky
+
+- Headless beh `40694620596`, pevný seed, 70 dní a 72 hráčových firiem: maximálny meraný jednotlivý krok fázy ukončenia dňa bol 16,322 ms; pri dvoch mesačných uzávierkach systém `Society.monthly` trval 8,539 a 8,654 ms, dividendy 1,859 a 2,838 ms, makro 0,968 a 0,990 ms. Najvyššie maximá ostatných fáz boli pod 5,6 ms.
+- Časy obsahujú réžiu diagnostiky a dva mesačné vzorky na cloudovom CPU; nejde o čas celej vykreslenej snímky, FPS notebooku ani dôkaz, že sa náročnejší save správa rovnako. Profil nemenil herné výsledky ani produkčný kód. https://github.com/Wondris404/Projekt-47/actions/runs/40694620596
+
+
+## 2026-10-28 – Podrobnejší profil spoločnosti
+
+- Vzdialená sonda bola rozšírená o jednotlivé časti mesačnej aktualizácie spoločnosti a výpočet služieb v mestách. Meracie výpisy sa vkladajú len do dočasnej kópie na runneri; produkčný kód ani poradie herných výpočtov sa nemení. Výsledok ďalšieho behu zatiaľ nie je známy.
+
+
+## 2026-10-28 – Podrobnosti profilu spoločnosti
+
+- V behu `40694951436` zabrali výpočty vplyvu krajín pri mesačnej uzávierke 6,54 a 6,64 ms, mestská časť 5,87 a 5,69 ms vrátane jednotlivých výpisov. Približne 1,2 ms z mestskej časti patrilo výpočtom služieb miest. Celý spoločenský systém v tejto podrobne inštrumentovanej sonde trval 13,17 a 13,62 ms, maximum fázy 23,00 ms; tento beh obsahuje viac výpisov a nemá sa priamo porovnávať s menej inštrumentovaným profilom.
+- Nález aj obmedzenia boli doplnené do popisu pull requestu. Najprv sa skúma zdieľanie už vypočítaných údajov o zamestnancoch pri zachovaní presných výsledkov; herné výpočty zatiaľ neboli zmenené. https://github.com/Wondris404/Projekt-47/actions/runs/40694951436
+
+
+## 2026-10-28 – Zdieľanie počtu zamestnancov pri výpočte vplyvu
+
+- Výpočet vplyvu môže použiť rovnaký súčet zamestnancov, ktorý bezprostredne predtým vypočíta pre závislosť krajiny. Referenčná cesta pôvodného výpočtu zostáva dostupná na porovnanie; poradie ostatných výpočtov a ich vedľajšie účinky zostávajú zachované.
+- Pridané kontroly prípravy scenára a presnej zhody celého uloženého stavu po 62 dňoch pri pevnom seed-e, cez dve mesačné uzávierky. Výsledok testov, prípadné zrýchlenie a výkon notebooku ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Zhoda simulácie po optimalizácii vplyvu
+
+- Linuxový `audit_unit` v behu `40695557618` prešiel vrátane porovnania celého serializovaného stavu po 62 dňoch a dvoch mesačných uzávierkach s pôvodnou aj optimalizovanou cestou. Stabilita 1/30/365 prešla; úplná `unit` a Windows kontrola ešte bežia.
+- Rýchlosť novej cesty sa musí porovnať na tom istom runneri. Zhoda jedného scenára nie je dôkazom totožnosti pre každú možnú uloženú hru. https://github.com/Wondris404/Projekt-47/actions/runs/40695557618
+
+
+## 2026-10-28 – Párový profil výpočtu vplyvu
+
+- Pridaný vzdialený profil na porovnanie pôvodného a optimalizovaného výpočtu na tom istom runneri v poradí pred/po/po/pred, s rovnakým seed-om a dvoma mesačnými uzávierkami. Produkčný kód sa meracími výpismi nemení. Výsledky ešte nie sú známe.
+- Windowsový auditný beh `40695557675` prešiel aj po optimalizácii; presný počet kontrol a párové merania sa ešte zapisujú.
+
+
+## 2026-10-28 – Oprava meracej sondy
+
+- Prvý párový profil `40695893182` sa pred meraním zastavil na 404, pretože v adrese pôvodnej revízie bol preklep. Adresa bola opravená na skutočného rodiča optimalizačného commitu; meranie sa opakuje. Tento neúspešný beh nevypovedá o výkone hry. https://github.com/Wondris404/Projekt-47/actions/runs/40695893182
+
+
+## 2026-10-28 – Párový výsledok výpočtu vplyvu
+
+- Beh `40696075993` na jednom cloudovom runneri, poradie pred/po/po/pred: štyri mesačné merania výpočtu vplyvu pred úpravou 6,816; 6,622; 6,355; 6,562 ms, po úprave 5,426; 5,514; 5,748; 5,520 ms. Priemery sú približne 6,59 a 5,55 ms, teda o 1,04 ms menej v tomto scenári.
+- Najdlhší jednotlivý krok ukončenia dňa mal v týchto behoch pred úpravou 21,76 a 20,79 ms, po úprave 19,57 a 19,99 ms. Meranie používalo 70 dní, 72 hráčových firiem a diagnostické výpisy; má málo mesačných vzoriek, nezahŕňa vykreslenú snímku ani výkon notebooku a nedokazuje odstránenie sekania. https://github.com/Wondris404/Projekt-47/actions/runs/40696075993
+- Linux aj Windows prešli porovnaním celého serializovaného stavu po 62 dňoch pri použití starej a novej cesty. Úplná základná sada ešte beží; optimalizáciu treba preveriť aj na rozsiahlejšom uloženom stave.
+
+
+## 2026-10-28 – Úplná sada po optimalizácii vplyvu
+
+- Linuxový beh `40695557618` dokončil `unit` s 531 OK / 1 FAIL na chýbajúcej referencii katalógu; `audit_unit` 35 OK a stabilita 1/30/365 prešli. Windowsový auditný beh mal tiež 35 OK. Stav optimalizácie a párové meranie boli doplnené do pull requestu. https://github.com/Wondris404/Projekt-47/actions/runs/40695557618
+
+
+## 2026-10-28 – Skupiny firiem pri mesačných službách
+
+- Mesačný výpočet služieb môže použiť už vytvorené skupiny hráčových firiem podľa mesta; pri iných volaniach sa zachová pôvodný úplný prechod. Referenčná cesta zostáva dostupná na porovnanie a ekonomické výpočty ani ich poradie sa nemenia.
+- Skúška bola rozšírená o viac miest a samostatné porovnanie celého stavu po 62 dňoch pri pôvodnej a optimalizovanej ceste. Výsledky, časová úspora a správanie na rozsiahlych savoch ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Zhoda mesačných skupín firiem
+
+- Linuxový beh `40696718198` a Windowsový `40696717980` prešli `audit_unit` 36 OK / 0 FAIL. Presný serializovaný stav po 62 dňoch sa zhodoval pri pôvodnej aj novej ceste v scenári s viacerými mestami; Linuxová stabilita 1/30/365 prešla. Úplná `unit` ešte beží.
+- Jedna testovacia konfigurácia nedokazuje zhodu všetkých savov; časová úspora sa ešte musí zmerať na rovnakom runneri.
+
+
+## 2026-10-28 – Párový profil mestských služieb
+
+- Pridaný profil porovnávajúci pôvodnú a optimalizovanú cestu mestských služieb na rovnakom runneri v poradí pred/po/po/pred. Meria celú mestskú časť aj samotné služby počas dvoch mesačných uzávierok; meracie zásahy zostávajú v dočasnej kópii. Výsledky zatiaľ nie sú potvrdené.
+
+
+## 2026-10-28 – Párový výsledok mestských služieb
+
+- Beh `40697119316` na rovnakom runneri, poradie pred/po/po/pred a štyri mesačné vzorky: samotné služby pred úpravou 1,188; 1,212; 1,181; 1,191 ms, po úprave 0,420; 0,405; 0,402; 0,408 ms. Priemery sú približne 1,19 a 0,41 ms. Priemer celej mestskej časti bol približne 4,84 a 4,03 ms.
+- Najdlhší jednotlivý krok ukončenia dňa bol pred úpravou 20,64 a 20,39 ms, po úprave 19,37 a 19,39 ms. Ide o krátku headless sondu so 72 hráčovými firmami a meracou réžiou, nie o FPS notebooku ani o dôkaz odstránenia všetkého sekania. Zhodu celého stavu po 62 dňoch overili Linux aj Windows. https://github.com/Wondris404/Projekt-47/actions/runs/40697119316
+
+
+## 2026-10-28 – Úplná sada po optimalizácii mestských služieb
+
+- Beh `40696718198`: `unit` 531 OK / 1 FAIL na chýbajúcej referencii katalógu, `audit_unit` 36 OK / 0 FAIL a stabilita 1/30/365 prešla. Výsledok optimalizácie a párové meranie boli doplnené do pull requestu. https://github.com/Wondris404/Projekt-47/actions/runs/40696718198
+
+
+## 2026-10-28 – Príčiny upozornení GitHub Actions
+
+- Opakované chyby `Projekt-47 audit / baseline (unit)` pochádzajú z existujúceho testu s chýbajúcim referenčným súborom; nejde o nasadenie hry. Pri každom spustení vygeneroval GitHub nové upozornenie.
+- Samostatný profil `40695893182` predtým zlyhal kvôli preklepu v revízii a po oprave prešiel. Novší profil `40697719549` zlyhal v meracom skripte: po optimalizácii sa zmenilo volanie mestských služieb a diagnostika hľadala jeho starý presný text. Skript bol upravený, nový beh ešte nie je potvrdený. Produkčný kód hry týmto chybným meraním zmenený nebol.
+
+
+## 2026-10-28 – Menej opakovaných upozornení na známu chybu
+
+- `unit` sa naďalej celý spúšťa. Ak sa dokončí a jeho jediným zlyhaním je `catalog_fields_match_brief` pri neprítomnom `tests/catalog_field_lock.txt`, workflow túto známu neoverenú referenciu zobrazí ako varovanie namiesto opakovaného neúspešného behu. Výsledok testu zostáva v logu 531 OK / 1 FAIL; nejde o opravenie ani overenie katalógu.
+- Iné zlyhanie, chyba GDScriptu, timeout, nedokončená sada alebo chyba pri existujúcej referencii zostáva chybou. Pridaná samostatná kontrola siedmich scenárov klasifikácie; reálny beh a samokontrola sa ešte overujú.
+
+
+## 2026-10-28 – Opakované meranie dividend
+
+- Opravený profil `40698325056` prešiel. Pri dvoch mesačných uzávierkach nameral výpočet obdobného zisku 1,11 a 2,09 ms, výpočet rezerv 0,70 a 0,94 ms a prevod dividend 0,25 a 0,24 ms. Merania zahŕňajú réžiu časovačov a nemerajú snímky ani výkon notebooku.
+- Správy v Gmaile boli iba prečítané; príčiny jednotlivých neúspešných behov sa zhodujú s auditným logom. https://github.com/Wondris404/Projekt-47/actions/runs/40698325056
+
+
+## 2026-10-28 – Overenie upozornenia na katalóg
+
+- Beh `40698639465` prešiel siedmimi syntetickými kontrolami klasifikácie a potom spustil celú `unit` sadu. Log obsahuje 531 OK / 1 FAIL (`catalog_fields_match_brief`); GitHub zobrazuje výslovné varovanie, že referencia chýba a katalóg nie je overený. `audit_unit`, stabilita a sonda výkonu prešli.
+- Testy klasifikácie overili, že ďalšie zlyhanie, chyba skriptu, timeout, nedokončená sada a zlyhanie pri existujúcej referencii zostávajú neúspešné. Toto je dočasné odlíšenie známeho problému, nie oprava referencie katalógu. https://github.com/Wondris404/Projekt-47/actions/runs/40698639465
+
+
+## 2026-10-28 – Audit základných finančných polí savu
+
+- Zaznamenané podozrenie, že validácia považuje chýbajúcu hotovosť hráča alebo firmy za prijateľnú, hoci niektoré herné funkcie tieto údaje očakávajú. Pred zmenou treba reprodukovať správanie a preveriť kompatibilitu pôvodných verzií savov. Zatiaľ bez úpravy.
+
+
+## 2026-10-28 – Skúška neúplného savu
+
+- Pridaná izolovaná sonda, ktorá v dočasnej testovacej hre odstráni hotovosť hráča alebo firmy z kópie savu a zaznamená, či ju načítanie prijalo. Test nezasahuje do skutočných uložených hier, produkčného kódu ani balansu. Výsledok zatiaľ nie je známy.
+
+
+## 2026-10-28 – Potvrdenie neúplných finančných polí
+
+- Izolovaná sonda `40699855377` potvrdila, že save bez `player.cash` aj save bez `firm.cash` prešiel validáciou a neúplný slovník nahradil živý stav. Dostupné historické definície zakladania hráča a firiem obsahujú hotovosť; skutočné historické savy však nie sú v GitHube dostupné.
+- Navrhnuté je odmietnuť chýbajúcu základnú hotovosť ešte pred zmenou živého stavu a zachovať existujúce migrácie a predvolené hodnoty pre novšie polia. Zatiaľ neopravené. https://github.com/Wondris404/Projekt-47/actions/runs/40699855377
+
+
+## 2026-10-28 – Odmietnutie savu bez základnej hotovosti
+
+- Validácia teraz odmietne chýbajúcu `cash` u hráča alebo firmy ešte pred nahradením živého stavu. Pôvodné migračné polia a predvolené hodnoty novších údajov sa nemenia; dostupné historické definície hráča a firiem obsahujú hotovosť.
+- Pridaných sedem kontrol pre neúplný stav a prijatie úplných vzoriek označených v1/v2/v3. Skutočné historické savy nie sú v repozitári a uvedené vzorky ich nenahrádzajú. Výsledky testov po úprave ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Overenie chýbajúcich finančných polí
+
+- Linuxový beh `40700401490` aj Windowsový `40700401478` prešli `audit_unit` 43 OK / 0 FAIL. Všetkých šesť kontrol odmietlo chýbajúcu hotovosť hráča/firmy vo vzorkách v1/v2/v3 bez zmeny živého stavu; úplné vzorky všetkých troch verzií sa prijali. Linuxová stabilita 1/30/365 prešla, úplná `unit` ešte beží.
+- Skutočné historické savy nie sú v repozitári; tieto syntetické vzorky nenahrádzajú ich kontrolu. https://github.com/Wondris404/Projekt-47/actions/runs/40700401490
+
+
+## 2026-10-28 – Úplná sada po oprave neúplného savu
+
+- Beh `40700401490`: `unit` 531 OK / 1 FAIL kvôli chýbajúcej referencii katalógu, ktorú GitHub označil viditeľným varovaním; `audit_unit` 43 OK, stabilita 1/30/365 a výkonnostná sonda prešli. Rovnakých 43 auditných kontrol prešlo aj na Windowse. Referencia katalógu zostáva neoverená. https://github.com/Wondris404/Projekt-47/actions/runs/40700401490
+
+
+## 2026-10-28 – Skupiny firiem pri mesačnom vplyve
+
+- Pri mesačnom prepočte sa vytvoria skupiny hráčových firiem podľa krajiny a použijú pri výpočte závislosti a mediálneho dosahu. Ostatné volania ponechávajú pôvodný prechod; výpočty majú rovnaké poradie a referenčná cesta zostáva dostupná na porovnanie.
+- Skúška presnej zhody stavu po 62 dňoch bola rozšírená o samostatné porovnanie tejto cesty. Testy aj párové meranie ešte nie sú potvrdené; výkon notebooku zostáva neoverený.
+
+
+## 2026-10-28 – Zhoda skupín firiem podľa krajiny
+
+- Linuxový beh `40701608943` aj Windowsový `40701609001` prešli `audit_unit` 44 OK / 0 FAIL. Porovnanie celého stavu po 62 dňoch prešlo samostatne pre všetky tri optimalizačné cesty. Stabilita 1/30/365 prešla; úplná `unit` a párové meranie ešte prebiehajú.
+- Zhoda testovacieho scenára nezaručuje zhodu všetkých reálnych savov. https://github.com/Wondris404/Projekt-47/actions/runs/40701608943
+
+
+## 2026-10-28 – Párový profil skupín podľa krajiny
+
+- Pridaný párový profil pôvodného a nového prechodu firiem v poradí pred/po/po/pred na tom istom runneri. Používa pevný seed a 70 dní; výsledok ešte nie je známy a profil nemení produkčný kód ani save.
+
+
+## 2026-10-28 – Párový výsledok skupín podľa krajiny
+
+- Beh `40702082461` na rovnakom runneri, poradie pred/po/po/pred: štyri mesačné merania výpočtu vplyvu pred úpravou 5,552; 5,821; 5,209; 5,497 ms, po úprave 3,895; 4,094; 3,860; 4,218 ms. Priemery sú približne 5,52 a 4,02 ms.
+- Najdlhší krok ukončenia dňa bol v oboch behoch pred úpravou 19,62 a 18,69 ms, po úprave 17,28 a 18,74 ms. Test obsahuje diagnostickú réžiu, iba štyri mesačné vzorky a nezahŕňa vykreslenie ani notebook; nepotvrdzuje odstránenie sekania. Presný stav po 62 dňoch sa zhodoval na Linuxe aj Windowse. https://github.com/Wondris404/Projekt-47/actions/runs/40702082461
+
+
+## 2026-10-28 – Úplné testy po skupinách podľa krajiny
+
+- Beh `40701608943` dokončil `unit` s 531 OK / 1 známym FAIL na chýbajúcej referencii katalógu; workflow ho zobrazuje ako výslovné varovanie. `audit_unit` 44 OK a stabilita 1/30/365 prešli na Linuxe; auditná sada prešla aj na Windowse. https://github.com/Wondris404/Projekt-47/actions/runs/40701608943
+
+
+## 2026-10-28 – Mediálny súhrn bez nepotrebného počtu konkurentov
+
+- Interný súhrn mediálneho dosahu preskakuje vytváranie zoznamu konkurentov, keďže z detailu používa iba počet používateľov. Bežný detail média naďalej počíta a zobrazuje konkurentov; výpočet dosahu a ostatné údaje sa nemenia.
+- Pridané kontroly plného detailu, zhodných hodnôt súhrnu a presného stavu simulácie po 62 dňoch. Testy, časová úspora a správanie na rozsiahlejších savoch ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Zhoda mediálneho súhrnu
+
+- Linuxový `40702803419` a Windowsový `40702803147` prešli `audit_unit` 46 OK / 0 FAIL. Detail média si zachoval počet konkurentov, používané hodnoty sú rovnaké a úplný stav po 62 dňoch sa zhodoval s referenčným výpočtom. Stabilita 1/30/365 prešla; úplná `unit` a párové meranie ešte bežia. https://github.com/Wondris404/Projekt-47/actions/runs/40702803419
+
+
+## 2026-10-28 – Párový profil mediálneho súhrnu
+
+- Pridaný profil pôvodného a nového mediálneho súhrnu na rovnakom runneri v poradí pred/po/po/pred, s pevným seed-om a dvoma mesačnými uzávierkami. Výsledok ešte nie je známy; nejde o meranie FPS notebooku.
+
+
+## 2026-10-28 – Prehliadka porovnávacích snímok a úplná sada
+
+- V zmenšenom náhľade na GitHube je vidieť, že po oprave panel krajiny zostáva v okne hry a bankový panel zobrazuje aktualizovanú sadzbu. Náhľad nie je dostatočne detailný na kontrolu všetkého textu; správu pri obnove uloženia preto vizuálne nepotvrdzujem. Správanie obnovy aj banky kontrolujú aj samostatné grafické testy.
+- Beh `40702803419`: `unit` 531 OK / 1 známy FAIL pre chýbajúcu referenciu katalógu, viditeľný ako varovanie; `audit_unit` 46 OK a stabilita 1/30/365 prešli. Párové meranie médií ešte prebieha. https://github.com/Wondris404/Projekt-47/actions/runs/40702803419
+
+
+## 2026-10-28 – Oprava opakovaného merania médií
+
+- Pri kontrole párového merania sa zistilo, že cyklus mohol opakovane vložiť časovač do toho istého skriptu a následne spôsobiť chybu. Profil pred každým meraním obnovuje pôvodnú testovaciu kópiu skriptu a až potom pridá časovač. Produkčná hra sa tým nemení.
+- Prvý beh už bol spustený s pôvodným postupom a môže zlyhať; opravený profil aj jeho výsledok treba ešte overiť. https://github.com/Wondris404/Projekt-47/actions/runs/40703252724
+
+
+## 2026-10-28 – Výsledok párového merania mediálneho súhrnu
+
+- Opravený beh `40704325707` na rovnakom runneri a v poradí pred/po/po/pred nameral výpočet vplyvu pred zmenou 2,645; 2,725; 2,651; 2,733 ms a po zmene 2,518; 2,591; 2,400; 2,586 ms. Priemery sú 2,69 a 2,52 ms, úspora asi 0,16 ms v tomto scenári.
+- Maximálny krok uzávierky bol pred zmenou 13,64 a 13,34 ms, po zmene 13,89 a 13,94 ms. Štyri vzorky a diagnostická réžia nestačia na záver o zmene maxima ani o FPS notebooku. Detail média a stav po 62 dňoch prešli na Linuxe a Windowse; rozsiahlejšie savy nie sú overené. https://github.com/Wondris404/Projekt-47/actions/runs/40704325707
+
+
+## 2026-10-28 – Ukončenie starého profilu médií
+
+- Pôvodný beh `40703252724` skončil neúspešne; išlo o už spustenú starú verziu meracieho postupu. Opravený opakovaný beh `40704325707` prešiel a jeho čísla sú uvedené vyššie. https://github.com/Wondris404/Projekt-47/actions/runs/40703252724
+
+
+## 2026-10-28 – Základná sonda na notebooku
+
+- Po povolení používateľa bol spustený lokálny Godot 4.7.2, existujúca lokálna kópia projektu a test `profile_sim` s 72 firmami a 10 dňami. Používateľské dáta boli smerované do samostatného priečinka `audit/laptop_profile_userdata`. Lokálna kópia nie je Git repozitár a nebola zamenená za vetvu PR.
+- Najdlhšie namerané jednotlivé volanie fázy malo 17,815 ms (fáza 6); súčet priemerných časov fáz je približne 261 ms na simulovaný deň. Toto je headless profil bez renderovania a mesačnej uzávierky, nie meranie snímok, FPS ani porovnanie aktuálneho PR. https://github.com/Wondris404/Projekt-47/pull/3
+
+
+## 2026-10-28 – Príprava verzie PR na notebooku
+
+- Vetva PR bola naklonovaná do samostatného podpriečinka `audit/pr-laptop-20261028`; pôvodná kópia sa neprepísala. Import čistého projektu skončil s kódom 0, no na začiatku vypísal chyby fontu a obrázkov a hlásenie o bezpečnom zápise nastavení. Po importe prešla headless sonda `profile_sim` s 72 firmami a 10 dňami.
+- Súčet časov fáz je približne 248 ms/simulovaný deň, maximum jedného volania 18,936 ms. Ide o jednu krátku vzorku bez vykresľovania či mesačnej uzávierky; nemožno z nej vyvodzovať FPS, porovnanie výkonu ani pripravenosť dema. Spustenie grafiky a základnej hry ešte treba overiť.
+
+
+## 2026-10-28 – Vyriešenie konfliktu mapy v PR
+
+- Do pracovnej vetvy PR bola pripravená aktuálna hlavná vetva vrátane novšieho Atlasu. Konflikt pripojenia signálu v world_map.gd je vyriešený kontrolou existencie okna aj toho, či je signál už pripojený. Hlavná vetva sa tým nemení.
+- Import čistého projektu prebehol; prvotné chyby zdrojov počas importu zostávajú otvorené. Výsledky testov budú doplnené po dokončení.
+
+- Lokálny Windows audit_unit skončil s kódom 0, vrátane kontroly odpojenej mapy a 62-dňovej zhody simulácie. Test zálohy úmyselne vyvolal chybu otvorenia súboru a potvrdil ochranu pôvodného slotu.

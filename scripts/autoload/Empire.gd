@@ -536,14 +536,15 @@ func extra_worth() -> float:
 # ===================== JUAN13 (t806u): zavislost krajiny na hracovi =====================
 const DEP_LABELS = [[10.0, "Žiadna"], [30.0, "Nízka"], [55.0, "Stredná"], [85.0, "Vysoká"], [101.0, "Úplná"]]
 
-func dependency(iso: String) -> Dictionary:
+func dependency(iso: String, include_headcount: bool = false, country_firms = null) -> Dictionary:
 	var w: Dictionary = GameState.world.get(iso, {})
 	var gdp_eur = maxf(1.0, float(w.get("gdp_usd", DataLoader.countries.get(iso, {}).get("gdp_usd", 1e11))) / maxf(GameState.usd_per_eur, 0.1))
 	var pop = maxf(1.0, float(w.get("population", DataLoader.countries.get(iso, {}).get("population", 1e6))))
 	var rev = 0.0
 	var emp = 0.0
 	var out: Dictionary = {}
-	for f in GameState.player_firms():
+	var candidates: Array = GameState.player_firms() if country_firms == null else country_firms
+	for f in candidates:
 		if str(f.get("country", "")) != iso:
 			continue
 		var mh: Array = f.get("month_hist", [])
@@ -580,8 +581,11 @@ func dependency(iso: String) -> Dictionary:
 	var c_inf = clampf(infl / 100.0, 0.0, 1.0)
 	var owned = owns_state(iso)
 	var idx = 100.0 if owned else clampf(c_gdp * 35.0 + c_res * 25.0 + c_emp * 15.0 + c_loan * 10.0 + c_inf * 15.0, 0.0, 100.0)
-	return {"index": idx, "label": dep_label(idx), "gdp_share": rev / gdp_eur, "emp_share": emp / (pop * 0.5), "loans": loans, "loan_share": loans / gdp_eur,
+	var result = {"index": idx, "label": dep_label(idx), "gdp_share": rev / gdp_eur, "emp_share": emp / (pop * 0.5), "loans": loans, "loan_share": loans / gdp_eur,
 		"influence": infl, "owned": owned, "resources": res_rows, "parts": {"HDP": c_gdp * 35.0, "Suroviny/energia": c_res * 25.0, "Zamestnanci": c_emp * 15.0, "Úvery": c_loan * 10.0, "Vplyv": c_inf * 15.0}}
+	if include_headcount:
+		result["_headcount"] = emp
+	return result
 
 func dep_label(idx: float) -> String:
 	for l in DEP_LABELS:

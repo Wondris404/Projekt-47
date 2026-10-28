@@ -1,6 +1,11 @@
 extends RefCounted
 
 func run(u) -> void:
+	_detached_map_ready(u)
+	_save_size_limit(u)
+	_save_replace_backup(u)
+	_reject_missing_cash(u)
+	_society_power_headcount(u)
 	_trade_ledger(u)
 	_power_input(u)
 	_maintenance(u)
@@ -187,3 +192,141 @@ func _atlas_geometry(u) -> void:
 	ad.B_on = false
 	ad.B_v.clear()
 	ad.B_c.clear()
+
+func _save_size_limit(u) -> void:
+	u._chk("audit_save_limit_utf8_boundary", SaveSystem._within_save_limit("ž", 2) and not SaveSystem._within_save_limit("ž", 1))
+	u._new()
+	var previous_dir = SaveSystem.base_dir
+	SaveSystem.base_dir = "user://audit_size_%d" % Time.get_ticks_usec()
+	var path = SaveSystem.save_slot(1)
+	var exists = FileAccess.file_exists(path)
+	var previous = FileAccess.get_file_as_string(path) if exists else ""
+	u._chk("audit_save_limit_small_saved", exists and not previous.is_empty())
+	GameState.ext["audit_oversize"] = "x".repeat(SaveSystem.MAX_SAVE_BYTES + 1)
+	var error = SaveSystem.save_slot(1)
+	GameState.ext.erase("audit_oversize")
+	u._chk("audit_save_limit_rejects_oversize", error == SaveSystem.last_error and error.contains("limit"))
+	u._chk("audit_save_limit_preserves_slot", exists and FileAccess.get_file_as_string(path) == previous)
+	SaveSystem.base_dir = previous_dir
+
+func _detached_map_ready(u) -> void:
+	var map = load("res://scripts/ui/world_map.gd").new()
+	map._ready()
+	u._chk("audit_detached_map_ready", not map.is_inside_tree() and map._atlas_layer != null)
+	map.free()
+
+func _save_replace_backup(u) -> void:
+	u._new()
+	var previous_dir = SaveSystem.base_dir
+	SaveSystem.base_dir = "user://audit_backup_%d" % Time.get_ticks_usec()
+	var path = SaveSystem.save_slot(1)
+	var original_cash = float(GameState.player.cash)
+	var original_hash = FileAccess.get_sha256(path)
+	GameState.player.cash = original_cash + 12345.0
+	var saved = SaveSystem.save_slot(1)
+	u._chk("audit_backup_written", saved == path and not original_hash.is_empty() and FileAccess.get_sha256(path + ".backup") == original_hash)
+	GameState.player.cash = 0.0
+	var err = SaveSystem.load_slot(1)
+	u._chk("audit_backup_current_preferred", err == "" and not SaveSystem.last_load_from_backup and is_equal_approx(float(GameState.player.cash), original_cash + 12345.0))
+	# Presun stranou napodobní chýbajúci cieľ po neúspešnom nahradení, bez mazania.
+	var moved = DirAccess.rename_absolute(path, path + ".held") == OK
+	GameState.player.cash = 0.0
+	err = SaveSystem.load_slot(1)
+	u._chk("audit_backup_recovery_v3", moved and err == "" and SaveSystem.last_load_from_backup and is_equal_approx(float(GameState.player.cash), original_cash) and GameState.SAVE_VERSION == 3)
+	var path2 = SaveSystem.save_slot(2)
+	var hash2 = FileAccess.get_sha256(path2)
+	var blocked = DirAccess.make_dir_absolute(path2 + ".backup") == OK
+	GameState.player.cash = original_cash + 54321.0
+	var refusal = SaveSystem.save_slot(2)
+	u._chk("audit_backup_failure_preserves_slot", blocked and refusal == SaveSystem.last_error and refusal.contains("záložná") and FileAccess.get_sha256(path2) == hash2)
+	SaveSystem.base_dir = previous_dir
+
+func _society_power_headcount(u) -> void:
+	u._new()
+	GameState.config.progression = false
+	GameState.player.cash = 1.0e10
+	var setup_ok = true
+	for iso in ["SK", "CZ", "DE", "US"]:
+		for ind in ["wheat_farm", "coal_mine", "telecom", "school_high", "hospital"]:
+			if GameState.found_firm(ind, "Audit vplyvu " + ind, iso) != "":
+				setup_ok = false
+		var available_cities: Array = TerrainSystem.cities(iso)
+		if available_cities.size() > 1:
+			var own: Array = GameState.player_firms()
+			own[-1]["city"] = str(available_cities[1].name)
+	var made_bank: Dictionary = BankingSystem.create_bank(0.02, 0.08, 0.8)
+	setup_ok = setup_ok and bool(made_bank.get("ok", false))
+	var media_detail_ok = false
+	for f in GameState.player_firms():
+		if Brand.is_media(f):
+			var detail = Brand.media_reach(f)
+			var light = Brand.media_reach(f, false)
+			media_detail_ok = detail.has("competitors") and not light.has("competitors")
+			for field in ["users", "pct", "share", "cap_pct", "pop"]:
+				media_detail_ok = media_detail_ok and detail.get(field) == light.get(field)
+			break
+	var snapshot = GameState.to_dict().duplicate(true)
+	Brand.use_light_country_media = false
+	Society.use_power_headcount_cache = false
+	Society.use_monthly_city_groups = false
+	Society.use_monthly_country_groups = false
+	var first_error = GameState.from_dict(snapshot.duplicate(true))
+	for i in 62:
+		GameState.simulate_day()
+	var expected = JSON.stringify(GameState.to_dict())
+	Society.use_power_headcount_cache = true
+	var second_error = GameState.from_dict(snapshot.duplicate(true))
+	for i in 62:
+		GameState.simulate_day()
+	var actual = JSON.stringify(GameState.to_dict())
+	Society.use_monthly_city_groups = true
+	var third_error = GameState.from_dict(snapshot.duplicate(true))
+	for i in 62:
+		GameState.simulate_day()
+	var grouped = JSON.stringify(GameState.to_dict())
+	Society.use_monthly_country_groups = true
+	var fourth_error = GameState.from_dict(snapshot.duplicate(true))
+	for i in 62:
+		GameState.simulate_day()
+	var country_grouped = JSON.stringify(GameState.to_dict())
+	Brand.use_light_country_media = true
+	var fifth_error = GameState.from_dict(snapshot.duplicate(true))
+	for i in 62:
+		GameState.simulate_day()
+	var light_media = JSON.stringify(GameState.to_dict())
+	Society.use_power_headcount_cache = true
+	Society.use_monthly_city_groups = true
+	Society.use_monthly_country_groups = true
+	Brand.use_light_country_media = true
+	u._chk("audit_society_power_setup", setup_ok and first_error == "" and second_error == "" and third_error == "" and fourth_error == "" and fifth_error == "")
+	u._chk("audit_society_power_exact_62_days", expected == actual)
+	u._chk("audit_society_city_groups_exact_62_days", expected == grouped)
+	u._chk("audit_society_country_groups_exact_62_days", expected == country_grouped)
+	u._chk("audit_media_detail_unchanged", media_detail_ok)
+	u._chk("audit_society_light_media_exact_62_days", expected == light_media)
+
+func _reject_missing_cash(u) -> void:
+	u._new()
+	GameState.config.progression = false
+	GameState.player.cash = 2.0e8
+	var founded = GameState.found_firm("cafe", "Audit neúplného savu", "SK")
+	var original = GameState.to_dict().duplicate(true)
+	var before = JSON.stringify(GameState.to_dict())
+	for version in [1, 2, 3]:
+		var player_missing = original.duplicate(true)
+		player_missing["v"] = version
+		player_missing.player.erase("cash")
+		var player_error = GameState.from_dict(player_missing)
+		u._chk("audit_v%d_missing_player_cash" % version, player_error != "" and JSON.stringify(GameState.to_dict()) == before)
+		var firm_missing = original.duplicate(true)
+		firm_missing["v"] = version
+		firm_missing.firms[-1].erase("cash")
+		var firm_error = GameState.from_dict(firm_missing)
+		u._chk("audit_v%d_missing_firm_cash" % version, firm_error != "" and JSON.stringify(GameState.to_dict()) == before)
+	var valid = founded == ""
+	for version in [1, 2, 3]:
+		var good = original.duplicate(true)
+		good["v"] = version
+		if GameState.from_dict(good) != "":
+			valid = false
+	u._chk("audit_cash_present_v1_v2_v3_load", valid)

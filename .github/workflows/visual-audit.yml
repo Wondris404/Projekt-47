@@ -1,0 +1,125 @@
+name: Projekt-47 visual audit
+on:
+  push:
+    branches:
+      - codex/audit-ux-20261028
+    paths:
+      - .github/workflows/visual-audit.yml
+      - scripts/main.gd
+      - tests/bank_controls_ui.gd
+      - tests/save_recovery_ui.gd
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install verified Godot 4.7.2 and software renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 --output godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum --check
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+          echo "XDG_DATA_HOME=$RUNNER_TEMP/p47-user-data" >> "$GITHUB_ENV"
+          echo "XDG_CONFIG_HOME=$RUNNER_TEMP/p47-user-config" >> "$GITHUB_ENV"
+          echo "XDG_CACHE_HOME=$RUNNER_TEMP/p47-user-cache" >> "$GITHUB_ENV"
+      - name: Import project assets
+        run: Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path "$GITHUB_WORKSPACE" --import
+      - name: Capture baseline screenshots
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          set -o pipefail
+          timeout 600 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- atlas_visual_audit baseline20261028 all 2>&1 | tee "$RUNNER_TEMP/visual.log"
+          grep -q '^P47_VISUAL_DONE baseline20261028' "$RUNNER_TEMP/visual.log"
+          ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/visual.log"
+      - name: Save screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-atlas-baseline
+          path: audit/screenshots/atlas-update/*_baseline20261028.png
+          if-no-files-found: error
+      - name: Save visual log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-visual-log
+          path: ${{ runner.temp }}/visual.log
+          if-no-files-found: warn
+      - name: Run window movement and resize audit
+        if: always()
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          set -o pipefail
+          python3 -c 'from pathlib import Path; p=Path("scripts/main.gd"); s=p.read_text(); a="\tres[\"drag_stops_on_focus_loss\"] = started_drag and win_mgr._mode == 0"; assert s.count(a)==1; s=s.replace(a,"\tprint(\"P47_WINDOW_FOCUS started=\", started_drag, \" mode_after=\", win_mgr._mode)\n"+a); p.write_text(s)'
+          python3 -c 'from pathlib import Path; p=Path("scripts/main.gd"); s=p.read_text(); a="\tvar keep = Rect2(country_win.position, country_win.size)"; b="\tres[\"remembered\"] = Rect2(country_win.position, country_win.size).is_equal_approx(keep)"; assert s.count(a)==1 and s.count(b)==1; s=s.replace(a,a+"\n\tprint(\"P47_WINDOW_BEFORE rect=\", keep, \" saved=\", win_mgr.rects.get(\"country\"), \" viewport=\", vp, \" mode=\", win_mgr._mode)"); s=s.replace(b,"\tprint(\"P47_WINDOW_AFTER rect=\", Rect2(country_win.position, country_win.size), \" saved=\", win_mgr.rects.get(\"country\"), \" min=\", country_win.get_combined_minimum_size())\n\tfor node in country_win.find_children(\"*\", \"Control\", true, false):\n\t\tif node.get_combined_minimum_size().x > 300:\n\t\t\tprint(\"P47_WINDOW_NODE \", node.get_path(), \" min=\", node.get_combined_minimum_size())\n\tawait RenderingServer.frame_post_draw\n\tDirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(\"res://audit/screenshots/window-audit\"))\n\tget_viewport().get_texture().get_image().save_png(\"res://audit/screenshots/window-audit/reopened_after20261028.png\")\n"+b); p.write_text(s)'
+          timeout 300 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- window_ui after20261028 2>&1 | tee "$RUNNER_TEMP/window.log"
+          ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/window.log"
+      - name: Save window audit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-window-baseline
+          path: audit/screenshots/window-audit/*_after20261028.png
+          if-no-files-found: error
+      - name: Save window audit log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-window-log
+          path: ${{ runner.temp }}/window.log
+          if-no-files-found: warn
+      - name: Check bank settings after an external change
+        if: always()
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          set -o pipefail
+          timeout 300 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- bank_controls_ui_test current20261028 2>&1 | tee "$RUNNER_TEMP/bank-controls.log"
+          ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/bank-controls.log"
+      - name: Save bank audit log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-bank-controls-log
+          path: ${{ runner.temp }}/bank-controls.log
+          if-no-files-found: warn
+      - name: Save bank controls screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-bank-controls-screenshot
+          path: audit/screenshots/bank-audit/bank_current20261028.png
+          if-no-files-found: error
+      - name: Verify save recovery feedback
+        if: always()
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          set -o pipefail
+          timeout 300 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- save_recovery_ui_test current20261028 2>&1 | tee "$RUNNER_TEMP/save-recovery.log"
+          ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/save-recovery.log"
+      - name: Save recovery UI output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-save-recovery-ui
+          path: |
+            audit/screenshots/save-audit/recovery_current20261028.png
+            ${{ runner.temp }}/save-recovery.log
+          if-no-files-found: warn

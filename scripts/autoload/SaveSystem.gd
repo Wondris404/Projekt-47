@@ -2,6 +2,7 @@ extends Node
 
 const MAX_SAVE_BYTES = 64 * 1024 * 1024
 var last_error = ""
+var last_load_from_backup := false
 var base_dir = "user://saves"
 const TEST_DIR = "user://test_tmp_saves"
 
@@ -31,6 +32,9 @@ func legacy_dir() -> String:
 func _slot_name(slot: int) -> String:
 	return "slot_%d.json" % slot
 
+func _within_save_limit(text: String, limit: int = MAX_SAVE_BYTES) -> bool:
+	return text.to_utf8_buffer().size() <= limit
+
 # Vracia cestu pri úspechu, inak text chyby (zachované API); podrobnosť je v last_error.
 func save_slot(slot: int) -> String:
 	GameState.finish_pending_day()
@@ -38,6 +42,9 @@ func save_slot(slot: int) -> String:
 	var path = saves_dir().path_join(_slot_name(slot))
 	var tmp = path + ".tmp"
 	var text = JSON.stringify(GameState.to_dict())
+	if not _within_save_limit(text):
+		last_error = "Uložená hra prekračuje limit 64 MiB; pôvodný slot zostal zachovaný."
+		return last_error
 	var f = FileAccess.open(tmp, FileAccess.WRITE)
 	if f == null:
 		last_error = "Save zlyhal (zápis do dočasného súboru)."
@@ -49,9 +56,18 @@ func save_slot(slot: int) -> String:
 		DirAccess.remove_absolute(tmp)
 		last_error = "Save zlyhal (nezhodná veľkosť)."
 		return last_error
+	# Godot na Windowse pri premenovaní najprv odstráni existujúci cieľ.
+	# Pred nahradením preto overíme samostatnú kópiu posledného slotu.
+	var had_previous = FileAccess.file_exists(path)
+	var backup = path + ".backup"
+	if had_previous:
+		var original_hash = FileAccess.get_sha256(path)
+		if original_hash == "" or DirAccess.copy_absolute(path, backup) != OK or FileAccess.get_sha256(backup) != original_hash:
+			last_error = "Save zlyhal (záložná kópia sa nedá bezpečne vytvoriť); pôvodný slot zostal zachovaný."
+			return last_error
 	if DirAccess.rename_absolute(tmp, path) != OK:
 		DirAccess.remove_absolute(tmp)
-		last_error = "Save zlyhal (premenovanie)."
+		last_error = "Save zlyhal (premenovanie); predchádzajúci slot je v záložnej kópii." if had_previous else "Save zlyhal (premenovanie)."
 		return last_error
 	return path
 
@@ -59,6 +75,8 @@ func _find_slot(slot: int) -> String:
 	var p = saves_dir().path_join(_slot_name(slot))
 	if FileAccess.file_exists(p):
 		return p
+	if FileAccess.file_exists(p + ".backup"):
+		return p + ".backup"  # obnova, keď presun nového slotu po odstránení cieľa zlyhal
 	if base_dir == TEST_DIR:
 		return ""  # test nesmie citat skutocne ani legacy sloty
 	var legacy = legacy_dir().path_join(_slot_name(slot))
@@ -69,6 +87,7 @@ func _find_slot(slot: int) -> String:
 # Vracia "" pri úspechu, inak text chyby; pri chybe sa živý stav nemení.
 func load_slot(slot: int) -> String:
 	last_error = ""
+	last_load_from_backup = false
 	var path = _find_slot(slot)
 	if path == "":
 		return "Slot je prázdny."
@@ -83,6 +102,8 @@ func load_slot(slot: int) -> String:
 	var err = GameState.from_dict(data)
 	if err != "":
 		last_error = err
+	else:
+		last_load_from_backup = path.ends_with(".backup")
 	return err
 
 func has_slot(slot: int) -> bool:

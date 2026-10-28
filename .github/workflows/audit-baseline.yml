@@ -1,0 +1,83 @@
+name: Projekt-47 audit
+on:
+  push:
+    branches:
+      - codex/audit-ux-20261028
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/**'
+      - 'audit/screenshots/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        test: [unit, audit_unit, stability, performance_audit]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install verified Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 --output godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum --check
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+      - name: Isolate Godot user data
+        shell: bash
+        run: |
+          echo "XDG_DATA_HOME=$RUNNER_TEMP/p47-user-data" >> "$GITHUB_ENV"
+          echo "XDG_CONFIG_HOME=$RUNNER_TEMP/p47-user-config" >> "$GITHUB_ENV"
+          echo "XDG_CACHE_HOME=$RUNNER_TEMP/p47-user-cache" >> "$GITHUB_ENV"
+      - name: Import project assets
+        shell: bash
+        run: |
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path "$GITHUB_WORKSPACE" --import
+      - name: Test unit status classification
+        if: matrix.test == 'unit'
+        shell: bash
+        run: bash .github/scripts/check-unit-result-test.sh
+      - name: Run existing test or benchmark
+        shell: bash
+        env:
+          TEST_NAME: ${{ matrix.test }}
+        run: |
+          set -o pipefail
+          args=("$TEST_NAME")
+          if [ "$TEST_NAME" = stability ]; then args+=(1 30 365); fi
+          set +e
+          timeout 900 Godot_v4.7.2-stable_linux.x86_64 --headless --path "$GITHUB_WORKSPACE" -- "${args[@]}" 2>&1 | tee "$RUNNER_TEMP/$TEST_NAME.log"
+          pipeline_status=("${PIPESTATUS[@]}")
+          set -e
+          if [ "${pipeline_status[1]}" -ne 0 ]; then exit "${pipeline_status[1]}"; fi
+          if [ "$TEST_NAME" = unit ]; then
+            bash .github/scripts/check-unit-result.sh "$RUNNER_TEMP/$TEST_NAME.log" "${pipeline_status[0]}" tests/catalog_field_lock.txt
+            exit $?
+          fi
+          if [ "${pipeline_status[0]}" -ne 0 ]; then exit "${pipeline_status[0]}"; fi
+          if grep -q "^SCRIPT ERROR:" "$RUNNER_TEMP/$TEST_NAME.log"; then
+            echo "Unexpected GDScript error in $TEST_NAME"
+            exit 1
+          fi
+          if [ "$TEST_NAME" = unit ] || [ "$TEST_NAME" = audit_unit ]; then
+            ! grep -q '^P47_UNIT_FAIL' "$RUNNER_TEMP/$TEST_NAME.log"
+            grep -q '^P47_UNIT_OK' "$RUNNER_TEMP/$TEST_NAME.log"
+          elif [ "$TEST_NAME" = stability ]; then
+            grep -q '^P47_STAB_OK' "$RUNNER_TEMP/$TEST_NAME.log"
+          else
+            grep -q '^P47_BENCHMARK ' "$RUNNER_TEMP/$TEST_NAME.log"
+          fi
+      - name: Save test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-${{ matrix.test }}-log
+          path: ${{ runner.temp }}/${{ matrix.test }}.log
+          if-no-files-found: warn

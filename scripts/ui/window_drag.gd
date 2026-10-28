@@ -21,6 +21,19 @@ var persist := true
 func _ready() -> void:
 	_load_cfg()
 	get_viewport().size_changed.connect(clamp_all)
+	var window = get_window()
+	if window != null:
+		window.focus_exited.connect(_cancel_active_drag)
+
+func _cancel_active_drag() -> void:
+	if _mode == 0:
+		return
+	_mode = 0
+	if wins.has(_key):
+		var panel: Control = wins[_key].panel
+		if is_instance_valid(panel):
+			rects[_key] = Rect2(panel.position, panel.size)
+			_save_cfg()
 
 func _load_cfg(path: String = CFG_PATH) -> void:
 	var cf = ConfigFile.new()

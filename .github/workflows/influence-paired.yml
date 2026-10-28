@@ -1,0 +1,77 @@
+name: Paired influence performance
+on:
+  push:
+    branches:
+      - codex/audit-ux-20261028
+    paths:
+      - .github/workflows/influence-paired.yml
+permissions:
+  contents: read
+jobs:
+  paired:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install verified Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 --output godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum --check
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+          echo "XDG_DATA_HOME=$RUNNER_TEMP/p47-user-data" >> "$GITHUB_ENV"
+          echo "XDG_CONFIG_HOME=$RUNNER_TEMP/p47-user-config" >> "$GITHUB_ENV"
+          echo "XDG_CACHE_HOME=$RUNNER_TEMP/p47-user-cache" >> "$GITHUB_ENV"
+      - name: Import assets
+        run: Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path "$GITHUB_WORKSPACE" --import
+      - name: Profile same seed on the same runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in Empire Society; do
+            cp "scripts/autoload/$file.gd" "$RUNNER_TEMP/after-$file.gd"
+            curl --fail --location --retry 3 --output "$RUNNER_TEMP/before-$file.gd" "https://raw.githubusercontent.com/Wondris404/Projekt-47/f232ca1453bce78e8972b36a7e4c1f085f74296e/scripts/autoload/$file.gd"
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("tests/profile_sim.gd")
+          text = p.read_text()
+          assert text.count("while days < 10:") == 1
+          p.write_text(text.replace("while days < 10:", "while days < 70:"))
+          PY
+          for run_name in before1 after1 after2 before2; do
+            version="${run_name%?}"
+            for file in Empire Society; do cp "$RUNNER_TEMP/$version-$file.gd" "scripts/autoload/$file.gd"; done
+            python3 - <<'PY'
+          from pathlib import Path
+          p = Path("scripts/autoload/Society.gd")
+          text = p.read_text()
+          start = text.index("func monthly(")
+          end = text.index("\nfunc _update_city(", start)
+          block = text[start:end]
+          begin = "\tfor iso in isos.keys():"
+          finish = "\t_npc_cache_day = -1"
+          assert block.count(begin) == 1 and block.count(finish) == 1
+          block = block.replace(begin, "\tvar p47_power_start = Time.get_ticks_usec()\n" + begin)
+          block = block.replace(finish, '\tprint("P47_SOC_POWER day=%d ms=%.3f" % [GameState.day_index, float(Time.get_ticks_usec() - p47_power_start) / 1000.0])\n' + finish)
+          p.write_text(text[:start] + block + text[end:])
+          PY
+            timeout 600 Godot_v4.7.2-stable_linux.x86_64 --headless --path "$GITHUB_WORKSPACE" -- profile_sim > "$RUNNER_TEMP/$run_name-influence.log" 2>&1
+            ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/$run_name-influence.log"
+            grep -q '^P47_PHASE_DONE .*days=70' "$RUNNER_TEMP/$run_name-influence.log"
+            echo "P47_INFLUENCE_RUN $run_name"
+            grep -E '^P47_SOC_POWER|^P47_PHASE phase=' "$RUNNER_TEMP/$run_name-influence.log"
+          done
+      - name: Save measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-paired-influence
+          path: ${{ runner.temp }}/*-influence.log
+          if-no-files-found: warn
