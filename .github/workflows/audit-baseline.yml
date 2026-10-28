@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - codex/audit-ux-20261028
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/visual-audit.yml'
   workflow_dispatch:
 permissions:
   contents: read
