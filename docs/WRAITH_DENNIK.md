@@ -1032,3 +1032,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Linuxový beh `40700401490` aj Windowsový `40700401478` prešli `audit_unit` 43 OK / 0 FAIL. Všetkých šesť kontrol odmietlo chýbajúcu hotovosť hráča/firmy vo vzorkách v1/v2/v3 bez zmeny živého stavu; úplné vzorky všetkých troch verzií sa prijali. Linuxová stabilita 1/30/365 prešla, úplná `unit` ešte beží.
 - Skutočné historické savy nie sú v repozitári; tieto syntetické vzorky nenahrádzajú ich kontrolu. https://github.com/Wondris404/Projekt-47/actions/runs/40700401490
+
+
+## 2026-10-28 – Úplná sada po oprave neúplného savu
+
+- Beh `40700401490`: `unit` 531 OK / 1 FAIL kvôli chýbajúcej referencii katalógu, ktorú GitHub označil viditeľným varovaním; `audit_unit` 43 OK, stabilita 1/30/365 a výkonnostná sonda prešli. Rovnakých 43 auditných kontrol prešlo aj na Windowse. Referencia katalógu zostáva neoverená. https://github.com/Wondris404/Projekt-47/actions/runs/40700401490
