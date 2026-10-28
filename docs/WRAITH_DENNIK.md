@@ -1026,3 +1026,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Validácia teraz odmietne chýbajúcu `cash` u hráča alebo firmy ešte pred nahradením živého stavu. Pôvodné migračné polia a predvolené hodnoty novších údajov sa nemenia; dostupné historické definície hráča a firiem obsahujú hotovosť.
 - Pridaných sedem kontrol pre neúplný stav a prijatie úplných vzoriek označených v1/v2/v3. Skutočné historické savy nie sú v repozitári a uvedené vzorky ich nenahrádzajú. Výsledky testov po úprave ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Overenie chýbajúcich finančných polí
+
+- Linuxový `406...` beh `40700401490` aj Windowsový `40700401478` prešli `audit_unit` 43 OK / 0 FAIL. Všetkých šesť kontrol odmietlo chýbajúcu hotovosť hráča/firmy vo vzorkách v1/v2/v3 bez zmeny živého stavu; úplné vzorky všetkých troch verzií sa prijali. Linuxová stabilita 1/30/365 prešla, úplná `unit` ešte beží.
+- Skutočné historické savy nie sú v repozitári; tieto syntetické vzorky nenahrádzajú ich kontrolu. https://github.com/Wondris404/Projekt-47/actions/runs/40700401490
