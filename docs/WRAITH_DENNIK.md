@@ -1155,3 +1155,11 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Diagnostika sa teraz pripája do `user://data_warnings.log`; pri chybe zápisu sa zobrazí varovanie. Po oprave sonda potvrdila nezmenený projektový súbor a obe pridané správy, exit 0. Log sa môže časom zväčšovať; rotácia nie je zavedená. Ekonomické výpočty a save sa nemenia. Ďalšia auditná sada sa ešte vykonáva.
 
 - Po oprave prešla na Windowse lokálna auditná sada `audit_unit` (46 kontrol, exit 0), vrátane porovnania stavu po 62 dňoch. Kontrola chyby zálohy zámerne vyvolala chybu otvorenia izolovaného súboru a potvrdila ochranu slotu. Úplná jednotková sada nebola v tomto kroku spustená.
+
+
+## Pre-Beta-0.9 — úvodné zmapovanie a lokálna sonda (2026-10-28)
+
+- Schválený zámer: strategická 3D mapa, obnoviteľný pixelový režim, nové rozhranie a slovník, 3D modely a optimalizácia. Implementácia ešte nezačala.
+- GitHub main používa GL Compatibility; PR #8 pre škálovanie okien je stále rozpracované. Testovací `tests/run_all.sh` má pascu, ktorá maže dočasný priečinok; vzhľadom na zákaz mazania sa nespúšťal.
+- Existujúci `tests/profile_sim.gd` sa spustil v lokálnom projekte (ktorý nie je overenou kópiou aktuálneho main), Godot 4.7.2, seed 47, 72 firiem a 10 dní, izolované používateľské dáta. Dokončil sa s exit 0. Súčet priemerov fáz podľa vypísaných vzoriek je približne 263,45 ms/deň; najdlhšie volanie fázy 20,415 ms. Ide o jednu headless vzorku bez merania FPS alebo grafiky, nie porovnanie výkonu verzií.
+- Ďalej: zosúladiť čistý pracovný základ s GitHub main bez zásahu do existujúcich zmien, zmerať snímky v reálnom grafickom okne pri všetkých rýchlostiach, vykonať cielené testy a vybudovať hrateľný prototyp. 3D mapa ani modely zatiaľ nie sú hotové.
