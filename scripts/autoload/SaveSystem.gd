@@ -31,6 +31,9 @@ func legacy_dir() -> String:
 func _slot_name(slot: int) -> String:
 	return "slot_%d.json" % slot
 
+func _within_save_limit(text: String, limit: int = MAX_SAVE_BYTES) -> bool:
+	return text.to_utf8_buffer().size() <= limit
+
 # Vracia cestu pri úspechu, inak text chyby (zachované API); podrobnosť je v last_error.
 func save_slot(slot: int) -> String:
 	GameState.finish_pending_day()
@@ -38,6 +41,9 @@ func save_slot(slot: int) -> String:
 	var path = saves_dir().path_join(_slot_name(slot))
 	var tmp = path + ".tmp"
 	var text = JSON.stringify(GameState.to_dict())
+	if not _within_save_limit(text):
+		last_error = "Uložená hra prekračuje limit 64 MiB; pôvodný slot zostal zachovaný."
+		return last_error
 	var f = FileAccess.open(tmp, FileAccess.WRITE)
 	if f == null:
 		last_error = "Save zlyhal (zápis do dočasného súboru)."

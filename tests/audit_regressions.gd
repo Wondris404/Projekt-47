@@ -1,6 +1,7 @@
 extends RefCounted
 
 func run(u) -> void:
+	_save_size_limit(u)
 	_trade_ledger(u)
 	_power_input(u)
 	_maintenance(u)
@@ -187,3 +188,19 @@ func _atlas_geometry(u) -> void:
 	ad.B_on = false
 	ad.B_v.clear()
 	ad.B_c.clear()
+
+func _save_size_limit(u) -> void:
+	u._chk("audit_save_limit_utf8_boundary", SaveSystem._within_save_limit("ž", 2) and not SaveSystem._within_save_limit("ž", 1))
+	u._new()
+	var previous_dir = SaveSystem.base_dir
+	SaveSystem.base_dir = "user://audit_size_%d" % Time.get_ticks_usec()
+	var path = SaveSystem.save_slot(1)
+	var exists = FileAccess.file_exists(path)
+	var previous = FileAccess.get_file_as_string(path) if exists else ""
+	u._chk("audit_save_limit_small_saved", exists and not previous.is_empty())
+	GameState.ext["audit_oversize"] = "x".repeat(SaveSystem.MAX_SAVE_BYTES + 1)
+	var error = SaveSystem.save_slot(1)
+	GameState.ext.erase("audit_oversize")
+	u._chk("audit_save_limit_rejects_oversize", error == SaveSystem.last_error and error.contains("limit"))
+	u._chk("audit_save_limit_preserves_slot", exists and FileAccess.get_file_as_string(path) == previous)
+	SaveSystem.base_dir = previous_dir

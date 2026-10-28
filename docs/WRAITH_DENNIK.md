@@ -636,3 +636,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Na auditnej vetve pridaný GitHub Actions workflow pre existujúce `unit`, `audit_unit`, `stability 1 30 365` a `performance_audit`. Beží na oddelených Linux runneroch s Godotom 4.7.2 z oficiálneho vydania, overeným SHA-256, a používa samostatné dočasné používateľské dáta. Herné súbory sa nemenili.
 - Prvá verzia workflow zlyhala pred spustením úloh pre chybný kontext ciest runnera; konfigurácia bola opravená. Beh 40652483767 sa už spustil, výsledky zatiaľ nie sú uzavreté. Toto nie je grafické overenie cez Xvfb ani meranie FPS na notebooku.
+
+
+## 2026-10-28 – Ochrana pred príliš veľkým savom (overovanie prebieha)
+
+- Ukladanie pred zápisom kontroluje rovnaký limit 64 MiB v UTF-8 bajtoch ako načítanie. Pri prekročení vráti chybu ešte pred vytvorením dočasného súboru, takže predchádzajúci slot ostane zachovaný. Formát v3 ani pravidlá hry sa nemenia.
+- Pridané štyri cielené regresné kontroly hranice viacbajtového textu, úspešného uloženia, odmietnutia veľkého stavu a zachovania slotu. GitHub Actions beh po zmene ešte musí potvrdiť výsledok; záznam sa po dokončení aktualizuje.
