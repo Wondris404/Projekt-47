@@ -58,6 +58,7 @@ var _anim_acc: float = 0.0
 var _cafe_anim: Texture2D
 var _factory_anim: Texture2D
 var _bank_anim: Texture2D
+var _traffic_layer: Node2D
 var _camera_initialized := false
 var _camera_fit := 1.0
 var _camera_size := Vector2.ZERO
@@ -78,6 +79,10 @@ func _ready() -> void:
 	_atlas_layer = preload("res://scripts/ui/atlas_layer.gd").new()
 	_atlas_layer.map = self
 	add_child(_atlas_layer)
+	_traffic_layer = preload("res://scripts/ui/atlas_traffic.gd").new()
+	_traffic_layer.map = self
+	add_child(_traffic_layer)
+	draw.connect(_traffic_layer.queue_redraw)
 	_build()
 	item_rect_changed.connect(_preserve_camera_layout)
 	set_notify_transform(true)
@@ -141,6 +146,7 @@ func _process(delta: float) -> void:
 
 const GFX = preload("res://scripts/gfx.gd")
 func _anim_live() -> bool:
+	if atlas: return false # Atlas models are static; traffic redraws its own layer.
 	if GFX.low():  # JUAN23: nizka grafika = bez animacii (mapa sa neprekresluje 10x za sekundu)
 		return false
 	for firm in GameState.firms:
@@ -1376,22 +1382,26 @@ func _draw_lines() -> void:
 	for l in Transport.lines():
 		var a = _to_screen(Transport._pt(l.a))
 		var b = _to_screen(Transport._pt(l.b))
+		var clipped = preload("res://scripts/ui/atlas_traffic.gd").clipped(a, b, Rect2(Vector2.ZERO, size).grow(20))
+		if clipped.is_empty(): continue
+		var detail_a = clipped[0]
+		var detail_b = clipped[1]
 		var u = Transport.utilization(l)
 		if str(l.kind) == "rail":
 			draw_line(a, b, Color(0.08, 0.08, 0.09), w + 2.0, true)
 			draw_line(a, b, Color(0.55, 0.55, 0.58), w * 0.5, true)
-			var n = int(a.distance_to(b) / maxf(6.0, w * 2.2))
+			var n = mini(256, int(detail_a.distance_to(detail_b) / maxf(6.0, w * 2.2)))
 			var dir = (b - a).normalized()
 			var nrm = Vector2(-dir.y, dir.x) * (w * 0.9)
 			for i in n:
-				var p = a.lerp(b, (i + 0.5) / maxf(n, 1))
+				var p = detail_a.lerp(detail_b, (i + 0.5) / maxf(n, 1))
 				draw_line(p - nrm, p + nrm, Color(0.32, 0.24, 0.16), 1.5)
 		else:
 			draw_line(a, b, Color(0.12, 0.08, 0.04), w + 3.0, true)
 			draw_line(a, b, Color(0.78, 0.5, 0.18), w, true)
-			var m = int(a.distance_to(b) / 26.0)
+			var m = mini(128, int(detail_a.distance_to(detail_b) / 26.0))
 			for i in range(1, m):
-				draw_circle(a.lerp(b, float(i) / m), w * 0.75, Color(0.55, 0.32, 0.1))
+				draw_circle(detail_a.lerp(detail_b, float(i) / m), w * 0.75, Color(0.55, 0.32, 0.1))
 		for e in [a, b]:
 			draw_circle(e, w * 0.9, Color(0.1, 0.1, 0.1))
 			draw_circle(e, w * 0.55, UiPalette.ACCENT)

@@ -18,6 +18,7 @@ func _frames(n: int = 4) -> void:
 func _snap(name: String, title: String) -> void:
 	caption.text = title
 	host.map.queue_redraw()
+	if host.map._traffic_layer != null: host.map._traffic_layer.queue_redraw()
 	await _frames()
 	await RenderingServer.frame_post_draw
 	var img = host.get_viewport().get_texture().get_image()
