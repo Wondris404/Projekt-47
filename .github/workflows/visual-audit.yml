@@ -7,6 +7,7 @@ on:
       - .github/workflows/visual-audit.yml
       - scripts/main.gd
       - tests/bank_controls_ui.gd
+      - tests/save_recovery_ui.gd
   workflow_dispatch:
 permissions:
   contents: read
@@ -103,3 +104,21 @@ jobs:
           name: p47-bank-controls-screenshot
           path: audit/screenshots/bank-audit/bank_current20261028.png
           if-no-files-found: error
+      - name: Verify save recovery feedback
+        if: always()
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          set -o pipefail
+          timeout 300 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- save_recovery_ui_test current20261028 2>&1 | tee "$RUNNER_TEMP/save-recovery.log"
+          ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/save-recovery.log"
+      - name: Save recovery UI output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-save-recovery-ui
+          path: |
+            audit/screenshots/save-audit/recovery_current20261028.png
+            ${{ runner.temp }}/save-recovery.log
+          if-no-files-found: warn
