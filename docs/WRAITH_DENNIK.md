@@ -1099,3 +1099,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Opravený beh `40704325707` na rovnakom runneri a v poradí pred/po/po/pred nameral výpočet vplyvu pred zmenou 2,645; 2,725; 2,651; 2,733 ms a po zmene 2,518; 2,591; 2,400; 2,586 ms. Priemery sú 2,69 a 2,52 ms, úspora asi 0,16 ms v tomto scenári.
 - Maximálny krok uzávierky bol pred zmenou 13,64 a 13,34 ms, po zmene 13,89 a 13,94 ms. Štyri vzorky a diagnostická réžia nestačia na záver o zmene maxima ani o FPS notebooku. Detail média a stav po 62 dňoch prešli na Linuxe a Windowse; rozsiahlejšie savy nie sú overené. https://github.com/Wondris404/Projekt-47/actions/runs/40704325707
+
+
+## 2026-10-28 – Ukončenie starého profilu médií
+
+- Pôvodný beh `40703252724` skončil neúspešne; išlo o už spustenú starú verziu meracieho postupu. Opravený opakovaný beh `40704325707` prešiel a jeho čísla sú uvedené vyššie. https://github.com/Wondris404/Projekt-47/actions/runs/40703252724
