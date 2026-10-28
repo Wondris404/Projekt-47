@@ -1155,3 +1155,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Diagnostika sa teraz pripája do `user://data_warnings.log`; pri chybe zápisu sa zobrazí varovanie. Po oprave sonda potvrdila nezmenený projektový súbor a obe pridané správy, exit 0. Log sa môže časom zväčšovať; rotácia nie je zavedená. Ekonomické výpočty a save sa nemenia. Ďalšia auditná sada sa ešte vykonáva.
 
 - Po oprave prešla na Windowse lokálna auditná sada `audit_unit` (46 kontrol, exit 0), vrátane porovnania stavu po 62 dňoch. Kontrola chyby zálohy zámerne vyvolala chybu otvorenia izolovaného súboru a potvrdila ochranu slotu. Úplná jednotková sada nebola v tomto kroku spustená.
+
+
+## Pre-Beta-0.9 — grafická sonda snímok na notebooku (2026-10-28)
+
+- Pridaná `tests/prebeta_frame_probe.gd`: nová hra so seedom 47 pre každý index rýchlosti 1/2/3, 90 zahrievacích a 240 meraných snímok; meria intervaly medzi signálmi snímok vrátane čakania na obmedzenie FPS. Výsledky uvádzajú priemer, p95, p99, maximum, počet intervalov nad 16,67 ms a počet dokončených dní. Nejde o čistý CPU alebo GPU čas a zaokrúhlenie i časovač pri limite 60 FPS ovplyvňujú počet nad prahom.
+- Dva lokálne grafické behy s AMD Radeon Graphics, GL Compatibility a Godot 4.7.2 (izolované dáta, pracovná kópia s rozpracovaným PR #9): index 1 priemer 17,29/16,81 ms, p95 22,27/20,36 ms, p99 28,89/28,44 ms, max 31,47/31,31 ms; index 2 priemer 20,26/20,28 ms, p95 37,31/37,50 ms, p99 38,44/38,39 ms, max 40,40/39,95 ms; index 3 priemer 27,16/27,49 ms, p95 42,57/43,33 ms, p99 43,80/44,77 ms, max 45,38/47,91 ms. Oba behy exit 0. Krátka vzorka môže obsahovať zahriatie, šum OS a rôzny simulačný deň; nie je párovým porovnaním verzií.
+- Skript bol spustený na lokálnej verzii s PR #9, nie na čistom main; na GitHub main treba ešte overiť presný commit, všetky scenáre a výkon exportu. Pamäť, GPU časy, hustá oblasť a portfólio zatiaľ neboli zmerané. 3D režim ešte neexistuje.
