@@ -20,3 +20,7 @@ Pulzy zobrazujú existujúce zaťaženie potrubia: intenzita, hustota a rýchlos
 ## Voliteľná pravá ruka — Codex (GPT-6)
 
 Základný manažment nakupuje 100 % dostupných potrebných vstupov, udržiava cieľový počet pracovníkov a nemá automatickú 20 % penalizáciu výkonu. Najatý manažér stále poberá pôvodnú mzdu a má pôvodný bonus spokojnosti; výkon je najmenej na úrovni základu (pôvodný vzorec sa orezáva zdola na 1). Existujúce mená, schopnosti a platy sa nemigrujú. Fluktuácia z nespokojnosti/kriminality zostáva zachovaná a základný manažment stav pri mesačnej uzávierke doplní. Je to jediná autorizovaná zmena balansu.
+
+## Mapové modely — Codex (GPT-6)
+
+62 pôvodných pixelových modelov pokrýva celý katalóg 61 odvetví a banku. Nemocnice/klinika majú kríž, školy školské krídla a vlajku/hodiny, univerzita stĺporadie, prístav mólo, loď a kontajnery, jadrová elektráreň chladiace veže. Výrobné prevádzky majú vybavenie svojho odvetvia. Generátor v `tools/generate_map_models.py` umožňuje reprodukciu. Modely sú samostatné PNG s nearest filtrovaním na Atlase; UI ikony sa nemenia. Textúry sa načítajú raz na typ, kreslenie modelu je jedno texture volanie.
