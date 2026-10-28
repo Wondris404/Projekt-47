@@ -249,10 +249,15 @@ func _society_power_headcount(u) -> void:
 		for ind in ["wheat_farm", "coal_mine", "telecom", "school_high", "hospital"]:
 			if GameState.found_firm(ind, "Audit vplyvu " + ind, iso) != "":
 				setup_ok = false
+		var available_cities: Array = TerrainSystem.cities(iso)
+		if available_cities.size() > 1:
+			var own: Array = GameState.player_firms()
+			own[-1]["city"] = str(available_cities[1].name)
 	var made_bank: Dictionary = BankingSystem.create_bank(0.02, 0.08, 0.8)
 	setup_ok = setup_ok and bool(made_bank.get("ok", false))
 	var snapshot = GameState.to_dict().duplicate(true)
 	Society.use_power_headcount_cache = false
+	Society.use_monthly_city_groups = false
 	var first_error = GameState.from_dict(snapshot.duplicate(true))
 	for i in 62:
 		GameState.simulate_day()
@@ -262,6 +267,13 @@ func _society_power_headcount(u) -> void:
 	for i in 62:
 		GameState.simulate_day()
 	var actual = JSON.stringify(GameState.to_dict())
+	Society.use_monthly_city_groups = true
+	var third_error = GameState.from_dict(snapshot.duplicate(true))
+	for i in 62:
+		GameState.simulate_day()
+	var grouped = JSON.stringify(GameState.to_dict())
 	Society.use_power_headcount_cache = true
-	u._chk("audit_society_power_setup", setup_ok and first_error == "" and second_error == "")
+	Society.use_monthly_city_groups = true
+	u._chk("audit_society_power_setup", setup_ok and first_error == "" and second_error == "" and third_error == "")
 	u._chk("audit_society_power_exact_62_days", expected == actual)
+	u._chk("audit_society_city_groups_exact_62_days", expected == grouped)

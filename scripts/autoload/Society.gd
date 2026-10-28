@@ -364,6 +364,7 @@ func has_control(iso: String) -> bool:
 	return power_value(iso) > CONTROL
 
 var use_power_headcount_cache := true  # porovnávateľná referenčná cesta pre testy
+var use_monthly_city_groups := true  # porovnávateľná referenčná cesta pre testy
 
 func _power0(iso: String) -> Dictionary:
 	if Empire.owns_state(iso):
@@ -617,12 +618,13 @@ func port_discount(f: Dictionary) -> float:
 			return 0.2
 	return 0.0
 
-func city_services(iso: String, city_name: String) -> Dictionary:
+func city_services(iso: String, city_name: String, player_city_firms = null) -> Dictionary:
 	var out = {"hospital": 0, "insurance": 0, "pmc": 0, "school": 0, "academy": 0, "university": 0, "students": 0.0}
 	for nf in _npc_service_firms():  # skoly konkurencie tiez vzdelavaju mesto (vyhody pre ludi len z vlastnych firiem)
 		if str(nf.get("country", "")) == iso and str(nf.get("city", "")) == city_name and str(nf.get("industry", "")) in ["school_primary", "school_high", "university"]:
 			out.students = float(out.students) + students(nf) * float(recipe_of(nf).get("edu", 1.0))
-	for f in GameState.player_firms():
+	var candidates: Array = GameState.player_firms() if player_city_firms == null else player_city_firms
+	for f in candidates:
 		if bool(f.get("closed", false)) or str(f.get("country", "")) != iso or firm_city(f) != city_name:
 			continue
 		var ind = str(f.get("industry", ""))
@@ -753,7 +755,7 @@ func monthly(_y: int = 0, _m: int = 0) -> void:
 		var iso = str(cw[k].iso)
 		var cname = str(cw[k].city)
 		var crow = city(iso, cname)
-		var svc = city_services(iso, cname)
+		var svc = city_services(iso, cname, cw[k].firms if use_monthly_city_groups else null)
 		var prot = protection(iso, cname)
 		_update_city(iso, cname, crow, svc, prot)
 		for f in cw[k].firms:
