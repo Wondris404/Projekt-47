@@ -929,3 +929,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Linuxový `audit_unit` v behu `40695557618` prešiel vrátane porovnania celého serializovaného stavu po 62 dňoch a dvoch mesačných uzávierkach s pôvodnou aj optimalizovanou cestou. Stabilita 1/30/365 prešla; úplná `unit` a Windows kontrola ešte bežia.
 - Rýchlosť novej cesty sa musí porovnať na tom istom runneri. Zhoda jedného scenára nie je dôkazom totožnosti pre každú možnú uloženú hru. https://github.com/Wondris404/Projekt-47/actions/runs/40695557618
+
+
+## 2026-10-28 – Párový profil výpočtu vplyvu
+
+- Pridaný vzdialený profil na porovnanie pôvodného a optimalizovaného výpočtu na tom istom runneri v poradí pred/po/po/pred, s rovnakým seed-om a dvoma mesačnými uzávierkami. Produkčný kód sa meracími výpismi nemení. Výsledky ešte nie sú známe.
+- Windowsový auditný beh `40695557675` prešiel aj po optimalizácii; presný počet kontrol a párové merania sa ešte zapisujú.
