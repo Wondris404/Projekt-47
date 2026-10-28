@@ -45,7 +45,9 @@ jobs:
           assert text.count("while days < 10:") == 1
           p.write_text(text.replace("while days < 10:", "while days < 70:"))
           PY
+          cp scripts/autoload/Society.gd "$RUNNER_TEMP/profile-Society.gd"
           for run_name in before1 after1 after2 before2; do
+            cp "$RUNNER_TEMP/profile-Society.gd" scripts/autoload/Society.gd
             version="${run_name%?}"
             for file in Brand; do cp "$RUNNER_TEMP/$version-$file.gd" "scripts/autoload/$file.gd"; done
             python3 - <<'PY'
