@@ -4,6 +4,8 @@ signal country_selected(iso: String)
 signal city_selected(iso: String, city: String)
 signal firm_selected(id: String)
 
+const INDUSTRIAL_TYPES = ["steel_mill", "chem_plant", "textile_mill", "electronics_plant", "auto_plant", "arms_plant", "chip_fab", "aircraft_plant", "oil_refinery", "gas_works", "warehouse", "logistics_hub"]
+
 var _map: Control
 var _camera: Camera3D
 var _viewport: SubViewport
@@ -13,6 +15,7 @@ var _cities: Array = []
 var _firms: Array = []
 var _firm_key: Array = []
 var _firm_layer: MultiMeshInstance3D
+var _industrial_layer: MultiMeshInstance3D
 var _city_layer: MultiMeshInstance3D
 var _countries_ready := false
 var _labels: Control
@@ -111,20 +114,56 @@ func _add_firms(world: Node3D) -> void:
 	_firm_layer = MultiMeshInstance3D.new()
 	_firm_layer.multimesh = instances
 	world.add_child(_firm_layer)
+	_load_industrial.call_deferred(world)
+	refresh_firms()
+
+func _load_industrial(world: Node3D) -> void:
+	var path = "res://assets/models/industrial_kenney/building-a.glb"
+	if not ResourceLoader.exists(path) or ResourceLoader.load_threaded_request(path, "PackedScene", false) != OK: return
+	var status = ResourceLoader.load_threaded_get_status(path)
+	while status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		await get_tree().process_frame
+		if not is_instance_valid(world) or is_queued_for_deletion(): return
+		status = ResourceLoader.load_threaded_get_status(path)
+	if status != ResourceLoader.THREAD_LOAD_LOADED: return
+	var scene: PackedScene = ResourceLoader.load_threaded_get(path)
+	if scene == null or not is_instance_valid(world) or is_queued_for_deletion(): return
+	var model = scene.instantiate()
+	var parts = model.find_children("*", "MeshInstance3D", true, false)
+	if not parts.is_empty() and parts[0].mesh != null:
+		var industrial = MultiMesh.new()
+		industrial.transform_format = MultiMesh.TRANSFORM_3D
+		industrial.mesh = parts[0].mesh
+		_industrial_layer = MultiMeshInstance3D.new()
+		_industrial_layer.multimesh = industrial
+		world.add_child(_industrial_layer)
+	model.free()
+	_firm_key.clear()
 	refresh_firms()
 
 func refresh_firms() -> void:
 	var entries: Array = []
 	for firm in GameState.player_firms():
-		entries.append({"id": str(firm.id), "pos": _map.firm_world_pos(firm)})
+		entries.append({"id": str(firm.id), "pos": _map.firm_world_pos(firm), "industry": str(firm.get("industry", ""))})
 	if entries == _firm_key: return
 	_firm_key = entries.duplicate(true)
 	_firms = entries
 	var mesh = _firm_layer.multimesh
 	mesh.instance_count = entries.size()
+	var industrial_entries: Array = []
 	for i in entries.size():
 		var p: Vector2 = entries[i].pos
-		mesh.set_instance_transform(i, Transform3D(Basis.IDENTITY, Vector3(p.x, 0.9, p.y)))
+		if _industrial_layer != null and entries[i].industry in INDUSTRIAL_TYPES:
+			industrial_entries.append(entries[i])
+			mesh.set_instance_transform(i, Transform3D(Basis.IDENTITY.scaled(Vector3(0.25, 0.25, 0.25)), Vector3(p.x, 1.8, p.y)))
+		else:
+			mesh.set_instance_transform(i, Transform3D(Basis.IDENTITY, Vector3(p.x, 0.9, p.y)))
+	if _industrial_layer != null:
+		var factories = _industrial_layer.multimesh
+		factories.instance_count = industrial_entries.size()
+		for i in industrial_entries.size():
+			var p: Vector2 = industrial_entries[i].pos
+			factories.set_instance_transform(i, Transform3D(Basis.IDENTITY, Vector3(p.x, 0.0, p.y)))
 
 func _firm_at(local_pos: Vector2) -> String:
 	if _camera.size > 150.0: return ""

@@ -21,7 +21,7 @@ func run() -> void:
 		quit(1)
 		return
 	await RenderingServer.frame_post_draw
-	root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_before_20261028v10.png")
+	root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_before_20261028v13.png")
 	button.pressed.emit()
 	for i in 8: await process_frame
 	var view = game._prototype_3d
@@ -37,7 +37,7 @@ func run() -> void:
 		if view._city_layer == null or not view._city_layer.multimesh.mesh is ArrayMesh:
 			fails.append("city_model")
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_world_20261028v10.png")
+		root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_world_20261028v13.png")
 		if view._ground(view.size * 0.5).distance_to(map_center) > 0.1:
 			fails.append("camera_in")
 		var origin: Vector2 = view._ground(view.size * 0.5)
@@ -50,7 +50,7 @@ func run() -> void:
 		view._labels.queue_redraw()
 		await process_frame
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_cities_20261028v10.png")
+		root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_cities_20261028v13.png")
 		var local = cam.unproject_position(Vector3(city.pos.x, 0, city.pos.y)) * view.size / Vector2(view._viewport.size)
 		var picked = []
 		view.country_selected.connect(func(iso): picked.append(iso))
@@ -74,7 +74,7 @@ func run() -> void:
 			if view._firms.size() != 1 or view._firms[0].pos != fp: fails.append("firm_position")
 			game.city_panel.visible = false
 			await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_firm_20261028v10.png")
+			root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_firm_20261028v13.png")
 			local = cam.unproject_position(Vector3(fp.x, 0.9, fp.y)) * view.size / Vector2(view._viewport.size)
 			var picked_firm = []
 			view.firm_selected.connect(func(id): picked_firm.append(id))
@@ -86,13 +86,41 @@ func run() -> void:
 				view.gui_input.emit(e)
 			if picked_firm.is_empty() or picked_firm[0] != firm.id or not game.win_mgr.wins.firm.panel.visible: fails.append("firm_click")
 			await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_detail_20261028v10.png")
+			root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_detail_20261028v13.png")
 			firm.pos = [fp.x + 1.0, fp.y]
 			game._refresh_label()
 			if view._firms[0].pos != fp + Vector2(1, 0): fails.append("firm_move")
 			firm.closed = true
 			game._refresh_label()
 			if not view._firms.is_empty(): fails.append("firm_closed")
+			gs.config.progression = false
+			var created_factory: String = gs.found_firm("steel_mill", "Oceliareň 3D", "SK")
+			if created_factory != "":
+				fails.append("factory_setup")
+			else:
+				var factory: Dictionary = gs.player_firms().back()
+				var factory_pos: Vector2 = city.pos + Vector2(2.0, 1.0)
+				factory.pos = [factory_pos.x, factory_pos.y]
+				game._refresh_label()
+				for i in 120:
+					if view._industrial_layer != null: break
+					await process_frame
+				if view._industrial_layer == null or view._industrial_layer.multimesh.instance_count != 1 or not view._industrial_layer.multimesh.mesh is ArrayMesh:
+					fails.append("industrial_model")
+				game.win_mgr.wins.firm.panel.visible = false
+				await RenderingServer.frame_post_draw
+				root.get_texture().get_image().save_png("res://audit/prototype_3d_factory_20261028c.png")
+				local = cam.unproject_position(Vector3(factory_pos.x, 0.9, factory_pos.y)) * view.size / Vector2(view._viewport.size)
+				for down in [true, false]:
+					var e = InputEventMouseButton.new()
+					e.button_index = MOUSE_BUTTON_LEFT
+					e.pressed = down
+					e.position = local
+					view.gui_input.emit(e)
+				if picked_firm.back() != factory.id or not game.win_mgr.wins.firm.panel.visible: fails.append("factory_click")
+				factory.closed = true
+				game._refresh_label()
+				if view._industrial_layer == null or view._industrial_layer.multimesh.instance_count != 0: fails.append("factory_closed")
 		var terrain = root.get_node("TerrainSystem")
 		var inland: Vector2 = terrain.project(48.7, 19.6)
 		local = cam.unproject_position(Vector3(inland.x, 0, inland.y)) * view.size / Vector2(view._viewport.size)
