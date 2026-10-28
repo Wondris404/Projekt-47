@@ -630,3 +630,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Kontrola limitu uložených hier
 
 - Do `docs/AUDIT_UX_20261028.md` pridaný staticky zistený rozdiel: ukladanie neoveruje 64 MiB limit, ktorý neskôr uplatňuje načítanie; navyše doterajšia kontrola zápisu porovnáva znaky a nie bajty. Oprava ani reprodukcia v Godote zatiaľ neprebehla. Herný kód a existujúce savy sa nemenili.
+
+
+## 2026-10-28 – Vzdialený testovací beh na GitHube
+
+- Na auditnej vetve pridaný GitHub Actions workflow pre existujúce `unit`, `audit_unit`, `stability 1 30 365` a `performance_audit`. Beží na oddelených Linux runneroch s Godotom 4.7.2 z oficiálneho vydania, overeným SHA-256, a používa samostatné dočasné používateľské dáta. Herné súbory sa nemenili.
+- Prvá verzia workflow zlyhala pred spustením úloh pre chybný kontext ciest runnera; konfigurácia bola opravená. Beh 40652483767 sa už spustil, výsledky zatiaľ nie sú uzavreté. Toto nie je grafické overenie cez Xvfb ani meranie FPS na notebooku.
