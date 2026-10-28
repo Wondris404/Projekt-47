@@ -1153,3 +1153,5 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Overený nález z dokumentu od Copilota: `DataLoader._log_data` zapisoval pri proxy dátach do `res://docs/DATA.md`. V izolovanej kópii Windows sonda pred opravou potvrdila zmenu projektového súboru a neprítomnosť používateľského logu.
 - Diagnostika sa teraz pripája do `user://data_warnings.log`; pri chybe zápisu sa zobrazí varovanie. Po oprave sonda potvrdila nezmenený projektový súbor a obe pridané správy, exit 0. Log sa môže časom zväčšovať; rotácia nie je zavedená. Ekonomické výpočty a save sa nemenia. Ďalšia auditná sada sa ešte vykonáva.
+
+- Po oprave prešla na Windowse lokálna auditná sada `audit_unit` (46 kontrol, exit 0), vrátane porovnania stavu po 62 dňoch. Kontrola chyby zálohy zámerne vyvolala chybu otvorenia izolovaného súboru a potvrdila ochranu slotu. Úplná jednotková sada nebola v tomto kroku spustená.
