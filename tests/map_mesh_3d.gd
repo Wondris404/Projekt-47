@@ -22,11 +22,13 @@ func run() -> void:
 		var after = output.surface_get_arrays(0)
 		var pts: PackedVector2Array = before[Mesh.ARRAY_VERTEX]
 		var vs: PackedVector3Array = after[Mesh.ARRAY_VERTEX]
-		if pts.size() != vs.size() or before[Mesh.ARRAY_INDEX] != after[Mesh.ARRAY_INDEX]:
+		var uv: PackedVector2Array = after[Mesh.ARRAY_TEX_UV]
+		if pts.size() != vs.size() or pts.size() != uv.size() or before[Mesh.ARRAY_INDEX] != after[Mesh.ARRAY_INDEX]:
 			failed += 1
 			continue
 		for i in pts.size():
-			if vs[i] != Vector3(pts[i].x, 0.0, pts[i].y):
+			var want_uv = Vector2(pts[i].x / maxf(1.0, float(root.get_node("DataLoader").map.get("w", 1440)) - 1.0), pts[i].y / maxf(1.0, float(root.get_node("DataLoader").map.get("h", 720)) - 1.0))
+			if vs[i] != Vector3(pts[i].x, 0.0, pts[i].y) or not uv[i].is_equal_approx(want_uv):
 				failed += 1
 				break
 		tested += 1

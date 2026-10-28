@@ -48,6 +48,8 @@ func setup(source_map: Control) -> void:
 
 func _build_countries(world: Node3D) -> void:
 	var converter = load("res://scripts/ui/map_mesh_3d.gd")
+	var world_texture: Texture2D = preload("res://scripts/ui/tex_util.gd").load_tex("res://assets/atlas/world.jpg")
+	var border_vertices = PackedVector3Array()
 	var started = Time.get_ticks_usec()
 	for shape in _map.shapes:
 		if not is_instance_valid(world) or is_queued_for_deletion(): return
@@ -59,12 +61,36 @@ func _build_countries(world: Node3D) -> void:
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		material.cull_mode = BaseMaterial3D.CULL_DISABLED
 		var shade = float(absi(str(shape.iso).hash()) % 20) / 100.0
-		material.albedo_color = Color(0.25 + shade, 0.34 + shade, 0.23 + shade)
+		if world_texture != null:
+			material.albedo_texture = world_texture
+			material.albedo_color = Color(0.84 + shade * 0.5, 0.84 + shade * 0.5, 0.84 + shade * 0.5)
+		else:
+			material.albedo_color = Color(0.25 + shade, 0.34 + shade, 0.23 + shade)
 		item.material_override = material
 		world.add_child(item)
+		for polygon in shape.polys:
+			if polygon.size() < 2: continue
+			for i in polygon.size():
+				var a: Vector2 = polygon[i]
+				var b: Vector2 = polygon[(i + 1) % polygon.size()]
+				border_vertices.append(Vector3(a.x, 0.03, a.y))
+				border_vertices.append(Vector3(b.x, 0.03, b.y))
 		if Time.get_ticks_usec() - started >= 2000:
 			await get_tree().process_frame
 			started = Time.get_ticks_usec()
+	if not border_vertices.is_empty() and is_instance_valid(world) and not is_queued_for_deletion():
+		var arrays = []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = border_vertices
+		var borders = ArrayMesh.new()
+		borders.add_surface_from_arrays(Mesh.PRIMITIVE_LINES, arrays)
+		var outline = MeshInstance3D.new()
+		outline.mesh = borders
+		var border_material = StandardMaterial3D.new()
+		border_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		border_material.albedo_color = Color("1a2020")
+		outline.material_override = border_material
+		world.add_child(outline)
 	_countries_ready = true
 
 func _add_firms(world: Node3D) -> void:

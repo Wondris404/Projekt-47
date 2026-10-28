@@ -21,7 +21,7 @@ func run() -> void:
 		quit(1)
 		return
 	await RenderingServer.frame_post_draw
-	root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_before_20261028v6.png")
+	root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_before_20261028v8.png")
 	button.pressed.emit()
 	for i in 8: await process_frame
 	var view = game._prototype_3d
@@ -36,7 +36,7 @@ func run() -> void:
 		if view._city_layer == null or not view._city_layer.multimesh.mesh is ArrayMesh:
 			fails.append("city_model")
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_world_20261028v6.png")
+		root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_world_20261028v8.png")
 		if view._ground(view.size * 0.5).distance_to(map_center) > 0.1:
 			fails.append("camera_in")
 		var origin: Vector2 = view._ground(view.size * 0.5)
@@ -48,7 +48,7 @@ func run() -> void:
 		cam.size = 40.0
 		await process_frame
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_cities_20261028v6.png")
+		root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_cities_20261028v8.png")
 		var local = cam.unproject_position(Vector3(city.pos.x, 0, city.pos.y)) * view.size / Vector2(view._viewport.size)
 		var picked = []
 		view.country_selected.connect(func(iso): picked.append(iso))
@@ -72,7 +72,7 @@ func run() -> void:
 			if view._firms.size() != 1 or view._firms[0].pos != fp: fails.append("firm_position")
 			game.city_panel.visible = false
 			await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_firm_20261028v6.png")
+			root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_firm_20261028v8.png")
 			local = cam.unproject_position(Vector3(fp.x, 0.9, fp.y)) * view.size / Vector2(view._viewport.size)
 			var picked_firm = []
 			view.firm_selected.connect(func(id): picked_firm.append(id))
@@ -84,7 +84,7 @@ func run() -> void:
 				view.gui_input.emit(e)
 			if picked_firm.is_empty() or picked_firm[0] != firm.id or not game.win_mgr.wins.firm.panel.visible: fails.append("firm_click")
 			await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_detail_20261028v6.png")
+			root.get_texture().get_image().save_png("res://audit/prototype_3d_kenney_detail_20261028v8.png")
 			firm.pos = [fp.x + 1.0, fp.y]
 			game._refresh_label()
 			if view._firms[0].pos != fp + Vector2(1, 0): fails.append("firm_move")
