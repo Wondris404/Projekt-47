@@ -1014,3 +1014,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Skúška neúplného savu
 
 - Pridaná izolovaná sonda, ktorá v dočasnej testovacej hre odstráni hotovosť hráča alebo firmy z kópie savu a zaznamená, či ju načítanie prijalo. Test nezasahuje do skutočných uložených hier, produkčného kódu ani balansu. Výsledok zatiaľ nie je známy.
+
+
+## 2026-10-28 – Potvrdenie neúplných finančných polí
+
+- Izolovaná sonda `40699855377` potvrdila, že save bez `player.cash` aj save bez `firm.cash` prešiel validáciou a neúplný slovník nahradil živý stav. Dostupné historické definície zakladania hráča a firiem obsahujú hotovosť; skutočné historické savy však nie sú v GitHube dostupné.
+- Navrhnuté je odmietnuť chýbajúcu základnú hotovosť ešte pred zmenou živého stavu a zachovať existujúce migrácie a predvolené hodnoty pre novšie polia. Zatiaľ neopravené. https://github.com/Wondris404/Projekt-47/actions/runs/40699855377
