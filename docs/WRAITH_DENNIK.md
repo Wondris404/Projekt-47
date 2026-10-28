@@ -1171,6 +1171,20 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Po oprave prešla na Windowse lokálna auditná sada `audit_unit` (46 kontrol, exit 0), vrátane porovnania stavu po 62 dňoch. Kontrola chyby zálohy zámerne vyvolala chybu otvorenia izolovaného súboru a potvrdila ochranu slotu. Úplná jednotková sada nebola v tomto kroku spustená.
 
 
+## Pre-Beta-0.9 — úvodné zmapovanie a lokálna sonda (2026-10-28)
+
+- Schválený zámer: strategická 3D mapa, obnoviteľný pixelový režim, nové rozhranie a slovník, 3D modely a optimalizácia. Implementácia ešte nezačala.
+- GitHub main používa GL Compatibility; PR #8 pre škálovanie okien je stále rozpracované. Testovací `tests/run_all.sh` má pascu, ktorá maže dočasný priečinok; vzhľadom na zákaz mazania sa nespúšťal.
+- Existujúci `tests/profile_sim.gd` sa spustil v lokálnom projekte (ktorý nie je overenou kópiou aktuálneho main), Godot 4.7.2, seed 47, 72 firiem a 10 dní, izolované používateľské dáta. Dokončil sa s exit 0. Súčet priemerov fáz podľa vypísaných vzoriek je približne 263,45 ms/deň; najdlhšie volanie fázy 20,415 ms. Ide o jednu headless vzorku bez merania FPS alebo grafiky, nie porovnanie výkonu verzií.
+- Ďalej: zosúladiť čistý pracovný základ s GitHub main bez zásahu do existujúcich zmien, zmerať snímky v reálnom grafickom okne pri všetkých rýchlostiach, vykonať cielené testy a vybudovať hrateľný prototyp. 3D mapa ani modely zatiaľ nie sú hotové.
+
+
+## Pre-Beta-0.9 — návrat voľby pixelovej mapy (2026-10-28)
+
+- V hernej lište je opäť prepínač Atlas / Pixelová mapa; zmena sa ukladá do používateľských nastavení a predvolenou mapou starých nastavení je Atlas. Poloha kamery a herný stav sa pri prepnutí nemenia. Nový 3D režim zatiaľ neexistuje.
+- Izolovaný pracovný základ vychádza z lokálneho commitu PR #3; zmenené herné skripty oproti GitHub main boli porovnané pomocou Git blob SHA a DataLoader bol doplnený z main. Nejde o úplne totožnú git históriu GitHub main.
+- Pred zmenou prešiel headless `audit_unit` (exit 0; zámerná chyba vytvorenia zálohy v teste sa vypísala ako ERROR). Po zmene na notebooku s AMD Radeon Graphics a rendererom Compatibility prešli dve grafické sondy: prepnutie, zachovanie kamery, uloženie a obnovenie nastavenia; test načítania v3 a mapových vrstiev. Godot pri ukončení sond uviedol úniky ObjectDB (33 a 57); nie je potvrdené, či sa prejavujú počas hry. FPS a reálne systémové DPI sa v tomto kroku nemerali.
+- Ďalej: grafický prototyp 3D mapy a výkonové merania; celá Pre-Beta-0.9 ešte nie je dokončená.
 ## 2026-10-28 – Kontrola a rozpracovaná oprava panelov pri mierke
 
 - Na notebooku s AMD Radeon Graphics sa pri veľkostiach okna 1280 × 720, 800 × 450 a 480 × 270 kontrolovali panely krajiny, mesta, firmy, burzy a portfólia: hranice, dostupnosť tlačidla, simulované zatvorenie cez Godot a nastavenie zvislého posuvu. V týchto scenároch prešli všetky kombinácie, text v najmenšom okne bol veľmi drobný.

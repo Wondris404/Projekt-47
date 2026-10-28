@@ -445,9 +445,9 @@ func _build_play() -> void:
 	cust_b.tooltip_text = "Zafarbí krajiny podľa toho, koľko od teba kupujú (€/mesiac): zelená najviac, žltá stredne, červená nič."
 	cust_b.toggled.connect(func(on): map.cust_mode = on; map._cust_day = -99; map.queue_redraw())
 	zoom_row.add_child(cust_b)
-	map_style_b = Button.new()  # zachovane pre stare diagnosticke scenare; v hre sa nezobrazuje
+	map_style_b = Button.new()
 	map_style_b.name = "MapStyleToggle"
-	map_style_b.visible = false
+	map_style_b.pressed.connect(func(): set_map_style("pixel" if map_style() == "hoi" else "hoi"))
 	zoom_row.add_child(map_style_b)
 	for spec in [["rail", "Železnica", "Postav železnicu: klikni na začiatok a koniec. %s €/km. Napojené firmy (do ~17 km) majú dopravu tovaru o 60 %% lacnejšiu." % EconMath.eur(Transport.RAIL_KM)], ["pipe", "Ropovod / plynovod", "Postav potrubie: klikni na začiatok a koniec. %s €/km. Ropa, plyn a palivá pre napojené firmy o 85 %% lacnejšie." % EconMath.eur(Transport.PIPE_KM)]]:
 		var lb = Button.new()  # JUAN19
@@ -832,6 +832,7 @@ func _load_ui_scale() -> void:
 	var scale = 1.0
 	if cfg.load("user://settings.cfg") == OK:
 		scale = float(cfg.get_value("ui", "scale", 1.0))
+		_map_style = "pixel" if str(cfg.get_value("graphics", "map_style", "hoi")) == "pixel" else "hoi"
 	if not is_equal_approx(scale, 1.0) and not is_equal_approx(scale, 1.25) and not is_equal_approx(scale, 1.5):
 		scale = 1.0
 	_ui_scale = scale
@@ -1826,24 +1827,36 @@ func _unhandled_input(event: InputEvent) -> void:
 		_set_speed(3)
 
 var map_style_b: Button
+var _map_style: String = "hoi"
 
-# Atlas je jediny styl aj pre starsie nastavenia a ulozene hry.
 func saved_map_style() -> String:
-	return "hoi"
+	return _map_style
 
 func map_style() -> String:
-	return "hoi"
+	return _map_style
 
-func set_map_style(_st: String) -> void:
+func set_map_style(st: String) -> void:
+	if st != "pixel" and st != "hoi":
+		return
+	_map_style = st
+	var cfg = ConfigFile.new()
+	cfg.load("user://settings.cfg")
+	cfg.set_value("graphics", "map_style", st)
+	var err = cfg.save("user://settings.cfg")
+	if err != OK:
+		push_warning("Nastavenie mapy sa nepodarilo uložiť (chyba %d)." % err)
 	_sync_map_style()
 
 func _sync_map_style() -> void:
 	if map_style_b:
-		map_style_b.visible = false
+		map_style_b.visible = true
+		map_style_b.text = "Mapa: Pixelová" if _map_style == "pixel" else "Mapa: Atlas"
+		map_style_b.tooltip_text = "Prepnúť vzhľad mapy"
 	if map:
-		map.set_meta("map_style", "hoi")
-		if not map.atlas:
-			map.atlas = true
+		map.set_meta("map_style", _map_style)
+		var want_atlas = _map_style == "hoi"
+		if map.atlas != want_atlas:
+			map.atlas = want_atlas
 			map.queue_redraw()
 
 func _on_line_requested(kind: String, a: Vector2, b: Vector2) -> void:  # JUAN19
