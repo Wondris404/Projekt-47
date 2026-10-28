@@ -947,3 +947,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Beh `40696075993` na jednom cloudovom runneri, poradie pred/po/po/pred: štyri mesačné merania výpočtu vplyvu pred úpravou 6,816; 6,622; 6,355; 6,562 ms, po úprave 5,426; 5,514; 5,748; 5,520 ms. Priemery sú približne 6,59 a 5,55 ms, teda o 1,04 ms menej v tomto scenári.
 - Najdlhší jednotlivý krok ukončenia dňa mal v týchto behoch pred úpravou 21,76 a 20,79 ms, po úprave 19,57 a 19,99 ms. Meranie používalo 70 dní, 72 hráčových firiem a diagnostické výpisy; má málo mesačných vzoriek, nezahŕňa vykreslenú snímku ani výkon notebooku a nedokazuje odstránenie sekania. https://github.com/Wondris404/Projekt-47/actions/runs/40696075993
 - Linux aj Windows prešli porovnaním celého serializovaného stavu po 62 dňoch pri použití starej a novej cesty. Úplná základná sada ešte beží; optimalizáciu treba preveriť aj na rozsiahlejšom uloženom stave.
+
+
+## 2026-10-28 – Úplná sada po optimalizácii vplyvu
+
+- Linuxový beh `40695557618` dokončil `unit` s 531 OK / 1 FAIL na chýbajúcej referencii katalógu; `audit_unit` 35 OK a stabilita 1/30/365 prešli. Windowsový auditný beh mal tiež 35 OK. Stav optimalizácie a párové meranie boli doplnené do pull requestu. https://github.com/Wondris404/Projekt-47/actions/runs/40695557618
