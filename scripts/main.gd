@@ -4651,6 +4651,15 @@ func _window_ui() -> void:
 	res["drag_stops_on_focus_loss"] = started_drag and win_mgr._mode == 0
 	_mouse(true, false, focus_point)
 	await get_tree().process_frame
+	var resize_point = country_win.position + country_win.size - Vector2(3, 3)
+	_mouse(false, false, resize_point)
+	_mouse(true, true, resize_point)
+	await get_tree().process_frame
+	var started_resize = win_mgr._mode == 2
+	get_window().focus_exited.emit()
+	res["resize_stops_on_focus_loss"] = started_resize and win_mgr._mode == 0
+	_mouse(true, false, resize_point)
+	await get_tree().process_frame
 	# 5) pamat podla typu okna (zavriet/otvorit inu krajinu)
 	var keep = Rect2(country_win.position, country_win.size)
 	country_win.visible = false
