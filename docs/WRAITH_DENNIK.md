@@ -1054,3 +1054,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Párový profil skupín podľa krajiny
 
 - Pridaný párový profil pôvodného a nového prechodu firiem v poradí pred/po/po/pred na tom istom runneri. Používa pevný seed a 70 dní; výsledok ešte nie je známy a profil nemení produkčný kód ani save.
+
+
+## 2026-10-28 – Párový výsledok skupín podľa krajiny
+
+- Beh `40702082461` na rovnakom runneri, poradie pred/po/po/pred: štyri mesačné merania výpočtu vplyvu pred úpravou 5,552; 5,821; 5,209; 5,497 ms, po úprave 3,895; 4,094; 3,860; 4,218 ms. Priemery sú približne 5,52 a 4,02 ms.
+- Najdlhší krok ukončenia dňa bol v oboch behoch pred úpravou 19,62 a 18,69 ms, po úprave 17,28 a 18,74 ms. Test obsahuje diagnostickú réžiu, iba štyri mesačné vzorky a nezahŕňa vykreslenie ani notebook; nepotvrdzuje odstránenie sekania. Presný stav po 62 dňoch sa zhodoval na Linuxe aj Windowse. https://github.com/Wondris404/Projekt-47/actions/runs/40702082461
