@@ -1848,6 +1848,10 @@ func _toggle_3d_prototype() -> void:
 			GameState.selected_iso = iso
 			_on_country_picked(iso)
 			open_country_firms(iso))
+		_prototype_3d.city_selected.connect(func(iso, city):
+			GameState.selected_iso = iso
+			_on_country_picked(iso)
+			open_city_panel(iso, city))
 		map.visible = false
 	else:
 		_prototype_3d.restore_map_camera()

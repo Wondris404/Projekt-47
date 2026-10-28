@@ -1,12 +1,14 @@
 extends SubViewportContainer
 
 signal country_selected(iso: String)
+signal city_selected(iso: String, city: String)
 
 var _map: Control
 var _camera: Camera3D
 var _viewport: SubViewport
 var _dragging := false
 var _moved := false
+var _cities: Array = []
 
 func setup(source_map: Control) -> void:
 	_map = source_map
@@ -31,6 +33,7 @@ func setup(source_map: Control) -> void:
 		material.albedo_color = Color(0.25 + shade, 0.34 + shade, 0.23 + shade)
 		item.material_override = material
 		world.add_child(item)
+	_add_cities(world)
 	_camera = Camera3D.new()
 	_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	_camera.far = 5000.0
@@ -38,6 +41,41 @@ func setup(source_map: Control) -> void:
 	sync_from_map()
 	_camera.current = true
 	gui_input.connect(_input_3d)
+
+func _add_cities(world: Node3D) -> void:
+	for iso in DataLoader.country_ids:
+		for city in TerrainSystem.cities(str(iso)):
+			_cities.append(city)
+	if _cities.is_empty(): return
+	var building = BoxMesh.new()
+	building.size = Vector3(1.1, 0.9, 1.1)
+	var material = StandardMaterial3D.new()
+	material.albedo_color = Color("dbc8a8")
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	building.material = material
+	var instances = MultiMesh.new()
+	instances.transform_format = MultiMesh.TRANSFORM_3D
+	instances.mesh = building
+	instances.instance_count = _cities.size()
+	for i in _cities.size():
+		var p: Vector2 = _cities[i].pos
+		instances.set_instance_transform(i, Transform3D(Basis.IDENTITY, Vector3(p.x, 0.45, p.y)))
+	var layer = MultiMeshInstance3D.new()
+	layer.multimesh = instances
+	world.add_child(layer)
+
+func _city_at(local_pos: Vector2) -> Dictionary:
+	if _camera.size > 150.0: return {}
+	var best: Dictionary = {}
+	var distance = 12.0
+	for city in _cities:
+		var pos: Vector2 = city.pos
+		var screen = _camera.unproject_position(Vector3(pos.x, 0.45, pos.y)) * size / Vector2(_viewport.size)
+		var d = screen.distance_to(local_pos)
+		if d < distance:
+			distance = d
+			best = city
+	return best
 
 func sync_from_map() -> void:
 	var center: Vector2 = _map._to_world(_map.size * 0.5)
@@ -80,7 +118,10 @@ func _input_3d(event: InputEvent) -> void:
 				if not _moved:
 					var point = _ground(event.position)
 					var iso = _map.region_at_world(point)
-					if iso != "": country_selected.emit(iso)
+					var city = _city_at(event.position)
+					if not city.is_empty():
+						city_selected.emit(str(city.iso), str(city.name))
+					elif iso != "": country_selected.emit(iso)
 	elif event is InputEventMouseMotion and _dragging:
 		var delta: Vector2 = event.relative
 		if delta.length() > 0.1: _moved = true

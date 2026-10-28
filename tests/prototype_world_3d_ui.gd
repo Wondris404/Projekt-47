@@ -21,7 +21,7 @@ func run() -> void:
 		quit(1)
 		return
 	await RenderingServer.frame_post_draw
-	root.get_texture().get_image().save_png("res://audit/prototype_3d_pred_20261028c.png")
+	root.get_texture().get_image().save_png("res://audit/prototype_3d_city_pred_20261028b.png")
 	button.pressed.emit()
 	for i in 8: await process_frame
 	var view = game._prototype_3d
@@ -30,7 +30,7 @@ func run() -> void:
 	else:
 		var cam: Camera3D = view._camera
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("res://audit/prototype_3d_po_20261028c.png")
+		root.get_texture().get_image().save_png("res://audit/prototype_3d_city_po_20261028b.png")
 		if Vector2(cam.position.x, cam.position.z).distance_to(map_center) > 0.1:
 			fails.append("camera_in")
 		var origin: Vector2 = view._ground(view.size * 0.5)
@@ -41,16 +41,30 @@ func run() -> void:
 		cam.position = Vector3(city.pos.x, 1200, city.pos.y)
 		cam.size = 40.0
 		await process_frame
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png("res://audit/prototype_3d_city_detail_20261028b.png")
 		var local = cam.unproject_position(Vector3(city.pos.x, 0, city.pos.y)) * view.size / Vector2(view._viewport.size)
 		var picked = []
 		view.country_selected.connect(func(iso): picked.append(iso))
+		var picked_city = []
+		view.city_selected.connect(func(iso, name): picked_city.append([iso, name]))
 		for down in [true, false]:
 			var e = InputEventMouseButton.new()
 			e.button_index = MOUSE_BUTTON_LEFT
 			e.pressed = down
 			e.position = local
 			view.gui_input.emit(e)
-		if picked.is_empty() or picked[0] != "SK" or gs.selected_iso != "SK": fails.append("country")
+		if picked_city.is_empty() or picked_city[0] != ["SK", city.name] or gs.selected_iso != "SK" or not game.city_panel.visible: fails.append("city")
+		var terrain = root.get_node("TerrainSystem")
+		var inland: Vector2 = terrain.project(48.7, 19.6)
+		local = cam.unproject_position(Vector3(inland.x, 0, inland.y)) * view.size / Vector2(view._viewport.size)
+		for down in [true, false]:
+			var e = InputEventMouseButton.new()
+			e.button_index = MOUSE_BUTTON_LEFT
+			e.pressed = down
+			e.position = local
+			view.gui_input.emit(e)
+		if picked.is_empty() or picked[0] != "SK": fails.append("country")
 		var old_size = cam.size
 		var wheel = InputEventMouseButton.new()
 		wheel.button_index = MOUSE_BUTTON_WHEEL_UP
