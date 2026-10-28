@@ -1,0 +1,86 @@
+name: Monthly simulation profile
+on:
+  push:
+    branches:
+      - codex/audit-ux-20261028
+    paths:
+      - .github/workflows/profile-monthly.yml
+permissions:
+  contents: read
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install verified Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 --output godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum --check
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+          echo "XDG_DATA_HOME=$RUNNER_TEMP/p47-user-data" >> "$GITHUB_ENV"
+          echo "XDG_CONFIG_HOME=$RUNNER_TEMP/p47-user-config" >> "$GITHUB_ENV"
+          echo "XDG_CACHE_HOME=$RUNNER_TEMP/p47-user-cache" >> "$GITHUB_ENV"
+      - name: Import assets
+        run: Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path "$GITHUB_WORKSPACE" --import
+      - name: Profile two month boundaries in a temporary checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("tests/profile_sim.gd")
+          text = p.read_text()
+          assert text.count("while days < 10:") == 1
+          p.write_text(text.replace("while days < 10:", "while days < 70:"))
+          p = Path("scripts/autoload/GameState.gd")
+          text = p.read_text()
+          start = text.index("func _finish_day(")
+          end = text.index("\nfunc _macro(", start)
+          block = text[start:end]
+          calls = [
+              ("macro", "_macro()"),
+              ("society", "Society.monthly(year_before, month_before)"),
+              ("firms_close", "IndustrySystem.close_month(year_before, month_before)"),
+              ("dividends", "IndustrySystem.pay_dividends()"),
+              ("rates", "BankingSystem.update_rates()"),
+              ("interest", "BankingSystem.process_monthly_interest()"),
+              ("bank", "BankingSystem.monthly()"),
+              ("geopolitics", "GeopoliticsSystem.monthly()"),
+              ("agents", "AgentSystem.monthly()"),
+              ("events", "EventSystem.monthly()"),
+              ("politics", "PoliticsSystem.monthly()"),
+              ("rivals", "RivalSystem.monthly()"),
+              ("gender", "PoliticsSystem.gender_monthly()"),
+              ("media", "IndustrySystem.media_monthly()"),
+              ("collateral", "BankingSystem.collateral_monthly()"),
+              ("airport", "IndustrySystem.airport_monthly()"),
+              ("stocks", "StockMarket.monthly()"),
+              ("empire", "Empire.monthly()"),
+          ]
+          for name, call in calls:
+              line = "\t\t" + call
+              assert block.count(line) == 1, name
+              before = "\t\tvar p47_t_" + name + " = Time.get_ticks_usec()\n"
+              after = '\n\t\tprint("P47_MONTH_SECTION ' + name + ' day=%d ms=%.3f" % [day_index, float(Time.get_ticks_usec() - p47_t_' + name + ') / 1000.0])'
+              block = block.replace(line, before + line + after)
+          p.write_text(text[:start] + block + text[end:])
+          PY
+          timeout 600 Godot_v4.7.2-stable_linux.x86_64 --headless --path "$GITHUB_WORKSPACE" -- profile_sim 2>&1 | tee "$RUNNER_TEMP/p47-monthly-profile.log"
+          ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/p47-monthly-profile.log"
+          grep -q '^P47_PHASE_DONE .*days=70' "$RUNNER_TEMP/p47-monthly-profile.log"
+          grep -q '^P47_MONTH_SECTION ' "$RUNNER_TEMP/p47-monthly-profile.log"
+      - name: Save profile output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-monthly-profile
+          path: ${{ runner.temp }}/p47-monthly-profile.log
+          if-no-files-found: warn
