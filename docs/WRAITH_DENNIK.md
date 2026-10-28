@@ -777,3 +777,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Párové výsledky výkonu bankovej opravy
 
 - Beh `40671193033` na tom istom runneri: pred 85,94 a 85,72 ms/deň, po 85,87 a 85,38 ms/deň; priemery dvojíc sú približne 85,83 a 85,63 ms/deň. V tejto krátkej headless sonde sa zhoršenie neprejavilo, rozdiel nie je dôkazom zrýchlenia a nemeria FPS ani notebook. https://github.com/Wondris404/Projekt-47/actions/runs/40671193033
+
+
+## 2026-10-28 – Ďalšie kontroly bankového formulára
+
+- Grafická skúška bola rozšírená o skutočný mesačný zásah poradcu a o zachovanie textu v práve editovanom políčku. Workflow teraz spúšťa grafickú kontrolu aj po zmene testu. Testy používajú izolovanú testovaciu hru; výsledok rozšírenej skúšky sa ešte overuje.
