@@ -1162,3 +1162,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Na notebooku s AMD Radeon Graphics sa pri veľkostiach okna 1280 × 720, 800 × 450 a 480 × 270 kontrolovali panely krajiny, mesta, firmy, burzy a portfólia: hranice, dostupnosť tlačidla, simulované zatvorenie cez Godot a nastavenie zvislého posuvu. V týchto scenároch prešli všetky kombinácie, text v najmenšom okne bol veľmi drobný.
 - Pri simulácii mierky Godotu 100 %, 125 % a 150 % (nie zmeny systémového DPI Windows) sa pri 150 % potvrdil presah panelov Burza a Portfólio a čiastočne skryté zatvorenie. Ich obsah má väčšiu vnútornú minimálnu šírku než bola použitá pri výpočte polohy.
 - Rozpracovaná oprava na vetve `codex/fix-scaled-window-position` zohľadňuje minimálnu veľkosť obsahu a pri jej zmene opätovne upraví polohu okna. Lokálna grafická sonda na notebooku po oprave vykázala úspešných 15 kombinácií panelov a mierok; pred/po snímky sú zatiaľ len v lokálnom testovacom priečinku. Pridaná samostatná regresná sonda sa ešte musí samostatne spustiť, celá sada ani dopad na FPS neboli po zmene overené. Skutočné systémové DPI a panely nad rámec uvedených piatich zostávajú neoverené.
+
+
+## Overenie presnej sondy PR #8 (2026-10-28)
+
+- Presné súbory `tests/scaled_panels_ui.gd` a `scripts/ui/window_drag.gd` z vetvy PR #8 sa spustili v samostatnej lokálnej kópii projektu na AMD Radeon Graphics s Godot 4.7.2 a GL Compatibility. Všetkých 15 kombinácií piatich panelov a faktorov Godotu 100/125/150 % prešlo: rám a tlačidlo zatvorenia v logickom viewporte, posúvanie a simulované zavretie; exit 0.
+- Prvý pokus pred importom zdrojov neprešiel, keďže čistá kópia nemala importované textúry. Po importe bol test spustený znova úspešne; prvý import vypísal známe chyby zdrojov pri inicializácii.
+- GitHub kontrola `windows-demo` pre head 5f4fd484 prešla. Systémové DPI Windows, fyzické kliknutie, presun a zmena veľkosti po oprave a výkon ešte nie sú týmto testom overené. PR zostáva rozpracované.
