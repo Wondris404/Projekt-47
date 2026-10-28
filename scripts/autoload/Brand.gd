@@ -349,7 +349,7 @@ func _firm_capacity(f: Dictionary) -> float:
 	return float(MEDIA[ind].users) * (1.0 + (lvl - 1.0) * 0.8) * eff
 
 # vysledok: users, pct (z celej populacie), share (podiel na pouzivateloch typu v krajine), cap_pct (strop dosahu)
-func media_reach(firm: Dictionary) -> Dictionary:
+func media_reach(firm: Dictionary, include_competitors: bool = true) -> Dictionary:
 	var ind = str(firm.get("industry", ""))
 	if not MEDIA.has(ind):
 		return {}
@@ -364,7 +364,10 @@ func media_reach(firm: Dictionary) -> Dictionary:
 	var inc = demand * INCUMBENT_SHARE
 	var mine = _firm_capacity(firm)
 	var users = minf(mine, demand * mine / maxf(caps + inc, 1.0))
-	return {"users": users, "pct": users / maxf(pop, 1.0), "share": users / maxf(demand, 1.0), "cap_pct": cap, "pop": pop, "competitors": maxi(0, GameState.firms.filter(func(x): return str(x.get("industry", "")) == ind and str(x.get("country", "")) == iso and not bool(x.get("closed", false))).size() - 1)}
+	var result = {"users": users, "pct": users / maxf(pop, 1.0), "share": users / maxf(demand, 1.0), "cap_pct": cap, "pop": pop}
+	if include_competitors:
+		result["competitors"] = maxi(0, GameState.firms.filter(func(x): return str(x.get("industry", "")) == ind and str(x.get("country", "")) == iso and not bool(x.get("closed", false))).size() - 1)
+	return result
 
 func media_text(firm: Dictionary) -> String:
 	var r = media_reach(firm)
@@ -374,13 +377,15 @@ func media_text(firm: Dictionary) -> String:
 	return "DOSAH: %.1f %% obyvateľov krajiny (%s %s z %s). Podiel na trhu %.0f %%, strop typu v krajine %.0f %%, konkurenti %d." % [float(r.pct) * 100.0, _fmt_n(float(r.users)), str(m.noun), _fmt_n(float(r.pop)), float(r.share) * 100.0, float(r.cap_pct) * 100.0, int(r.competitors)]
 
 # suhrn za krajinu: % obyvatelov pre kazdy typ, ktory hrac v krajine ma
+var use_light_country_media := true  # porovnávateľná referenčná cesta pre testy
+
 func country_media(iso: String, country_firms = null) -> Array:
 	var by = {}
 	var candidates: Array = GameState.player_firms() if country_firms == null else country_firms
 	for f in candidates:
 		if is_media(f) and str(f.get("country", "")) == iso and not bool(f.get("closed", false)):
 			var ind = str(f.industry)
-			by[ind] = float(by.get(ind, 0.0)) + float(media_reach(f).users)
+			by[ind] = float(by.get(ind, 0.0)) + float(media_reach(f, not use_light_country_media).users)
 	var out: Array = []
 	for ind in by.keys():
 		out.append({"ind": ind, "name": str(MEDIA[ind].name), "pct": minf(float(by[ind]) / maxf(_pop(iso), 1.0), media_cap(iso, ind))})

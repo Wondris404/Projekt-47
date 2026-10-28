@@ -256,7 +256,17 @@ func _society_power_headcount(u) -> void:
 			own[-1]["city"] = str(available_cities[1].name)
 	var made_bank: Dictionary = BankingSystem.create_bank(0.02, 0.08, 0.8)
 	setup_ok = setup_ok and bool(made_bank.get("ok", false))
+	var media_detail_ok = false
+	for f in GameState.player_firms():
+		if Brand.is_media(f):
+			var detail = Brand.media_reach(f)
+			var light = Brand.media_reach(f, false)
+			media_detail_ok = detail.has("competitors") and not light.has("competitors")
+			for field in ["users", "pct", "share", "cap_pct", "pop"]:
+				media_detail_ok = media_detail_ok and detail.get(field) == light.get(field)
+			break
 	var snapshot = GameState.to_dict().duplicate(true)
+	Brand.use_light_country_media = false
 	Society.use_power_headcount_cache = false
 	Society.use_monthly_city_groups = false
 	Society.use_monthly_country_groups = false
@@ -279,13 +289,21 @@ func _society_power_headcount(u) -> void:
 	for i in 62:
 		GameState.simulate_day()
 	var country_grouped = JSON.stringify(GameState.to_dict())
+	Brand.use_light_country_media = true
+	var fifth_error = GameState.from_dict(snapshot.duplicate(true))
+	for i in 62:
+		GameState.simulate_day()
+	var light_media = JSON.stringify(GameState.to_dict())
 	Society.use_power_headcount_cache = true
 	Society.use_monthly_city_groups = true
 	Society.use_monthly_country_groups = true
-	u._chk("audit_society_power_setup", setup_ok and first_error == "" and second_error == "" and third_error == "" and fourth_error == "")
+	Brand.use_light_country_media = true
+	u._chk("audit_society_power_setup", setup_ok and first_error == "" and second_error == "" and third_error == "" and fourth_error == "" and fifth_error == "")
 	u._chk("audit_society_power_exact_62_days", expected == actual)
 	u._chk("audit_society_city_groups_exact_62_days", expected == grouped)
 	u._chk("audit_society_country_groups_exact_62_days", expected == country_grouped)
+	u._chk("audit_media_detail_unchanged", media_detail_ok)
+	u._chk("audit_society_light_media_exact_62_days", expected == light_media)
 
 func _reject_missing_cash(u) -> void:
 	u._new()
