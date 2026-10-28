@@ -992,3 +992,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - `unit` sa naďalej celý spúšťa. Ak sa dokončí a jeho jediným zlyhaním je `catalog_fields_match_brief` pri neprítomnom `tests/catalog_field_lock.txt`, workflow túto známu neoverenú referenciu zobrazí ako varovanie namiesto opakovaného neúspešného behu. Výsledok testu zostáva v logu 531 OK / 1 FAIL; nejde o opravenie ani overenie katalógu.
 - Iné zlyhanie, chyba GDScriptu, timeout, nedokončená sada alebo chyba pri existujúcej referencii zostáva chybou. Pridaná samostatná kontrola siedmich scenárov klasifikácie; reálny beh a samokontrola sa ešte overujú.
+
+
+## 2026-10-28 – Opakované meranie dividend
+
+- Opravený profil `40698325056` prešiel. Pri dvoch mesačných uzávierkach nameral výpočet obdobného zisku 1,11 a 2,09 ms, výpočet rezerv 0,70 a 0,94 ms a prevod dividend 0,25 a 0,24 ms. Merania zahŕňajú réžiu časovačov a nemerajú snímky ani výkon notebooku.
+- Správy v Gmaile boli iba prečítané; príčiny jednotlivých neúspešných behov sa zhodujú s auditným logom. https://github.com/Wondris404/Projekt-47/actions/runs/40698325056
