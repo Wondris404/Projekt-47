@@ -719,3 +719,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - V grafickom behu `40667390401` prešlo všetkých 10 existujúcich kontrol. Po otvorení inej krajiny zostal panel na (940, 500) s veľkosťou 340 × 220 px; minimálna šírka obsahu klesla zo 477 na 288 px. Testované cez Xvfb/llvmpipe pri viewporte 1280 × 720.
 - Pridaný workflow `country-comparison.yml` pripravuje samostatné snímky pred/po a obraz vedľa seba, a po úspešnej kontrole ich má uložiť do vetvy. Výsledok vytvorenia snímok a ich vizuálna kontrola zatiaľ nie sú potvrdené. https://github.com/Wondris404/Projekt-47/actions/runs/40667390401
+
+
+## 2026-10-28 – Testy po zalomení textu
+
+- Beh `40667327638`: `audit_unit` 29 OK / 0 FAIL, stabilita 1/30/365 prešla, `unit` 531 OK / 1 FAIL na tej istej chýbajúcej referencii katalógu ako pred zmenou. Testovacia vetva teda stále nemá úplne zelenú základnú sadu.
+- Headless sonda s rovnakým scenárom uvádza priemer 59,52 ms/deň, medián 58,92 ms, p95 67,65 ms a maximum 72,95 ms. Pôvodný beh mal 87,79 ms/deň; rozdielne vyťaženie vzdialených runnerov neumožňuje z toho dokázať zrýchlenie ani vylúčiť zhoršenie na notebooku. Nejde o meranie času snímky. https://github.com/Wondris404/Projekt-47/actions/runs/40667327638
