@@ -859,3 +859,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - V behu `40674747084` na pôvodnom stave prešli dve kontroly načítania a zlyhalo upozornenie, po oprave prešli všetky tri. Snímky `recovery_before20261028.png`, `recovery_after20261028.png` a `recovery_comparison20261028.png` sú v `audit/screenshots/save-audit/`.
 - Snímky z Xvfb/llvmpipe zatiaľ neboli vizuálne posúdené. https://github.com/Wondris404/Projekt-47/actions/runs/40674747084
+
+
+## 2026-10-28 – Kontrola straty fokusu počas presunu okna
+
+- Grafický test okna bol rozšírený o začatie presunu a vyvolanie straty fokusu pred udalosťou uvoľnenia myši. Overuje, či sa presun zastaví; nejde o zmenu správania hry. Pôvodný audit toto riziko evidoval ako neoverené. Výsledok reprodukcie zatiaľ nie je známy.
