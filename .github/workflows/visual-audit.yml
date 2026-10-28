@@ -5,6 +5,7 @@ on:
       - codex/audit-ux-20261028
     paths:
       - .github/workflows/visual-audit.yml
+      - scripts/main.gd
   workflow_dispatch:
 permissions:
   contents: read
@@ -61,15 +62,15 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: "1"
         run: |
           set -o pipefail
-          python3 -c 'from pathlib import Path; p=Path("scripts/main.gd"); s=p.read_text(); a="\tvar keep = Rect2(country_win.position, country_win.size)"; b="\tres[\"remembered\"] = Rect2(country_win.position, country_win.size).is_equal_approx(keep)"; assert s.count(a)==1 and s.count(b)==1; s=s.replace(a,a+"\n\tprint(\"P47_WINDOW_BEFORE rect=\", keep, \" saved=\", win_mgr.rects.get(\"country\"), \" viewport=\", vp, \" mode=\", win_mgr._mode)"); s=s.replace(b,"\tprint(\"P47_WINDOW_AFTER rect=\", Rect2(country_win.position, country_win.size), \" saved=\", win_mgr.rects.get(\"country\"), \" min=\", country_win.get_combined_minimum_size())\n\tfor node in country_win.find_children(\"*\", \"Control\", true, false):\n\t\tif node.get_combined_minimum_size().x > 300:\n\t\t\tprint(\"P47_WINDOW_NODE \", node.get_path(), \" min=\", node.get_combined_minimum_size())\n"+b); p.write_text(s)'
-          timeout 300 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- window_ui baseline20261028 2>&1 | tee "$RUNNER_TEMP/window.log"
+          python3 -c 'from pathlib import Path; p=Path("scripts/main.gd"); s=p.read_text(); a="\tvar keep = Rect2(country_win.position, country_win.size)"; b="\tres[\"remembered\"] = Rect2(country_win.position, country_win.size).is_equal_approx(keep)"; assert s.count(a)==1 and s.count(b)==1; s=s.replace(a,a+"\n\tprint(\"P47_WINDOW_BEFORE rect=\", keep, \" saved=\", win_mgr.rects.get(\"country\"), \" viewport=\", vp, \" mode=\", win_mgr._mode)"); s=s.replace(b,"\tprint(\"P47_WINDOW_AFTER rect=\", Rect2(country_win.position, country_win.size), \" saved=\", win_mgr.rects.get(\"country\"), \" min=\", country_win.get_combined_minimum_size())\n\tfor node in country_win.find_children(\"*\", \"Control\", true, false):\n\t\tif node.get_combined_minimum_size().x > 300:\n\t\t\tprint(\"P47_WINDOW_NODE \", node.get_path(), \" min=\", node.get_combined_minimum_size())\n\tawait RenderingServer.frame_post_draw\n\tDirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(\"res://audit/screenshots/window-audit\"))\n\tget_viewport().get_texture().get_image().save_png(\"res://audit/screenshots/window-audit/reopened_after20261028.png\")\n"+b); p.write_text(s)'
+          timeout 300 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- window_ui after20261028 2>&1 | tee "$RUNNER_TEMP/window.log"
           ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/window.log"
       - name: Save window audit screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: p47-window-baseline
-          path: audit/screenshots/window-audit/*_baseline20261028.png
+          path: audit/screenshots/window-audit/*_after20261028.png
           if-no-files-found: error
       - name: Save window audit log
         if: always()
