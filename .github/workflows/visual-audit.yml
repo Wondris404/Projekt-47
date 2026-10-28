@@ -54,3 +54,26 @@ jobs:
           name: p47-visual-log
           path: ${{ runner.temp }}/visual.log
           if-no-files-found: warn
+      - name: Run window movement and resize audit
+        if: always()
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          set -o pipefail
+          timeout 300 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- window_ui baseline20261028 2>&1 | tee "$RUNNER_TEMP/window.log"
+          ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/window.log"
+      - name: Save window audit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-window-baseline
+          path: audit/screenshots/window-audit/*_baseline20261028.png
+          if-no-files-found: error
+      - name: Save window audit log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-window-log
+          path: ${{ runner.temp }}/window.log
+          if-no-files-found: warn

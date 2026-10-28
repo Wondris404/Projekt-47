@@ -684,3 +684,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Menej opakovaných testovacích behov
 
 - GitHub Actions pre celý audit ignoruje commity meniace iba dokumentáciu alebo samostatný grafický workflow; herné a testovacie zmeny ho naďalej spúšťajú a zostáva dostupné ručné spustenie. Pred zmenou prešiel audit_unit a stabilita; úprava mení len spúšťanie workflow a po zápise sa ešte neoverilo každé pravidlo spúšťania.
+
+
+## 2026-10-28 – Prenositeľný výstup testu okien
+
+- Grafická skúška `window_ui` ukladá snímku do `audit/screenshots/window-audit/` v skúšanej kópii namiesto pevnej cesty z iného počítača; snímka má odlíšiteľný tag. GitHub Actions spúšťa existujúce kontroly presunu, veľkosti a pamäte okien cez Xvfb a ukladá výslednú snímku a log ako artefakty. Herné rozhranie a jeho správanie sa nemenili.
+- Pred úpravou prešla grafická sonda Atlasu; výsledok skúšky okien na tejto verzii ešte nie je potvrdený. Artefakt treba vizuálne skontrolovať; nie je to automatické porovnanie pred/po.

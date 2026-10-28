@@ -4624,7 +4624,11 @@ func _window_ui() -> void:
 		await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	var img = get_viewport().get_texture().get_image()
-	var shot = "/workspace/projekt47/preview/p47_windows_country.png"
+	var shot_dir = ProjectSettings.globalize_path("res://audit/screenshots/window-audit")
+	DirAccess.make_dir_recursive_absolute(shot_dir)
+	var args = OS.get_cmdline_user_args()
+	var tag = str(args[1]) if args.size() > 1 else "baseline"
+	var shot = shot_dir.path_join("country_" + tag + ".png")
 	img.save_png(shot)
 	res["screenshot"] = FileAccess.file_exists(shot) and img.get_width() > 100
 	var fails = 0
