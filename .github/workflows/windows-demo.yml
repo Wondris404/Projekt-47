@@ -11,6 +11,17 @@ on:
       - 'scenes/**'
       - 'ui/**'
       - 'project.godot'
+  push:
+    branches: [main]
+    paths:
+      - 'export_presets.cfg'
+      - '.github/workflows/windows-demo.yml'
+      - 'scripts/**'
+      - 'assets/**'
+      - 'data/**'
+      - 'scenes/**'
+      - 'ui/**'
+      - 'project.godot'
   workflow_dispatch:
 
 permissions:
@@ -70,10 +81,11 @@ jobs:
           Hra ukladá pozície do priečinka používateľských dát Godotu.
           Ide o skúšobnú verziu; chyby a kroky na ich zopakovanie nahláste autorovi.
           '@ | Set-Content -Encoding utf8 build/CITAJ-MA.txt
-          Compress-Archive -Path build/Projekt-47.exe,build/CITAJ-MA.txt -DestinationPath Projekt-47-Windows.zip
       - uses: actions/upload-artifact@v4
         with:
           name: Projekt-47-Windows
-          path: Projekt-47-Windows.zip
+          path: |
+            build/Projekt-47.exe
+            build/CITAJ-MA.txt
           if-no-files-found: error
           retention-days: 30
