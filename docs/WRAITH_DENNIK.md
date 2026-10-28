@@ -725,3 +725,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Beh `40667327638`: `audit_unit` 29 OK / 0 FAIL, stabilita 1/30/365 prešla, `unit` 531 OK / 1 FAIL na tej istej chýbajúcej referencii katalógu ako pred zmenou. Testovacia vetva teda stále nemá úplne zelenú základnú sadu.
 - Headless sonda s rovnakým scenárom uvádza priemer 59,52 ms/deň, medián 58,92 ms, p95 67,65 ms a maximum 72,95 ms. Pôvodný beh mal 87,79 ms/deň; rozdielne vyťaženie vzdialených runnerov neumožňuje z toho dokázať zrýchlenie ani vylúčiť zhoršenie na notebooku. Nejde o meranie času snímky. https://github.com/Wondris404/Projekt-47/actions/runs/40667327638
+
+
+## 2026-10-28 – Snímky okna pred a po
+
+- Workflow `40667619876` zopakoval rovnaký scenár na kóde pred opravou a po nej: pred opravou zlyhalo zapamätanie okna, po oprave prešlo všetkých desať kontrol. Tri nové obrázky sú v `audit/screenshots/window-audit/`: `country_before_20261028.png`, `country_after_20261028.png` a `country_comparison_20261028.png` (vedľa seba).
+- Obrázky vznikli cez Xvfb/llvmpipe. Ich vizuálne posúdenie zatiaľ nie je potvrdené; nejde o meranie výkonu GPU notebooku. https://github.com/Wondris404/Projekt-47/actions/runs/40667619876
