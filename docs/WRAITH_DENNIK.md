@@ -1087,3 +1087,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - V zmenšenom náhľade na GitHube je vidieť, že po oprave panel krajiny zostáva v okne hry a bankový panel zobrazuje aktualizovanú sadzbu. Náhľad nie je dostatočne detailný na kontrolu všetkého textu; správu pri obnove uloženia preto vizuálne nepotvrdzujem. Správanie obnovy aj banky kontrolujú aj samostatné grafické testy.
 - Beh `40702803419`: `unit` 531 OK / 1 známy FAIL pre chýbajúcu referenciu katalógu, viditeľný ako varovanie; `audit_unit` 46 OK a stabilita 1/30/365 prešli. Párové meranie médií ešte prebieha. https://github.com/Wondris404/Projekt-47/actions/runs/40702803419
+
+
+## 2026-10-28 – Oprava opakovaného merania médií
+
+- Pri kontrole párového merania sa zistilo, že cyklus mohol opakovane vložiť časovač do toho istého skriptu a následne spôsobiť chybu. Profil pred každým meraním obnovuje pôvodnú testovaciu kópiu skriptu a až potom pridá časovač. Produkčná hra sa tým nemení.
+- Prvý beh už bol spustený s pôvodným postupom a môže zlyhať; opravený profil aj jeho výsledok treba ešte overiť. https://github.com/Wondris404/Projekt-47/actions/runs/40703252724
