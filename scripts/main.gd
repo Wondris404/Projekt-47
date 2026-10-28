@@ -1252,7 +1252,8 @@ func _on_menu_load(slot: int) -> void:
 	if main_menu:
 		main_menu.visible = false
 	_refresh_label()
-	_feedback("Hra načítaná (slot %d). Pauza – stlač 1." % slot, true)
+	var loaded_message = "Hra načítaná zo záložnej kópie" if SaveSystem.last_load_from_backup else "Hra načítaná"
+	_feedback("%s (slot %d). Pauza – stlač 1." % [loaded_message, slot], true)
 
 func _on_menu_quit() -> void:
 	get_tree().quit()

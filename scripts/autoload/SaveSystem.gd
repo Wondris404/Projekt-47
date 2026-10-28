@@ -2,6 +2,7 @@ extends Node
 
 const MAX_SAVE_BYTES = 64 * 1024 * 1024
 var last_error = ""
+var last_load_from_backup := false
 var base_dir = "user://saves"
 const TEST_DIR = "user://test_tmp_saves"
 
@@ -86,6 +87,7 @@ func _find_slot(slot: int) -> String:
 # Vracia "" pri úspechu, inak text chyby; pri chybe sa živý stav nemení.
 func load_slot(slot: int) -> String:
 	last_error = ""
+	last_load_from_backup = false
 	var path = _find_slot(slot)
 	if path == "":
 		return "Slot je prázdny."
@@ -100,6 +102,8 @@ func load_slot(slot: int) -> String:
 	var err = GameState.from_dict(data)
 	if err != "":
 		last_error = err
+	else:
+		last_load_from_backup = path.ends_with(".backup")
 	return err
 
 func has_slot(slot: int) -> bool:

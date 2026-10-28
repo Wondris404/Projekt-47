@@ -225,12 +225,12 @@ func _save_replace_backup(u) -> void:
 	u._chk("audit_backup_written", saved == path and not original_hash.is_empty() and FileAccess.get_sha256(path + ".backup") == original_hash)
 	GameState.player.cash = 0.0
 	var err = SaveSystem.load_slot(1)
-	u._chk("audit_backup_current_preferred", err == "" and is_equal_approx(float(GameState.player.cash), original_cash + 12345.0))
+	u._chk("audit_backup_current_preferred", err == "" and not SaveSystem.last_load_from_backup and is_equal_approx(float(GameState.player.cash), original_cash + 12345.0))
 	# Presun stranou napodobní chýbajúci cieľ po neúspešnom nahradení, bez mazania.
 	var moved = DirAccess.rename_absolute(path, path + ".held") == OK
 	GameState.player.cash = 0.0
 	err = SaveSystem.load_slot(1)
-	u._chk("audit_backup_recovery_v3", moved and err == "" and is_equal_approx(float(GameState.player.cash), original_cash) and GameState.SAVE_VERSION == 3)
+	u._chk("audit_backup_recovery_v3", moved and err == "" and SaveSystem.last_load_from_backup and is_equal_approx(float(GameState.player.cash), original_cash) and GameState.SAVE_VERSION == 3)
 	var path2 = SaveSystem.save_slot(2)
 	var hash2 = FileAccess.get_sha256(path2)
 	var blocked = DirAccess.make_dir_absolute(path2 + ".backup") == OK
