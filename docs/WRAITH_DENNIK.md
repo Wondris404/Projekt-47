@@ -1216,3 +1216,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - GitHub kontrola `windows-demo` pre head 5f4fd484 prešla. Systémové DPI Windows, fyzické kliknutie, presun a zmena veľkosti po oprave a výkon ešte nie sú týmto testom overené. PR zostáva rozpracované.
 
 - Následne na rovnakej izolovanej kópii s presným kódom PR prešlo 12 existujúcich GUI kontrol vrátane simulovaného ťahania, zmeny veľkosti, obmedzenia na viewport a straty fokusu (`window_ui`, exit 0). Pridané sú lokálne snímky Burzy pred/po pri faktore Godotu 150 % z predchádzajúcej lokálnej experimentálnej sondy; nejde o snímky zo systémového DPI Windows.
+
+
+## Pre-Beta-0.9 — skúšobný 3D pohľad v hre (2026-10-28)
+
+- V lište je experimentálne tlačidlo „3D skúška“. Otvára 3D pohľad z existujúcich vyčistených hraníc, podporuje ťahanie, koliesko a výber krajiny s otvorením jej panelu. Pri prepnutí sa prenáša stred a približná mierka kamery; po návrate sa 3D scéna uvoľní. Výpočet a save formát sa nemenia.
+- Na notebooku s AMD Radeon Graphics a Godot 4.7.2 GL Compatibility prešla grafická sonda prepnutia, prevodu súradníc, výberu Slovenska, zoomu, zachovania stredu kamery a návratu, aj kontrola pozastaveného dňa. Samostatná existujúca sonda pixel/Atlas prešla. Pri ukončení sond Godot hlásil 15 a 33 ObjectDB únikov; príčina nebola zisťovaná. Snímky pred a po sú v audit/screenshots/prebeta-3d/. Simulované udalosti nenahrádzajú fyzickú skúšku vstupu.
+- Toto je len skúšobný pohľad, nie dokončená 3D hra: chýba terén, mestá, firmy a ich výber, rieky, modely, vrstvy obchodu, vhodná grafika aj meranie FPS a pamäte. Vytváranie 165 mesh objektov pri otvorení môže spôsobovať zásek; zatiaľ nebolo merané. Prepínanie počas stavby a regionálneho pohľadu treba preveriť. Grafická skúška porovnáva ten istý stred, nie rovnaký výtvarný vzhľad.

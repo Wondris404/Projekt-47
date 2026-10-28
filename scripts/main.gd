@@ -4,6 +4,7 @@ const WorldMapScript = preload("res://scripts/ui/world_map.gd")
 const BusinessDescriptions = preload("res://scripts/business_descriptions.gd")
 const GoodsIcons = preload("res://scripts/ui/goods_icons.gd")
 var map
+var _prototype_3d: Control
 var info: Label
 var play = false
 var acc = 0.0
@@ -449,6 +450,12 @@ func _build_play() -> void:
 	map_style_b.name = "MapStyleToggle"
 	map_style_b.pressed.connect(func(): set_map_style("pixel" if map_style() == "hoi" else "hoi"))
 	zoom_row.add_child(map_style_b)
+	var preview_3d_button = Button.new()
+	preview_3d_button.name = "Prototype3DButton"
+	preview_3d_button.text = "3D skúška"
+	preview_3d_button.tooltip_text = "Rozpracovaný 3D pohľad: výber krajiny, posun a priblíženie."
+	preview_3d_button.pressed.connect(_toggle_3d_prototype)
+	zoom_row.add_child(preview_3d_button)
 	for spec in [["rail", "Železnica", "Postav železnicu: klikni na začiatok a koniec. %s €/km. Napojené firmy (do ~17 km) majú dopravu tovaru o 60 %% lacnejšiu." % EconMath.eur(Transport.RAIL_KM)], ["pipe", "Ropovod / plynovod", "Postav potrubie: klikni na začiatok a koniec. %s €/km. Ropa, plyn a palivá pre napojené firmy o 85 %% lacnejšie." % EconMath.eur(Transport.PIPE_KM)]]:
 		var lb = Button.new()  # JUAN19
 		lb.text = str(spec[1])
@@ -1828,6 +1835,25 @@ func _unhandled_input(event: InputEvent) -> void:
 
 var map_style_b: Button
 var _map_style: String = "hoi"
+
+func _toggle_3d_prototype() -> void:
+	if _prototype_3d == null:
+		_prototype_3d = load("res://scripts/ui/prototype_world_3d.gd").new()
+		_prototype_3d.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_prototype_3d.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		map.get_parent().add_child(_prototype_3d)
+		map.get_parent().move_child(_prototype_3d, map.get_index() + 1)
+		_prototype_3d.setup(map)
+		_prototype_3d.country_selected.connect(func(iso):
+			GameState.selected_iso = iso
+			_on_country_picked(iso)
+			open_country_firms(iso))
+		map.visible = false
+	else:
+		_prototype_3d.restore_map_camera()
+		_prototype_3d.queue_free()
+		_prototype_3d = null
+		map.visible = true
 
 func saved_map_style() -> String:
 	return _map_style
