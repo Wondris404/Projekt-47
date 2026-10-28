@@ -958,3 +958,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Mesačný výpočet služieb môže použiť už vytvorené skupiny hráčových firiem podľa mesta; pri iných volaniach sa zachová pôvodný úplný prechod. Referenčná cesta zostáva dostupná na porovnanie a ekonomické výpočty ani ich poradie sa nemenia.
 - Skúška bola rozšírená o viac miest a samostatné porovnanie celého stavu po 62 dňoch pri pôvodnej a optimalizovanej ceste. Výsledky, časová úspora a správanie na rozsiahlych savoch ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Zhoda mesačných skupín firiem
+
+- Linuxový beh `40696718198` a Windowsový `40696717980` prešli `audit_unit` 36 OK / 0 FAIL. Presný serializovaný stav po 62 dňoch sa zhodoval pri pôvodnej aj novej ceste v scenári s viacerými mestami; Linuxová stabilita 1/30/365 prešla. Úplná `unit` ešte beží.
+- Jedna testovacia konfigurácia nedokazuje zhodu všetkých savov; časová úspora sa ešte musí zmerať na rovnakom runneri.
