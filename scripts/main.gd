@@ -37,6 +37,13 @@ func _ready() -> void:
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/atlas_camera_regressions.gd").new().run(unit, self)
 			exit_code = 1 if unit.fails > 0 else 0
+		elif args.size() > 0 and str(args[0]) == "map_compat_unit":
+			var unit = load("res://tests/unit.gd").new()
+			SaveSystem.use_test_dir()
+			load("res://tests/juan5.gd").new().run(unit)
+			load("res://tests/juan9.gd").new().run(unit)
+			SaveSystem.cleanup_test_dir()
+			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "atlas_update_unit":
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/atlas_update_regressions.gd").new().run(unit, self)

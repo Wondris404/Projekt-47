@@ -40,3 +40,11 @@ Pri dekódovaní zdedených PNG boli tri zo štyroch obrázkov `camera_*_before.
 ## Kliknutie na vysoké modely — Codex (GPT-6)
 
 Dodatočná kontrola odhalila, že pôvodné vyberanie používalo iba malý kruh okolo základne budovy. Strecha/chladiace veže nového modelu mohli byť mimo tohto kruhu. Výber teraz používa rovnaký obdĺžnik ako kreslenie a nepriehľadné pixely modelu; transparentné okraje nekradnú kliknutia. Prekrytie sa vyhodnotí v opačnom poradí kreslenia. Doplnené dve kontroly strechy a priehľadného rohu (spolu 30 mapových kontrol).
+
+## Bezpečná inicializácia mapy — Codex (GPT-6)
+
+Úplná sada odhalila tri script errors v zdedenej oprave kamery: staršie testy volajú `_ready()` aj na mape mimo stromu, kde `get_window()` vracia null. Pripojenie `focus_exited` teraz kontroluje existenciu okna a neduplikuje spojenie. Pridaná regresia inicializácie mimo stromu (spolu 31 nových mapových kontrol) a samostatný beh existujúcich Juan5/Juan9 sekcií, ktoré tieto tri volania obsahujú.
+
+## Súbežný stav GitHubu
+
+Počas práce niekto zlúčil kameru do main (`88849d6`) a publikoval alternatívnu implementáciu vlakov `6120dee` na `codex/atlas-trains-20261028`. Táto vetva sa neprepisuje ani nemaže. Jej vlaky plnia rovnakú úlohu ako naša samostatná vrstva; dve implementácie sa nekombinujú. Aktuálny main sa zahrnie do histórie tejto pracovnej vetvy, porovnania zostanú z opätovne overených PNG.

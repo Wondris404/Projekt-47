@@ -1,6 +1,10 @@
 extends RefCounted
 const Traffic = preload("res://scripts/ui/atlas_traffic.gd")
 func run(u, host: Node) -> void:
+	var detached = WorldMap.new()
+	detached._ready() # Existing compatibility tests initialize maps outside the tree.
+	u._chk("camera_detached_initialization", detached.shapes.size() == 165)
+	detached.free()
 	u._new()
 	u._chk("traffic_idle", Traffic.train_count(0.0) == 0)
 	u._chk("traffic_density", Traffic.train_count(0.15) < Traffic.train_count(1.0))
