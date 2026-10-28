@@ -696,3 +696,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Vzdialený beh `40654635533` preveril 10 existujúcich kontrol okna krajiny: deväť prešlo, kontrola presnej polohy a veľkosti po zatvorení a znovuotvorení zlyhala. Príčina sa ešte skúma; nejde zatiaľ o potvrdenie konkrétnej chyby herného kódu. Východisková snímka a log sú uložené ako artefakty behu https://github.com/Wondris404/Projekt-47/actions/runs/40654635533.
 - Test používal Xvfb a softvérové vykresľovanie, preto nepotvrdzuje vzhľad ani výkon na notebooku. Beh Atlasu prešiel, ale jeho snímky zatiaľ neboli vizuálne posúdené.
+
+
+## 2026-10-28 – Diagnostika pamäte okna
+
+- Grafický workflow do dočasnej kópie pri teste doplní výpis polohy, uloženej polohy a minimálnej veľkosti pred a po znovuotvorení okna. Zdrojový kód hry sa tým nemení. Beh `40655073099` prebieha; záver ešte nie je známy.
