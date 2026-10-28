@@ -1,0 +1,54 @@
+name: Windows save regression
+on:
+  push:
+    branches:
+      - codex/audit-ux-20261028
+    paths:
+      - .github/workflows/save-windows.yml
+      - scripts/autoload/SaveSystem.gd
+      - tests/audit_regressions.gd
+permissions:
+  contents: read
+jobs:
+  save:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install verified Godot 4.7.2
+        shell: pwsh
+        run: |
+          $zipFile = Join-Path $env:RUNNER_TEMP "p47-godot-windows.zip"
+          $binDir = Join-Path $env:RUNNER_TEMP "p47-godot-windows"
+          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_win64.exe.zip" -OutFile $zipFile
+          $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $zipFile).Hash.ToLowerInvariant()
+          if ($hash -ne "731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953") { throw "Godot archive checksum mismatch" }
+          Expand-Archive -LiteralPath $zipFile -DestinationPath $binDir
+          $consoleExe = Join-Path $binDir "Godot_v4.7.2-stable_win64_console.exe"
+          if (-not (Test-Path -LiteralPath $consoleExe)) { throw "Godot console executable missing" }
+          "P47_GODOT=$consoleExe" | Out-File -FilePath $env:GITHUB_ENV -Append
+      - name: Import assets
+        shell: pwsh
+        run: |
+          & $env:P47_GODOT --headless --editor --path $env:GITHUB_WORKSPACE --import
+          if ($LASTEXITCODE -ne 0) { throw "Asset import failed ($LASTEXITCODE)" }
+      - name: Run save and audit regressions
+        shell: pwsh
+        run: |
+          $log = Join-Path $env:RUNNER_TEMP "p47-windows-audit.log"
+          & $env:P47_GODOT --headless --path $env:GITHUB_WORKSPACE -- audit_unit 2>&1 | Tee-Object -FilePath $log
+          $code = $LASTEXITCODE
+          if ($code -ne 0) { throw "Audit tests failed ($code)" }
+          if (Select-String -Path $log -Pattern '^SCRIPT ERROR:|^P47_UNIT_FAIL') { throw "Audit test reported errors" }
+          foreach ($name in @("audit_backup_written", "audit_backup_current_preferred", "audit_backup_recovery_v3", "audit_backup_failure_preserves_slot")) {
+            if (-not (Select-String -Path $log -Pattern ("^P47_UNIT_OK " + $name))) { throw "Missing test result: $name" }
+          }
+      - name: Save Windows test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-windows-audit-log
+          path: ${{ runner.temp }}/p47-windows-audit.log
+          if-no-files-found: warn
