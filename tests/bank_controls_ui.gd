@@ -42,6 +42,18 @@ func run(host) -> void:
 	host._bank_cons.value = 23.0
 	host._on_bank_apply()
 	var precision_ok = is_equal_approx(float(bank.sav_rate), 0.1273)
-	for row in [["clean_refresh", clean_ok], ["preserve_edit", dirty_ok], ["apply_current", apply_ok], ["preserve_precision", precision_ok]]:
+	var hired = BankingSystem.hire_advisor(bank)
+	BankingSystem._advisor_month(bank)
+	host._fill_bank_detail()
+	var advisor_ok = hired == "" and absf(host._bank_cons.value - BankingSystem.consumer_rate(bank) * 100.0) <= 0.251 and absf(host._bank_sav.value - float(bank.sav_rate) * 100.0) <= 0.126
+	var line: LineEdit = host._bank_cons.get_line_edit()
+	line.grab_focus()
+	await host.get_tree().process_frame
+	line.text = "19"
+	bank.cons_rate = 0.24
+	host._fill_bank_detail()
+	var typing_ok = line.has_focus() and line.text == "19"
+	line.release_focus()
+	for row in [["clean_refresh", clean_ok], ["preserve_edit", dirty_ok], ["apply_current", apply_ok], ["preserve_precision", precision_ok], ["advisor_refresh", advisor_ok], ["preserve_typing", typing_ok]]:
 		print("P47_BANK_%s %s" % ["OK" if row[1] else "FAIL", row[0]])
-	host.get_tree().quit(0 if clean_ok and dirty_ok and apply_ok and precision_ok else 1)
+	host.get_tree().quit(0 if clean_ok and dirty_ok and apply_ok and precision_ok and advisor_ok and typing_ok else 1)
