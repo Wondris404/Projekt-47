@@ -3246,6 +3246,7 @@ func open_country_firms(iso: String) -> void:
 	if rows.is_empty():
 		var l = Label.new()
 		l.text = "Tu zatiaľ nič nemáš. Založ firmu: Založiť → Postaviť na mape."
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		v.add_child(l)
 	var sc = ScrollContainer.new()
 	sc.custom_minimum_size = Vector2(260, mini(rows.size(), 8) * 32)
