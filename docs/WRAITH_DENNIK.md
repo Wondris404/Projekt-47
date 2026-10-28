@@ -906,3 +906,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Headless beh `40694620596`, pevný seed, 70 dní a 72 hráčových firiem: maximálny meraný jednotlivý krok fázy ukončenia dňa bol 16,322 ms; pri dvoch mesačných uzávierkach systém `Society.monthly` trval 8,539 a 8,654 ms, dividendy 1,859 a 2,838 ms, makro 0,968 a 0,990 ms. Najvyššie maximá ostatných fáz boli pod 5,6 ms.
 - Časy obsahujú réžiu diagnostiky a dva mesačné vzorky na cloudovom CPU; nejde o čas celej vykreslenej snímky, FPS notebooku ani dôkaz, že sa náročnejší save správa rovnako. Profil nemenil herné výsledky ani produkčný kód. https://github.com/Wondris404/Projekt-47/actions/runs/40694620596
+
+
+## 2026-10-28 – Podrobnejší profil spoločnosti
+
+- Vzdialená sonda bola rozšírená o jednotlivé časti mesačnej aktualizácie spoločnosti a výpočet služieb v mestách. Meracie výpisy sa vkladajú len do dočasnej kópie na runneri; produkčný kód ani poradie herných výpočtov sa nemení. Výsledok ďalšieho behu zatiaľ nie je známy.
