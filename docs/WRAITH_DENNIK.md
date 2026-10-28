@@ -766,3 +766,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Párové meranie výkonu
 
 - Pridaný vzdialený workflow porovnávajúci predchádzajúci a opravený `main.gd` na rovnakom runneri v poradí pred, po, po, pred. Používa existujúcu 100-dňovú headless sondu a nemení súbory ani nastavenia hráča. Výsledky zatiaľ nie sú potvrdené; sú to časy simulácie, nie FPS na notebooku.
+
+
+## 2026-10-28 – Snímky nastavení banky pred a po
+
+- Workflow `40671103738` zopakoval tú istú grafickú skúšku na pôvodnom a opravenom formulári. Pôvodný formulár mal 1 zo 4 kontrol úspešnú, opravený 4 zo 4. Pridané súbory `audit/screenshots/bank-audit/bank_before20261028.png`, `bank_after20261028.png` a `bank_comparison20261028.png` ukazujú oba stavy aj vedľa seba.
+- Snímky vznikli cez Xvfb/llvmpipe a zatiaľ neboli vizuálne posúdené. https://github.com/Wondris404/Projekt-47/actions/runs/40671103738
