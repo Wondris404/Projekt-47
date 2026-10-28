@@ -879,3 +879,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Diagnostika skúšky fokusu
 
 - Grafický workflow do dočasnej testovacej kópie doplní výpis, či sa presun začal a aký režim zostal po strate fokusu. Produkčný kód hry sa touto diagnostikou nemení. Výsledok zatiaľ čaká na beh.
+
+
+## 2026-10-28 – Ukončenie presunu okna pri strate fokusu
+
+- Diagnostika `40693049934` potvrdila, že simulovaný presun sa začal a po strate fokusu zostal aktívny (`started=true`, `mode_after=1`). Správca okien teraz pri strate fokusu zastaví aktívny presun alebo zmenu veľkosti a zapamätá si posledný obdĺžnik.
+- Grafická skúška bola doplnená aj o zmenu veľkosti; výsledky po oprave sa ešte overujú. https://github.com/Wondris404/Projekt-47/actions/runs/40693049934
