@@ -1155,3 +1155,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Diagnostika sa teraz pripája do `user://data_warnings.log`; pri chybe zápisu sa zobrazí varovanie. Po oprave sonda potvrdila nezmenený projektový súbor a obe pridané správy, exit 0. Log sa môže časom zväčšovať; rotácia nie je zavedená. Ekonomické výpočty a save sa nemenia. Ďalšia auditná sada sa ešte vykonáva.
 
 - Po oprave prešla na Windowse lokálna auditná sada `audit_unit` (46 kontrol, exit 0), vrátane porovnania stavu po 62 dňoch. Kontrola chyby zálohy zámerne vyvolala chybu otvorenia izolovaného súboru a potvrdila ochranu slotu. Úplná jednotková sada nebola v tomto kroku spustená.
+
+
+## Pre-Beta-0.9 — úvodný vizuálny inventár (2026-10-28)
+
+- Pridaný `docs/PREBETA_09_VIZUALNY_INVENTAR.md`: východiskový zoznam 61 podnikových typov a 28 komodít z GitHub main `5d8f407`, plus ďalšie skupiny na inventarizáciu 3D podkladov.
+- Kontrola katalógov pred tvorbou a kontrola pokrytia ID v uloženom dokumente prešli; ID sú jedinečné a názvy neprázdne. Stav modelov a licencií je zatiaľ neoverený, nejde o zoznam hotových modelov. Zmena je iba dokumentačná, bez zmien hry alebo ekonomiky.
+- Ďalej: overiť geografické údaje, zostaviť vizuálnu špecifikáciu, vybrať referenčnú oblasť a vytvoriť hrateľný 3D prototyp s meraním výkonu. Kompletný inventár UI a správ ešte chýba.
