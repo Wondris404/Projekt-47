@@ -731,3 +731,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Workflow `40667619876` zopakoval rovnaký scenár na kóde pred opravou a po nej: pred opravou zlyhalo zapamätanie okna, po oprave prešlo všetkých desať kontrol. Tri nové obrázky sú v `audit/screenshots/window-audit/`: `country_before_20261028.png`, `country_after_20261028.png` a `country_comparison_20261028.png` (vedľa seba).
 - Obrázky vznikli cez Xvfb/llvmpipe. Ich vizuálne posúdenie zatiaľ nie je potvrdené; nejde o meranie výkonu GPU notebooku. https://github.com/Wondris404/Projekt-47/actions/runs/40667619876
+
+
+## 2026-10-28 – Príprava reprodukcie nastavení banky
+
+- Pridaná grafická skúška detailu banky s tromi kontrolami: obnovenie nezmenených polí po externej zmene, zachovanie rozpracovanej úpravy a uloženie aktuálnych hodnôt. Test vykonáva zmeny len v izolovanej testovacej hre, nemení bankovú mechaniku v bežnom hraní.
+- Grafický workflow test spúšťa a ukladá jeho log. Výsledok prvého behu ešte nie je potvrdený; možná chyba nastavení zostáva otvorená.
