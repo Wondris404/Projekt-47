@@ -374,9 +374,10 @@ func media_text(firm: Dictionary) -> String:
 	return "DOSAH: %.1f %% obyvateľov krajiny (%s %s z %s). Podiel na trhu %.0f %%, strop typu v krajine %.0f %%, konkurenti %d." % [float(r.pct) * 100.0, _fmt_n(float(r.users)), str(m.noun), _fmt_n(float(r.pop)), float(r.share) * 100.0, float(r.cap_pct) * 100.0, int(r.competitors)]
 
 # suhrn za krajinu: % obyvatelov pre kazdy typ, ktory hrac v krajine ma
-func country_media(iso: String) -> Array:
+func country_media(iso: String, country_firms = null) -> Array:
 	var by = {}
-	for f in GameState.player_firms():
+	var candidates: Array = GameState.player_firms() if country_firms == null else country_firms
+	for f in candidates:
 		if is_media(f) and str(f.get("country", "")) == iso and not bool(f.get("closed", false)):
 			var ind = str(f.industry)
 			by[ind] = float(by.get(ind, 0.0)) + float(media_reach(f).users)

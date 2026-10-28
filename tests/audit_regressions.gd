@@ -259,6 +259,7 @@ func _society_power_headcount(u) -> void:
 	var snapshot = GameState.to_dict().duplicate(true)
 	Society.use_power_headcount_cache = false
 	Society.use_monthly_city_groups = false
+	Society.use_monthly_country_groups = false
 	var first_error = GameState.from_dict(snapshot.duplicate(true))
 	for i in 62:
 		GameState.simulate_day()
@@ -273,11 +274,18 @@ func _society_power_headcount(u) -> void:
 	for i in 62:
 		GameState.simulate_day()
 	var grouped = JSON.stringify(GameState.to_dict())
+	Society.use_monthly_country_groups = true
+	var fourth_error = GameState.from_dict(snapshot.duplicate(true))
+	for i in 62:
+		GameState.simulate_day()
+	var country_grouped = JSON.stringify(GameState.to_dict())
 	Society.use_power_headcount_cache = true
 	Society.use_monthly_city_groups = true
-	u._chk("audit_society_power_setup", setup_ok and first_error == "" and second_error == "" and third_error == "")
+	Society.use_monthly_country_groups = true
+	u._chk("audit_society_power_setup", setup_ok and first_error == "" and second_error == "" and third_error == "" and fourth_error == "")
 	u._chk("audit_society_power_exact_62_days", expected == actual)
 	u._chk("audit_society_city_groups_exact_62_days", expected == grouped)
+	u._chk("audit_society_country_groups_exact_62_days", expected == country_grouped)
 
 func _reject_missing_cash(u) -> void:
 	u._new()
