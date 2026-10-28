@@ -1124,3 +1124,15 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Import čistého projektu prebehol; prvotné chyby zdrojov počas importu zostávajú otvorené. Výsledky testov budú doplnené po dokončení.
 
 - Lokálny Windows audit_unit skončil s kódom 0, vrátane kontroly odpojenej mapy a 62-dňovej zhody simulácie. Test zálohy úmyselne vyvolal chybu otvorenia súboru a potvrdil ochranu pôvodného slotu.
+
+
+## 2026-10-28 – Príprava Windows balíka pre testerov
+
+- Pridaný exportný profil pre 64-bitový Windows a postup GitHub Actions na vytvorenie ZIP balíka. Postup overuje SHA-256 oficiálneho Godotu a šablón, exportuje hru a spúšťa headless sondu priamo z exportovaného programu s oddelenými používateľskými dátami.
+- Prvé zostavenie a spustenie ešte nie sú potvrdené. Balík je plánovaný ako časovo obmedzený artefakt GitHub Actions, nie zverejnený release; grafické spustenie a použiteľnosť na počítači testera treba samostatne overiť.
+
+
+## 2026-10-28 – Overenie Windows exportu
+
+- Prvý pokus skončil chybou, pretože release export neobsahoval konzolový spúšťač testu. Exportný profil bol upravený; opakovaný beh `40712990280` úspešne overil kontrolné súčty, zostavil hru a z exportu vykonal 10 dní simulácie bez GDScript chyby.
+- GitHub vytvoril artefakt `Projekt-47-Windows`, dostupný 30 dní v danom behu. Artefakt je ZIP obsahujúci ďalší ZIP hry, takže treba rozbaliť oba. Jeho stiahnutie môže vyžadovať prihlásenie do GitHubu. Grafické spustenie na notebooku a ukladanie z exportu ešte neboli overené; chyby pri prvom importe zdrojov zostávajú otvorené. https://github.com/Wondris404/Projekt-47/actions/runs/40712990280
