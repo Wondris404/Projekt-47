@@ -14,6 +14,7 @@ var _firms: Array = []
 var _firm_key: Array = []
 var _firm_layer: MultiMeshInstance3D
 var _city_layer: MultiMeshInstance3D
+var _countries_ready := false
 
 func setup(source_map: Control) -> void:
 	_map = source_map
@@ -34,8 +35,22 @@ func setup(source_map: Control) -> void:
 	environment.ambient_light_energy = 1.0
 	lighting.environment = environment
 	world.add_child(lighting)
+	_build_countries.call_deferred(world)
+	_add_cities(world)
+	_add_firms(world)
+	_camera = Camera3D.new()
+	_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+	_camera.far = 5000.0
+	world.add_child(_camera)
+	sync_from_map()
+	_camera.current = true
+	gui_input.connect(_input_3d)
+
+func _build_countries(world: Node3D) -> void:
 	var converter = load("res://scripts/ui/map_mesh_3d.gd")
+	var started = Time.get_ticks_usec()
 	for shape in _map.shapes:
+		if not is_instance_valid(world) or is_queued_for_deletion(): return
 		var mesh: ArrayMesh = converter.convert(shape.mesh)
 		if mesh.get_surface_count() == 0: continue
 		var item = MeshInstance3D.new()
@@ -47,15 +62,10 @@ func setup(source_map: Control) -> void:
 		material.albedo_color = Color(0.25 + shade, 0.34 + shade, 0.23 + shade)
 		item.material_override = material
 		world.add_child(item)
-	_add_cities(world)
-	_add_firms(world)
-	_camera = Camera3D.new()
-	_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	_camera.far = 5000.0
-	world.add_child(_camera)
-	sync_from_map()
-	_camera.current = true
-	gui_input.connect(_input_3d)
+		if Time.get_ticks_usec() - started >= 2000:
+			await get_tree().process_frame
+			started = Time.get_ticks_usec()
+	_countries_ready = true
 
 func _add_firms(world: Node3D) -> void:
 	var building = BoxMesh.new()
@@ -142,19 +152,25 @@ func _city_at(local_pos: Vector2) -> Dictionary:
 	return best
 
 func sync_from_map() -> void:
+	if _map.size.x <= 0.0 or _map.size.y <= 0.0:
+		_camera.size = 850.0
+		_camera.position = Vector3(720, 1200, 960)
+		_camera.look_at(Vector3(720, 0, 360), Vector3.FORWARD)
+		return
 	var center: Vector2 = _map._to_world(_map.size * 0.5)
 	_camera.size = _map.size.y / maxf(_map._fit() * _map.zoom, 0.0001)
 	_camera.position = Vector3(center.x, 1200, center.y + 600)
 	_camera.look_at(Vector3(center.x, 0, center.y), Vector3.FORWARD)
 
 func restore_map_camera() -> void:
-	if _map.size.y <= 0.0: return
+	if _map.size.y <= 0.0 or size.x <= 0.0 or size.y <= 0.0: return
+	var center = _ground(size * 0.5)
+	if not is_finite(center.x) or not is_finite(center.y): return
 	var fit: float = _map._fit()
 	_map.zoom = clampf(_map.size.y / (maxf(fit, 0.0001) * _camera.size), 1.0, _map.MAX_ZOOM)
 	_map._zoom_target = _map.zoom
 	var map_size = Vector2(float(DataLoader.map.get("w", 1440)), float(DataLoader.map.get("h", 720)))
 	var scale: float = fit * _map.zoom
-	var center = _ground(size * 0.5)
 	_map.pan = _map.size * 0.5 - ( _map.size - map_size * scale) * 0.5 - center * scale
 	_map.queue_redraw()
 
