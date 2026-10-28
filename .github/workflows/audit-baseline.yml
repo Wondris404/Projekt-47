@@ -14,10 +14,6 @@ jobs:
       fail-fast: false
       matrix:
         test: [unit, audit_unit, stability, performance_audit]
-    env:
-      XDG_DATA_HOME: ${{ runner.temp }}/p47-user-data
-      XDG_CONFIG_HOME: ${{ runner.temp }}/p47-user-config
-      XDG_CACHE_HOME: ${{ runner.temp }}/p47-user-cache
     steps:
       - uses: actions/checkout@v4
       - name: Install verified Godot 4.7.2
@@ -30,6 +26,12 @@ jobs:
           unzip -q godot.zip -d godot-bin
           chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
           echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+      - name: Isolate Godot user data
+        shell: bash
+        run: |
+          echo "XDG_DATA_HOME=$RUNNER_TEMP/p47-user-data" >> "$GITHUB_ENV"
+          echo "XDG_CONFIG_HOME=$RUNNER_TEMP/p47-user-config" >> "$GITHUB_ENV"
+          echo "XDG_CACHE_HOME=$RUNNER_TEMP/p47-user-cache" >> "$GITHUB_ENV"
       - name: Import project assets
         shell: bash
         run: |
