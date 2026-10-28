@@ -890,3 +890,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Overenie straty fokusu
 
 - Grafický beh `40693779749` prešiel všetkými 12 kontrolami okien: po strate fokusu sa zastavil presun aj zmena veľkosti. Prešlo aj 6 kontrol banky a 3 kontroly obnovy savu. Popis pull requestu bol doplnený o túto opravu a výsledky. https://github.com/Wondris404/Projekt-47/actions/runs/40693779749
+
+
+## 2026-10-28 – Profil mesačnej uzávierky
+
+- Pridaný vzdialený headless profil s pevným seed-om, 72 hráčovými firmami a 70 dňami. V dočasnej kópii dopĺňa merania jednotlivých mesačných systémov a fáz simulácie, aby zachytil dva prechody mesiaca. Produkčný kód ani ekonomiku nemení. Výsledok ešte nie je známy a nepôjde o meranie FPS notebooku.
