@@ -816,3 +816,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Linuxový `audit_unit` v behu `40673444595` prešiel vrátane všetkých štyroch nových kontrol uloženia; stabilita 1/30/365 a headless výkonnostná sonda tiež prešli, úplná `unit` ešte beží. Windows kontrola zatiaľ prebieha.
 - Pri prepise sa navyše číta a zapisuje predchádzajúci save a čítajú sa jeho kontrolné súčty; veľké savy preto môžu trvať dlhšie a zaberajú miesto aj v jednej záložnej kópii na slot. Výpadok napájania, chyby disku a skutočné zlyhanie presunu na Windowse test nedokazuje. https://github.com/Wondris404/Projekt-47/actions/runs/40673444595
+
+
+## 2026-10-28 – Windows overenie ochrany slotu
+
+- Windows GitHub Actions `40673584344` s oficiálnym Godotom 4.7.2: `audit_unit` 33 OK / 0 FAIL vrátane všetkých štyroch kontrol kópie, prednosti hlavného slotu, obnovy v3 a zastavenia pri chybe kópie. Správanie po skutočnom zlyhaní systémového presunu ani po výpadku napájania nie je týmto simulovaným testom dokázané. https://github.com/Wondris404/Projekt-47/actions/runs/40673584344
