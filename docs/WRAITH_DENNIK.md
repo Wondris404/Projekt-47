@@ -842,3 +842,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Po úspešnom načítaní záložného slotu hra hlási „Hra načítaná zo záložnej kópie“; pri bežnom slote zachováva pôvodné hlásenie. Príznak zdroja načítania je iba pre aktuálnu reláciu, neukladá sa do v3 JSON a pri začatí ďalšieho načítania sa vymaže.
 - Testy kontrolujú aj správny príznak pri hlavnom slote a zálohe a normálne hlásenie pri štandardnom načítaní. Výsledky po zmene a snímky pred/po zatiaľ nie sú potvrdené.
+
+
+## 2026-10-28 – Overenie hlásenia obnovy
+
+- Grafický beh `40674500224` overil normálne načítanie, obnovenie stavu zo zálohy a oznámenie hráčovi: všetky tri kontroly prešli. Šesť kontrol banky aj desať kontrol okien tiež prešlo. Windows `audit_unit` v behu `40674500295` prešiel; stabilita a auditná sada na Linuxe tiež prešli, úplná sada ešte beží.
+- Pridaný workflow na párové snímky hlásenia obnovy; jeho výsledok a vizuálne posúdenie zatiaľ nie sú potvrdené.
