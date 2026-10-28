@@ -1065,3 +1065,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Úplné testy po skupinách podľa krajiny
 
 - Beh `40701608943` dokončil `unit` s 531 OK / 1 známym FAIL na chýbajúcej referencii katalógu; workflow ho zobrazuje ako výslovné varovanie. `audit_unit` 44 OK a stabilita 1/30/365 prešli na Linuxe; auditná sada prešla aj na Windowse. https://github.com/Wondris404/Projekt-47/actions/runs/40701608943
+
+
+## 2026-10-28 – Mediálny súhrn bez nepotrebného počtu konkurentov
+
+- Interný súhrn mediálneho dosahu preskakuje vytváranie zoznamu konkurentov, keďže z detailu používa iba počet používateľov. Bežný detail média naďalej počíta a zobrazuje konkurentov; výpočet dosahu a ostatné údaje sa nemenia.
+- Pridané kontroly plného detailu, zhodných hodnôt súhrnu a presného stavu simulácie po 62 dňoch. Testy, časová úspora a správanie na rozsiahlejších savoch ešte nie sú potvrdené.
