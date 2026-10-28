@@ -642,3 +642,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Ukladanie pred zápisom kontroluje rovnaký limit 64 MiB v UTF-8 bajtoch ako načítanie. Pri prekročení vráti chybu ešte pred vytvorením dočasného súboru, takže predchádzajúci slot ostane zachovaný. Formát v3 ani pravidlá hry sa nemenia.
 - Pridané štyri cielené regresné kontroly hranice viacbajtového textu, úspešného uloženia, odmietnutia veľkého stavu a zachovania slotu. GitHub Actions beh po zmene ešte musí potvrdiť výsledok; záznam sa po dokončení aktualizuje.
+
+
+## 2026-10-28 – Výsledky ochrany saveu
+
+- GitHub Actions na commite `dee8a650c4eb5873bde77b6f01d94ef5dd3d611e`: `audit_unit` 28 OK / 0 FAIL, vrátane štyroch nových kontrol veľkého saveu; stabilita 1, 30 a 365 dní prešla. Úplná sada `unit` v čase zápisu ešte beží. Pred opravou audit_unit aj stabilita prešli; úplná sada mala 531 OK / 1 FAIL kvôli chýbajúcej referencii katalógu a navyše tri runtime chyby testov mapy mimo stromu.
+- Headless benchmark 100 dní, 72 hráčových firiem: pred 87,79 ms/deň, po 77,65 ms/deň; jednotlivé vzdialené runnery majú rôznu záťaž, preto výsledok nedokazuje celkové zrýchlenie ani výkon notebooku. Beh: https://github.com/Wondris404/Projekt-47/actions/runs/40652812617.
