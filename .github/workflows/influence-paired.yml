@@ -36,7 +36,7 @@ jobs:
           set -euo pipefail
           for file in Empire Society; do
             cp "scripts/autoload/$file.gd" "$RUNNER_TEMP/after-$file.gd"
-            curl --fail --location --retry 3 --output "$RUNNER_TEMP/before-$file.gd" "https://raw.githubusercontent.com/Wondris404/Projekt-47/f232ca1453bce78e8972b36a5e4c1f085f74296e/scripts/autoload/$file.gd"
+            curl --fail --location --retry 3 --output "$RUNNER_TEMP/before-$file.gd" "https://raw.githubusercontent.com/Wondris404/Projekt-47/f232ca1453bce78e8972b36a7e4c1f085f74296e/scripts/autoload/$file.gd"
           done
           python3 - <<'PY'
           from pathlib import Path
