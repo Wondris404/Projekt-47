@@ -911,3 +911,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Podrobnejší profil spoločnosti
 
 - Vzdialená sonda bola rozšírená o jednotlivé časti mesačnej aktualizácie spoločnosti a výpočet služieb v mestách. Meracie výpisy sa vkladajú len do dočasnej kópie na runneri; produkčný kód ani poradie herných výpočtov sa nemení. Výsledok ďalšieho behu zatiaľ nie je známy.
+
+
+## 2026-10-28 – Podrobnosti profilu spoločnosti
+
+- V behu `40694951436` zabrali výpočty vplyvu krajín pri mesačnej uzávierke 6,54 a 6,64 ms, mestská časť 5,87 a 5,69 ms vrátane jednotlivých výpisov. Približne 1,2 ms z mestskej časti patrilo výpočtom služieb miest. Celý spoločenský systém v tejto podrobne inštrumentovanej sonde trval 13,17 a 13,62 ms, maximum fázy 23,00 ms; tento beh obsahuje viac výpisov a nemá sa priamo porovnávať s menej inštrumentovaným profilom.
+- Nález aj obmedzenia boli doplnené do popisu pull requestu. Najprv sa skúma zdieľanie už vypočítaných údajov o zamestnancoch pri zachovaní presných výsledkov; herné výpočty zatiaľ neboli zmenené. https://github.com/Wondris404/Projekt-47/actions/runs/40694951436
