@@ -980,3 +980,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Úplná sada po optimalizácii mestských služieb
 
 - Beh `40696718198`: `unit` 531 OK / 1 FAIL na chýbajúcej referencii katalógu, `audit_unit` 36 OK / 0 FAIL a stabilita 1/30/365 prešla. Výsledok optimalizácie a párové meranie boli doplnené do pull requestu. https://github.com/Wondris404/Projekt-47/actions/runs/40696718198
+
+
+## 2026-10-28 – Príčiny upozornení GitHub Actions
+
+- Opakované chyby `Projekt-47 audit / baseline (unit)` pochádzajú z existujúceho testu s chýbajúcim referenčným súborom; nejde o nasadenie hry. Pri každom spustení vygeneroval GitHub nové upozornenie.
+- Samostatný profil `40695893182` predtým zlyhal kvôli preklepu v revízii a po oprave prešiel. Novší profil `40697719549` zlyhal v meracom skripte: po optimalizácii sa zmenilo volanie mestských služieb a diagnostika hľadala jeho starý presný text. Skript bol upravený, nový beh ešte nie je potvrdený. Produkčný kód hry týmto chybným meraním zmenený nebol.
