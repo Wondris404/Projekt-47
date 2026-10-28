@@ -935,3 +935,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Pridaný vzdialený profil na porovnanie pôvodného a optimalizovaného výpočtu na tom istom runneri v poradí pred/po/po/pred, s rovnakým seed-om a dvoma mesačnými uzávierkami. Produkčný kód sa meracími výpismi nemení. Výsledky ešte nie sú známe.
 - Windowsový auditný beh `40695557675` prešiel aj po optimalizácii; presný počet kontrol a párové merania sa ešte zapisujú.
+
+
+## 2026-10-28 – Oprava meracej sondy
+
+- Prvý párový profil `40695893182` sa pred meraním zastavil na 404, pretože v adrese pôvodnej revízie bol preklep. Adresa bola opravená na skutočného rodiča optimalizačného commitu; meranie sa opakuje. Tento neúspešný beh nevypovedá o výkone hry. https://github.com/Wondris404/Projekt-47/actions/runs/40695893182
