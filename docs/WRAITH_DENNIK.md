@@ -805,3 +805,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Pred nahradením existujúceho slotu sa vytvorí jeho kópia `.backup` a porovná sa SHA-256 oboch súborov. Ak kópiu nemožno overiť, uloženie sa zastaví ešte pred premenovaním. Ak hlavný slot po neúspešnom presune chýba, vyhľadávanie slotu používa záložnú kópiu. Formát JSON a verzia v3 sa nemenia.
 - Pridané štyri kontroly: obsah zálohy, prednosť aktuálneho slotu, obnova v3 pri chýbajúcom hlavnom súbore a zachovanie slotu pri neúspešnom vytvorení zálohy. Scenár chýbajúceho súboru sa simuluje presunutím, bez vymazania. Výsledky po úprave zatiaľ nie sú potvrdené; pri behu na Linuxe sa nesimuluje skutočné Windows API ani výpadok napájania.
+
+
+## 2026-10-28 – Windows test ukladania
+
+- Pridaný samostatný GitHub Actions beh na Windows pre auditné a nové kontroly zálohy slotu. Používa oficiálny Godot 4.7.2 s overeným SHA-256 a izolovaný dočasný runner. Výsledok zatiaľ nie je známy; chýbajúci slot sa v teste simuluje presunutím súboru, nie skutočným zlyhaním Windows API.
