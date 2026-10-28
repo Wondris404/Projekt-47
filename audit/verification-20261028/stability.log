@@ -1,0 +1,112 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+P47_STAB_CONFIG clean (bez vojen, bez katastrof), seed 47, home=SK, bez poziky a bez firiem hraca (AI firmy su); s vojnami/katastrofami su ceny a inflacia ine
+P47_STAB_DAY 1 date 2024-01-02
+P47_STAB_PRICE wheat med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE coffee med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE meat med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE crude_oil med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE coal med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE iron_ore med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE copper med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE steel med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE chemicals med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE pharma med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE textiles med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE electronics med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE automobiles med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE weapons med 1.001 min 0.995 max 1.003
+P47_STAB_PRICE electricity med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE construction med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE logistics med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE food_service med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE finance med 1.018 min 0.991 max 1.028
+P47_STAB_PRICE pmc med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE arms med 1.001 min 0.995 max 1.003
+P47_STAB_PRICE pmc_services med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE fuel med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE natural_gas med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE ships med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE aircraft med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE compute med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE ai_services med 1.004 min 0.995 max 1.004
+P47_STAB_PRICE_ALL min 0.991 max 1.028 outside30 0/4620
+P47_STAB_CRIT day 1 inband_all 1.000 inband_SKDEUSBR 1.000 median_all 1.004
+P47_STAB_RATE min 0.0219 med 0.1460 max 0.4000
+P47_STAB_INFL min 0.0020 med 0.0800 max 0.5340
+P47_STAB_SK wheat_x 1.00 oil_x 1.00 infl 0.0500 policy 0.0671 base_rate 0.0671
+P47_STAB_CASH 0.00
+P47_STAB_NAN 0 
+P47_STAB_DAY 30 date 2024-01-31
+P47_STAB_PRICE wheat med 1.013 min 0.930 max 1.050
+P47_STAB_PRICE coffee med 1.012 min 0.936 max 1.053
+P47_STAB_PRICE meat med 1.013 min 0.932 max 1.048
+P47_STAB_PRICE crude_oil med 1.014 min 0.925 max 1.054
+P47_STAB_PRICE coal med 1.014 min 0.927 max 1.052
+P47_STAB_PRICE iron_ore med 1.014 min 0.927 max 1.052
+P47_STAB_PRICE copper med 1.013 min 0.930 max 1.058
+P47_STAB_PRICE steel med 1.013 min 0.932 max 1.048
+P47_STAB_PRICE chemicals med 1.013 min 0.930 max 1.050
+P47_STAB_PRICE pharma med 1.014 min 0.927 max 1.059
+P47_STAB_PRICE textiles med 1.011 min 0.943 max 1.040
+P47_STAB_PRICE electronics med 1.010 min 0.949 max 1.035
+P47_STAB_PRICE automobiles med 1.009 min 0.953 max 1.039
+P47_STAB_PRICE weapons med 1.003 min 0.936 max 1.047
+P47_STAB_PRICE electricity med 1.014 min 0.925 max 1.054
+P47_STAB_PRICE construction med 1.011 min 0.939 max 1.051
+P47_STAB_PRICE logistics med 1.012 min 0.934 max 1.047
+P47_STAB_PRICE food_service med 1.010 min 0.944 max 1.038
+P47_STAB_PRICE finance med 1.188 min 0.900 max 1.298
+P47_STAB_PRICE pmc med 1.014 min 0.927 max 1.062
+P47_STAB_PRICE arms med 1.003 min 0.936 max 1.047
+P47_STAB_PRICE pmc_services med 1.014 min 0.927 max 1.062
+P47_STAB_PRICE fuel med 1.014 min 0.927 max 1.052
+P47_STAB_PRICE natural_gas med 1.014 min 0.925 max 1.054
+P47_STAB_PRICE ships med 1.015 min 0.958 max 1.036
+P47_STAB_PRICE aircraft med 1.015 min 0.958 max 1.037
+P47_STAB_PRICE compute med 1.011 min 0.939 max 1.050
+P47_STAB_PRICE ai_services med 1.011 min 0.943 max 1.047
+P47_STAB_PRICE_ALL min 0.900 max 1.298 outside30 0/4620
+P47_STAB_CRIT day 30 inband_all 1.000 inband_SKDEUSBR 1.000 median_all 1.014
+P47_STAB_RATE min 0.0219 med 0.1460 max 0.4000
+P47_STAB_INFL min 0.0020 med 0.0800 max 0.5340
+P47_STAB_SK wheat_x 0.97 oil_x 0.97 infl 0.0500 policy 0.0671 base_rate 0.0671
+P47_STAB_CASH 0.00
+P47_STAB_NAN 0 
+P47_STAB_DAY 365 date 2024-12-31
+P47_STAB_PRICE wheat med 1.033 min 0.942 max 1.074
+P47_STAB_PRICE coffee med 1.031 min 0.949 max 1.066
+P47_STAB_PRICE meat med 1.033 min 0.945 max 1.071
+P47_STAB_PRICE crude_oil med 1.038 min 0.939 max 1.080
+P47_STAB_PRICE coal med 1.035 min 0.941 max 1.077
+P47_STAB_PRICE iron_ore med 1.036 min 0.941 max 1.077
+P47_STAB_PRICE copper med 1.035 min 0.944 max 1.074
+P47_STAB_PRICE steel med 1.071 min 0.993 max 1.123
+P47_STAB_PRICE chemicals med 1.035 min 0.943 max 1.074
+P47_STAB_PRICE pharma med 1.037 min 0.942 max 1.077
+P47_STAB_PRICE textiles med 1.026 min 0.955 max 1.058
+P47_STAB_PRICE electronics med 1.059 min 1.008 max 1.104
+P47_STAB_PRICE automobiles med 1.055 min 1.011 max 1.100
+P47_STAB_PRICE weapons med 1.014 min 0.950 max 1.064
+P47_STAB_PRICE electricity med 1.038 min 0.939 max 1.080
+P47_STAB_PRICE construction med 1.029 min 0.952 max 1.062
+P47_STAB_PRICE logistics med 1.032 min 0.947 max 1.069
+P47_STAB_PRICE food_service med 1.140 min 0.958 max 1.225
+P47_STAB_PRICE finance med 0.865 min 0.753 max 1.054
+P47_STAB_PRICE pmc med 1.036 min 0.941 max 1.077
+P47_STAB_PRICE arms med 1.014 min 0.950 max 1.064
+P47_STAB_PRICE pmc_services med 1.036 min 0.941 max 1.077
+P47_STAB_PRICE fuel med 1.036 min 0.941 max 1.077
+P47_STAB_PRICE natural_gas med 1.038 min 0.939 max 1.080
+P47_STAB_PRICE ships med 1.018 min 0.965 max 1.042
+P47_STAB_PRICE aircraft med 1.018 min 0.965 max 1.043
+P47_STAB_PRICE compute med 1.031 min 0.952 max 1.065
+P47_STAB_PRICE ai_services med 1.029 min 0.955 max 1.061
+P47_STAB_PRICE_ALL min 0.753 max 1.225 outside30 0/4620
+P47_STAB_CRIT day 365 inband_all 1.000 inband_SKDEUSBR 1.000 median_all 1.035
+P47_STAB_RATE min 0.0020 med 0.0210 max 0.0601
+P47_STAB_INFL min 0.0000 med 0.0016 max 0.0106
+P47_STAB_SK wheat_x 0.99 oil_x 0.99 infl 0.0010 policy 0.0020 base_rate 0.0020
+P47_STAB_CASH 0.00
+P47_STAB_NAN 0 
+P47_STAB_OK

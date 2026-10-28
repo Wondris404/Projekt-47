@@ -52,3 +52,11 @@ Počas práce niekto zlúčil kameru do main (`88849d6`) a publikoval alternatí
 ## Horná hranica animácií — Codex (GPT-6)
 
 Po porovnaní súbežnej vetvy je aj tu pevný limit 64 viditeľných aktívnych liniek na jeden prekresľovací krok. Vo veľmi hustom pohľade zostávajú ďalšie trate statické. Pri pauze sa animačné hodiny zastavia; testovací scenár používa pevne nastavený čas. Simulácia sa nemení.
+
+## Výsledky overenia — Codex (GPT-6)
+
+9 pôvodných a 22 nových mapových kontrol prešlo; audit 24, society 29, routes 8 a 365-dňová stabilita prešli. Úplná sada mala 531 OK / 1 známy FAIL katalógového snapshotu. Tri nájdené chyby inicializácie mapy mimo stromu sa opravili; opakované Juan5/Juan9 sekcie ich už nemajú. Ich samostatný časový test prekročil starý limit 80 ms/deň (147,7 a 107,4), hoci v úplnej sade vyšiel 72,3 a prešiel. Prah sa nemenil. Prijatý párový benchmark: medián 118,00 → 111,29 ms/deň, s významným rozptylom. Kompletné logy a oba typy meraní zostávajú v repozitári.
+
+82 PNG (54 herných snímok, 27 párov a kontaktný list) bolo dekódovaných bez chyby. Na PC treba potvrdiť čitateľnosť modelov, grafický výkon, zoom/kliknutia a starý reálny save. Výsledky softvérového renderera sa neprezentujú ako FPS Radeon grafiky. Detailný report: `docs/ATLAS_COMPLETION_20261028.md`.
+
+Kontrola pôvodného základu rovnakým izolovaným Juan5/Juan9 scenárom: 77,9 ms/deň (limit prešiel), tri rovnaké pôvodné chyby chýbajúceho okna sa reprodukovali. Po oprave okna je v opakovaných sekciách nula script errors. Rozdiel časových behov je zachovaný ako otvorený limit overenia, nie skrytý zvýšením prahu; párové výsledky ani FPS sa nezovšeobecňujú na ľubovoľný save.

@@ -1,0 +1,68 @@
+{
+  "camera": {
+    "passed": 9,
+    "failures": [],
+    "script_errors": 0
+  },
+  "update-tests": {
+    "passed": 22,
+    "failures": [],
+    "script_errors": 0
+  },
+  "audit-unit": {
+    "passed": 24,
+    "failures": [],
+    "script_errors": 0
+  },
+  "society-unit": {
+    "passed": 29,
+    "failures": [],
+    "script_errors": 0
+  },
+  "routes-unit": {
+    "passed": 8,
+    "failures": [],
+    "script_errors": 0
+  },
+  "unit": {
+    "passed": 531,
+    "failures": [
+      "P47_UNIT_FAIL catalog_fields_match_brief "
+    ],
+    "script_errors": 3
+  },
+  "map-compat-final": {
+    "passed": 229,
+    "failures": [
+      "P47_UNIT_FAIL j5_bench_ms_per_day 147.7 ms"
+    ],
+    "script_errors": 0
+  },
+  "map-compat-pinned": {
+    "passed": 229,
+    "failures": [
+      "P47_UNIT_FAIL j5_bench_ms_per_day 107.4 ms"
+    ],
+    "script_errors": 0
+  },
+  "map-compat-baseline": {
+    "passed": 230,
+    "failures": [],
+    "script_errors": 3
+  },
+  "notes": [
+    "unit.log is the complete pre-guard run: 531 pass, known missing catalog snapshot fails, and three detached-map Window errors.",
+    "The Window errors are also reproduced on baseline; map-compat-final/pinned rerun all affected sections after the guard with zero script errors.",
+    "Legacy hard 80ms benchmark passes full run (72.3) and baseline isolated (77.9), fails isolated current runs (147.7/107.4). Timing limit was not changed.",
+    "One atlas_update_unit attempt overlapped merge conflict files and was discarded; final update-tests.log has 22 passes and zero script errors.",
+    "Simulation paired benchmark is separately recorded in measurements.json; not a claim of universal performance."
+  ],
+  "stability": {
+    "ok": true
+  },
+  "screenshots": {
+    "decoded_png": 82,
+    "pairs": 27,
+    "renderer": "Xvfb, Mesa llvmpipe, OpenGL Compatibility"
+  }
+}
