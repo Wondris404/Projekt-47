@@ -917,3 +917,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - V behu `40694951436` zabrali výpočty vplyvu krajín pri mesačnej uzávierke 6,54 a 6,64 ms, mestská časť 5,87 a 5,69 ms vrátane jednotlivých výpisov. Približne 1,2 ms z mestskej časti patrilo výpočtom služieb miest. Celý spoločenský systém v tejto podrobne inštrumentovanej sonde trval 13,17 a 13,62 ms, maximum fázy 23,00 ms; tento beh obsahuje viac výpisov a nemá sa priamo porovnávať s menej inštrumentovaným profilom.
 - Nález aj obmedzenia boli doplnené do popisu pull requestu. Najprv sa skúma zdieľanie už vypočítaných údajov o zamestnancoch pri zachovaní presných výsledkov; herné výpočty zatiaľ neboli zmenené. https://github.com/Wondris404/Projekt-47/actions/runs/40694951436
+
+
+## 2026-10-28 – Zdieľanie počtu zamestnancov pri výpočte vplyvu
+
+- Výpočet vplyvu môže použiť rovnaký súčet zamestnancov, ktorý bezprostredne predtým vypočíta pre závislosť krajiny. Referenčná cesta pôvodného výpočtu zostáva dostupná na porovnanie; poradie ostatných výpočtov a ich vedľajšie účinky zostávajú zachované.
+- Pridané kontroly prípravy scenára a presnej zhody celého uloženého stavu po 62 dňoch pri pevnom seed-e, cez dve mesačné uzávierky. Výsledok testov, prípadné zrýchlenie a výkon notebooku ešte nie sú potvrdené.
