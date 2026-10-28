@@ -1142,3 +1142,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Všetky štyri existujúce PR sú zlúčené. Staršie neúspešné behy exportu a profilu boli opravené a ich opakované behy prešli; referencia katalógu zostáva neoverená.
 - Postup zostavenia Windows balíka bol upravený, aby sa spustil aj po relevantnej zmene hlavnej vetvy a artefakt tvoril jediný ZIP s hrou a návodom. Test zmeneného postupu a grafické spustenie na notebooku ešte nie sú potvrdené.
+
+
+## 2026-10-28 – Overenie opravy balíka
+
+- Beh `40715336351` úspešne zostavil Windows hru, vykonal headless skúšku 10 dní a odovzdal artefakt `Projekt-47-Windows`. Nový postup odovzdáva súbory hry priamo do artefaktu namiesto vnútorného ZIPu. Automatické spustenie na `main` sa prejaví až po zlúčení; grafické spustenie a uloženie z balíka zostávajú neoverené. https://github.com/Wondris404/Projekt-47/actions/runs/40715336351
