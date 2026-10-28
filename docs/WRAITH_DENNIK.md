@@ -661,3 +661,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - GitHub Actions pre commit `bdbdc442094361c8741c47741b5a88b4ba138b24`: `audit_unit` 29 OK / 0 FAIL vrátane vytvorenia mapy mimo stromu a kontroly výpisu GDScript chýb; stabilita 1, 30 a 365 dní prešla. Úplná `unit` sada pri tomto zápise ešte beží.
 - Headless výkonnostná sonda 100 dní na 72 firmách: 62,52 ms/deň; predchádzajúce behy na iných cloudových runneroch namerali 87,79 a 77,65 ms/deň. Rozdiel môže byť záťažou runnera a nedokazuje zrýchlenie ani FPS na notebooku. Prvá úprava kontroly chybového výpisu mala chybné formátovanie workflow, opravené v samostatnom commite pred týmto behom.
 - Vyhľadanie `tests/catalog_field_lock.txt` v troch ďalších vetvách ani v histórii tohto súboru na main nevrátilo referenciu. Aktuálny katalóg nebol použitý na vytvorenie novej referencie.
+
+
+## 2026-10-28 – Výsledok úplnej sady po oprave mapy
+
+- GitHub Actions `40653443499` na kóde `bdbdc442094361c8741c47741b5a88b4ba138b24`: `unit` 531 OK / 1 FAIL (`catalog_fields_match_brief`, chýbajúca referencia). Predchádzajúce tri `SCRIPT ERROR` pri vytvorení mapy mimo stromu sa v samotnom teste už nevyskytli. `audit_unit` 29 OK, stabilita 1/30/365 prešla, výkonnostná sonda dokončená; celý workflow ostáva červený kvôli testu katalógu.
+- V priebehu importu čerstvej kópie Godot vypisuje chyby o zdrojoch, ktoré ešte nie sú importované; treba ich samostatne preveriť. Výsledok nepovažovať za úplne čistý beh ani za vizuálnu kontrolu hry.
