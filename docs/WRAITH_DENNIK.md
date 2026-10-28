@@ -618,3 +618,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Poloha/veľkosť sa pamätá podľa typu okna počas relácie a v nastaveniach `user://ui_windows.cfg` – nie v save v3.
 - Oprava: spodný riadok v okne krajiny (politik + suma + Lobovať, aj riadok zmluvy PMC) je HFlowContainer a pri úzkom okne sa zalomí; zoznam politikov/PMC orezáva dlhý text, tlačidlá firiem tiež.
 - Test (xvfb, 1280×720): 10 kontrol – riadok sa zmestí, aj v úzkom okne, presun, zmena veľkosti rohom, min. veľkosť, orezanie na obrazovku, zápis/čítanie nastavení, všetky okná majú posuv, screenshot `preview/p47_windows_country.png` – OK; „pamäť po zatvorení/otvorení“ zlyhala (uvoľnenie tlačidla mimo okna sa nezapísalo). Opravené (poloha sa ukladá už počas ťahania, ukladá sa aj pri zatvorení), ale znovu netestované – limit 10 testov vyčerpaný.
+
+
+## 2026-10-28 – Úvodný audit hrateľnosti a UI
+
+- Na GitHube vytvorená vetva `codex/audit-ux-20261028` z main `88849d621ee983c4b9c26f9777e8aa78d6941a95`; prvotné nálezy s prioritami boli oznámené pred opravami a sú uložené v `docs/AUDIT_UX_20261028.md`.
+- Čítaním aktuálneho kódu overené riziko vnútorných dodávok bez konkrétneho dodávateľa a doplnené riziko neaktuálnych polí nastavení pri činnosti bankového poradcu. Nálezy vyžadujú reprodukciu a overenie; herný kód ani grafika v tomto kroku zmenené neboli.
+- Nové testy ani merania zatiaľ neboli spustené. Predchádzajúce výsledky z `docs/PERFORMANCE_AUDIT_20261027.md` pochádzajú z iného východiskového commitu a nepreukazujú stav novej vetvy. Na GitHube zatiaľ nebol nájdený pripravený workflow ani uložený spúšťač Godot testov.
