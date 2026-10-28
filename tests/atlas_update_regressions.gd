@@ -5,6 +5,8 @@ func run(u, host: Node) -> void:
 	u._chk("traffic_idle", Traffic.train_count(0.0) == 0)
 	u._chk("traffic_density", Traffic.train_count(0.15) < Traffic.train_count(1.0))
 	u._chk("traffic_cap", Traffic.train_count(10000.0) == 4)
+	u._chk("traffic_partial_train_has_empty_wagons", Traffic.wagon_load(0.5,0,3) == 1.0 and Traffic.wagon_load(0.5,1,3) == 0.5 and Traffic.wagon_load(0.5,2,3) == 0.0)
+	u._chk("traffic_full_train", Traffic.wagon_load(1.0,2,3) == 1.0)
 	var r = Rect2(0,0,100,100)
 	u._chk("traffic_offscreen", Traffic.clipped(Vector2(-10,-10), Vector2(-20,120), r).is_empty())
 	var clipped = Traffic.clipped(Vector2(-100000,50), Vector2(100000,50), r)

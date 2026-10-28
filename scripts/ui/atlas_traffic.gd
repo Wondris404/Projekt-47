@@ -74,9 +74,13 @@ func _draw() -> void:
 				# Symmetric pulse: explicitly no claim about physical flow direction.
 				draw_circle(p, 1.5 + minf(u, 1.0) * 2.0, Color(col, 0.4 + 0.6 * sin(phase * PI)))
 
+static func wagon_load(util: float, wagon: int, wagons: int) -> float:
+	return clampf(util * wagons - wagon, 0.0, 1.0)
+
 func _train(p: Vector2, direction: Vector2, normal: Vector2, load: float) -> void:
 	var scale_px = clampf(map.zoom / 10.0, 0.8, 1.5)
-	for car in (4 if map.zoom >= 12.0 else 2):
+	var cars = 4 if map.zoom >= 12.0 else 2
+	for car in cars:
 		var q = p - direction * car * 11.0 * scale_px
 		var pts = PackedVector2Array([q - direction * 4.5 * scale_px - normal * 3 * scale_px, q + direction * 4.5 * scale_px - normal * 3 * scale_px, q + direction * 4.5 * scale_px + normal * 3 * scale_px, q - direction * 4.5 * scale_px + normal * 3 * scale_px])
 		draw_colored_polygon(pts, Color("D5AB39") if car == 0 else Color("333A43"))
@@ -84,4 +88,5 @@ func _train(p: Vector2, direction: Vector2, normal: Vector2, load: float) -> voi
 			var start = q - direction * 3.5 * scale_px
 			# Empty wagon interior remains dark; length of cargo shows actual utilization.
 			draw_line(start, start + direction * 7.0 * scale_px, Color("121920"), 3 * scale_px)
-			if load > 0.0: draw_line(start, start + direction * 7.0 * scale_px * load, Color("C99060"), 3 * scale_px)
+			var cargo = wagon_load(load, car - 1, cars - 1)
+			if cargo > 0.0: draw_line(start, start + direction * 7.0 * scale_px * cargo, Color("C99060"), 3 * scale_px)

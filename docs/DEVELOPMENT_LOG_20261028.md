@@ -28,3 +28,7 @@ Základný manažment nakupuje 100 % dostupných potrebných vstupov, udržiava 
 ## Regresné kontroly — Codex (GPT-6)
 
 Pridaných 17 kontrol: limit/hustota vlakov, orezanie tratí, úplnosť modelov, plný nákup a personál bez manažéra, zachovanie v3 manažéra a prevádzka bez poľa manager, bonus aj po prepustení a plynulý zoom pri zmene rodičovského layoutu. Existujúce testy manažmentu sa prispôsobili výslovne požadovanej mechanike; žiadna kontrola nebola vymazaná. Spolu s deviatimi zdedenými testmi kamery je to 26 nových kontrol tejto mapovej úlohy.
+
+## Náklad jednotlivých vagónov — Codex (GPT-6)
+
+Po vizuálnej kontrole sa náklad rozdeľuje medzi vagóny: pri 50 % je prvý plný, druhý polovičný a tretí prázdny. Dve ďalšie regresné kontroly overujú túto vizuálnu požiadavku (spolu 28 kontrol vrátane kamery). Mení sa len prezentácia agregovaného vyťaženia.
