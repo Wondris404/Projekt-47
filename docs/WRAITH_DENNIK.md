@@ -836,3 +836,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Výsledok reprodukcie hlásenia obnovy
 
 - Grafický beh `40674124613` úspešne načítal stav zo záložnej kópie, no potvrdil chýbajúce upozornenie pre hráča. Východisková snímka a log sú v artefakte `p47-save-recovery-ui`; po úprave bude treba kontrolu a snímky zopakovať. https://github.com/Wondris404/Projekt-47/actions/runs/40674124613
+
+
+## 2026-10-28 – Hlásenie pri obnove zálohy
+
+- Po úspešnom načítaní záložného slotu hra hlási „Hra načítaná zo záložnej kópie“; pri bežnom slote zachováva pôvodné hlásenie. Príznak zdroja načítania je iba pre aktuálnu reláciu, neukladá sa do v3 JSON a pri začatí ďalšieho načítania sa vymaže.
+- Testy kontrolujú aj správny príznak pri hlavnom slote a zálohe a normálne hlásenie pri štandardnom načítaní. Výsledky po zmene a snímky pred/po zatiaľ nie sú potvrdené.
