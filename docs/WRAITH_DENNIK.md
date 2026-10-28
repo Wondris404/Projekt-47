@@ -1081,3 +1081,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Párový profil mediálneho súhrnu
 
 - Pridaný profil pôvodného a nového mediálneho súhrnu na rovnakom runneri v poradí pred/po/po/pred, s pevným seed-om a dvoma mesačnými uzávierkami. Výsledok ešte nie je známy; nejde o meranie FPS notebooku.
+
+
+## 2026-10-28 – Prehliadka porovnávacích snímok a úplná sada
+
+- V zmenšenom náhľade na GitHube je vidieť, že po oprave panel krajiny zostáva v okne hry a bankový panel zobrazuje aktualizovanú sadzbu. Náhľad nie je dostatočne detailný na kontrolu všetkého textu; správu pri obnove uloženia preto vizuálne nepotvrdzujem. Správanie obnovy aj banky kontrolujú aj samostatné grafické testy.
+- Beh `40702803419`: `unit` 531 OK / 1 známy FAIL pre chýbajúcu referenciu katalógu, viditeľný ako varovanie; `audit_unit` 46 OK a stabilita 1/30/365 prešli. Párové meranie médií ešte prebieha. https://github.com/Wondris404/Projekt-47/actions/runs/40702803419
