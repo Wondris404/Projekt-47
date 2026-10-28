@@ -737,3 +737,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Pridaná grafická skúška detailu banky s tromi kontrolami: obnovenie nezmenených polí po externej zmene, zachovanie rozpracovanej úpravy a uloženie aktuálnych hodnôt. Test vykonáva zmeny len v izolovanej testovacej hre, nemení bankovú mechaniku v bežnom hraní.
 - Grafický workflow test spúšťa a ukladá jeho log. Výsledok prvého behu ešte nie je potvrdený; možná chyba nastavení zostáva otvorená.
+
+
+## 2026-10-28 – Potvrdená chyba nastavení banky
+
+- Grafický beh `40668251403` potvrdil reprodukciu: po zmene sadzieb zvonka sa nezmenené vstupné polia neobnovili a stlačenie uloženia prepísalo aktuálne sadzby starými hodnotami. Kontrola zachovania rozpracovanej hodnoty prešla. Zmena sa zatiaľ v simulácii vykonala len v izolovanej testovacej hre.
+- Oprava ešte nie je vykonaná. Pri návrhu treba zachovať manuálne editované hodnoty a neprepisovať presné automatické sadzby zaokrúhlenými hodnotami z formulára. https://github.com/Wondris404/Projekt-47/actions/runs/40668251403
