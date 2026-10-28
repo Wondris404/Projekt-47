@@ -821,3 +821,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Windows overenie ochrany slotu
 
 - Windows GitHub Actions `40673584344` s oficiálnym Godotom 4.7.2: `audit_unit` 33 OK / 0 FAIL vrátane všetkých štyroch kontrol kópie, prednosti hlavného slotu, obnovy v3 a zastavenia pri chybe kópie. Správanie po skutočnom zlyhaní systémového presunu ani po výpadku napájania nie je týmto simulovaným testom dokázané. https://github.com/Wondris404/Projekt-47/actions/runs/40673584344
+
+
+## 2026-10-28 – Úplná sada po oprave ochrany slotu
+
+- Linuxový beh `40673444595`: `unit` 531 OK / 1 FAIL na chýbajúcej referencii katalógu, `audit_unit` 33 OK / 0 FAIL, stabilita 1/30/365 prešla. Samotný test nevypísal GDScript chybu; pri úvodnom importe zdrojov sa opäť objavili dosiaľ nevyšetrené chyby načítania. Headless sonda uviedla 62,68 ms/deň; iné runnery sa líšia a nejde o FPS notebooku.
