@@ -853,3 +853,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Menej nadbytočných testov
 
 - Úplný auditný workflow sa už automaticky nespúšťa pri commitoch, ktoré menia iba workflowy, snímky auditu alebo dokumentáciu. Pri zmene herného kódu či testov sa naďalej spúšťa; samostatné grafické, Windows a porovnávacie workflowy majú vlastné spúšťače. Zmena upravuje len pravidlá spúšťania, nie hru.
+
+
+## 2026-10-28 – Snímky hlásenia obnovy
+
+- V behu `40674747084` na pôvodnom stave prešli dve kontroly načítania a zlyhalo upozornenie, po oprave prešli všetky tri. Snímky `recovery_before20261028.png`, `recovery_after20261028.png` a `recovery_comparison20261028.png` sú v `audit/screenshots/save-audit/`.
+- Snímky z Xvfb/llvmpipe zatiaľ neboli vizuálne posúdené. https://github.com/Wondris404/Projekt-47/actions/runs/40674747084
