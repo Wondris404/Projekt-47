@@ -1155,3 +1155,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Diagnostika sa teraz pripája do `user://data_warnings.log`; pri chybe zápisu sa zobrazí varovanie. Po oprave sonda potvrdila nezmenený projektový súbor a obe pridané správy, exit 0. Log sa môže časom zväčšovať; rotácia nie je zavedená. Ekonomické výpočty a save sa nemenia. Ďalšia auditná sada sa ešte vykonáva.
 
 - Po oprave prešla na Windowse lokálna auditná sada `audit_unit` (46 kontrol, exit 0), vrátane porovnania stavu po 62 dňoch. Kontrola chyby zálohy zámerne vyvolala chybu otvorenia izolovaného súboru a potvrdila ochranu slotu. Úplná jednotková sada nebola v tomto kroku spustená.
+
+
+## Pre-Beta-0.9 — základ 3D geometrie krajín (2026-10-28)
+
+- Pridaný prevod už vyčistenej a triangulovanej 2D geometrie krajín do roviny X/Z v 3D. Prevádza existujúce súradnice a indexy bez zmeny ekonomiky, RNG alebo uložených hier; zatiaľ sa nezapája do bežnej hry.
+- Headless kontrola porovnala polohy vrcholov a indexy pre 165 neprázdnych geometrických objektov krajín: 0 chýb, exit 0. Grafická skúška na notebooku (Godot 4.7.2, AMD Radeon Graphics, GL Compatibility) vykreslila 1280 × 720 náhľad; snímka je v `audit/screenshots/prebeta-3d/world-geometry.png`. Test používa jednoduché diagnostické farby a obojstranný materiál.
+- Ide iba o statický geometrický základ, nie hrateľný 3D režim. Chýbajú výšky terénu, interakcia a kamera v hre, mestá, firmy, rieky, modely, výkonové merania a vizuálne porovnanie rovnakej oblasti v oboch režimoch. Pred týmto novým prevodníkom neexistovala jeho 3D implementácia; bežný predchádzajúci audit prešiel pri práci na PR #9. Používanie obojstranného materiálu a orientácia trojuholníkov vyžadujú ďalšie riešenie.
