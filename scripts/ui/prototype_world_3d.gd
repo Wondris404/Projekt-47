@@ -15,6 +15,7 @@ var _firm_key: Array = []
 var _firm_layer: MultiMeshInstance3D
 var _city_layer: MultiMeshInstance3D
 var _countries_ready := false
+var _labels: Control
 
 func setup(source_map: Control) -> void:
 	_map = source_map
@@ -44,6 +45,10 @@ func setup(source_map: Control) -> void:
 	world.add_child(_camera)
 	sync_from_map()
 	_camera.current = true
+	_labels = load("res://scripts/ui/map_3d_labels.gd").new()
+	_labels.map_view = self
+	add_child(_labels)
+	resized.connect(_labels.queue_redraw)
 	gui_input.connect(_input_3d)
 
 func _build_countries(world: Node3D) -> void:
@@ -213,8 +218,10 @@ func _input_3d(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
 			_camera.size = maxf(20.0, _camera.size * 0.8)
+			_labels.queue_redraw()
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			_camera.size = minf(1500.0, _camera.size * 1.25)
+			_labels.queue_redraw()
 		elif event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				_dragging = true
@@ -237,3 +244,4 @@ func _input_3d(event: InputEvent) -> void:
 		var move = delta * (_camera.size / maxf(size.y, 1.0))
 		_camera.position.x -= move.x
 		_camera.position.z -= move.y / 0.89442719
+		_labels.queue_redraw()
