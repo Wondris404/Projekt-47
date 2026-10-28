@@ -192,6 +192,13 @@ static func firm(m: CanvasItem, p: Vector2, s: float, ind: String, mine: bool, i
 	if mine:
 		_arc(m, p + Vector2(0, s * 0.2), s * 1.9, 0, TAU, 32, Color(1.0, 0.6, 0.15, 0.95), maxf(2.0, s * 0.18), true)
 		_circle(m, p + Vector2(0, s * 0.2), s * 1.85, Color(1.0, 0.6, 0.15, 0.14))
+	var model = preload("res://scripts/ui/atlas_models.gd").texture(ind)
+	if model != null:
+		flush(m)
+		# Ground baseline in the 64x72 source is y=62. Nearest filtering keeps pixels crisp.
+		m.draw_texture_rect(model, preload("res://scripts/ui/atlas_models.gd").model_rect(p,s), false)
+		_icon(m, p, s, icon, mine, s * 1.3)
+		return
 	var h = s * 1.3
 	var wall = Color("B9B4AA")
 	var roof = Color("8C8F94")

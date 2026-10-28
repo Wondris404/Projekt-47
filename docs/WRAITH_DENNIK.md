@@ -1116,3 +1116,11 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Vetva PR bola naklonovaná do samostatného podpriečinka `audit/pr-laptop-20261028`; pôvodná kópia sa neprepísala. Import čistého projektu skončil s kódom 0, no na začiatku vypísal chyby fontu a obrázkov a hlásenie o bezpečnom zápise nastavení. Po importe prešla headless sonda `profile_sim` s 72 firmami a 10 dňami.
 - Súčet časov fáz je približne 248 ms/simulovaný deň, maximum jedného volania 18,936 ms. Ide o jednu krátku vzorku bez vykresľovania či mesačnej uzávierky; nemožno z nej vyvodzovať FPS, porovnanie výkonu ani pripravenosť dema. Spustenie grafiky a základnej hry ešte treba overiť.
+
+
+## 2026-10-28 – Vyriešenie konfliktu mapy v PR
+
+- Do pracovnej vetvy PR bola pripravená aktuálna hlavná vetva vrátane novšieho Atlasu. Konflikt pripojenia signálu v world_map.gd je vyriešený kontrolou existencie okna aj toho, či je signál už pripojený. Hlavná vetva sa tým nemení.
+- Import čistého projektu prebehol; prvotné chyby zdrojov počas importu zostávajú otvorené. Výsledky testov budú doplnené po dokončení.
+
+- Lokálny Windows audit_unit skončil s kódom 0, vrátane kontroly odpojenej mapy a 62-dňovej zhody simulácie. Test zálohy úmyselne vyvolal chybu otvorenia súboru a potvrdil ochranu pôvodného slotu.
