@@ -4641,6 +4641,16 @@ func _window_ui() -> void:
 	await _drag(country_win.position + Vector2(40, 16), Vector2(vp.x + 500, vp.y + 500))
 	var r = country_win.get_global_rect()
 	res["clamped"] = r.position.x >= 0.0 and r.position.y >= 0.0 and r.end.x <= vp.x + 0.5 and r.end.y <= vp.y + 0.5
+	# Strata fokusu počas presunu musí ukončiť ťahanie aj bez doručeného uvoľnenia.
+	var focus_point = country_win.position + Vector2(40, 16)
+	_mouse(false, false, focus_point)
+	_mouse(true, true, focus_point)
+	await get_tree().process_frame
+	var started_drag = win_mgr._mode == 1
+	get_window().focus_exited.emit()
+	res["drag_stops_on_focus_loss"] = started_drag and win_mgr._mode == 0
+	_mouse(true, false, focus_point)
+	await get_tree().process_frame
 	# 5) pamat podla typu okna (zavriet/otvorit inu krajinu)
 	var keep = Rect2(country_win.position, country_win.size)
 	country_win.visible = false
