@@ -782,3 +782,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Ďalšie kontroly bankového formulára
 
 - Grafická skúška bola rozšírená o skutočný mesačný zásah poradcu a o zachovanie textu v práve editovanom políčku. Workflow teraz spúšťa grafickú kontrolu aj po zmene testu. Testy používajú izolovanú testovaciu hru; výsledok rozšírenej skúšky sa ešte overuje.
+
+
+## 2026-10-28 – Kontrola validácie starých savov
+
+- Audit zaznamenal neistotu pri povinných poliach v3: validácia ich vyžaduje, hoci opravná funkcia pozná predvolené hodnoty, a existujúce testy kontrolujú ich povinnosť. Zatiaľ nie je známe, či niektorá vydaná v3 takéto polia nemala; preto sa validácia ani testy nemenili. Nález a ďalší postup sú v `docs/AUDIT_UX_20261028.md`.
