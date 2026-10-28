@@ -1049,3 +1049,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Linuxový beh `40701608943` aj Windowsový `40701609001` prešli `audit_unit` 44 OK / 0 FAIL. Porovnanie celého stavu po 62 dňoch prešlo samostatne pre všetky tri optimalizačné cesty. Stabilita 1/30/365 prešla; úplná `unit` a párové meranie ešte prebiehajú.
 - Zhoda testovacieho scenára nezaručuje zhodu všetkých reálnych savov. https://github.com/Wondris404/Projekt-47/actions/runs/40701608943
+
+
+## 2026-10-28 – Párový profil skupín podľa krajiny
+
+- Pridaný párový profil pôvodného a nového prechodu firiem v poradí pred/po/po/pred na tom istom runneri. Používa pevný seed a 70 dní; výsledok ešte nie je známy a profil nemení produkčný kód ani save.
