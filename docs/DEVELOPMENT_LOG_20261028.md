@@ -36,3 +36,7 @@ Po vizuálnej kontrole sa náklad rozdeľuje medzi vagóny: pri 50 % je prvý pl
 ## Obnovenie dôkazov kamery — Codex (GPT-6)
 
 Pri dekódovaní zdedených PNG boli tri zo štyroch obrázkov `camera_*_before.png` poškodené. Namiesto použitia nečitateľných dôkazov sa scenár znovu vykreslil cez llvmpipe na pôvodnom kóde kamery `08381a7` v oddelenej dočasnej pracovnej kópii. Posun pred opravou: panel 662,31 px, resize 40 px; po oprave na aktuálnej vetve: oba 0 px. Pôvodné poškodené bajty zostávajú v histórii Git. Nové screenshoty sú dekódovateľné, páry sa vytvárajú reprodukovateľným skriptom. FPS sa neinterpretuje ako výkon používateľovho GPU.
+
+## Kliknutie na vysoké modely — Codex (GPT-6)
+
+Dodatočná kontrola odhalila, že pôvodné vyberanie používalo iba malý kruh okolo základne budovy. Strecha/chladiace veže nového modelu mohli byť mimo tohto kruhu. Výber teraz používa rovnaký obdĺžnik ako kreslenie a nepriehľadné pixely modelu; transparentné okraje nekradnú kliknutia. Prekrytie sa vyhodnotí v opačnom poradí kreslenia. Doplnené dve kontroly strechy a priehľadného rohu (spolu 30 mapových kontrol).

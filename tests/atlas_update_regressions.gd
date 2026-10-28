@@ -51,4 +51,25 @@ func run(u, host: Node) -> void:
 	map._preserve_camera_layout()
 	map._process(0.016)
 	u._chk("camera_smooth_layout_anchor", (map.get_global_transform() * map._to_screen(point)).distance_to(anchor) < 0.01)
+	map.atlas = true
+	map._zoom_at(Vector2(400,300),60.0)
+	firm = GameState.player_firms()[0]
+	firm.industry = "nuclear_plant"
+	var ground = Vector2(400,300)
+	var wp = map._to_world(ground)
+	firm.pos = [wp.x,wp.y]
+	map._ms_f = -1
+	var model_size = clampf(map._fit() * map.zoom * 0.55,5.0,22.0)
+	var models = preload("res://scripts/ui/atlas_models.gd")
+	var bounds = models.model_rect(ground,model_size)
+	var image = models.texture("nuclear_plant").get_image()
+	var roof = Vector2.ZERO
+	for y in range(30):
+		for x in range(64):
+			if image.get_pixel(x,y).a > 0.9:
+				roof = bounds.position + (Vector2(x,y) + Vector2(0.5,0.5)) / Vector2(64,72) * bounds.size
+				break
+		if roof != Vector2.ZERO: break
+	u._chk("camera_click_visible_roof", roof.distance_to(ground) > map.icon_px() * 0.6 + 2.0 and map.firm_at_screen(roof) == str(firm.id), "roof=%s ground=%s selected=%s expected=%s zoom=%s sites=%s" % [roof,ground,map.firm_at_screen(roof),firm.id,map.zoom,map._my_sites()])
+	u._chk("camera_model_transparency", not models.hit("nuclear_plant",ground,model_size,bounds.position + Vector2(0.1,0.1)))
 	map.free()

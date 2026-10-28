@@ -763,6 +763,18 @@ func _draw_icon_at(screen_pos: Vector2, kind: String, icon: Texture2D, mine: boo
 
 # JUAN3: hracova firma pod kurzorom (screen suradnice), "" ak ziadna
 func firm_at_screen(sp: Vector2) -> String:
+	if atlas and zoom >= DETAIL_ZOOM:
+		var sites = _my_sites()
+		var model_size = clampf(_fit() * zoom * 0.55, 5.0, 22.0)
+		# Reverse paint order: select the visible foreground model, including its roof.
+		for i in range(sites.size() - 1, -1, -1):
+			var site: Dictionary = sites[i]
+			var point = _to_screen(site.wp)
+			var models = preload("res://scripts/ui/atlas_models.gd")
+			var icon_size = clampf(model_size * 1.3, 10.0, 26.0)
+			var badge = Rect2(point + Vector2(-icon_size * 0.5, -model_size * 4.1 - icon_size), Vector2(icon_size, icon_size))
+			if models.hit(str(site.ind), point, model_size, sp) or (type_icon(str(site.ind)) != null and badge.has_point(sp)):
+				return str(site.id)
 	var best = ""
 	var best_d = icon_px() * 0.6 + 2.0  # JUAN14: len skutocny polomer ikonky, nie "najblizsia firma"
 	for cid in Empire.st().hq.keys():  # JUAN15: centrala ma prednost (klik -> Portfolio)
