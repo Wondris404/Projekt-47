@@ -6,6 +6,7 @@ on:
     paths:
       - .github/workflows/visual-audit.yml
       - scripts/main.gd
+      - tests/bank_controls_ui.gd
   workflow_dispatch:
 permissions:
   contents: read
@@ -86,7 +87,7 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: "1"
         run: |
           set -o pipefail
-          timeout 300 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- bank_controls_ui_test before20261028 2>&1 | tee "$RUNNER_TEMP/bank-controls.log"
+          timeout 300 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- bank_controls_ui_test current20261028 2>&1 | tee "$RUNNER_TEMP/bank-controls.log"
           ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/bank-controls.log"
       - name: Save bank audit log
         if: always()
@@ -100,5 +101,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: p47-bank-controls-screenshot
-          path: audit/screenshots/bank-audit/bank_before20261028.png
+          path: audit/screenshots/bank-audit/bank_current20261028.png
           if-no-files-found: error
