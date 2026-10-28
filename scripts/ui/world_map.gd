@@ -32,6 +32,7 @@ var _marker_isos: Dictionary = {}
 var product_firm := ""  # JUAN21: zobraz kam sa predali vozidla firmy
 var atlas: bool = false  # JUAN20: Atlas mapa (len DEV)
 var _atlas_layer: Node2D
+var _traffic: Node2D
 var _ainfra: Dictionary = {}
 var _ainfra_key := -1
 var _ainfra_layout: Array = []
@@ -78,6 +79,10 @@ func _ready() -> void:
 	_atlas_layer = preload("res://scripts/ui/atlas_layer.gd").new()
 	_atlas_layer.map = self
 	add_child(_atlas_layer)
+	_traffic = preload("res://scripts/ui/transport_traffic.gd").new()
+	_traffic.map = self
+	_traffic.z_index = 20
+	add_child(_traffic)
 	_build()
 	item_rect_changed.connect(_preserve_camera_layout)
 	set_notify_transform(true)
@@ -142,6 +147,10 @@ func _process(delta: float) -> void:
 const GFX = preload("res://scripts/gfx.gd")
 func _anim_live() -> bool:
 	if GFX.low():  # JUAN23: nizka grafika = bez animacii (mapa sa neprekresluje 10x za sekundu)
+		return false
+	# Atlas traffic has its own throttled child canvas. Static Atlas geometry
+	# does not need a full redraw for legacy building sprite frames.
+	if atlas and not place_mode:
 		return false
 	for firm in GameState.firms:
 		if bool(firm.get("closed", false)):

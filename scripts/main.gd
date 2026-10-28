@@ -37,6 +37,10 @@ func _ready() -> void:
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/atlas_camera_regressions.gd").new().run(unit, self)
 			exit_code = 1 if unit.fails > 0 else 0
+		elif args.size() > 0 and str(args[0]) == "traffic_unit":
+			var unit = load("res://tests/unit.gd").new()
+			load("res://tests/transport_traffic_regressions.gd").new().run(unit)
+			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "audit_unit":
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/audit_regressions.gd").new().run(unit)

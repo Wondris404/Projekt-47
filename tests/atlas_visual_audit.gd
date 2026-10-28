@@ -99,13 +99,19 @@ func _transport() -> void:
 			var cap = 600.0 if kind == "rail" else 900.0
 			Transport.st().lines.append({"id": "visual_%s_%d" % [kind, row], "kind": kind, "a": [a.x, a.y], "b": [b.x, b.y], "km": Transport.km(a,b), "cap": cap, "used": cap * load, "used_prev": cap * load})
 			row += 1
-		map.anim_time = 1.75
+		map._traffic.set_preview_time(1.75)
 		await _snap("transport_" + kind, "Železnice / potrubia: vyťaženie 0 %, 15 %, 50 %, 100 %, 150 %; simulácia je pozastavená")
-		map.anim_time = 4.25
+		map._traffic.set_preview_time(4.25)
 		await _snap("transport_" + kind + "_motion", "Tok a doprava v neskoršom čase; údaj predstavuje vyťaženie, nie druh komodity")
 		Transport.st().lines.clear()
+	# Keep a loaded rail line in the fixture: the distant screenshot proves
+	# that traffic disappears because of LOD, rather than because no line exists.
+	var da = map._to_world(Vector2(170, 260))
+	var db = map._to_world(Vector2(map.size.x - 150, 260))
+	Transport.st().lines.append({"id":"visual_distant", "kind":"rail", "a":[da.x,da.y], "b":[db.x,db.y], "km":Transport.km(da,db), "cap":600.0, "used":600.0, "used_prev":600.0})
 	_center(1.0)
 	await _snap("transport_distant", "Vzdialený pohľad: animácia dopravy má byť vypnutá")
+	map._traffic.clear_preview_time()
 
 func _models() -> void:
 	if host.side_panel.visible: host.toggle_side_panel()
