@@ -625,3 +625,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Na GitHube vytvorená vetva `codex/audit-ux-20261028` z main `88849d621ee983c4b9c26f9777e8aa78d6941a95`; prvotné nálezy s prioritami boli oznámené pred opravami a sú uložené v `docs/AUDIT_UX_20261028.md`.
 - Čítaním aktuálneho kódu overené riziko vnútorných dodávok bez konkrétneho dodávateľa a doplnené riziko neaktuálnych polí nastavení pri činnosti bankového poradcu. Nálezy vyžadujú reprodukciu a overenie; herný kód ani grafika v tomto kroku zmenené neboli.
 - Nové testy ani merania zatiaľ neboli spustené. Predchádzajúce výsledky z `docs/PERFORMANCE_AUDIT_20261027.md` pochádzajú z iného východiskového commitu a nepreukazujú stav novej vetvy. Na GitHube zatiaľ nebol nájdený pripravený workflow ani uložený spúšťač Godot testov.
+
+
+## 2026-10-28 – Kontrola limitu uložených hier
+
+- Do `docs/AUDIT_UX_20261028.md` pridaný staticky zistený rozdiel: ukladanie neoveruje 64 MiB limit, ktorý neskôr uplatňuje načítanie; navyše doterajšia kontrola zápisu porovnáva znaky a nie bajty. Oprava ani reprodukcia v Godote zatiaľ neprebehla. Herný kód a existujúce savy sa nemenili.
