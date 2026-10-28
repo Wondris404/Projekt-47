@@ -744,7 +744,7 @@ func validate_save(d) -> String:
 	if pl.is_empty():
 		return "Save nemá hráča."
 	if not pl.is_empty():
-		if not _num_ok(pl, "cash", -1.0e15, 1.0e15):
+		if not pl.has("cash") or not _num_ok(pl, "cash", -1.0e15, 1.0e15):
 			return "Chybná hotovosť hráča."
 		for k2 in ["loans", "bonds", "events", "done", "research_queue"]:
 			if pl.has(k2) and typeof(pl[k2]) != TYPE_ARRAY:
@@ -830,7 +830,7 @@ func validate_save(d) -> String:
 		if c[iso3].has("upd_day") and (not _num_ok(c[iso3], "upd_day", -1.0, 1.0e9) or int(c[iso3].upd_day) != float(c[iso3].upd_day)):
 			return "Centrálna banka '%s': neplatný upd_day." % str(iso3)
 	for fr in d.get("firms", []):
-		if not _num_ok(fr, "cash", -1.0e15, 1.0e15):
+		if not fr.has("cash") or not _num_ok(fr, "cash", -1.0e15, 1.0e15):
 			return "Firma: neplatná hotovosť."
 		for k5 in ["id", "country", "industry"]:
 			if fr.has(k5) and typeof(fr[k5]) != TYPE_STRING:

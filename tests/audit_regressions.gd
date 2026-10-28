@@ -4,6 +4,7 @@ func run(u) -> void:
 	_detached_map_ready(u)
 	_save_size_limit(u)
 	_save_replace_backup(u)
+	_reject_missing_cash(u)
 	_society_power_headcount(u)
 	_trade_ledger(u)
 	_power_input(u)
@@ -277,3 +278,29 @@ func _society_power_headcount(u) -> void:
 	u._chk("audit_society_power_setup", setup_ok and first_error == "" and second_error == "" and third_error == "")
 	u._chk("audit_society_power_exact_62_days", expected == actual)
 	u._chk("audit_society_city_groups_exact_62_days", expected == grouped)
+
+func _reject_missing_cash(u) -> void:
+	u._new()
+	GameState.config.progression = false
+	GameState.player.cash = 2.0e8
+	var founded = GameState.found_firm("cafe", "Audit neúplného savu", "SK")
+	var original = GameState.to_dict().duplicate(true)
+	var before = JSON.stringify(GameState.to_dict())
+	for version in [1, 2, 3]:
+		var player_missing = original.duplicate(true)
+		player_missing["v"] = version
+		player_missing.player.erase("cash")
+		var player_error = GameState.from_dict(player_missing)
+		u._chk("audit_v%d_missing_player_cash" % version, player_error != "" and JSON.stringify(GameState.to_dict()) == before)
+		var firm_missing = original.duplicate(true)
+		firm_missing["v"] = version
+		firm_missing.firms[-1].erase("cash")
+		var firm_error = GameState.from_dict(firm_missing)
+		u._chk("audit_v%d_missing_firm_cash" % version, firm_error != "" and JSON.stringify(GameState.to_dict()) == before)
+	var valid = founded == ""
+	for version in [1, 2, 3]:
+		var good = original.duplicate(true)
+		good["v"] = version
+		if GameState.from_dict(good) != "":
+			valid = false
+	u._chk("audit_cash_present_v1_v2_v3_load", valid)
