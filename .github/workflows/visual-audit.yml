@@ -1,0 +1,56 @@
+name: Projekt-47 visual audit
+on:
+  push:
+    branches:
+      - codex/audit-ux-20261028
+    paths:
+      - .github/workflows/visual-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install verified Godot 4.7.2 and software renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 --output godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum --check
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+          echo "XDG_DATA_HOME=$RUNNER_TEMP/p47-user-data" >> "$GITHUB_ENV"
+          echo "XDG_CONFIG_HOME=$RUNNER_TEMP/p47-user-config" >> "$GITHUB_ENV"
+          echo "XDG_CACHE_HOME=$RUNNER_TEMP/p47-user-cache" >> "$GITHUB_ENV"
+      - name: Import project assets
+        run: Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path "$GITHUB_WORKSPACE" --import
+      - name: Capture baseline screenshots
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          set -o pipefail
+          timeout 600 xvfb-run -a -s "-screen 0 1280x720x24" Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility --rendering-driver opengl3 --path "$GITHUB_WORKSPACE" -- atlas_visual_audit baseline20261028 all 2>&1 | tee "$RUNNER_TEMP/visual.log"
+          grep -q '^P47_VISUAL_DONE baseline20261028' "$RUNNER_TEMP/visual.log"
+          ! grep -q '^SCRIPT ERROR:' "$RUNNER_TEMP/visual.log"
+      - name: Save screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-atlas-baseline
+          path: audit/screenshots/atlas-update/*_baseline20261028.png
+          if-no-files-found: error
+      - name: Save visual log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p47-visual-log
+          path: ${{ runner.temp }}/visual.log
+          if-no-files-found: warn
