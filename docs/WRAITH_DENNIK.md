@@ -690,3 +690,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Grafická skúška `window_ui` ukladá snímku do `audit/screenshots/window-audit/` v skúšanej kópii namiesto pevnej cesty z iného počítača; snímka má odlíšiteľný tag. GitHub Actions spúšťa existujúce kontroly presunu, veľkosti a pamäte okien cez Xvfb a ukladá výslednú snímku a log ako artefakty. Herné rozhranie a jeho správanie sa nemenili.
 - Pred úpravou prešla grafická sonda Atlasu; výsledok skúšky okien na tejto verzii ešte nie je potvrdený. Artefakt treba vizuálne skontrolovať; nie je to automatické porovnanie pred/po.
+
+
+## 2026-10-28 – Grafická skúška okien
+
+- Vzdialený beh `40654635533` preveril 10 existujúcich kontrol okna krajiny: deväť prešlo, kontrola presnej polohy a veľkosti po zatvorení a znovuotvorení zlyhala. Príčina sa ešte skúma; nejde zatiaľ o potvrdenie konkrétnej chyby herného kódu. Východisková snímka a log sú uložené ako artefakty behu https://github.com/Wondris404/Projekt-47/actions/runs/40654635533.
+- Test používal Xvfb a softvérové vykresľovanie, preto nepotvrdzuje vzhľad ani výkon na notebooku. Beh Atlasu prešiel, ale jeho snímky zatiaľ neboli vizuálne posúdené.
