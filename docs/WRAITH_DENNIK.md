@@ -885,3 +885,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Diagnostika `40693049934` potvrdila, že simulovaný presun sa začal a po strate fokusu zostal aktívny (`started=true`, `mode_after=1`). Správca okien teraz pri strate fokusu zastaví aktívny presun alebo zmenu veľkosti a zapamätá si posledný obdĺžnik.
 - Grafická skúška bola doplnená aj o zmenu veľkosti; výsledky po oprave sa ešte overujú. https://github.com/Wondris404/Projekt-47/actions/runs/40693049934
+
+
+## 2026-10-28 – Overenie straty fokusu
+
+- Grafický beh `40693779749` prešiel všetkými 12 kontrolami okien: po strate fokusu sa zastavil presun aj zmena veľkosti. Prešlo aj 6 kontrol banky a 3 kontroly obnovy savu. Popis pull requestu bol doplnený o túto opravu a výsledky. https://github.com/Wondris404/Projekt-47/actions/runs/40693779749
