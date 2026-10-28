@@ -93,8 +93,9 @@ jobs:
           line = "\tvar cw = cities_with_player()"
           assert block.count(line) == 1
           block = block.replace(line, "\tvar p47_t_cities = Time.get_ticks_usec()\n" + line)
-          line = "\t\tvar svc = city_services(iso, cname)"
-          assert block.count(line) == 1
+          service_lines = [row for row in block.splitlines() if row.startswith("\t\tvar svc = city_services(")]
+          assert len(service_lines) == 1
+          line = service_lines[0]
           block = block.replace(line, '\t\tvar p47_t_svc = Time.get_ticks_usec()\n' + line + '\n\t\tprint("P47_SOCIETY_CITY_SERVICES day=%d iso=%s ms=%.3f" % [GameState.day_index, iso, float(Time.get_ticks_usec() - p47_t_svc) / 1000.0])')
           line = "\ts.infra = inf"
           assert block.count(line) == 1
