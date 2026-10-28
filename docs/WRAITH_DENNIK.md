@@ -1020,3 +1020,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Izolovaná sonda `40699855377` potvrdila, že save bez `player.cash` aj save bez `firm.cash` prešiel validáciou a neúplný slovník nahradil živý stav. Dostupné historické definície zakladania hráča a firiem obsahujú hotovosť; skutočné historické savy však nie sú v GitHube dostupné.
 - Navrhnuté je odmietnuť chýbajúcu základnú hotovosť ešte pred zmenou živého stavu a zachovať existujúce migrácie a predvolené hodnoty pre novšie polia. Zatiaľ neopravené. https://github.com/Wondris404/Projekt-47/actions/runs/40699855377
+
+
+## 2026-10-28 – Odmietnutie savu bez základnej hotovosti
+
+- Validácia teraz odmietne chýbajúcu `cash` u hráča alebo firmy ešte pred nahradením živého stavu. Pôvodné migračné polia a predvolené hodnoty novších údajov sa nemenia; dostupné historické definície hráča a firiem obsahujú hotovosť.
+- Pridaných sedem kontrol pre neúplný stav a prijatie úplných vzoriek označených v1/v2/v3. Skutočné historické savy nie sú v repozitári a uvedené vzorky ich nenahrádzajú. Výsledky testov po úprave ešte nie sú potvrdené.
