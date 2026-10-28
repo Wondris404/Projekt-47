@@ -1009,3 +1009,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Audit základných finančných polí savu
 
 - Zaznamenané podozrenie, že validácia považuje chýbajúcu hotovosť hráča alebo firmy za prijateľnú, hoci niektoré herné funkcie tieto údaje očakávajú. Pred zmenou treba reprodukovať správanie a preveriť kompatibilitu pôvodných verzií savov. Zatiaľ bez úpravy.
+
+
+## 2026-10-28 – Skúška neúplného savu
+
+- Pridaná izolovaná sonda, ktorá v dočasnej testovacej hre odstráni hotovosť hráča alebo firmy z kópie savu a zaznamená, či ju načítanie prijalo. Test nezasahuje do skutočných uložených hier, produkčného kódu ani balansu. Výsledok zatiaľ nie je známy.
