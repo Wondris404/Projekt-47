@@ -713,3 +713,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Diagnostika `40655287108` ukázala, že minimálnu šírku 449 px vytvoril text v krajine bez hráčových firiem. Správa sa teraz zalamuje, aby nevyžadovala široký panel. Herné pravidlá, dáta ani existujúce ikony sa nemenia.
 - Grafický workflow bol rozšírený o snímku znovuotvoreného panelu a automatické spustenie po zmene hlavného UI. Overenie po oprave a porovnanie snímok ešte prebieha; nie je potvrdené, že oprava funguje.
+
+
+## 2026-10-28 – Overenie panelu krajiny po oprave
+
+- V grafickom behu `40667390401` prešlo všetkých 10 existujúcich kontrol. Po otvorení inej krajiny zostal panel na (940, 500) s veľkosťou 340 × 220 px; minimálna šírka obsahu klesla zo 477 na 288 px. Testované cez Xvfb/llvmpipe pri viewporte 1280 × 720.
+- Pridaný workflow `country-comparison.yml` pripravuje samostatné snímky pred/po a obraz vedľa seba, a po úspešnej kontrole ich má uložiť do vetvy. Výsledok vytvorenia snímok a ich vizuálna kontrola zatiaľ nie sú potvrdené. https://github.com/Wondris404/Projekt-47/actions/runs/40667390401
