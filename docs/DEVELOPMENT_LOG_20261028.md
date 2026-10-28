@@ -48,3 +48,7 @@ Dodatočná kontrola odhalila, že pôvodné vyberanie používalo iba malý kru
 ## Súbežný stav GitHubu
 
 Počas práce niekto zlúčil kameru do main (`88849d6`) a publikoval alternatívnu implementáciu vlakov `6120dee` na `codex/atlas-trains-20261028`. Táto vetva sa neprepisuje ani nemaže. Jej vlaky plnia rovnakú úlohu ako naša samostatná vrstva; dve implementácie sa nekombinujú. Aktuálny main sa zahrnie do histórie tejto pracovnej vetvy, porovnania zostanú z opätovne overených PNG.
+
+## Horná hranica animácií — Codex (GPT-6)
+
+Po porovnaní súbežnej vetvy je aj tu pevný limit 64 viditeľných aktívnych liniek na jeden prekresľovací krok. Vo veľmi hustom pohľade zostávajú ďalšie trate statické. Pri pauze sa animačné hodiny zastavia; testovací scenár používa pevne nastavený čas. Simulácia sa nemení.

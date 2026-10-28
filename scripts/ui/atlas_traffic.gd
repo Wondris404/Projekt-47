@@ -5,6 +5,7 @@ var _acc := 0.0
 var _active := false
 const MAX_TRAINS = 4
 const MAX_MARKERS = 24
+const MAX_VISIBLE_LINES = 64
 
 static func train_count(util: float) -> int:
 	if util <= 0.0: return 0
@@ -28,6 +29,7 @@ static func clipped(a: Vector2, b: Vector2, rect: Rect2) -> PackedVector2Array:
 	return PackedVector2Array([a + d * lo, a + d * hi])
 
 func _process(delta: float) -> void:
+	if GameState.paused: return
 	_acc += delta
 	if _acc < 0.1: return
 	var dt = _acc
@@ -44,13 +46,16 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	if not map.atlas or map.zoom < 4.0 or map.GFX.low(): return
+	var visible_lines = 0
 	for line in Transport.lines():
+		if visible_lines >= MAX_VISIBLE_LINES: break
 		var u = maxf(0.0, Transport.utilization(line))
 		if u <= 0.0: continue
 		var a = map._to_screen(Transport._pt(line.a))
 		var b = map._to_screen(Transport._pt(line.b))
 		var visible = clipped(a, b, Rect2(Vector2.ZERO, map.size).grow(32))
 		if visible.is_empty() or a.distance_to(b) < 2.0: continue
+		visible_lines += 1
 		var direction = (b - a).normalized()
 		var normal = Vector2(-direction.y, direction.x)
 		var seed_phase = float(absi(str(line.get("id", "")).hash()) % 997) / 997.0
