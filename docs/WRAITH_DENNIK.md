@@ -864,3 +864,8 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 ## 2026-10-28 – Kontrola straty fokusu počas presunu okna
 
 - Grafický test okna bol rozšírený o začatie presunu a vyvolanie straty fokusu pred udalosťou uvoľnenia myši. Overuje, či sa presun zastaví; nejde o zmenu správania hry. Pôvodný audit toto riziko evidoval ako neoverené. Výsledok reprodukcie zatiaľ nie je známy.
+
+
+## 2026-10-28 – Pull request na kontrolu zmien
+
+- Existujúci pull request č. 3 pre pracovnú vetvu bol doplnený o prehľad opráv, testov, meraní, otvorených obmedzení a odkazy na porovnávacie snímky. Ďalšie commity tejto vetvy sa v ňom zobrazia automaticky. https://github.com/Wondris404/Projekt-47/pull/3
