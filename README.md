@@ -1,23 +1,20 @@
 # Projekt-47
 
-Lokálny ekonomický simulátor v Godot 4.7. Bez siete za behu. Spravil vývojár Wondris404.
+Projekt-47 je rozpracovaná ekonomická strategická hra od Wondris404. Hráč buduje a riadi podniky, obchoduje s komoditami a sleduje vývoj ekonomiky na svetovej mape. Hra používa Godot 4 a počas hrania nepotrebuje internet.
 
-## Spustenie
+## Inštalácia pre Windows
 
-```
-tools\godot\Godot_v4.7.2-stable_win64.exe --path C:\Users\ondre\Desktop\Projekt-47
-```
+Po zverejnení testovacieho vydania otvorte **PowerShell** a zadajte jeden príkaz:
 
-Nová hra založí kaviareň a štartovací úver. Medzerník pauzuje, šípka vpravo posunie jeden deň. Klik na obdĺžnik vyberie krajinu.
-
-Headless kontrola (má skončiť riadkom `P47_PROBE_OK`):
-
-```
-tools\godot\Godot_v4.7.2-stable_win64_console.exe --headless --path C:\Users\ondre\Desktop\Projekt-47
+```powershell
+& ([scriptblock]::Create((Invoke-WebRequest -UseBasicParsing 'https://raw.githubusercontent.com/Wondris404/Projekt-47/main/tools/install-windows.ps1').Content))
 ```
 
-## Dáta
+Skript stiahne najnovší dostupný testovací balík z [GitHub Releases](https://github.com/Wondris404/Projekt-47/releases), overí kontrolný súčet SHA-256 a vypíše umiestnenie súboru `Projekt-47.exe`. Hru nainštaluje do nového priečinka v `%LOCALAPPDATA%\Projekt-47`; jestvujúce súbory neprepisuje. Pre stiahnutie je potrebné internetové pripojenie. Ak vydanie ešte neexistuje, skript oznámi, že balík zatiaľ nie je zverejnený.
 
-`data/` drží komodity, recepty, krajiny a mapu. Aktuálne je to sada 26 krajín (ručne zadané odhady pre rok 2023, časť sú zástupné hodnoty). Skript `emit_boot_data.ps1` pozná len 16 krajín a bez `-Force` neprepíše už upravené dáta (`authored: true` alebo viac krajín v súbore). Plný sťahovač je `tools/build_world_data.py` (v tomto priečinku treba Python spustiť izolovane, inak spadne na prefixe).
+Ide o vývojovú verziu: obsah a výkon sa ešte menia. Uložené hry si pred skúšaním nových zostavení zálohujte.
 
-Stav systémov: `docs/NOTES.md`.
+## Vývoj
+
+Zdrojový projekt otvorte v Godot 4.7.2 cez `project.godot`. Dáta hry sú v `data/`, skripty v `scripts/`, testy v `tests/` a história zmien v `docs/WRAITH_DENNIK.md`. Požadované exportné šablóny nie sú súčasťou samotného zdrojového repozitára.
+

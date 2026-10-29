@@ -89,3 +89,29 @@ jobs:
             build/CITAJ-MA.txt
           if-no-files-found: error
           retention-days: 30
+
+  publish-demo:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    needs: windows-demo
+    runs-on: windows-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Projekt-47-Windows
+          path: release-input
+      - name: Build verified release package
+        shell: pwsh
+        run: ./tools/package-windows-release.ps1 -InputPath release-input -OutputPath release-output
+      - name: Publish prerelease
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = "demo-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
+          gh release create $tag release-output/Projekt-47-Windows.zip release-output/SHA256SUMS.txt --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --prerelease --latest=false --title "Projekt-47 - testovacia verzia $tag" --notes "Experimentálna testovacia verzia. Obsah a výkon sú vo vývoji."
+          if ($LASTEXITCODE -ne 0) { throw 'Release publication failed.' }

@@ -1274,3 +1274,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Pre 12 vybraných typov priemyselných podnikov a skladov sa v 3D skúške zobrazuje prvý spoločný model Kenney City Kit (Industrial) s oranžovou značkou vlastníka. Aktuálne pozície a kliknutia používajú existujúce údaje firiem; ostatné firmy majú pôvodný dočasný marker. Model a externá textúra vrátane zdroja, licencie CC0 a hashov sú zaznamenané v `assets/models/industrial_kenney/README.md`.
 - Model sa načítava na pozadí; počas načítania zostáva jednoduchý marker. Grafická sonda na notebooku (Godot 4.7.2, AMD Radeon Graphics, GL Compatibility) prešla pre vytvorenie oceliarne, načítanie modelu, výber a otvorenie detailu, zatvorenie firmy, výber mesta, krajiny a prenos kamery, exit 0. Pri ukončení sa objavilo jedno upozornenie o uvoľnení ObjectDB; opakované otváranie sa má ďalej sledovať. Snímky `audit/screenshots/prebeta-3d/factory-before.png` a `factory-after.png` sú podobná oblasť pred/po vytvorení firmy, nie porovnanie tej istej uloženej hry.
 - Krátka sonda so 48 firmami a bez dokončeného simulačného dňa: prvé otvorenie približne 84,35 ms, priemer 18,30 ms a maximum 69,32 ms na 30 snímkach po zavedení asynchrónneho načítania. Pred pridaním modelu obdobná sonda ukázala 79,35 ms; nejde o spoľahlivé párové meranie. Cieľ 16,7 ms zatiaľ nie je dosiahnutý a účinok na export ešte nie je overený. Modely pre jednotlivé typy, elektrárne, ďalšie firmy a detailný terén zostávajú otvorené.
+
+
+## 2026-10-29 – Príprava inštalátora Windows
+
+- Doplnený PowerShell inštalátor: vyberie zverejnené demo, overí SHA-256 a nainštaluje do nového priečinka bez prepisovania súborov. README obsahuje jeden spúšťací príkaz.
+- Po úspešnom exporte môže manuálne spustený workflow vytvoriť predbežné vydanie s unikátnym tagom, balíkom a kontrolným súčtom; existujúce vydania sa neprepisujú.
+- Overenie v PowerShell 5.1: funkčný lokálny falošný balík, odmietnutie existujúceho cieľa, nesprávneho súčtu a neočakávaného obsahu. Overený lokálny cyklus zabalenie → overenie → inštalácia. Skutočné vydanie a verejné stiahnutie v tomto okamihu ešte nie sú overené.
