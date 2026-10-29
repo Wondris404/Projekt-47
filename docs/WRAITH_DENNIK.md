@@ -1342,3 +1342,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Na žiadosť hráča vytvorených deväť nových pixelových návrhov: tri vysoké typy v úrovniach 1–3. Banka má stupňovitú korunu a stĺpový vstup, kasíno dve zlaté veže s neónovými pásmi, hotel balkóny a strešný bazén. Spoločná projekcia umožňuje porovnanie výšky aj rastu.
 - Návrhy a skutočný render Godotu 4.7.2 cez Xvfb/Mesa llvmpipe sú v `docs/atlas-towers-proposal/`. Zdrojové generátory sú priložené. Vizuálne skontrolovaný celý prehľad vrátane 24/32/48 px; deväť rasterov je jedinečných, neorezaných a výška rastie medzi úrovňami.
 - Ide o návrh na kontrolu; produkčné modely, herná logika, UI a uložené hry sa nemenili. Nové ani široké herné testy sa pri tejto prezentačnej zmene nespúšťali.
+
+## 2026-10-29 – Nasadenie schválenej výškovej banky, kasína a hotela
+
+- Hráč výslovne schválil všetky tri návrhy a ostatné budovy. Do Atlas sady zapojených presne deväť schválených PNG; bajtová zhoda s návrhmi bola overená. Spoločná kamera a geometria návrhov sú súčasťou reprodukovateľného generátora. Ostatných 186 modelov sa nemení.
+- Hotel a kasíno používajú existujúce úrovne 1–3 a prechody pri upgrade; banka používa L1, kým nemá vlastnú upgrade logiku. UI, ekonomika a save v3 sa nemenili.
+- Zopakovaných 20 existujúcich kontrol úrovní a jeden audit aktív; nejde o novú rozšírenú testovaciu sadu. Herné snímky boli obnovené cez Xvfb/llvmpipe. Ďalšie práce podľa hráčovho zadania: Atlas mapa podľa dodaného HOI4 PDF.

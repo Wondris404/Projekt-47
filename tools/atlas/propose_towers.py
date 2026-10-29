@@ -65,8 +65,8 @@ def proposal(kind,level):
     return m
 
 
-def main():
-    (OUT/'sprites').mkdir(parents=True,exist_ok=True)
+def designs():
+    """Approved geometry and the exact shared camera used in the review image."""
     families={k:[proposal(k,l) for l in (1,2,3)] for k in ('bank','casino','hotel')}
     # One common camera for all nine drafts: height and growth remain comparable.
     raw=[((x-y)*5.3,(x+y)*2.65-z*5.3) for f in families.values() for m in f for x,y,z in m.points]
@@ -74,6 +74,12 @@ def main():
     top,bottom=min(p[1] for p in raw),max(p[1] for p in raw)
     scale=min(58/(right-left),60/(bottom-top))
     projection=(scale,32-(left+right)*scale/2,62-bottom*scale)
+    return families,projection
+
+
+def main():
+    (OUT/'sprites').mkdir(parents=True,exist_ok=True)
+    families,projection=designs()
     records=[]
     for kind,family in families.items():
         for level,m in enumerate(family,1):
@@ -82,7 +88,7 @@ def main():
             lo=[min(p[i] for p in m.points) for i in range(3)]
             hi=[max(p[i] for p in m.points) for i in range(3)]
             records.append(dict(id=kind,level=level,path='sprites/'+name,bounds=[lo,hi],parts=m.parts,sha256=hashlib.sha256(im.tobytes()).hexdigest()))
-    (OUT/'manifest.json').write_text(json.dumps(dict(status='proposal only; not used by game',origin='Original procedural artwork for Projekt-47',license='LicenseRef-Projekt47-Original',projection=projection,models=records),ensure_ascii=False,indent=2)+'\n')
+    (OUT/'manifest.json').write_text(json.dumps(dict(status='approved by user; integrated into Atlas on 2026-10-29',origin='Original procedural artwork for Projekt-47',license='LicenseRef-Projekt47-Original',projection=projection,models=records),ensure_ascii=False,indent=2)+'\n')
     assert len({r['sha256'] for r in records})==9
     print('Prepared nine distinct high-rise proposals; production assets unchanged')
 

@@ -64,3 +64,5 @@ P47_ATLAS_CAPTURE_OK types=65 levels=195 sizes=24,32,48 renderer=llvmpipe (LLVM 
 
 49 runtime checks + 1 grouped asset audit = 50 checks. No broad suite.
 Visual recognition is subject to player review; uniqueness is not a recognition score.
+
+Approved tower update (2026-10-29): same 20 atlas_levels_unit checks rerun successfully; asset audit passed; nine production PNGs byte-identical to approved proposal. Other 186 models unchanged. No new runtime tests added. Captures refreshed.

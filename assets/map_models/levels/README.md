@@ -1,7 +1,7 @@
 # Pôvodné pixelové modely Atlasu
 
 195 exteriérov: 61 druhov podnikov a 4 mapové objekty, každý v troch úrovniach.
-Zdrojom je [generátor](../../../tools/atlas/generate_levels.py), nie Sketchfab,
+Zdrojom je [generátor](../../../tools/atlas/generate_levels.py) a schválené [výškové modely](../../../tools/atlas/propose_towers.py), nie Sketchfab,
 generované obrázky z obrazového modelu ani skopírované textúry. Tvary sú zostavené
 z explicitných geometrických dielov a rasterizované do jednotnej palety.
 

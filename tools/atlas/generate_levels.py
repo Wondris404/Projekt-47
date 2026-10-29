@@ -401,12 +401,14 @@ def building(kind,level):
 
 
 def main():
+    from propose_towers import designs
+    approved_towers,approved_projection=designs()
     OUT.mkdir(parents=True,exist_ok=True)
     names={r['id']:r['name'] for r in json.loads((ROOT/'data/industries.json').read_text())}
     names.update(bank="Banka",hq="Centrála",port="Prístavný žeriav",highway="Diaľnica")
     records=[]
     for kind,name in names.items():
-        family=[building(kind,level) for level in (1,2,3)]
+        family=approved_towers.get(kind) or [building(kind,level) for level in (1,2,3)]
         # Fit the whole FAMILY once, never each level separately. A given wall or
         # vehicle keeps exactly the same pixel scale and ground anchor on upgrade.
         raw=[((x-y)*5.3,(x+y)*2.65-z*5.3) for m in family for x,y,z in m.points]
@@ -414,6 +416,7 @@ def main():
         top,bottom=min(p[1] for p in raw),max(p[1] for p in raw)
         scale=min(58/(right-left),60/(bottom-top))
         projection=(scale,32-(left+right)*scale/2,62-bottom*scale)
+        if kind in approved_towers:projection=approved_projection
         for level,m in enumerate(family,1):
             m.projection=projection
             im=m.render();filename=f"{kind}_{level}.png"

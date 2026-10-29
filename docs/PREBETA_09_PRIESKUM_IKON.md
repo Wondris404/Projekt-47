@@ -1,6 +1,6 @@
 # Atlas: opravené modely a tri vizuálne úrovne
 
-> Nový návrh na kontrolu: [výšková banka, kasíno a hotel](atlas-towers-proposal/README.md). Zatiaľ nenahrádza nasadené modely.
+> Hráč schválil [výškovú banku, kasíno a hotel](atlas-towers-proposal/README.md); všetkých deväť variantov je zapojených do Atlas sady. Ostatné budovy sú tiež schválené.
 
 Aktualizácia 29. 10. 2026. **V Atlase je nasadená vlastná jednotná pixelová sada pre všetkých 61 podnikov.** Ďalšie štyri mapové objekty majú pripravené varianty. Spolu 65 typov × 3 úrovne = **195 odlišných exteriérov**. Nejde o stiahnuté 3D meshe: využitá je povolená alternatíva vlastných izometrických pixelových modelov.
 
@@ -59,7 +59,7 @@ V manifeste je pôvod označený `LicenseRef-Projekt47-Original`. Nie je to tvrd
 
 ## Otvorené položky
 
-1. Potvrdenie výtvarného výsledku hráčom, najmä rozlíšenia drobných fasádnych znakov pri 24 px. Sada je nasadená v Atlase a snímky umožňujú konkrétnu kontrolu.
+1. Výtvarný výsledok budov je schválený hráčom vrátane prepracovanej výškovej banky, kasína a hotela. Ďalšie vizuálne práce sa presúvajú na podklad Atlas mapy.
 2. Nová upgrade logika pre banku, HQ, samostatný prístavný žeriav a diaľnicu nebola vytvorená. Ich grafické varianty L2/L3 ostávajú pripravené na budúce napojenie.
 3. Komoditné návrhy zostávajú iba v dokumentácii, pretože zadanie zakazuje meniť existujúce UI ikony. Žiadna z ôsmich pôvodne chýbajúcich položiek už nie je bez vlastného návrhu.
 4. Nevykonal sa používateľský test rozpoznávania ani záťažový benchmark veľkého počtu súčasných upgradov; výsledky netvrdia garantované FPS.
@@ -97,7 +97,7 @@ Každý odkaz otvorí skutočný prehľad úrovní 1/2/3 aj pri 24/32/48 px. Tab
 | `auto_service` — Autoservis | Servisná hala so znakom auta a vozidlom | [Snímka L1–L3](atlas-levels/auto_service.png) |
 | `eshop` — E-shop | Expedičná hala, dodávka a balíky | [Snímka L1–L3](atlas-levels/eshop.png) |
 | `real_estate` — Realitka | Dom so sedlovou strechou a ceduľou PREDAJ | [Snímka L1–L3](atlas-levels/real_estate.png) |
-| `hotel` — Hotel | Viacposchodový hotel s označením H | [Snímka L1–L3](atlas-levels/hotel.png) |
+| `hotel` — Hotel | Výškový hotel s balkónmi, strešným bazénom a krytým príjazdom | [Snímka L1–L3](atlas-levels/hotel.png) |
 | `supermarket` — Supermarket | Predajná hala s dlhým zeleným označením | [Snímka L1–L3](atlas-levels/supermarket.png) |
 | `warehouse` — Logistika a sklady | Vysoká regálová hala s rebrovaným exteriérom | [Snímka L1–L3](atlas-levels/warehouse.png) |
 | `software` — Softvérová firma | Kancelária so symbolom kódu | [Snímka L1–L3](atlas-levels/software.png) |
@@ -115,7 +115,7 @@ Každý odkaz otvorí skutočný prehľad úrovní 1/2/3 aj pri 24/32/48 px. Tab
 | `tv_station` — Televízia | Štúdiová budova so satelitnými taniermi | [Snímka L1–L3](atlas-levels/tv_station.png) |
 | `social_network` — Sociálna sieť | Kampus s vlastným symbolom prepojenia | [Snímka L1–L3](atlas-levels/social_network.png) |
 | `newspaper` — Noviny | Tehlová tlačiareň s komínom a novinovým štítom | [Snímka L1–L3](atlas-levels/newspaper.png) |
-| `casino` — Kasíno | Kasíno so zlatou korunkou a mincovým znakom | [Snímka L1–L3](atlas-levels/casino.png) |
+| `casino` — Kasíno | Dve zlaté výškové veže, neónové pásy a diamantový vstupný znak | [Snímka L1–L3](atlas-levels/casino.png) |
 | `offshore` — Offshore firma | Vila, palma a bazénová terasa | [Snímka L1–L3](atlas-levels/offshore.png) |
 | `airport` — Letisko | Terminál, riadiaca veža a značenie letiskovej plochy | [Snímka L1–L3](atlas-levels/airport.png) |
 | `oil_refinery` — Ropná rafinéria | Destilačné kolóny, technologická hala a valcová nádrž | [Snímka L1–L3](atlas-levels/oil_refinery.png) |
@@ -131,7 +131,7 @@ Každý odkaz otvorí skutočný prehľad úrovní 1/2/3 aj pri 24/32/48 px. Tab
 | `school_high` — Súkromná stredná škola | Školská budova s hodinovou vežou | [Snímka L1–L3](atlas-levels/school_high.png) |
 | `university` — Súkromná univerzita | Univerzita s portikom, stĺpmi a kupolou | [Snímka L1–L3](atlas-levels/university.png) |
 | `corp_academy` — Firemná akadémia | Školiace centrum so zeleným znakom a presklenou časťou | [Snímka L1–L3](atlas-levels/corp_academy.png) |
-| `bank` — Banka | Banka s portikom, stĺpmi a mincovým označením | [Snímka L1–L3](atlas-levels/bank.png) |
+| `bank` — Banka | Výšková finančná veža so stĺpovým vstupom a zlatou stupňovitou korunou | [Snímka L1–L3](atlas-levels/bank.png) |
 | `hq` — Centrála | Najvyššia kancelárska veža s heliportom | [Snímka L1–L3](atlas-levels/hq.png) |
 | `port` — Prístavný žeriav | Samostatné prístavné žeriavy na móle | [Snímka L1–L3](atlas-levels/port.png) |
 | `highway` — Diaľnica | Diaľničný most na pilieroch | [Snímka L1–L3](atlas-levels/highway.png) |

@@ -1,6 +1,6 @@
 # Návrh: výšková banka, kasíno a hotel
 
-Návrh na kontrolu, **zatiaľ nezapojený do hry**. Všetky tri typy sú vysoké už na prvej úrovni. Deväť modelov používa spoločnú kameru a mierku, úrovne pridávajú poschodia a nové krídla.
+**Schválené hráčom a zapojené do Atlasu 29. 10. 2026.** Všetky tri typy sú vysoké už na prvej úrovni. Deväť modelov používa spoločnú kameru a mierku, úrovne pridávajú poschodia a nové krídla.
 
 ![Spoločný návrh troch výškových budov](navrh.png)
 
@@ -10,7 +10,7 @@ Návrh na kontrolu, **zatiaľ nezapojený do hry**. Všetky tri typy sú vysoké
 
 Samostatné náhľady: [banka](bank.png), [kasíno](casino.png), [hotel](hotel.png). Dolný riadok ukazuje L3 pri 24, 32 a 48 px. Pri banke sú L2/L3 stále iba vizuálne varianty; tento návrh nevytvára nový bankový upgrade systém.
 
-Pôvod: vlastná procedurálna pixelová tvorba pre Projekt-47 (`LicenseRef-Projekt47-Original`), bez cudzích modelov, textúr či log. Náhľad vykreslil Godot 4.7.2 cez Xvfb a Mesa llvmpipe. Nie je to snímka nasadenej hernej mapy. Existujúce modely, UI a save formát sa nezmenili.
+Pôvod: vlastná procedurálna pixelová tvorba pre Projekt-47 (`LicenseRef-Projekt47-Original`), bez cudzích modelov, textúr či log. Náhľad vykreslil Godot 4.7.2 cez Xvfb a Mesa llvmpipe. Tento obrázok zachováva pôvodný schválený návrh. [Aktuálne herné snímky](../atlas-levels/README.md) ukazujú nasadenie. Produkčné modely banky, kasína a hotela teraz presne zodpovedajú deviatim návrhom; UI a save formát sa nemenili.
 
 Reprodukcia (Python 3, Pillow, Godot 4.7.2, existujúci Xvfb displej):
 

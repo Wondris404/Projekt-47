@@ -196,7 +196,7 @@ Dom so sedlovou strechou a ceduľou PREDAJ.
 
 ### Hotel — `hotel`
 
-Viacposchodový hotel s označením H.
+Výškový hotel s balkónmi, strešným bazénom a krytým príjazdom.
 
 ![Hotel — všetky úrovne](hotel.png)
 
@@ -304,7 +304,7 @@ Tehlová tlačiareň s komínom a novinovým štítom.
 
 ### Kasíno — `casino`
 
-Kasíno so zlatou korunkou a mincovým znakom.
+Dve zlaté výškové veže, neónové pásy a diamantový vstupný znak.
 
 ![Kasíno — všetky úrovne](casino.png)
 
@@ -400,7 +400,7 @@ Univerzita s portikom, stĺpmi a kupolou.
 
 ### Banka — `bank`
 
-Banka s portikom, stĺpmi a mincovým označením.
+Výšková finančná veža so stĺpovým vstupom a zlatou stupňovitou korunou.
 
 ![Banka — všetky úrovne](bank.png)
 
