@@ -1,0 +1,13 @@
+# Pre-Beta-0.9: rozpracovaní kandidáti pre ikony
+
+Tento zoznam zachytáva prieskum, nie hotové ikony ani schválené podklady. Predloha od používateľa obsahuje veľkú mapu HOI4, realistický komplex elektrárne s chladiacimi vežami, letisko a mesto z nadhľadu. Odporúčaný smer pre ikony podnikov je rozpoznateľný objekt z podobného šikmého nadhľadu. Odkazovaný [GFX Remastered_l](https://steamcommunity.com/workshop/filedetails/?id=2668719344) slúži ako vizuálna referencia; oprávnenie použiť jeho súbory v samostatnej hre nie je overené.
+
+| Účel | Kandidát a autor | Licencia podľa zdroja | Výhrady pred použitím |
+| --- | --- | --- | --- |
+| Jadrová elektráreň | [Chernobyl Nuclear Power Plant Simplified](https://sketchfab.com/3d-models/dc8d54211f3b464ead6f03d6ea3b1c13), ml64 | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), vyžaduje uvedenie autora | Zobrazený náhľad nemá výrazné chladiace veže z predlohy; overiť vhodnosť, pôvod modelu a čitateľnosť v malých rozmeroch. |
+| Letisko | [Small airport terminal building complex](https://sketchfab.com/3d-models/f93a362f8a1f4e2c92f65310cfdd7fe2), soysascha | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), vyžaduje uvedenie autora | Je to terminál, nie celý komplex s dráhami ako v predlohe; overiť pôvod a či bude silueta pri malom rozmere zrozumiteľná. |
+| Prístav | [Apocalypse Scene. Shipping container port](https://sketchfab.com/3d-models/e7a7c37fae2246fea091e5139dfde925), vork0n | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), vyžaduje uvedenie autora | Náhľad obsahuje kontajnery a oplotenie, ale neukazuje móla ani žeriavy; atmosféra je pochmúrna. Nepovažovať za hotový prístav. |
+| Elektronika | [Microchip - Prototype](https://sketchfab.com/3d-models/7d00abe914664a17b4bf18c6e851e7eb), re1monsen | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), vyžaduje uvedenie autora | Náhľad je štylizovaný futuristický detail, nie továreň; overiť čitateľnosť, pôvod a vhodnosť pre komoditu. |
+| Ropa alebo palivo | [Barrel 01](https://polyhaven.com/a/Barrel_01), Jorge Camacho | [CC0 podľa Poly Haven](https://polyhaven.com/license) | Model je barel, nie podnik; overiť variant, mierku a čitateľnosť. |
+
+Licencie sú stav uvedený zdrojmi pri prieskume 29. 10. 2026, nie potvrdenie pôvodu každého dielu ani schválenie na použitie. Sketchfab API pri skúške sťahovania prvého modelu vrátilo HTTP 401; zoznamy a náhľady boli dostupné. Súbory ani náhľady kandidátov zatiaľ nie sú zahrnuté do hry. Skutočný jednotný uhol kamery, osvetlenie, 24/32/48 px, výkon a pôvod neboli overené. Zoznam nepokrýva 61 podnikov, 28 komodít ani ovládacie ikony; ďalší prieskum a návrhy na kontrolu zostávajú otvorené.
