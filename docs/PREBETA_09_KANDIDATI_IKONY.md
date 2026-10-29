@@ -1,5 +1,7 @@
 # Pre-Beta-0.9: rozpracovaní kandidáti pre ikony
 
+**Aktualizácia po spätnej väzbe:** používateľ odmietol nižšie uvedený futuristický `Microchip - Prototype` a `Barrel 01` pre ropu/palivo. Ide o historický záznam, tieto dva podklady už neponúkať ani nezačleňovať. Aktuálny prieskum podľa skutočných funkcií hry je v [súpise všetkých 93 existujúcich ikon](PREBETA_09_PRIESKUM_IKON.md).
+
 Tento zoznam zachytáva prieskum, nie hotové ikony ani schválené podklady. Predloha od používateľa obsahuje veľkú mapu HOI4, realistický komplex elektrárne s chladiacimi vežami, letisko a mesto z nadhľadu. Odporúčaný smer pre ikony podnikov je rozpoznateľný objekt z podobného šikmého nadhľadu. Odkazovaný [GFX Remastered_l](https://steamcommunity.com/workshop/filedetails/?id=2668719344) slúži ako vizuálna referencia; oprávnenie použiť jeho súbory v samostatnej hre nie je overené.
 
 | Účel | Kandidát a autor | Licencia podľa zdroja | Výhrady pred použitím |
