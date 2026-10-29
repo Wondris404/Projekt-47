@@ -1287,3 +1287,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Publikačný krok sa okrem manuálneho spustenia môže spustiť jednorazovo konkrétnym iniciačným commitom nad uvedeným rodičom. Stále závisí od úspešného zostavenia a skúšky exportu; ďalšie bežné commity vydanie nevytvárajú. Vydanie používa unikátny tag a existujúce súbory neprepisuje.
 - Kontrola podmienky: manuálne spustenie na main je povolené; bežný push, pull request aj push z iného rodiča sú odmietnuté. Skutočný beh a verejné stiahnutie treba po commite ešte overiť.
+
+
+## 2026-10-29 – Overenie inštalácie a načítavanie mesta v 3D
+
+- Prvé predbežné vydanie demo-40869281831-1 vytvoril GitHub Actions po úspešnom exporte a desaťdňovej headless skúške. Inštalátor ho na notebooku skutočne stiahol, overil SHA-256 a rozbalil do nového skúšobného priečinka; exportovaná hra v headless režime profile_sim skončila s kódom 0. Grafické hranie to nenahrádza.
+- Model mesta sa v 3D skúške načítava na pozadí, počas načítania je viditeľná náhradná budova. Zmenená je iba prezentačná vrstva, nie save ani ekonomika. Grafická regresná sonda prešla: geometria, načítanie modelu, výber miest, firiem a krajín, kamera a opätovné otvorenie; Godot na konci hlásil 2 neuvoľnené ObjectDB inštancie.
+- Jeden profil na notebooku pred/po so 48 firmami a seedom 47: prvé otvorenie 3D 202,28/170,28 ms; priemery snímok pri rýchlostiach 1/2/3 19,29/20,07; 20,78/21,36; 26,46/27,17 ms; p99 34,08/39,50; 48,02/52,96; 53,90/56,35 ms. Merania sú jednotlivé behy, zahŕňajú limit FPS a nie sú dôkazom spoľahlivého zlepšenia. Cieľ 16,7 ms ešte nie je splnený; otvorenie aj špičky potrebujú ďalšie meranie.

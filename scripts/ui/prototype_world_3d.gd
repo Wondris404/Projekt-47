@@ -183,19 +183,8 @@ func _add_cities(world: Node3D) -> void:
 		for city in TerrainSystem.cities(str(iso)):
 			_cities.append(city)
 	if _cities.is_empty(): return
-	var building: Mesh
-	var model_path = "res://assets/models/city_kenney/building-a.glb"
-	if ResourceLoader.exists(model_path):
-		var scene: PackedScene = load(model_path)
-		if scene != null:
-			var model = scene.instantiate()
-			var parts = model.find_children("*", "MeshInstance3D", true, false)
-			if not parts.is_empty(): building = parts[0].mesh
-			model.free()
-	if building == null:
-		var fallback = BoxMesh.new()
-		fallback.size = Vector3(1.1, 0.9, 1.1)
-		building = fallback
+	var building = BoxMesh.new()
+	building.size = Vector3(1.1, 0.9, 1.1)
 	var instances = MultiMesh.new()
 	instances.transform_format = MultiMesh.TRANSFORM_3D
 	instances.mesh = building
@@ -207,6 +196,24 @@ func _add_cities(world: Node3D) -> void:
 	layer.multimesh = instances
 	_city_layer = layer
 	world.add_child(layer)
+	_load_city_model.call_deferred(world)
+
+func _load_city_model(world: Node3D) -> void:
+	var path = "res://assets/models/city_kenney/building-a.glb"
+	if not ResourceLoader.exists(path) or ResourceLoader.load_threaded_request(path, "PackedScene", false) != OK: return
+	var status = ResourceLoader.load_threaded_get_status(path)
+	while status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		await get_tree().process_frame
+		if not is_instance_valid(world) or is_queued_for_deletion(): return
+		status = ResourceLoader.load_threaded_get_status(path)
+	if status != ResourceLoader.THREAD_LOAD_LOADED: return
+	var scene: PackedScene = ResourceLoader.load_threaded_get(path)
+	if scene == null or not is_instance_valid(world) or is_queued_for_deletion(): return
+	var model = scene.instantiate()
+	var parts = model.find_children("*", "MeshInstance3D", true, false)
+	if not parts.is_empty() and parts[0].mesh != null and is_instance_valid(_city_layer):
+		_city_layer.multimesh.mesh = parts[0].mesh
+	model.free()
 
 func _city_at(local_pos: Vector2) -> Dictionary:
 	if _camera.size > 150.0: return {}
