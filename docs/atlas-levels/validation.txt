@@ -1,0 +1,66 @@
+Godot 4.7.2 stable ed1daf0bf
+Xvfb + GL Compatibility + Mesa llvmpipe (LLVM 19.1.7, 256 bits)
+
+Commands (isolated XDG directories):
+  godot --headless --path . -- atlas_levels_unit
+  godot --headless --path . -- atlas_update_unit
+  godot --headless --path . -- goods_icons_unit
+  python tools/atlas/validate_levels.py
+  P47_GODOT_BIN=... P47_XVFB_BIN=... bash tools/atlas/capture_levels.sh
+
+P47_UNIT_OK levels_catalog_195
+P47_UNIT_OK levels_no_duplicate_images
+P47_UNIT_OK levels_safe_range
+P47_UNIT_OK levels_unknown_is_null
+P47_UNIT_OK levels_legacy_default
+P47_UNIT_OK levels_transition_start
+P47_UNIT_OK levels_transition_middle
+P47_UNIT_OK levels_rapid_upgrade_continuity
+P47_UNIT_OK levels_transition_finishes
+P47_UNIT_OK levels_new_save_clears_animation
+P47_UNIT_OK levels_real_upgrade_cost_and_capacity
+P47_UNIT_OK levels_same_frame_cache_and_signal
+P47_UNIT_OK levels_visuals_preserve_rng
+P47_UNIT_OK levels_failed_upgrade_preserves_target
+P47_UNIT_OK levels_real_upgrade_to_three
+P47_UNIT_OK levels_max_upgrade_unchanged
+P47_UNIT_OK levels_v3_roundtrip
+P47_UNIT_OK levels_v3_missing_level
+P47_UNIT_OK levels_added_wing_hit
+P47_UNIT_OK levels_transparent_corner
+P47_UNIT_OK camera_detached_initialization
+P47_UNIT_OK traffic_idle
+P47_UNIT_OK traffic_density
+P47_UNIT_OK traffic_cap
+P47_UNIT_OK traffic_partial_train_has_empty_wagons
+P47_UNIT_OK traffic_full_train
+P47_UNIT_OK traffic_offscreen
+P47_UNIT_OK traffic_extreme_zoom_clip
+P47_UNIT_OK traffic_zero_segment
+P47_UNIT_OK all_catalog_map_models
+P47_UNIT_OK baseline_full_efficiency
+P47_UNIT_OK baseline_full_purchase
+P47_UNIT_OK baseline_replenishes_workers
+P47_UNIT_OK manager_v3_roundtrip
+P47_UNIT_OK manager_original_bonus
+P47_UNIT_OK manager_never_penalizes
+P47_UNIT_OK firing_restores_baseline
+P47_UNIT_OK v3_missing_manager_loads
+P47_UNIT_OK v3_missing_manager_runs
+P47_UNIT_OK camera_smooth_layout_anchor
+P47_UNIT_OK camera_click_visible_roof roof=(409.5625, 242.0625) ground=(400.0, 300.0) selected=f1 expected=f1 zoom=60.0 sites=[{ "id": "f1", "ind": "nuclear_plant", "level": 1, "iso": "SK", "wp": (708.0456, 264.0228), "name": "Kaviareň Slovensko" }]
+P47_UNIT_OK camera_model_transparency
+P47_UNIT_OK goods_icons_complete []
+P47_UNIT_OK goods_icons_size []
+P47_UNIT_OK goods_icons_cache
+P47_UNIT_OK goods_icons_unknown
+P47_UNIT_OK goods_icons_inputs
+P47_UNIT_OK goods_icons_outputs
+P47_UNIT_OK goods_icons_no_recipe
+P47_ASSET_AUDIT_OK 195 models; geometry growth; fixed family projection; no clipping; no duplicates at 24/32/48/64 px
+
+P47_ATLAS_CAPTURE_CAMERA zoom=292.173913043478 fit=0.09583333333333 size=(1248.0, 641.0)
+P47_ATLAS_CAPTURE_OK types=65 levels=195 sizes=24,32,48 renderer=llvmpipe (LLVM 19.1.7, 256 bits)
+
+49 runtime checks + 1 grouped asset audit = 50 checks. No broad suite.
+Visual recognition is subject to player review; uniqueness is not a recognition score.

@@ -1,3 +1,142 @@
+# Atlas: opravené modely a tri vizuálne úrovne
+
+Aktualizácia 29. 10. 2026. **V Atlase je nasadená vlastná jednotná pixelová sada pre všetkých 61 podnikov.** Ďalšie štyri mapové objekty majú pripravené varianty. Spolu 65 typov × 3 úrovne = **195 odlišných exteriérov**. Nejde o stiahnuté 3D meshe: využitá je povolená alternatíva vlastných izometrických pixelových modelov.
+
+[Galéria všetkých typov a úrovní](atlas-levels/README.md) · [lokálna filtrovaná galéria](atlas-levels/index.html) · [195 jednotlivých snímok](atlas-levels/individual/) · [pôvod a podmienky vlastnej grafiky](../assets/map_models/levels/README.md)
+
+![Jadrová elektráreň: tri úrovne a veľkosti 24/32/48 px](atlas-levels/nuclear_plant.png)
+
+## Čo sa zmenilo
+
+- Externé výsledky so spoločnými kanceláriami, interiérmi a nejasným významom nahradili vlastné exteriéry s typovými dominantami. Žiadny Sketchfab model nebol prevzatý do hry. Staré odkazy sú zachované iba ako historický prieskum na konci dokumentu.
+- Kancelárie, logistika, ambulancia/nemocnica, letecká firma/lietadlo a prístav/terminál sa rozlišujú stavbou a vybavením. Tabuľka nižšie uvádza motív každého typu.
+- Chýbajúce `auto_plant`, `chip_fab`, `copper_mine`, `electronics_plant`, `gas_plant`, `restaurant` majú vlastné modely v troch úrovniach. Pre `crude_oil` a `fuel` sú hotové vlastné pixelové návrhy v dokumentácii.
+- `farm` zo zadania zodpovedá hernému ID `wheat_farm`, `nuclear` zodpovedá `nuclear_plant`. Žiadne nové druhy firiem sa nezaviedli.
+- Existujúce UI ikony, menu a 3D skúška zostali nezmenené. Nová sada sa načítava iba cez vykresľovanie Atlasu. Pôvodné súbory sa neodstraňujú.
+
+## Upgrady a kompatibilita
+
+`IndustrySystem.upgrade_firm` naďalej používa pôvodné náklady, odomykanie a násobiteľ výkonu 1,35. Po úspechu emituje prezentačný signál. Atlas načíta variant podľa existujúceho `firm.level`; starý save bez levelu používa úroveň 1.
+
+Úroveň 2 pridáva podľa typu bočné krídlo, poschodie, panelovú radu alebo technológiu. Úroveň 3 pridáva ďalšie krídlo, vyšší blok alebo ďalšie vybavenie. Manifest zaznamenáva rozmery a diely: pri každom kroku narastie aspoň jeden priestorový rozmer a pribudne alebo sa zmení geometria. Každá trojica používa **rovnakú projekciu a kotvu**; varianty nevznikajú zväčšením hotového obrázka.
+
+Prechod trvá 0,55 s a prelína starý a nový variant. Rýchle dva upgrady nadväzujú na rozpracovaný prechod. Kliknutia zohľadňujú viditeľné diely aj počas prechodu. Načítanie iného sveta vymaže animácie. Animácia sa neukladá, nepoužíva herný RNG a funguje aj pri pozastavenej simulácii. Save formát **v3 zostáva nezmenený**.
+
+**Hranica existujúcej logiky:** `bank`, `hq`, `port`, `highway` nemajú priemyselný upgrade 1–3. Majú pripravené všetky tri grafické varianty, ale v hre ostávajú na úrovni 1. Ich L2/L3 snímky sú ukážky variantov, nie dôkaz nového herného upgrade systému.
+
+## Opravené komoditné návrhy — UI sa nemení
+
+Tieto obrázky sú návrhy na kontrolu v `docs/`, nie náhrady existujúcich UI ikon. Komodity nie sú samostatné budovy Atlasu a nepodliehajú levelom budov.
+
+| ID | Nový motív | Náhľad |
+| --- | --- | --- |
+| `pmc` | Štít s odznakom; baterka vyradená | ![pmc](atlas-levels/proposals/pmc.png) |
+| `finance` | Stohy mincí; aktovka vyradená | ![finance](atlas-levels/proposals/finance.png) |
+| `ai_services` | Serverový cloud; interiér vyradený | ![ai_services](atlas-levels/proposals/ai_services.png) |
+| `weapons` | Puška | ![weapons](atlas-levels/proposals/weapons.png) |
+| `arms` | Muničná debna | ![arms](atlas-levels/proposals/arms.png) |
+| `crude_oil` | Valcový zásobník s plávajúcou strechou; tlaková guľa a barel vyradené | ![crude_oil](atlas-levels/proposals/crude_oil.png) |
+| `fuel` | Moderný výdajný stojan s pištoľou; hrdzavé historické rekvizity vyradené | ![fuel](atlas-levels/proposals/fuel.png) |
+| `electronics` | Bežná osadená doska elektroniky; futuristický mikro čip vyradený | ![electronics](atlas-levels/proposals/electronics.png) |
+
+`aircraft` zostáva lietadlo v existujúcom UI; `airline` na Atlase má dominantný chvost s vlastným znakom. `arms_plant` je výrobný podnik, `arms` komodita a `pmc_unit` bezpečnostný podnik — tieto významy sa nezamieňajú.
+
+## Pôvod, licencie a atribúcie
+
+Všetkých 195 modelov a osem komoditných návrhov je pôvodná geometrická pixelová tvorba pre tento repozitár. Zdroj: [`tools/atlas/generate_levels.py`](../tools/atlas/generate_levels.py). Generátor používa explicitné stavebné diely, vlastné znaky a jednotnú paletu, žiadne externé textúry ani modely. Nejde o obrázky vytvorené generatívnym obrazovým nástrojom.
+
+V manifeste je pôvod označený `LicenseRef-Projekt47-Original`. Nie je to tvrdenie, že pôvodná grafika je licencovaná zo Sketchfabu pod CC0/CC-BY; verejná distribučná licencia projektu sa touto zmenou nemení. **Použité Sketchfab aktíva: žiadne. Požadované atribúcie externých modelov: žiadne.** Historické vyhľadávacie označenia CC-BY nie sú schválením ich pôvodu ani povolením použiť ich obsah.
+
+## Overenie a snímky
+
+- Godot **4.7.2**, Xvfb, GL Compatibility, Mesa **llvmpipe**. Ide o skutočné snímky renderera, nie externé náhľady.
+- 65 prehľadových snímok po troch úrovniach, 195 samostatných výrezov z týchto snímok, 13 strán na skutočnom Atlase a 10 snímok úspešných upgradov jadrovej elektrárne.
+- Každý prehľad ukazuje rovnakú trojicu aj pri šírke obrazovej plochy 24, 32 a 48 px. Budova môže byť menšia než obrazová plocha kvôli priehľadnému okraju a miestu pre rast.
+- **49 cielených testov prešlo:** 20 nových kontrol úrovní, 22 existujúcich Atlas regresií a 7 kontrol pôvodných UI ikon. Jeden skupinový audit aktív navyše overil úplnosť, rast geometrie, spoločnú projekciu, neorezané okraje a žiadne identické obrázky pri 24/32/48/64 px. Spolu 50 kontrol, nie plná testovacia sada.
+- [Výsledky a príkazy](atlas-levels/validation.txt). Nezhodné kontrolné súčty samy osebe nedokazujú rozpoznateľnosť; na jej posúdenie sú priložené snímky všetkých typov.
+
+## Otvorené položky
+
+1. Potvrdenie výtvarného výsledku hráčom, najmä rozlíšenia drobných fasádnych znakov pri 24 px. Sada je nasadená v Atlase a snímky umožňujú konkrétnu kontrolu.
+2. Nová upgrade logika pre banku, HQ, samostatný prístavný žeriav a diaľnicu nebola vytvorená. Ich grafické varianty L2/L3 ostávajú pripravené na budúce napojenie.
+3. Komoditné návrhy zostávajú iba v dokumentácii, pretože zadanie zakazuje meniť existujúce UI ikony. Žiadna z ôsmich pôvodne chýbajúcich položiek už nie je bez vlastného návrhu.
+4. Nevykonal sa používateľský test rozpoznávania ani záťažový benchmark veľkého počtu súčasných upgradov; výsledky netvrdia garantované FPS.
+
+## Súpis všetkých typov
+
+Každý odkaz otvorí skutočný prehľad úrovní 1/2/3 aj pri 24/32/48 px. Tabuľka opisuje aktuálny vlastný model, nie historický externý kandidát.
+
+| ID / názov | Rozlišovací motív | Tri úrovne |
+| --- | --- | --- |
+| `cafe` — Kaviareň | Kaviareň so štítom a vonkajším slnečníkom | [Snímka L1–L3](atlas-levels/cafe.png) |
+| `wheat_farm` — Farma | Stodola, obilné pole a silo | [Snímka L1–L3](atlas-levels/wheat_farm.png) |
+| `coffee_farm` — Plantáž | Plantáž s kávovníkmi a stodolou | [Snímka L1–L3](atlas-levels/coffee_farm.png) |
+| `livestock` — Chov | Farma so stodolou a zvieratami | [Snímka L1–L3](atlas-levels/livestock.png) |
+| `oil_well` — Ropný vrt | Ťažobné čerpadlo s vahadlom a obslužnou budovou | [Snímka L1–L3](atlas-levels/oil_well.png) |
+| `coal_mine` — Uhoľná baňa | Ťažná veža so zvislým kolesom a kopou uhlia | [Snímka L1–L3](atlas-levels/coal_mine.png) |
+| `iron_mine` — Baňa na rudu | Stupňovitá rudná baňa s dopravníkom | [Snímka L1–L3](atlas-levels/iron_mine.png) |
+| `copper_mine` — Medená baňa | Stupňovitá medená baňa, obslužná budova a manipulačný žeriav | [Snímka L1–L3](atlas-levels/copper_mine.png) |
+| `power_coal` — Elektráreň | Turbínová hala, červené komíny a zásoba uhlia | [Snímka L1–L3](atlas-levels/power_coal.png) |
+| `steel_mill` — Oceliareň | Tehlová oceliareň, vysoká pec a žeravá oceľ | [Snímka L1–L3](atlas-levels/steel_mill.png) |
+| `chem_plant` — Chemička | Procesné nádoby a prepojené potrubie na hale | [Snímka L1–L3](atlas-levels/chem_plant.png) |
+| `pharma_lab` — Laboratórium | Laboratórna budova s krížom a chladením | [Snímka L1–L3](atlas-levels/pharma_lab.png) |
+| `textile_mill` — Textilka | Textilná hala so sedlovou strechou, komínom a cievkami | [Snímka L1–L3](atlas-levels/textile_mill.png) |
+| `electronics_plant` — Elektronika | Výrobná hala, strešné svetlíky a zelený elektronický znak | [Snímka L1–L3](atlas-levels/electronics_plant.png) |
+| `auto_plant` — Automobilka | Montážna hala, automobilový znak a hotové vozidlo | [Snímka L1–L3](atlas-levels/auto_plant.png) |
+| `arms_plant` — Zbrojovka | Tehlová zbrojovka s obranným emblémom a muničnou debnou | [Snímka L1–L3](atlas-levels/arms_plant.png) |
+| `construction_co` — Stavbár | Stavebný areál s vežovým žeriavom a materiálom | [Snímka L1–L3](atlas-levels/construction_co.png) |
+| `logistics_hub` — Logistika | Nízke prekladisko, kamióny a rampy | [Snímka L1–L3](atlas-levels/logistics_hub.png) |
+| `finance_office` — Finančná kancelária | Finančná budova s mincovým emblémom | [Snímka L1–L3](atlas-levels/finance_office.png) |
+| `pmc_unit` — Súkromná bezpečnosť | Bezpečnostná základňa so štítom | [Snímka L1–L3](atlas-levels/pmc_unit.png) |
+| `trade_desk` — Obchodná kancelária | Kancelária s vonkajšou obrazovkou kurzov | [Snímka L1–L3](atlas-levels/trade_desk.png) |
+| `restaurant` — Reštaurácia | Európska reštaurácia s komínom a zastrešenou terasou | [Snímka L1–L3](atlas-levels/restaurant.png) |
+| `bakery` — Pekáreň | Európska pekáreň, sedlová strecha, komín a chlieb na štíte | [Snímka L1–L3](atlas-levels/bakery.png) |
+| `gym` — Fitko | Športová budova s dominantnou činkou | [Snímka L1–L3](atlas-levels/gym.png) |
+| `auto_service` — Autoservis | Servisná hala so znakom auta a vozidlom | [Snímka L1–L3](atlas-levels/auto_service.png) |
+| `eshop` — E-shop | Expedičná hala, dodávka a balíky | [Snímka L1–L3](atlas-levels/eshop.png) |
+| `real_estate` — Realitka | Dom so sedlovou strechou a ceduľou PREDAJ | [Snímka L1–L3](atlas-levels/real_estate.png) |
+| `hotel` — Hotel | Viacposchodový hotel s označením H | [Snímka L1–L3](atlas-levels/hotel.png) |
+| `supermarket` — Supermarket | Predajná hala s dlhým zeleným označením | [Snímka L1–L3](atlas-levels/supermarket.png) |
+| `warehouse` — Logistika a sklady | Vysoká regálová hala s rebrovaným exteriérom | [Snímka L1–L3](atlas-levels/warehouse.png) |
+| `software` — Softvérová firma | Kancelária so symbolom kódu | [Snímka L1–L3](atlas-levels/software.png) |
+| `ad_agency` — Reklamná agentúra | Strešný billboard na kancelárii | [Snímka L1–L3](atlas-levels/ad_agency.png) |
+| `clinic` — Súkromná klinika | Nízka ambulancia s červeným krížom | [Snímka L1–L3](atlas-levels/clinic.png) |
+| `chip_fab` — Výroba čipov | Uzavretá čistá výroba s technickým strešným blokom a odťahmi | [Snímka L1–L3](atlas-levels/chip_fab.png) |
+| `airline` — Letecká spoločnosť | Prevádzková budova a dominantný chvost lietadla s vlastným znakom | [Snímka L1–L3](atlas-levels/airline.png) |
+| `telecom` — Telekom | Telekomunikačná budova s vysokým anténovým stožiarom | [Snímka L1–L3](atlas-levels/telecom.png) |
+| `solar_plant` — Solárna elektráreň | Rady solárnych panelov a meničová budova | [Snímka L1–L3](atlas-levels/solar_plant.png) |
+| `gas_plant` — Plynová elektráreň | Turbínové bloky a dvojica svetlých výfukových komínov | [Snímka L1–L3](atlas-levels/gas_plant.png) |
+| `nuclear_plant` — Jadrová elektráreň | Reaktorový blok s kupolou a chladiace veže | [Snímka L1–L3](atlas-levels/nuclear_plant.png) |
+| `shipyard` — Lodenica | Lodenica s halou, dvoma žeriavmi a rozostavanou loďou | [Snímka L1–L3](atlas-levels/shipyard.png) |
+| `insurance` — Poisťovňa | Modrý panel s dáždnikom na fasáde | [Snímka L1–L3](atlas-levels/insurance.png) |
+| `invest_fund` — Investičný fond | Štíhla sklenená veža | [Snímka L1–L3](atlas-levels/invest_fund.png) |
+| `tv_station` — Televízia | Štúdiová budova so satelitnými taniermi | [Snímka L1–L3](atlas-levels/tv_station.png) |
+| `social_network` — Sociálna sieť | Kampus s vlastným symbolom prepojenia | [Snímka L1–L3](atlas-levels/social_network.png) |
+| `newspaper` — Noviny | Tehlová tlačiareň s komínom a novinovým štítom | [Snímka L1–L3](atlas-levels/newspaper.png) |
+| `casino` — Kasíno | Kasíno so zlatou korunkou a mincovým znakom | [Snímka L1–L3](atlas-levels/casino.png) |
+| `offshore` — Offshore firma | Vila, palma a bazénová terasa | [Snímka L1–L3](atlas-levels/offshore.png) |
+| `airport` — Letisko | Terminál, riadiaca veža a značenie letiskovej plochy | [Snímka L1–L3](atlas-levels/airport.png) |
+| `oil_refinery` — Ropná rafinéria | Destilačné kolóny, technologická hala a valcová nádrž | [Snímka L1–L3](atlas-levels/oil_refinery.png) |
+| `gas_works` — Plynáreň | Plynárenská hala so zásobníkom a odťahom | [Snímka L1–L3](atlas-levels/gas_works.png) |
+| `stock_broker` — Burza / obchodník s cennými papiermi | Burzová kancelária s kurzovou obrazovkou a zlatou kupolou | [Snímka L1–L3](atlas-levels/stock_broker.png) |
+| `gas_well` — Vrt na zemný plyn | Vrtná veža, potrubie a ventil | [Snímka L1–L3](atlas-levels/gas_well.png) |
+| `aircraft_plant` — Letecká továreň | Výrobný hangár s celým lietadlom | [Snímka L1–L3](atlas-levels/aircraft_plant.png) |
+| `data_center` — Dátové centrum | Uzavretá hala s dvojicou strešných chladiacich jednotiek | [Snímka L1–L3](atlas-levels/data_center.png) |
+| `ai_firm` — AI firma | Serverové skrine na streche a anténa | [Snímka L1–L3](atlas-levels/ai_firm.png) |
+| `hospital` — Súkromná nemocnica | Viacposchodová nemocnica s krížom | [Snímka L1–L3](atlas-levels/hospital.png) |
+| `cargo_port` — Nákladný prístav | Kontajnerový terminál, žeriav a loď s kontajnermi | [Snímka L1–L3](atlas-levels/cargo_port.png) |
+| `school_primary` — Súkromná základná škola | Škola so sedlovou strechou, vlajkou a ihriskom | [Snímka L1–L3](atlas-levels/school_primary.png) |
+| `school_high` — Súkromná stredná škola | Školská budova s hodinovou vežou | [Snímka L1–L3](atlas-levels/school_high.png) |
+| `university` — Súkromná univerzita | Univerzita s portikom, stĺpmi a kupolou | [Snímka L1–L3](atlas-levels/university.png) |
+| `corp_academy` — Firemná akadémia | Školiace centrum so zeleným znakom a presklenou časťou | [Snímka L1–L3](atlas-levels/corp_academy.png) |
+| `bank` — Banka | Banka s portikom, stĺpmi a mincovým označením | [Snímka L1–L3](atlas-levels/bank.png) |
+| `hq` — Centrála | Najvyššia kancelárska veža s heliportom | [Snímka L1–L3](atlas-levels/hq.png) |
+| `port` — Prístavný žeriav | Samostatné prístavné žeriavy na móle | [Snímka L1–L3](atlas-levels/port.png) |
+| `highway` — Diaľnica | Diaľničný most na pilieroch | [Snímka L1–L3](atlas-levels/highway.png) |
+
+<details>
+<summary>Historický prieskum externých modelov — nepoužitý, nahradený vlastnou sadou vyššie</summary>
+
 # Ikony podľa skutočných funkcií Projektu-47
 
 Projekt-47 je ekonomická stratégia: hráč zakladá a riadi firmy na svetovej mape, nakupuje výrobné vstupy, predáva produkty, spravuje zamestnancov, úvery, banky, akcie a korporácie. Politika, výskum, mestá a logistika menia podmienky podnikania. Ikona má vysvetliť tento objekt alebo činnosť.
@@ -130,3 +269,5 @@ Náhľady autorov zo zdrojových stránok. Ide o jednotlivé námety, nie desať
 | `textiles` — Textil | Rolka textilu | [Fabric Rool ](https://sketchfab.com/3d-models/6ed8a7f49e81406287bab1b9e3abd2ad) — Paubr — CC Attribution | Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie. |
 | `weapons` — Zbrane | Výrobok zbrojovky | [Rifle Crate ](https://sketchfab.com/3d-models/85d4a6d16d834785809e659dde779471) — Olivercharlton11 — CC Attribution | Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie. |
 | `wheat` — Pšenica | Obilie alebo klasy ako materiál | [Realistic Wheat ](https://sketchfab.com/3d-models/50270968690441d3ad9d2a8924c7338b) — Graphetta — CC Attribution | Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie. |
+
+</details>

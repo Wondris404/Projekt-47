@@ -187,16 +187,16 @@ static func kind_of(ind: String) -> String:
 	if ind in ["steel_mill", "textile_mill", "electronics_plant", "auto_plant", "arms_plant", "chip_fab", "construction_co"]: return "factory"
 	return "shop"
 
-static func firm(m: CanvasItem, p: Vector2, s: float, ind: String, mine: bool, icon: Texture2D) -> void:
+static func firm(m: CanvasItem, p: Vector2, s: float, ind: String, mine: bool, icon: Texture2D, level: int = 1, weights: Array = []) -> void:
 	var k = kind_of(ind)
 	if mine:
 		_arc(m, p + Vector2(0, s * 0.2), s * 1.9, 0, TAU, 32, Color(1.0, 0.6, 0.15, 0.95), maxf(2.0, s * 0.18), true)
 		_circle(m, p + Vector2(0, s * 0.2), s * 1.85, Color(1.0, 0.6, 0.15, 0.14))
-	var model = preload("res://scripts/ui/atlas_models.gd").texture(ind)
+	var model = preload("res://scripts/ui/atlas_models.gd").texture(ind, level)
 	if model != null:
 		flush(m)
 		# Ground baseline in the 64x72 source is y=62. Nearest filtering keeps pixels crisp.
-		m.draw_texture_rect(model, preload("res://scripts/ui/atlas_models.gd").model_rect(p,s), false)
+		preload("res://scripts/ui/atlas_models.gd").draw_model(m, ind, p, s, level, weights)
 		_icon(m, p, s, icon, mine, s * 1.3)
 		return
 	var h = s * 1.3

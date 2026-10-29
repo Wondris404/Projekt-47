@@ -51,7 +51,12 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original proposal only",
+        "path": "docs/atlas-levels/proposals/ai_services.png",
+        "ui_unchanged": true
+      }
     },
     {
       "group": "komodita",
@@ -133,7 +138,12 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original proposal only",
+        "path": "docs/atlas-levels/proposals/arms.png",
+        "ui_unchanged": true
+      }
     },
     {
       "group": "komodita",
@@ -475,7 +485,12 @@
       ],
       "additional_queries": [
         "oil storage tank"
-      ]
+      ],
+      "implementation": {
+        "source": "original proposal only",
+        "path": "docs/atlas-levels/proposals/crude_oil.png",
+        "ui_unchanged": true
+      }
     },
     {
       "group": "komodita",
@@ -565,7 +580,12 @@
       ],
       "review_note": "Náhľad videný: súčasná doska elektroniky. Patrí len medzi vstupy/výstupy výroby; nie ako ikona výrobného podniku.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original proposal only",
+        "path": "docs/atlas-levels/proposals/electronics.png",
+        "ui_unchanged": true
+      }
     },
     {
       "group": "komodita",
@@ -673,7 +693,12 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original proposal only",
+        "path": "docs/atlas-levels/proposals/finance.png",
+        "ui_unchanged": true
+      }
     },
     {
       "group": "komodita",
@@ -767,7 +792,12 @@
       ],
       "additional_queries": [
         "fuel nozzle"
-      ]
+      ],
+      "implementation": {
+        "source": "original proposal only",
+        "path": "docs/atlas-levels/proposals/fuel.png",
+        "ui_unchanged": true
+      }
     },
     {
       "group": "komodita",
@@ -1044,7 +1074,12 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original proposal only",
+        "path": "docs/atlas-levels/proposals/pmc.png",
+        "ui_unchanged": true
+      }
     },
     {
       "group": "komodita",
@@ -1453,7 +1488,12 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original proposal only",
+        "path": "docs/atlas-levels/proposals/weapons.png",
+        "ui_unchanged": true
+      }
     },
     {
       "group": "komodita",
@@ -1555,7 +1595,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/ad_agency_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -1691,7 +1741,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/ai_firm_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -1782,7 +1842,17 @@
       ],
       "review_note": "Hangár je iba základ; chýba overená montážna linka.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/aircraft_plant_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -1830,7 +1900,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/airline_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -1874,7 +1954,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/airport_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -1917,7 +2007,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/arms_plant_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2055,7 +2155,17 @@
       "shortlist": [],
       "review_note": "Výsledky ukazovali autá alebo všeobecné továrne, nie vhodnú automobilovú montážnu halu.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/auto_plant_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2098,7 +2208,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/auto_service_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2144,7 +2264,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/bakery_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2194,7 +2324,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/bank_{level}.png",
+        "gameplay_upgrade": false
+      }
     },
     {
       "group": "podnik",
@@ -2246,7 +2386,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/cafe_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2316,7 +2466,17 @@
       ],
       "review_note": "Náhľad videný: prístavný žeriav; treba doplniť mólo, kontajnery a vhodnú loď.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/cargo_port_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2361,7 +2521,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/casino_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2403,7 +2573,17 @@
       ],
       "review_note": "Náhľad videný: biely technický model potrubia; chýbajú hotové materiály a čitateľná dominantná budova.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/chem_plant_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2422,7 +2602,17 @@
       "shortlist": [],
       "review_note": "Výsledky prevažne súčiastky; chýba vhodná fabrika s čistými prevádzkami.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/chip_fab_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2479,7 +2669,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/clinic_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2524,7 +2724,17 @@
       ],
       "review_note": "Len banská klietka, chýba areál a dopravník.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/coal_mine_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2584,7 +2794,17 @@
       ],
       "review_note": "Len kávovník; plantáž a spracovateľský objekt treba zostaviť z vhodných podkladov.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/coffee_farm_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2634,7 +2854,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/construction_co_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2736,7 +2966,17 @@
       "shortlist": [],
       "review_note": "Výsledky nespĺňajú potrebu súčasnej medenej bane s úpravňou.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/copper_mine_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2786,7 +3026,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/corp_academy_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2834,7 +3084,17 @@
       ],
       "review_note": "Iba administratívna budova dátového centra; samotné serverovne a chladenie ešte chýbajú.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/data_center_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2945,7 +3205,17 @@
       ],
       "additional_queries": [
         "SMT machine"
-      ]
+      ],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/electronics_plant_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -2990,7 +3260,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/eshop_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3038,7 +3318,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/finance_office_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3051,7 +3341,17 @@
       "shortlist": [],
       "review_note": "Náhľad Coolwater je vzdialený model na podkladovej ploche; nevhodný ako pripravená malá ikona.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/gas_plant_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3098,7 +3398,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/gas_well_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3214,7 +3524,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/gas_works_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3258,7 +3578,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/gym_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3306,7 +3636,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/highway_{level}.png",
+        "gameplay_upgrade": false
+      }
     },
     {
       "group": "podnik",
@@ -3356,7 +3696,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/hospital_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3405,7 +3755,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/hotel_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3451,7 +3811,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/hq_{level}.png",
+        "gameplay_upgrade": false
+      }
     },
     {
       "group": "podnik",
@@ -3497,7 +3867,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/insurance_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3544,7 +3924,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/invest_fund_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3592,7 +3982,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/iron_mine_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3636,7 +4036,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/livestock_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3698,7 +4108,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/logistics_hub_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3738,7 +4158,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/newspaper_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3792,7 +4222,17 @@
       ],
       "review_note": "Náhľad videný: obsahuje chladiace veže, ale nie kompletnú elektráreň. Ovládací panel a barel nie sú motívom ikony.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/nuclear_plant_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3845,7 +4285,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/offshore_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -3945,7 +4395,17 @@
       ],
       "review_note": "Náhľad skontrolovaný: kompaktný priemyselný blok s nádržami a potrubím; nie kompletná rafinéria s overeným technologickým usporiadaním. Zatiaľ len námet.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/oil_refinery_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4001,7 +4461,17 @@
       ],
       "review_note": "Náhľad videný: realistická silueta ťažobného čerpadla zodpovedá činnosti podniku.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/oil_well_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4070,7 +4540,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/pharma_lab_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4132,7 +4612,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/pmc_unit_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4207,7 +4697,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/port_{level}.png",
+        "gameplay_upgrade": false
+      }
     },
     {
       "group": "podnik",
@@ -4257,7 +4757,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/power_coal_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4303,7 +4813,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/real_estate_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4323,7 +4843,17 @@
           "reason": "Autor uvádza ručné modelovanie podľa fotografií a Google Street View. Nejde o preukázaný rip; použitie podkladov a textúr však treba preveriť pred zaradením."
         }
       ],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/restaurant_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4378,7 +4908,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/school_high_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4421,7 +4961,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/school_primary_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4472,7 +5022,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/shipyard_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4529,7 +5089,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/social_network_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4572,7 +5142,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/software_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4619,7 +5199,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/solar_plant_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4670,7 +5260,17 @@
       ],
       "review_note": "Náhľad a popis skontrolované: autor uvádza fotogrametriu DJI Mavic3/RealityScan. Veľký oceliarsky areál; hustotu geometrie, balík a čitateľnosť ešte overiť.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/steel_mill_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4723,7 +5323,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/stock_broker_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4768,7 +5378,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/supermarket_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4811,7 +5431,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/telecom_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4851,7 +5481,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/textile_mill_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4897,7 +5537,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/trade_desk_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -4940,7 +5590,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/tv_station_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -5085,7 +5745,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/university_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -5128,7 +5798,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/warehouse_{level}.png",
+        "gameplay_upgrade": true
+      }
     },
     {
       "group": "podnik",
@@ -5185,7 +5865,17 @@
       ],
       "review_note": "Predbežne vecne príbuzný výsledok; náhľad, pôvod, licencia celého balíka, mierka a import ešte vyžadujú overenie.",
       "rejected_candidates": [],
-      "additional_queries": []
+      "additional_queries": [],
+      "implementation": {
+        "source": "original",
+        "levels": [
+          1,
+          2,
+          3
+        ],
+        "path": "assets/map_models/levels/wheat_farm_{level}.png",
+        "gameplay_upgrade": true
+      }
     }
   ],
   "review_summary": {
@@ -5202,5 +5892,7 @@
       "podnik/restaurant"
     ],
     "note": "Kontrola popisov nie je dôkazom práv ani úplného vylúčenia AI; náhľady boli vizuálne posúdené len pri výslovne označených položkách."
-  }
+  },
+  "status": "Historický externý prieskum; aktuálne Atlas modely sú vlastná pixelová sada.",
+  "current_manifest": "../assets/map_models/levels/manifest.json"
 }

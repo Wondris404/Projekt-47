@@ -1,5 +1,7 @@
 extends Node
 
+signal firm_upgraded(firm_id: String, old_level: int, new_level: int)
+
 func io_map(raw) -> Dictionary:
 	if typeof(raw) == TYPE_DICTIONARY:
 		return raw
@@ -125,6 +127,7 @@ func upgrade_firm(firm_id: String) -> String:
 	for fac in firm.get("facilities", []):
 		fac.scale = float(fac.get("scale", 1.0)) * UPGRADE_SCALE
 	GameState.post_news("%s: úroveň %d (výkon ×%.2f)." % [str(firm.name), lv + 1, UPGRADE_SCALE])
+	firm_upgraded.emit(firm_id, lv, lv + 1)
 	return ""
 
 # media hraca: reputacia mesacne a bonus k lobingu/volbam

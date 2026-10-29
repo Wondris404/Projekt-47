@@ -38,6 +38,7 @@ var _ainfra_layout: Array = []
 var _ainfra_static: Dictionary = {}
 var last_draw_ms := 0.0
 const AD = preload("res://scripts/ui/atlas_draw.gd")
+var _atlas_upgrades = preload("res://scripts/ui/atlas_upgrade_visuals.gd").new()
 var infra: bool = false  # JUAN10: dialnice, letiska, pristavy, namorne trasy
 var _infra_cache: Dictionary = {}
 var place_mode: bool = false  # JUAN3: dalsi klik vyberie miesto na stavbu
@@ -66,6 +67,8 @@ var _camera_transform := Transform2D.IDENTITY
 var _drag_button := MOUSE_BUTTON_NONE
 
 func _ready() -> void:
+	if not IndustrySystem.firm_upgraded.is_connected(_on_atlas_upgrade):
+		IndustrySystem.firm_upgraded.connect(_on_atlas_upgrade)
 	clip_contents = true
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -129,6 +132,11 @@ func _cancel_drag() -> void:
 	_drag_button = MOUSE_BUTTON_NONE
 
 func _process(delta: float) -> void:
+	_atlas_upgrades.sync_revision(GameState.state_revision)
+	if not atlas:
+		_atlas_upgrades.active.clear()
+	elif _atlas_upgrades.advance(delta):
+		queue_redraw()
 	if absf(_zoom_target - zoom) > 0.0005 * zoom:  # JUAN12: plynuly zoom ku kurzoru
 		var nz = exp(lerpf(log(zoom), log(_zoom_target), clampf(delta * 14.0, 0.0, 1.0)))
 		if absf(nz - _zoom_target) < 0.002 * _zoom_target:
@@ -144,6 +152,13 @@ func _process(delta: float) -> void:
 		return
 	anim_time += _anim_acc
 	_anim_acc = 0.0
+	queue_redraw()
+
+func _on_atlas_upgrade(id: String, old_level: int, new_level: int) -> void:
+	_ms_f = -1
+	_atlas_upgrades.sync_revision(GameState.state_revision)
+	if atlas and is_visible_in_tree() and zoom >= DETAIL_ZOOM:
+		_atlas_upgrades.begin(id, old_level, new_level)
 	queue_redraw()
 
 const GFX = preload("res://scripts/gfx.gd")
@@ -481,6 +496,7 @@ var _ms_f := -1
 var _ms_revision := -1
 var _ms_c: Array = []
 func _my_sites() -> Array:  # JUAN23: raz za snimok
+	_atlas_upgrades.sync_revision(GameState.state_revision)
 	var fr = Engine.get_process_frames()
 	if fr == _ms_f and _ms_revision == GameState.state_revision:
 		return _ms_c
@@ -493,7 +509,7 @@ func _my_sites0() -> Array:
 	var out: Array = []
 	for firm in GameState.player_firms():
 		if not bool(firm.get("closed", false)):
-			out.append({"id": str(firm.id), "ind": str(firm.get("industry", "")), "iso": str(firm.get("country", "")), "wp": firm_world_pos(firm), "name": str(firm.get("name", ""))})
+			out.append({"id": str(firm.id), "ind": str(firm.get("industry", "")), "level": clampi(IndustrySystem.firm_level(firm), 1, 3), "iso": str(firm.get("country", "")), "wp": firm_world_pos(firm), "name": str(firm.get("name", ""))})
 	for cid in Empire.st().hq.keys():  # JUAN10: centraly korporacii
 		var h = Empire.hq(str(cid))
 		var hp: Array = h.get("pos", [])
@@ -775,7 +791,9 @@ func firm_at_screen(sp: Vector2) -> String:
 			var models = preload("res://scripts/ui/atlas_models.gd")
 			var icon_size = clampf(model_size * 1.3, 10.0, 26.0)
 			var badge = Rect2(point + Vector2(-icon_size * 0.5, -model_size * 4.1 - icon_size), Vector2(icon_size, icon_size))
-			if models.hit(str(site.ind), point, model_size, sp) or (type_icon(str(site.ind)) != null and badge.has_point(sp)):
+			var level := int(site.get("level", 1))
+			var weights: Array = _atlas_upgrades.weights(str(site.id), level)
+			if models.hit(str(site.ind), point, model_size, sp, level, weights) or (type_icon(str(site.ind)) != null and badge.has_point(sp)):
 				return str(site.id)
 	var best = ""
 	var best_d = icon_px() * 0.6 + 2.0  # JUAN14: len skutocny polomer ikonky, nie "najblizsia firma"
@@ -1568,7 +1586,7 @@ func atlas_infra() -> Dictionary:
 		var ind = str(f.get("industry", ""))
 		var wp = firm_world_pos(f)
 		if ind in POWER_IND:
-			power.append([wp, ind])
+			power.append([wp, ind, f])
 		if ind in WELL_IND:
 			wells.append([wp, ind])
 		if ind in PIPE_DEST:
@@ -1756,9 +1774,11 @@ func _draw_atlas_near(sc: float) -> void:
 			AD.city(self, c, cv[1], sc, fade_city)
 	prof["an2"] = Time.get_ticks_usec() - _tq; _tq = Time.get_ticks_usec()
 	for p0 in d.power:  # elektrarne (aj AI) ako modely
+		if str(p0[2].get("owner", "")) == "player": continue # Draw owned plants once, with their upgrade transition.
 		var q2 = _to_screen(p0[0])
 		if _vis(q2, 40):
-			AD.firm(self, q2, clampf(u * 0.45, 3.0, 14.0), str(p0[1]), false, null)
+			var level := clampi(IndustrySystem.firm_level(p0[2]), 1, 3)
+			AD.firm(self, q2, clampf(u * 0.45, 3.0, 14.0), str(p0[1]), false, null, level, _atlas_upgrades.weights(str(p0[2].get("id", "")), level))
 	AD.end_batch(self)
 	prof["an3"] = Time.get_ticks_usec() - _tq; _tq = Time.get_ticks_usec()
 	# firmy hraca: 3D model podla typu + zvyraznenie
@@ -1766,7 +1786,8 @@ func _draw_atlas_near(sc: float) -> void:
 	for s in _my_sites():
 		var p2 = _to_screen(s.wp)
 		if _vis(p2, 60):
-			AD.firm(self, p2, clampf(u * 0.55, 5.0, 22.0), str(s.ind), true, type_icon(str(s.ind)))
+			var level := int(s.get("level", 1))
+			AD.firm(self, p2, clampf(u * 0.55, 5.0, 22.0), str(s.ind), true, type_icon(str(s.ind)), level, _atlas_upgrades.weights(str(s.id), level))
 			_logo_badge(s, p2 + Vector2(0, -clampf(u * 0.55, 5.0, 22.0) * 2.0), clampf(u * 0.55, 5.0, 22.0) * 1.6)
 	prof["an4"] = Time.get_ticks_usec() - _tq; _tq = Time.get_ticks_usec()
 	# nazvy miest az navrchu, mensie, odsadene od stredu (neprekryvaju trasy v strede)
