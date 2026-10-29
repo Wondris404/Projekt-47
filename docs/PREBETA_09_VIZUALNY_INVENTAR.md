@@ -2,7 +2,7 @@
 
 Východiskový katalóg podľa `data/industries.json` a `data/commodities.json` vo verzii main `5d8f40756919480bb8a440debdbb41eb2ef1d229`. Je to zoznam na výber a overovanie 3D podkladov, nie dôkaz, že modely už existujú alebo chýbajú.
 
-V aktuálnej hre sa Atlas a pixelová mapa vykresľujú cez `scripts/ui/world_map.gd` a `scripts/ui/atlas_layer.gd`; prepínač je predmetom rozpracovaného PR #9. Godot projekt používa GL Compatibility. Projekt obsahuje aj existujúce 2D ikony a mapové podklady, ktoré treba pri práci inventarizovať podľa použitia.
+Atlas a pixelová mapa sa vykresľujú cez `scripts/ui/world_map.gd` a `scripts/ui/atlas_layer.gd`; v aktuálnom main je aj experimentálny 3D pohľad `scripts/ui/prototype_world_3d.gd`. Projekt používa GL Compatibility. Existujúce 2D ikony a mapové podklady ešte treba inventarizovať podľa použitia a pôvodu.
 
 Podklady treba skontrolovať z hľadiska jednotného štýlu, polohy na mape, variantov, náhľadu a licencie. Nižšie uvedený stav znamená, že výber modelu a overenie licencie pre tento účel ešte neboli zaznamenané.
 
@@ -108,6 +108,20 @@ Podklady treba skontrolovať z hľadiska jednotného štýlu, polohy na mape, va
 ## Ďalšie vizuálne skupiny
 
 Mestá a ich veľkosti; lesy a terén; rieky a pobrežie; hranice krajín; cesty, železnice a potrubia; prístavy, letiská a objekty v `data/places.json`; značky vlastníctva a ovládacie prvky. Ich presné pokrytie, geografické zdroje a modely ešte vyžadujú overenie.
+
+## Existujúce skúšobné 3D modely na main
+
+Stav preverovaný na `dc72a98ffb3a67722661a06a1f75caa131775ba6`. Toto je inventár súčasného prototypu, nie návrh na schválenie nového vzhľadu. Rovnaký model pre viac typov nezaručuje ich rozpoznateľnosť ani jednotný výsledný štýl.
+
+| Použitie | Súbor, autor a zaznamenaná licencia | Úpravy a stav |
+| --- | --- | --- |
+| Mestá | [City Kit (Commercial), building-a.glb](../assets/models/city_kenney/README.md), Kenney, CC0 | Pôvodný GLB bez úprav; mesh sa zdieľa cez MultiMesh. Skúšobný model, výber podľa veľkosti mesta a použitie v exporte zostávajú neoverené. |
+| 12 druhov hráčových firiem uvedených nižšie | [City Kit (Industrial), building-a.glb a colormap.png](../assets/models/industrial_kenney/README.md), Kenney, CC0 | Súbory bez úprav; zdieľaný mesh v MultiMesh. Spoločný skúšobný model nie je typovo rozlíšený a export ani výsledný vzhľad neboli overené. |
+| Ostatné firmy v 3D skúške | Náhradný procedurálny marker hry | Nejde o typový 3D model; pôvod a licencia budúcich modelov zatiaľ nie sú vybrané. |
+
+Spoločný priemyselný model sa podľa `INDUSTRIAL_TYPES` používa pre `steel_mill`, `chem_plant`, `textile_mill`, `electronics_plant`, `auto_plant`, `arms_plant`, `chip_fab`, `aircraft_plant`, `oil_refinery`, `gas_works`, `warehouse` a `logistics_hub`, po načítaní modelu. Pred načítaním sa používa marker. Označenie „Neoverené“ v tabuľke podnikov znamená, že špecializovaný model a jeho vhodnosť pre daný typ nie sú overené.
+
+SHA-256 oboch GLB a externej textúry sa zhodujú s údajmi v príslušných README. Verejné zdrojové repozitáre uvedené v README opisujú tieto balíky ako Kenney CC0; jednotlivé vizuály ešte neboli schválené ako cieľový výtvarný smer. Doterajšie grafické sondy prototypu sú zaznamenané v `docs/WRAITH_DENNIK.md`; nepredstavujú overenie všetkých scenárov, vizuálnej zhody ani výkonu exportu.
 
 ## Kontroly a ďalší postup
 

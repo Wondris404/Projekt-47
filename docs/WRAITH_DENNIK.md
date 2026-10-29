@@ -1306,3 +1306,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Na žiadosť hráča sa ďalší výber sústreďuje na veľkú strategickú mapu a existujúce HOI4 módy, nie na generované koncepty. Módy sú iba vizuálne referencie, kým nemajú overené práva pre samostatnú hru. Prípadné podklady Natural Earth sú voľné na použitie, ale potrebujú hráčovo schválenie a overenie výkonu v Godote.
 - Diagnostická grafická sonda na notebooku: pri prvom otvorení zabrali kroky setup do vytvorenia miest ~9,9 ms, po firmy ~11,4 ms a po vytvorenie vrstvy názvov ~48,3 ms; samotná inicializácia dát názvov ~1,3 ms. Neskoršie otvorenia celej časti setup ~4–7 ms. Ide o jeden merací beh; rozdiel môže zahŕňať prvé načítanie a kompiláciu skriptu. Sonda prešla, pri ukončení hlásila 2 ObjectDB úniky. Do hry sa meracie výpisy nepridali.
+
+## 2026-10-29 – Spresnenie inventára existujúceho 3D prototypu
+
+- Inventár teraz rozlišuje dva už použité skúšobné modely Kenney a vymenúva 12 typov firiem so spoločným priemyselným modelom. Dôvodom je odstrániť nejasnosť medzi existujúcim zástupným modelom a chýbajúcimi schválenými typovými modelmi. Nové vizuály sa do hry nepridali; hra, simulácia ani uložené hry sa nemenili.
+- Kontrola pred zmenou aj po nej potvrdila po jednom výskyte všetkých 61 ID podnikov a 28 ID komodít; po zmene sa overila aj zhoda 12 typov so zdrojovým kódom a SHA-256 dvoch modelov a textúry s existujúcimi README. `git diff --check` prešiel. Záznamy zdrojových verejných repozitárov uvádzajú Kenney CC0.
+- Nie je to úplný inventár modelov, ikon ani ich práv a nejde o desať výtvarných návrhov. Grafický test ani meranie výkonu sa pri dokumentačnej zmene nevykonali. Bežné webové vyhľadávanie je v aktuálnom prostredí blokované a v zadaní spomínané obrázkové predlohy neboli priložené; výber skutočných diel podľa nich preto zostáva otvorený. Ďalej doplniť predlohy a webový prieskum, zostaviť desať ucelených smerov na schválenie a až potom začleňovať nové vizuály.
