@@ -1281,3 +1281,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Doplnený PowerShell inštalátor: vyberie zverejnené demo, overí SHA-256 a nainštaluje do nového priečinka bez prepisovania súborov. README obsahuje jeden spúšťací príkaz.
 - Po úspešnom exporte môže manuálne spustený workflow vytvoriť predbežné vydanie s unikátnym tagom, balíkom a kontrolným súčtom; existujúce vydania sa neprepisujú.
 - Overenie v PowerShell 5.1: funkčný lokálny falošný balík, odmietnutie existujúceho cieľa, nesprávneho súčtu a neočakávaného obsahu. Overený lokálny cyklus zabalenie → overenie → inštalácia. Skutočné vydanie a verejné stiahnutie v tomto okamihu ešte nie sú overené.
+
+
+## 2026-10-29 – Prvé zverejnenie testovacieho balíka
+
+- Publikačný krok sa okrem manuálneho spustenia môže spustiť jednorazovo konkrétnym iniciačným commitom nad uvedeným rodičom. Stále závisí od úspešného zostavenia a skúšky exportu; ďalšie bežné commity vydanie nevytvárajú. Vydanie používa unikátny tag a existujúce súbory neprepisuje.
+- Kontrola podmienky: manuálne spustenie na main je povolené; bežný push, pull request aj push z iného rodiča sú odmietnuté. Skutočný beh a verejné stiahnutie treba po commite ešte overiť.

@@ -91,7 +91,7 @@ jobs:
           retention-days: 30
 
   publish-demo:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.event.before == '9a5f991575229638017232eecd9f1d6a11f814c8' && github.event.head_commit.message == 'Spustit prve testovacie vydanie Windows'))
     needs: windows-demo
     runs-on: windows-latest
     timeout-minutes: 15
