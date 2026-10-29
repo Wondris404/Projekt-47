@@ -1300,3 +1300,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 
 - Používateľ odmietol AI generovaný obrazový koncept. Nové vizuály sa majú vyberať zo skutočných bezplatných diel autorov; vždy predložiť 10 návrhov s odkazmi na ukážky a licenciami a použiť až po schválení. Odmietnutý obrázok nie je súčasťou hry ani repozitára.
 - Prvý zoznam kandidátov tvoria stránky Kenney: City Kit Industrial, City Kit Commercial, City Kit Suburban, City Kit Roads, Nature Kit, Factory Kit, Modular Buildings, Building Kit, Hexagon Kit a UI Pack. Autor pri každom uvádza licenciu CC0. Výber je na schválenie; vizuálna zhoda s cieľovým štýlom a výkon nie sú overené.
+
+
+## 2026-10-29 – Výber mapových referencií a meranie otvorenia
+
+- Na žiadosť hráča sa ďalší výber sústreďuje na veľkú strategickú mapu a existujúce HOI4 módy, nie na generované koncepty. Módy sú iba vizuálne referencie, kým nemajú overené práva pre samostatnú hru. Prípadné podklady Natural Earth sú voľné na použitie, ale potrebujú hráčovo schválenie a overenie výkonu v Godote.
+- Diagnostická grafická sonda na notebooku: pri prvom otvorení zabrali kroky setup do vytvorenia miest ~9,9 ms, po firmy ~11,4 ms a po vytvorenie vrstvy názvov ~48,3 ms; samotná inicializácia dát názvov ~1,3 ms. Neskoršie otvorenia celej časti setup ~4–7 ms. Ide o jeden merací beh; rozdiel môže zahŕňať prvé načítanie a kompiláciu skriptu. Sonda prešla, pri ukončení hlásila 2 ObjectDB úniky. Do hry sa meracie výpisy nepridali.
