@@ -1336,3 +1336,9 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - 49 cielených testov prešlo: 20 kontroly levelov/upgradov/save v3, 22 existujúce Atlas regresie, 7 existujúce kontroly UI ikon. Jeden skupinový audit aktív overil 195 položiek, rast rozmerov, rovnakú projekciu trojíc, okraje a neprítomnosť identických obrázkov pri 24/32/48/64 px. Spolu 50 kontrol.
 - Godot 4.7.2 + Xvfb + Mesa llvmpipe vytvorili 65 prehľadov, 195 jednotlivých výrezov úrovní, 13 Atlas strán a 10 snímok skutočných upgradov. Sú v `docs/atlas-levels/`; evidencia a reprodukčný skript sú priložené.
 - Otvorené: hráčovo posúdenie rozpoznateľnosti najmä pri 24 px, prípadná budúca upgrade logika štyroch ne-priemyselných objektov a rozhodnutie o komoditných UI ikonách. Hromadný výkonový benchmark sa nevykonal; garantované FPS sa netvrdí.
+
+## 2026-10-29 – Návrh výškových budov: banka, kasíno, hotel
+
+- Na žiadosť hráča vytvorených deväť nových pixelových návrhov: tri vysoké typy v úrovniach 1–3. Banka má stupňovitú korunu a stĺpový vstup, kasíno dve zlaté veže s neónovými pásmi, hotel balkóny a strešný bazén. Spoločná projekcia umožňuje porovnanie výšky aj rastu.
+- Návrhy a skutočný render Godotu 4.7.2 cez Xvfb/Mesa llvmpipe sú v `docs/atlas-towers-proposal/`. Zdrojové generátory sú priložené. Vizuálne skontrolovaný celý prehľad vrátane 24/32/48 px; deväť rasterov je jedinečných, neorezaných a výška rastie medzi úrovňami.
+- Ide o návrh na kontrolu; produkčné modely, herná logika, UI a uložené hry sa nemenili. Nové ani široké herné testy sa pri tejto prezentačnej zmene nespúšťali.
