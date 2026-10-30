@@ -217,7 +217,11 @@ if (Test-Path -LiteralPath $InstallPath -PathType Container) {
 }
 $existing = Test-Path -LiteralPath $gamePath -PathType Leaf
 if ((Test-Path -LiteralPath $InstallPath) -and -not $existing) {
-    throw "Po obnove chýba Projekt-47.exe alebo zvolený priečinok nie je inštaláciou: $InstallPath"
+    # Permit an empty directory after an interrupted first installation, never an
+    # unrelated non-empty directory or one that contains somebody else's files.
+    if (@(Get-ChildItem -LiteralPath $InstallPath -Force).Count -ne 0) {
+        throw "Priečinok nie je inštaláciou Projekt-47 a nie je prázdny: $InstallPath"
+    }
 }
 $installedTag = if ($existing) { Get-InstalledTag $InstallPath } else { $null }
 Write-Host "Priečinok: $InstallPath"
