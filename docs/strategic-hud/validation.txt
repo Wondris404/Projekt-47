@@ -1,0 +1,93 @@
+Godot 4.7.2 — 50 targeted checks (16 data + 18 GUI + 9 camera + 7 icons).
+Exported PCK repeats the same 16 data checks; Windows executable not run.
+
+/tmp/p47-hud-unit.log
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK hud_compact_money
+P47_UNIT_OK hud_negative_money
+P47_UNIT_OK hud_no_invented_history
+P47_UNIT_OK hud_same_day_no_fake_trend
+P47_UNIT_OK hud_daily_difference
+P47_UNIT_OK hud_load_clears_trend
+P47_UNIT_OK hud_complete_commodity_groups
+P47_UNIT_OK hud_mwh_to_mw
+P47_UNIT_OK hud_power_thresholds
+P47_UNIT_OK hud_power_no_false_surplus
+P47_UNIT_OK hud_roles_all_facilities
+P47_UNIT_OK hud_stock_read_only
+P47_UNIT_OK hud_actual_daily_production
+P47_UNIT_OK hud_consumption_includes_services
+P47_UNIT_OK hud_partial_day_keeps_completed
+P47_UNIT_OK hud_v3_load_unknown_flows
+
+/tmp/p47-hud-after.log
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+P47_UI_BUILT
+P47_HUD_UI_OK bar_fits
+P47_HUD_UI_OK all_metrics_readable
+P47_HUD_UI_OK clock_right
+P47_HUD_UI_OK tooltip_sources_and_trend
+P47_HUD_UI_OK speed_control
+P47_HUD_UI_OK pause_control
+P47_HUD_UI_OK advance_one_day
+P47_HUD_UI_OK drawer_animation
+P47_HUD_UI_OK resource_values
+P47_HUD_UI_OK map_resource_highlight
+P47_HUD_UI_OK pinned_stays_open
+P47_HUD_UI_OK drawer_resize
+P47_HUD_UI_OK drawer_drag
+P47_HUD_UI_OK all_resources_reachable
+P47_HUD_UI_OK small_150_bar_fits
+P47_HUD_UI_OK small_150_panel_fits
+P47_HUD_UI_OK escape_closes_and_clears
+P47_HUD_UI_OK unpinned_outside_closes
+P47_STRATEGIC_CAPTURE_OK after
+
+/tmp/p47-hud-camera_unit.log
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK camera_panel_world_position
+P47_UNIT_OK camera_panel_scale_and_lod
+P47_UNIT_OK camera_panel_roundtrip
+P47_UNIT_OK camera_window_resize
+P47_UNIT_OK camera_zoom_one_keeps_anchor
+P47_UNIT_OK camera_zoom_in_keeps_anchor
+P47_UNIT_OK camera_click_transform_roundtrip
+P47_UNIT_OK camera_click_release_coordinate
+P47_UNIT_OK camera_focus_loss_cancels_drag
+
+/tmp/p47-hud-goods_icons_unit.log
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK goods_icons_complete []
+P47_UNIT_OK goods_icons_size []
+P47_UNIT_OK goods_icons_cache
+P47_UNIT_OK goods_icons_unknown
+P47_UNIT_OK goods_icons_inputs
+P47_UNIT_OK goods_icons_outputs
+P47_UNIT_OK goods_icons_no_recipe
+
+/tmp/p47-hud-pack.log
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK hud_compact_money
+P47_UNIT_OK hud_negative_money
+P47_UNIT_OK hud_no_invented_history
+P47_UNIT_OK hud_same_day_no_fake_trend
+P47_UNIT_OK hud_daily_difference
+P47_UNIT_OK hud_load_clears_trend
+P47_UNIT_OK hud_complete_commodity_groups
+P47_UNIT_OK hud_mwh_to_mw
+P47_UNIT_OK hud_power_thresholds
+P47_UNIT_OK hud_power_no_false_surplus
+P47_UNIT_OK hud_roles_all_facilities
+P47_UNIT_OK hud_stock_read_only
+P47_UNIT_OK hud_actual_daily_production
+P47_UNIT_OK hud_consumption_includes_services
+P47_UNIT_OK hud_partial_day_keeps_completed
+P47_UNIT_OK hud_v3_load_unknown_flows

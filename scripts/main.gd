@@ -63,6 +63,10 @@ func _ready() -> void:
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/atlas_city_scale.gd").new().run(unit,self)
 			exit_code = 1 if unit.fails > 0 else 0
+		elif args.size() > 0 and str(args[0]) == "strategic_hud_unit":
+			var unit = load("res://tests/unit.gd").new()
+			load("res://tests/strategic_hud.gd").new().run(unit)
+			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "audit_unit":
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/audit_regressions.gd").new().run(unit)
@@ -307,6 +311,7 @@ func _sprite_colors(path: String) -> int:
 	return seen.size()
 
 var speed_bar
+var resource_drawer
 var side_tabs: TabContainer
 var main_menu
 var tutorial
@@ -349,6 +354,7 @@ func _build_play() -> void:
 	margin.add_child(outer)
 	var top_shell = PanelContainer.new()
 	top_shell.custom_minimum_size = Vector2(0, 40)
+	top_shell.add_theme_stylebox_override("panel",preload("res://scripts/ui/strategic_skin.gd").frame(true))
 	outer.add_child(top_shell)
 	speed_bar = preload("res://scripts/ui/top_bar.gd").new()
 	speed_bar.pause_pressed.connect(_on_pause)
@@ -357,6 +363,7 @@ func _build_play() -> void:
 	top_shell.add_child(speed_bar)
 	top_date = speed_bar.date_label
 	top_cash = speed_bar.cash_label
+	speed_bar.resized.connect(func(): call_deferred("_position_feedback"))
 	get_window().title = "Projekt-47 — Wondris404"
 	fps_label = Label.new()
 	fps_label.visible = false
@@ -383,6 +390,7 @@ func _build_play() -> void:
 	map_title.name = "StatStrip"  # JUAN10: HOI4 styl - osobne staty nad mapou
 	stat_strip = map_title
 	map_title.theme_type_variation = "HeaderLabel"
+	map_title.visible = false # Metrics now live in the responsive strategic top bar.
 	map_col.add_child(map_title)
 	map_shell.size_flags_stretch_ratio = 1.6
 	map = WorldMapScript.new()
@@ -523,6 +531,10 @@ func _build_play() -> void:
 	win_mgr = preload("res://scripts/ui/window_drag.gd").new()  # JUAN-P47: presuvatelne a zvacsitelne okna
 	win_mgr.name = "WindowDrag"
 	add_child(win_mgr)
+	resource_drawer = preload("res://scripts/ui/resource_drawer.gd").new()
+	resource_drawer.host = self
+	add_child(resource_drawer)
+	speed_bar.resources_pressed.connect(resource_drawer.toggle)
 	_build_burza_window()  # JUAN9: burza nie je v paneli, ale v zatvaratelnom okne nad mapou
 	var side = firm_tab
 	var cash_panel = side
@@ -809,6 +821,9 @@ func _build_play() -> void:
 	elif "atlas_cities_capture" in OS.get_cmdline_user_args():
 		_atlas_visual_runner = load("res://tests/atlas_cities_capture.gd").new()
 		_atlas_visual_runner.run(self)
+	elif "strategic_hud_capture" in OS.get_cmdline_user_args():
+		_atlas_visual_runner = load("res://tests/strategic_hud_capture.gd").new()
+		_atlas_visual_runner.run(self)
 	elif "perf23" in OS.get_cmdline_user_args():  # JUAN23
 		_perf23()
 	elif "j22_shot" in OS.get_cmdline_user_args():  # JUAN22
@@ -877,6 +892,7 @@ func _on_ui_scale(index: int) -> void:
 	cfg.save("user://settings.cfg")
 
 func _wrap_labels(node: Node) -> void:
+	if node == speed_bar or node == resource_drawer: return
 	if node is Label and node != fps_label and not (node.get_parent() is HBoxContainer):
 		var label = node as Label
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1401,10 +1417,20 @@ func _feedback(text: String, ok: bool) -> void:
 		feedback_label.z_index = 40
 		feedback_label.position = Vector2(24, 64)
 		add_child(feedback_label)
+	if speed_bar:
+		feedback_label.position = Vector2(24,speed_bar.get_global_rect().end.y+22)
+		feedback_label.size.x = maxf(100,get_viewport_rect().size.x-48)
+		feedback_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	feedback_label.text = text
 	feedback_label.add_theme_color_override("font_color", UiPalette.OK if ok else UiPalette.BAD)
 	feedback_label.visible = true
 	feedback_left = 3.0
+	call_deferred("_position_feedback")
+
+func _position_feedback() -> void:
+	if feedback_label and speed_bar:
+		feedback_label.position = Vector2(24,speed_bar.get_global_rect().end.y+22)
+		feedback_label.size.x = maxf(100,get_viewport_rect().size.x-48)
 
 func _on_loan() -> void:
 	if not GameState.running:
@@ -1659,6 +1685,7 @@ func _on_pause() -> void:
 	if not GameState.paused:
 		GameState.finish_pending_day()
 	GameState.paused = not GameState.paused
+	if speed_bar: speed_bar.sync_clock()
 
 func _update_fps(delta: float) -> void:
 	if fps_label == null:
@@ -1922,7 +1949,7 @@ func _refresh_label(force_firm_list: bool = true) -> void:
 		_prototype_3d.refresh_firms()
 	if cash_label == null or not GameState.running:
 		return
-	if stat_strip:
+	if stat_strip and stat_strip.visible:
 		var es = Empire.stats()
 		stat_strip.text = "Majetok %s  |  Ľudia %.0f  |  Vplyv %.0f  |  Popularita %.0f  |  Bezpečnosť %d  |  Firmy %d  |  Štáty %d" % [EconMath.eur(float(es.worth)), float(es.employees), float(es.influence), float(es.popularity), int(es.security), int(es.firms), int(es.states)]
 		stat_strip.tooltip_text = "Majetok · zamestnanci · vplyv · popularita · bezpečnosť · firmy · vlastnené štáty (detail: Portfólio)"
@@ -1938,7 +1965,8 @@ func _refresh_label(force_firm_list: bool = true) -> void:
 		speed_bar.set_cash(cash_value)
 		speed_bar.set_debt("Dlh %s" % EconMath.eur(GameState.debt()))
 		speed_bar.mark_speed(GameState.speed_index)
-	elif top_cash:
+	if resource_drawer and resource_drawer.visible: resource_drawer.refresh()
+	if not speed_bar and top_cash:
 		top_cash.text = EconMath.eur(cash_value)
 	var c: Dictionary = GameState.world.get(iso, {})
 	var firms: Array = GameState.player_firms()

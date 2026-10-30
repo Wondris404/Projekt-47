@@ -40,6 +40,23 @@ var last_draw_ms := 0.0
 const AD = preload("res://scripts/ui/atlas_draw.gd")
 const AtlasStyle = preload("res://scripts/ui/atlas_style.gd")
 var _atlas_label_boxes: Array = []
+var resource_focus := ""
+var resource_roles: Dictionary = {}
+var _resource_revision := -1
+
+func set_resource_focus(cid: String, roles: Dictionary) -> void:
+	resource_focus = cid
+	resource_roles = roles.duplicate()
+	_resource_revision = GameState.state_revision
+	queue_redraw()
+
+func _draw_resource_focus(id: String, point: Vector2, model_size: float) -> void:
+	if _resource_revision != GameState.state_revision or not resource_roles.has(id): return
+	var role := int(resource_roles[id])
+	var color := Color("92c79b") if role==1 else (Color("ddb56a") if role==2 else Color("c3a3de"))
+	var rect := preload("res://scripts/ui/atlas_models.gd").model_rect(point,model_size).grow(4)
+	draw_rect(rect,Color(color,.12))
+	draw_rect(rect,color,false,2.0)
 var _atlas_upgrades = preload("res://scripts/ui/atlas_upgrade_visuals.gd").new()
 var infra: bool = false  # JUAN10: dialnice, letiska, pristavy, namorne trasy
 var _infra_cache: Dictionary = {}
@@ -446,6 +463,7 @@ func _draw_names() -> void:
 		draw_string(label_font, pos, title, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, Color(UiPalette.TEXT, name_a))
 
 func _draw_atlas_country_names() -> void:
+	if size.x<16 or size.y<16: return
 	var sc: float = _fit()*zoom
 	var opacity := 1.0-smoothstep(9.0,20.0,sc)
 	if opacity <= 0.01: return
@@ -1824,6 +1842,7 @@ func _draw_atlas_near(sc: float) -> void:
 		if _vis(p2, 60):
 			var level := int(s.get("level", 1))
 			AD.firm(self, p2, clampf(u * 0.55, 5.0, 22.0), str(s.ind), true, type_icon(str(s.ind)), level, _atlas_upgrades.weights(str(s.id), level))
+			_draw_resource_focus(str(s.id),p2,clampf(u*.55,5.0,22.0))
 			_logo_badge(s, p2 + Vector2(0, -clampf(u * 0.55, 5.0, 22.0) * 2.0), clampf(u * 0.55, 5.0, 22.0) * 1.6)
 	prof["an4"] = Time.get_ticks_usec() - _tq; _tq = Time.get_ticks_usec()
 	# nazvy miest az navrchu, mensie, odsadene od stredu (neprekryvaju trasy v strede)

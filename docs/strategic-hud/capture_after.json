@@ -1,0 +1,81 @@
+{
+	"checks": [
+		{
+			"check": "bar_fits",
+			"ok": true
+		},
+		{
+			"check": "all_metrics_readable",
+			"ok": true
+		},
+		{
+			"check": "clock_right",
+			"ok": true
+		},
+		{
+			"check": "tooltip_sources_and_trend",
+			"ok": true
+		},
+		{
+			"check": "speed_control",
+			"ok": true
+		},
+		{
+			"check": "pause_control",
+			"ok": true
+		},
+		{
+			"check": "advance_one_day",
+			"ok": true
+		},
+		{
+			"check": "drawer_animation",
+			"ok": true
+		},
+		{
+			"check": "resource_values",
+			"ok": true
+		},
+		{
+			"check": "map_resource_highlight",
+			"ok": true
+		},
+		{
+			"check": "pinned_stays_open",
+			"ok": true
+		},
+		{
+			"check": "drawer_resize",
+			"ok": true
+		},
+		{
+			"check": "drawer_drag",
+			"ok": true
+		},
+		{
+			"check": "all_resources_reachable",
+			"ok": true
+		},
+		{
+			"check": "small_150_bar_fits",
+			"ok": true
+		},
+		{
+			"check": "small_150_panel_fits",
+			"ok": true
+		},
+		{
+			"check": "escape_closes_and_clears",
+			"ok": true
+		},
+		{
+			"check": "unpinned_outside_closes",
+			"ok": true
+		}
+	],
+	"failures": 0,
+	"renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+	"timings": {
+		"hud_refresh_mean_ms_6_firms_30_calls": 8.37523333333333
+	}
+}

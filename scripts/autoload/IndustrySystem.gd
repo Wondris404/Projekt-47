@@ -2,6 +2,13 @@ extends Node
 
 signal firm_upgraded(firm_id: String, old_level: int, new_level: int)
 
+func _ready() -> void:
+	GameState.day_passed.connect(_publish_hud_resources)
+
+func _publish_hud_resources(day: int) -> void:
+	if bool(_hud_pending.get("complete",false)) and int(_hud_pending.get("revision",-1))==GameState.state_revision and int(_hud_pending.get("day",-2))==day-1:
+		hud_resources = _hud_pending.duplicate(true)
+
 func io_map(raw) -> Dictionary:
 	if typeof(raw) == TYPE_DICTIONARY:
 		return raw
@@ -329,6 +336,13 @@ var _internal: Dictionary = {}   # "corp|iso|commodity" -> zostava ponuky na dne
 var _internal_requests: Dictionary = {}
 var _internal_delivered: Array = []
 var record_goods_flow := true
+var hud_resources: Dictionary = {} # Runtime only; never serialized into save v3.
+var _hud_pending: Dictionary = {}
+
+func _hud_add(field: String, quantities: Dictionary) -> void:
+	if _hud_pending.is_empty(): return
+	for cid in quantities:
+		_hud_pending[field][cid] = float(_hud_pending[field].get(cid,0.0))+float(quantities[cid])
 var _market_executions: Dictionary = {}
 var _direct_trades: Array = []
 var use_local_competition_cache := true
@@ -442,6 +456,7 @@ func settle() -> void:
 	settle_chunk(0, GameState.firms.size())
 
 func settle_start() -> void:
+	_hud_pending = {"revision":GameState.state_revision,"day":GameState.day_index,"produced":{},"consumed":{},"demand":{}}
 	Transport.begin_day()  # JUAN19
 	_market_executions.clear()
 	_direct_trades.clear()
@@ -522,6 +537,11 @@ func settle_chunk(start: int, count: int) -> int:
 				if is_pl and record_goods_flow:
 					_flow_add(flow.inputs, str(in_id), {"bought": bought, "internal": own_in, "cost": cost})
 			var applied: Dictionary = apply_spec(fac.inventory, _production_spec(firm, recipe), desired, _yield_mult(firm, str(fac.recipe)))
+			if is_pl:
+				_hud_add("produced",applied.produced)
+				_hud_add("consumed",applied.consumed)
+				for cid in recipe.get("inputs",{}):
+					_hud_add("demand",{cid:_input_qty(firm,recipe,cid)*desired})
 			var made = float(applied.get("actual", 0.0))
 			for out_id in recipe.get("outputs", {}).keys():
 				var sell_fill = MarketSystem.actor_sell_fill(iso, out_id)
@@ -605,6 +625,7 @@ func settle_chunk(start: int, count: int) -> int:
 	if record_goods_flow and end >= GameState.firms.size():
 		_match_market_executions()
 	if end >= GameState.firms.size():
+		_hud_pending["complete"] = true
 		_local_competition_valid = false
 	return end
 
@@ -622,6 +643,9 @@ func _settle_service(firm: Dictionary, fac: Dictionary, recipe: Dictionary) -> D
 	var en = 0.0
 	for in_id in recipe.get("inputs", {}).keys():
 		en += float(recipe.inputs[in_id]) * sc * MarketSystem.price(iso, str(in_id))
+		if str(firm.get("owner","")) == "player":
+			_hud_add("consumed",{in_id:float(recipe.inputs[in_id])*sc})
+			_hud_add("demand",{in_id:float(recipe.inputs[in_id])*sc})
 	firm.cash = float(firm.cash) + income - wage - zr - mt - en
 	return {"rev": income, "wages": wage, "rent": zr, "maint": mt, "cogs": en}
 
