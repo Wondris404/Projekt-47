@@ -1,0 +1,56 @@
+{
+  "source_features": 11878,
+  "holes_preserved": 228,
+  "tiles": 569,
+  "vertices": 205715,
+  "triangles": 181056,
+  "area_ratio_after_simplification": 0.9989277474573818,
+  "max_triangulation_area_error_degrees2": 1.1102230246251565e-15,
+  "samples": {
+    "Tokyo": {
+      "lon_lat_bounds": [
+        138.770219,
+        35.131781,
+        141.00776,
+        37.141466
+      ],
+      "width_km": 202.08,
+      "height_km": 223.47,
+      "source_area_sqkm": 18719.989
+    },
+    "Vienna": {
+      "lon_lat_bounds": [
+        16.161918,
+        47.778141,
+        16.628463,
+        48.385944
+      ],
+      "width_km": 34.57,
+      "height_km": 67.58,
+      "source_area_sqkm": 903.305
+    },
+    "Bratislava": {
+      "lon_lat_bounds": [
+        16.995072,
+        48.055898,
+        17.295159,
+        48.244902
+      ],
+      "width_km": 22.26,
+      "height_km": 21.02,
+      "source_area_sqkm": 244.059
+    },
+    "Paris": {
+      "lon_lat_bounds": [
+        1.608745,
+        48.496889,
+        2.997506,
+        49.189304
+      ],
+      "width_km": 101.6,
+      "height_km": 76.99,
+      "source_area_sqkm": 3144.314
+    }
+  },
+  "source_sha256": "5136ffd816a9b28c0f295e6797b4c03eaa421be80d78b90f542db4a932dd4497"
+}

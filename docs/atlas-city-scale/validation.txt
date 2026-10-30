@@ -1,0 +1,69 @@
+Godot 4.7.2 — city geographic scale
+41 checks passed: 10 city scale + 22 Atlas regression + 9 camera
+
+atlas_city_scale_unit
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK urban_real_bratislava
+P47_UNIT_OK urban_real_vienna
+P47_UNIT_OK urban_real_paris
+P47_UNIT_OK urban_real_tokyo
+P47_UNIT_OK urban_rural_gap
+P47_UNIT_OK urban_bratislava_extent_km
+P47_UNIT_OK urban_holes_and_area
+P47_UNIT_OK urban_atlas_only
+P47_UNIT_OK urban_geographic_scale
+P47_UNIT_OK urban_save_and_rng_unchanged
+
+atlas_update_unit
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK camera_detached_initialization
+P47_UNIT_OK traffic_idle
+P47_UNIT_OK traffic_density
+P47_UNIT_OK traffic_cap
+P47_UNIT_OK traffic_partial_train_has_empty_wagons
+P47_UNIT_OK traffic_full_train
+P47_UNIT_OK traffic_offscreen
+P47_UNIT_OK traffic_extreme_zoom_clip
+P47_UNIT_OK traffic_zero_segment
+P47_UNIT_OK all_catalog_map_models
+P47_UNIT_OK baseline_full_efficiency
+P47_UNIT_OK baseline_full_purchase
+P47_UNIT_OK baseline_replenishes_workers
+P47_UNIT_OK manager_v3_roundtrip
+P47_UNIT_OK manager_original_bonus
+P47_UNIT_OK manager_never_penalizes
+P47_UNIT_OK firing_restores_baseline
+P47_UNIT_OK v3_missing_manager_loads
+P47_UNIT_OK v3_missing_manager_runs
+P47_UNIT_OK camera_smooth_layout_anchor
+P47_UNIT_OK camera_click_visible_roof roof=(409.5625, 242.0625) ground=(400.0, 300.0) selected=f1 expected=f1 zoom=60.0 sites=[{ "id": "f1", "ind": "nuclear_plant", "level": 1, "iso": "SK", "wp": (708.0456, 264.0228), "name": "Kaviareň Slovensko" }]
+P47_UNIT_OK camera_model_transparency
+
+camera_unit
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK camera_panel_world_position
+P47_UNIT_OK camera_panel_scale_and_lod
+P47_UNIT_OK camera_panel_roundtrip
+P47_UNIT_OK camera_window_resize
+P47_UNIT_OK camera_zoom_one_keeps_anchor
+P47_UNIT_OK camera_zoom_in_keeps_anchor
+P47_UNIT_OK camera_click_transform_roundtrip
+P47_UNIT_OK camera_click_release_coordinate
+P47_UNIT_OK camera_focus_loss_cancels_drag
+
+Exported PCK — repeated same 10 geographic checks in an empty working directory
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK urban_real_bratislava
+P47_UNIT_OK urban_real_vienna
+P47_UNIT_OK urban_real_paris
+P47_UNIT_OK urban_real_tokyo
+P47_UNIT_OK urban_rural_gap
+P47_UNIT_OK urban_bratislava_extent_km
+P47_UNIT_OK urban_holes_and_area
+P47_UNIT_OK urban_atlas_only
+P47_UNIT_OK urban_geographic_scale
+P47_UNIT_OK urban_save_and_rng_unchanged

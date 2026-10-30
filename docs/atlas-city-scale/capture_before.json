@@ -1,0 +1,29 @@
+{
+	"renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+	"views": [
+		{
+			"camera_zoom": 48.4615384615385,
+			"draw_ms": 174.872,
+			"scale": 42.0,
+			"view": "stredna_europa"
+		},
+		{
+			"camera_zoom": 184.615384615385,
+			"draw_ms": 239.928,
+			"scale": 160.0,
+			"view": "vieden_bratislava"
+		},
+		{
+			"camera_zoom": 138.461538461538,
+			"draw_ms": 122.61,
+			"scale": 120.0,
+			"view": "pariz"
+		},
+		{
+			"camera_zoom": 115.384615384615,
+			"draw_ms": 247.8,
+			"scale": 100.0,
+			"view": "tokio"
+		}
+	]
+}

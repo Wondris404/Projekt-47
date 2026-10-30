@@ -59,6 +59,10 @@ func _ready() -> void:
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/atlas_style.gd").new().run(unit,self)
 			exit_code = 1 if unit.fails > 0 else 0
+		elif args.size() > 0 and str(args[0]) == "atlas_city_scale_unit":
+			var unit = load("res://tests/unit.gd").new()
+			load("res://tests/atlas_city_scale.gd").new().run(unit,self)
+			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "audit_unit":
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/audit_regressions.gd").new().run(unit)
@@ -801,6 +805,9 @@ func _build_play() -> void:
 		_atlas_visual_runner.run(self)
 	elif "atlas_style_capture" in OS.get_cmdline_user_args():
 		_atlas_visual_runner = load("res://tests/atlas_style_capture.gd").new()
+		_atlas_visual_runner.run(self)
+	elif "atlas_cities_capture" in OS.get_cmdline_user_args():
+		_atlas_visual_runner = load("res://tests/atlas_cities_capture.gd").new()
 		_atlas_visual_runner.run(self)
 	elif "perf23" in OS.get_cmdline_user_args():  # JUAN23
 		_perf23()

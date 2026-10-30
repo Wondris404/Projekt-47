@@ -2,6 +2,8 @@
 
 Dokončené 30. 10. 2026. Úprava nadväzuje na schválené výškové modely banky, kasína a hotela. Predlohou je používateľov **Dokument bez názvu.pdf**, predovšetkým politická mapa Afriky na prvej strane a odkaz na [GFX Remastered_l](https://steamcommunity.com/workshop/filedetails/?id=2668719344).
 
+Následná oprava podľa hráčovej kontroly: [geografické rozmery miest namiesto gigantických zhlukov](../atlas-city-scale/README.md). Nižšie sú historické snímky pôvodnej úpravy farebnosti mapy.
+
 ## Výsledok
 
 - Tlmenejšie politické farby nad viditeľným reliéfom, tmavomodré more a tlmená farebnosť pôvodného terénu.

@@ -1,6 +1,7 @@
 extends RefCounted
 ## Fixed-camera before/after captures of a disposable paused world.
-const OUT := "res://docs/atlas-map-style/"
+var OUT := "res://docs/atlas-map-style/"
+var views := [["svet",15.0,10.0,0.8],["afrika",18.0,10.0,2.6],["europa",15.0,50.0,5.0],["slovensko",19.5,48.5,22.0],["bratislava",17.1,48.15,42.0]]
 var host: Node
 
 func frames(n: int = 3) -> void:
@@ -44,7 +45,7 @@ func run(main: Node) -> void:
 	caption.z_index = 100
 	host.add_child(caption)
 	var results := []
-	for view in [["svet",15.0,10.0,0.8],["afrika",18.0,10.0,2.6],["europa",15.0,50.0,5.0],["slovensko",19.5,48.5,22.0],["bratislava",17.1,48.15,42.0]]:
+	for view in views:
 		var scale := float(view[3])
 		map._zoom_at(map.size*.5,scale/map._fit())
 		map.pan += map.size*.5-map._to_screen(map.project(float(view[2]),float(view[1])))

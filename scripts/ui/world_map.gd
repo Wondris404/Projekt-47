@@ -84,6 +84,9 @@ func _ready() -> void:
 	_atlas_layer = preload("res://scripts/ui/atlas_layer.gd").new()
 	_atlas_layer.map = self
 	add_child(_atlas_layer)
+	var urban_layer = preload("res://scripts/ui/atlas_urban_layer.gd").new()
+	urban_layer.map = self
+	add_child(urban_layer)
 	_traffic_layer = preload("res://scripts/ui/atlas_traffic.gd").new()
 	_traffic_layer.map = self
 	add_child(_traffic_layer)
@@ -1791,7 +1794,8 @@ func _draw_atlas_near(sc: float) -> void:
 			draw_line(q + Vector2(-s2 * 1.3, s2 * 0.35), q + Vector2(s2 * 1.3, -s2 * 0.35), Color(1, 1, 1, 0.8), 1.0)
 			box(q + Vector2(0, s2 * 0.6), s2 * 0.4, s2 * 0.5)
 	prof["an1"] = Time.get_ticks_usec() - _tq; _tq = Time.get_ticks_usec()
-	# mesta: 3D zhluky (miznu do satelitneho detailu pri CITY_ZOOM)
+	# City land is rendered by atlas_urban_layer at its geographic extent.
+	# c.r remains the gameplay service radius, never a visual city footprint.
 	var cities_vis: Array = []
 	if not st.has("towns_big"):
 		st["towns_big"] = st.towns.filter(func(t): return float(t.pop) >= 400000.0)
@@ -1799,22 +1803,11 @@ func _draw_atlas_near(sc: float) -> void:
 	for c in _visible_items("towns_big" if far_lod else "towns", st.towns_big if far_lod else st.towns, false, 300.0):
 		if u < 3.0: break
 		var cp = _to_screen(c.pos)
-		var rr = maxf(3.0, float(c.r) * sc)
-		if not _vis(cp, rr + 40.0):
+		if not _vis(cp, 16.0):
 			continue
 		cities_vis.append([c, cp])
 	cities_vis.sort_custom(func(a, b): return a[1].y < b[1].y)
-	AD.begin_batch()  # JUAN23: 3D mesta + elektrarne jednym volanim
-	for cv in cities_vis:
-		var c: Dictionary = cv[0]
-		# A city's footprint on screen determines detail, not the layout-dependent
-		# zoom number. Avoid dense street grids in a continental/regional view.
-		var detailed_city: bool = float(c.r)*sc >= 85.0
-		if detailed_city:
-			AD.flush(self)
-			_draw_city_detail(c, sc)
-		elif float(c.pop) >= (400000.0 if u < 8.0 else 30000.0):
-			AD.city(self, c, cv[1], sc, 1.0)
+	AD.begin_batch()
 	prof["an2"] = Time.get_ticks_usec() - _tq; _tq = Time.get_ticks_usec()
 	for p0 in d.power:  # elektrarne (aj AI) ako modely
 		if str(p0[2].get("owner", "")) == "player": continue # Draw owned plants once, with their upgrade transition.
@@ -1840,7 +1833,7 @@ func _draw_atlas_near(sc: float) -> void:
 		for cv in label_cities:
 			var c2: Dictionary = cv[0]
 			if float(c2.pop) > (500000.0 if u < 8.0 else (100000.0 if u < 20.0 else 0.0)):
-				var lp = cv[1] + Vector2(clampf(float(c2.r) * sc * 0.6, 8.0, 60.0), 14.0)
+				var lp = cv[1] + Vector2(6,14)
 				var fs = 11 if u < 20.0 else 13
 				var label_size: Vector2 = label_font.get_string_size(str(c2.name),HORIZONTAL_ALIGNMENT_LEFT,-1,fs)
 				var label_rect := Rect2(lp-Vector2(0,label_font.get_ascent(fs)),Vector2(label_size.x,label_font.get_height(fs)))

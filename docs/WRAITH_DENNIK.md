@@ -1356,3 +1356,10 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Zachované schválené modely, UI ikony, geografia, ekonomika, RNG a save v3. Žiadne aktíva modu neboli importované; PDF je vizuálna referencia. Terén zostáva pôvodný Natural Earth/vlastné procedúry, mení sa iba jeho vykreslenie.
 - Prešlo 41 cielených kontrol (10 štýl, 22 Atlas regresie, 9 kamera). Godot 4.7.2 cez Xvfb/llvmpipe zachytil päť rovnakých pohľadov pred úpravou a po nej. Galéria, log, zdroje a reprodukcia: `docs/atlas-map-style/README.md`.
 - Otvorené: hráčovo posúdenie vzhľadu, výkon na jeho GPU a existujúce rozlíšenie/polárny pás podkladu. Nejde o nový podklad vo vysokom rozlíšení ani o zavedenie HOI4 provincií. FPS na hráčovom GPU sa netvrdí.
+
+## 2026-10-30 – Geografická veľkosť miest
+
+- Po hráčovej pripomienke odstránené používanie herného servisného polomeru (minimálne 1,5 svetovej jednotky ≈ 42 km severojužne) ako vizuálneho rozsahu mesta v Atlase. Nahradené 11 878 geografickými obrysmi zastavaných oblastí Natural Earth 1:10m, public domain; zdroj, hash a licencia sú v `data/atlas/README.md`.
+- Obrysy používajú rovnakú projekciu ako mapa, bez zväčšenia malých miest. Pri priblížení sa iba doplní textúra blokov. Bratislava má obálku približne 22 × 21 km; krajina medzi ňou a Viedňou zostáva voľná. Aglomerácie sa nevykresľujú opakovane pre každý mestský názov. Ide o generalizované historické satelitné obrysy, nie dnešné administratívne hranice ani reálne ulice.
+- Zachované schválené modely podnikov, UI ikony, upgradovanie, stavebné/servisné pravidlá, ekonomika, RNG a save v3. Úprava je iba v Atlase. Pôvodné súbory ani snímky sa nemažú.
+- Prešlo 41 cielených kontrol: 10 geografických/prezentačných, 22 Atlas regresií a 9 kamery. Generátor overil plochy triangulácie vrátane 228 dier. Štyri páry screenshotov z Godotu 4.7.2/Xvfb/llvmpipe a výsledky sú v `docs/atlas-city-scale/`. Nevydáva sa garancia FPS na hráčovom GPU.
