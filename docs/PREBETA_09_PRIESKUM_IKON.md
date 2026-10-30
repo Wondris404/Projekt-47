@@ -2,6 +2,8 @@
 
 > Hráč schválil [výškovú banku, kasíno a hotel](atlas-towers-proposal/README.md); všetkých deväť variantov je zapojených do Atlas sady. Ostatné budovy sú tiež schválené.
 
+Nadväzujúca etapa: [Atlas mapa podľa HOI4 PDF — zmeny, licencie a päť pohľadov pred/po](atlas-map-style/README.md). Schválené modely zostávajú nezmenené.
+
 Aktualizácia 29. 10. 2026. **V Atlase je nasadená vlastná jednotná pixelová sada pre všetkých 61 podnikov.** Ďalšie štyri mapové objekty majú pripravené varianty. Spolu 65 typov × 3 úrovne = **195 odlišných exteriérov**. Nejde o stiahnuté 3D meshe: využitá je povolená alternatíva vlastných izometrických pixelových modelov.
 
 [Galéria všetkých typov a úrovní](atlas-levels/README.md) · [lokálna filtrovaná galéria](atlas-levels/index.html) · [195 jednotlivých snímok](atlas-levels/individual/) · [pôvod a podmienky vlastnej grafiky](../assets/map_models/levels/README.md)

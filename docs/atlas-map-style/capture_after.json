@@ -1,0 +1,35 @@
+{
+	"renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+	"views": [
+		{
+			"camera_zoom": 1.0,
+			"draw_ms": 39.824,
+			"scale": 0.866666666666667,
+			"view": "svet"
+		},
+		{
+			"camera_zoom": 3.0,
+			"draw_ms": 148.116,
+			"scale": 2.6,
+			"view": "afrika"
+		},
+		{
+			"camera_zoom": 5.76923076923077,
+			"draw_ms": 24.886,
+			"scale": 5.0,
+			"view": "europa"
+		},
+		{
+			"camera_zoom": 25.3846153846154,
+			"draw_ms": 15.05,
+			"scale": 22.0,
+			"view": "slovensko"
+		},
+		{
+			"camera_zoom": 48.4615384615385,
+			"draw_ms": 29.476,
+			"scale": 42.0,
+			"view": "bratislava"
+		}
+	]
+}

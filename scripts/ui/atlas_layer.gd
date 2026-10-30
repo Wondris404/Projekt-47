@@ -13,6 +13,9 @@ var load_ms := 0.0
 func _ready() -> void:
 	show_behind_parent = true
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	var terrain_material := ShaderMaterial.new()
+	terrain_material.shader = preload("res://scripts/ui/atlas_terrain.gdshader")
+	material = terrain_material
 	set_process(true)
 
 # JUAN23: vsetky dlazdice sa prednacitaju na pozadi (vlakna) hned po zapnuti Atlasu -> ziadne seknutie pri posune/zoome

@@ -1348,3 +1348,11 @@ Hra by sa už nemala sekať: mapa sa kreslí 3–6× rýchlejšie, deň simulác
 - Hráč výslovne schválil všetky tri návrhy a ostatné budovy. Do Atlas sady zapojených presne deväť schválených PNG; bajtová zhoda s návrhmi bola overená. Spoločná kamera a geometria návrhov sú súčasťou reprodukovateľného generátora. Ostatných 186 modelov sa nemení.
 - Hotel a kasíno používajú existujúce úrovne 1–3 a prechody pri upgrade; banka používa L1, kým nemá vlastnú upgrade logiku. UI, ekonomika a save v3 sa nemenili.
 - Zopakovaných 20 existujúcich kontrol úrovní a jeden audit aktív; nejde o novú rozšírenú testovaciu sadu. Herné snímky boli obnovené cez Xvfb/llvmpipe. Ďalšie práce podľa hráčovho zadania: Atlas mapa podľa dodaného HOI4 PDF.
+
+## 2026-10-30 – Atlas: kartografický štýl podľa HOI4 PDF
+
+- Prezentácia Atlasu dostala tlmené politické farby, tmavomodrý oceán, farebnú úpravu pôvodného terénu, jemnejšie hranice a svetlozlaté zvýraznenie štátu. Slovenské názvy krajín používajú Noto Serif (SIL OFL 1.1, plná licencia priložená), zalamovanie a ochranu pred prekrývaním.
+- Názvy pri priblížení ustupujú budovám. Diaľnice sú menej výrazné, dekorácie sa objavujú až pri bližšom pohľade a detail mesta závisí od jeho veľkosti na obrazovke. Mestské popisky uprednostňujú väčšie mestá a rešpektujú obsadený priestor.
+- Zachované schválené modely, UI ikony, geografia, ekonomika, RNG a save v3. Žiadne aktíva modu neboli importované; PDF je vizuálna referencia. Terén zostáva pôvodný Natural Earth/vlastné procedúry, mení sa iba jeho vykreslenie.
+- Prešlo 41 cielených kontrol (10 štýl, 22 Atlas regresie, 9 kamera). Godot 4.7.2 cez Xvfb/llvmpipe zachytil päť rovnakých pohľadov pred úpravou a po nej. Galéria, log, zdroje a reprodukcia: `docs/atlas-map-style/README.md`.
+- Otvorené: hráčovo posúdenie vzhľadu, výkon na jeho GPU a existujúce rozlíšenie/polárny pás podkladu. Nejde o nový podklad vo vysokom rozlíšení ani o zavedenie HOI4 provincií. FPS na hráčovom GPU sa netvrdí.

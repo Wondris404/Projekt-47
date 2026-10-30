@@ -1,0 +1,60 @@
+Godot 4.7.2 — Atlas style validation
+41 checks passed: 10 style + 22 Atlas regression + 9 camera
+
+atlas_style_unit
+Fontconfig error: No writable cache directories
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK atlas_style_political_lod
+P47_UNIT_OK atlas_style_stable_country_color
+P47_UNIT_OK atlas_style_long_name_wrap
+P47_UNIT_OK atlas_style_small_country_hidden
+P47_UNIT_OK atlas_style_large_name_bounded
+P47_UNIT_OK atlas_style_label_collision
+P47_UNIT_OK atlas_style_label_clipping
+P47_UNIT_OK atlas_style_geography_picking
+P47_UNIT_OK atlas_style_custom_overlay_retained
+P47_UNIT_OK atlas_style_simulation_unchanged
+
+atlas_update_unit
+Fontconfig error: No writable cache directories
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK camera_detached_initialization
+P47_UNIT_OK traffic_idle
+P47_UNIT_OK traffic_density
+P47_UNIT_OK traffic_cap
+P47_UNIT_OK traffic_partial_train_has_empty_wagons
+P47_UNIT_OK traffic_full_train
+P47_UNIT_OK traffic_offscreen
+P47_UNIT_OK traffic_extreme_zoom_clip
+P47_UNIT_OK traffic_zero_segment
+P47_UNIT_OK all_catalog_map_models
+P47_UNIT_OK baseline_full_efficiency
+P47_UNIT_OK baseline_full_purchase
+P47_UNIT_OK baseline_replenishes_workers
+P47_UNIT_OK manager_v3_roundtrip
+P47_UNIT_OK manager_original_bonus
+P47_UNIT_OK manager_never_penalizes
+P47_UNIT_OK firing_restores_baseline
+P47_UNIT_OK v3_missing_manager_loads
+P47_UNIT_OK v3_missing_manager_runs
+P47_UNIT_OK camera_smooth_layout_anchor
+P47_UNIT_OK camera_click_visible_roof roof=(409.5625, 242.0625) ground=(400.0, 300.0) selected=f1 expected=f1 zoom=60.0 sites=[{ "id": "f1", "ind": "nuclear_plant", "level": 1, "iso": "SK", "wp": (708.0456, 264.0228), "name": "Kaviareň Slovensko" }]
+P47_UNIT_OK camera_model_transparency
+
+camera_unit
+Fontconfig error: No writable cache directories
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P47_UNIT_OK camera_panel_world_position
+P47_UNIT_OK camera_panel_scale_and_lod
+P47_UNIT_OK camera_panel_roundtrip
+P47_UNIT_OK camera_window_resize
+P47_UNIT_OK camera_zoom_one_keeps_anchor
+P47_UNIT_OK camera_zoom_in_keeps_anchor
+P47_UNIT_OK camera_click_transform_roundtrip
+P47_UNIT_OK camera_click_release_coordinate
+P47_UNIT_OK camera_focus_loss_cancels_drag
+
+Graphical capture: Xvfb + Mesa llvmpipe, Compatibility; 5 views before and after.

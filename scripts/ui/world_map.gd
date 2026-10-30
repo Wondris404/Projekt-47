@@ -38,6 +38,8 @@ var _ainfra_layout: Array = []
 var _ainfra_static: Dictionary = {}
 var last_draw_ms := 0.0
 const AD = preload("res://scripts/ui/atlas_draw.gd")
+const AtlasStyle = preload("res://scripts/ui/atlas_style.gd")
+var _atlas_label_boxes: Array = []
 var _atlas_upgrades = preload("res://scripts/ui/atlas_upgrade_visuals.gd").new()
 var infra: bool = false  # JUAN10: dialnice, letiska, pristavy, namorne trasy
 var _infra_cache: Dictionary = {}
@@ -252,17 +254,19 @@ func _paint_fast(sh: Dictionary, col: Color, view: Rect2, sc: float) -> void:
 	if tri_ok:
 		draw_mesh(m, null, Transform2D.IDENTITY, col)
 	var inv = 1.0 / maxf(sc, 0.0001)
-	var bcol = Color(0.12, 0.1, 0.08, 0.75) if atlas else Color(col.darkened(0.45), 0.9)
+	var bcol = AtlasStyle.BORDER if atlas else Color(col.darkened(0.45), 0.9)
 	for poly in sh.polys:
 		if not tri_ok and poly.size() >= 3:
 			draw_colored_polygon(poly, col)
 		if poly.size() < 2:
 			continue
-		draw_polyline(poly, bcol, (1.4 if atlas else 1.6) * inv, false)
+		draw_polyline(poly, bcol, (2.0 if atlas else 1.6) * inv, false)
+		if atlas:
+			draw_polyline(poly, AtlasStyle.BORDER_LIGHT, 0.65 * inv, false)
 		if iso == hover:
-			draw_polyline(poly, UiPalette.ACCENT, 2.0 * inv, false)
+			draw_polyline(poly, AtlasStyle.HOVER if atlas else UiPalette.ACCENT, 2.0 * inv, false)
 		if iso == GameState.selected_iso:
-			draw_polyline(poly, UiPalette.ACCENT, 3.0 * inv, false)
+			draw_polyline(poly, AtlasStyle.SELECTED if atlas else UiPalette.ACCENT, 3.0 * inv, false)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if iso == hover or iso == GameState.selected_iso:
 		_paint_poly(PackedVector2Array(), col, iso)
@@ -399,6 +403,7 @@ var capitals_drawn: int = 0
 var _tsz := {}
 func _draw_names() -> void:
 	capitals_drawn = 0
+	_atlas_label_boxes.clear()
 	_marker_isos = country_markers() if zoom < DETAIL_ZOOM else {}
 	for sh in shapes:
 		if (sh.main_poly as PackedVector2Array).is_empty():
@@ -408,14 +413,12 @@ func _draw_names() -> void:
 		_draw_capital(str(sh.iso))
 	if label_font == null:
 		return
+	if atlas:
+		_draw_atlas_country_names()
+		return
 	var font_size = 13
 	var scale = _fit() * zoom
 	var name_a = 1.0
-	if atlas:  # JUAN20: nazvy krajin miznu s priblizenim (neprekryvaju infrastrukturu)
-		name_a = clampf(1.0 - (zoom - 2.5) / 5.0, 0.0, 1.0)
-		font_size = int(clampf(11.0 + zoom * 2.0, 12.0, 20.0))
-		if name_a <= 0.02:
-			return
 	for sh in shapes:
 		var iso = str(sh.iso)
 		var poly: PackedVector2Array = sh.main_poly
@@ -436,10 +439,44 @@ func _draw_names() -> void:
 		var pos = _to_screen(sh.cent) - Vector2(text_size.x * 0.5, font_size * 0.35)
 		if pos.x > size.x or pos.y > size.y + 20.0 or pos.x + text_size.x < 0.0 or pos.y < -20.0:
 			continue
-		if atlas:
-			title = title.to_upper()
 		draw_string_outline(label_font, pos, title, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, 3, Color(UiPalette.OUTLINE, name_a))
-		draw_string(label_font, pos, title, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, Color(UiPalette.TEXT if not atlas else Color("F2EAD6"), name_a))
+		draw_string(label_font, pos, title, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, Color(UiPalette.TEXT, name_a))
+
+func _draw_atlas_country_names() -> void:
+	var sc: float = _fit()*zoom
+	var opacity := 1.0-smoothstep(9.0,20.0,sc)
+	if opacity <= 0.01: return
+	var font := AtlasStyle.country_font()
+	var view := Rect2(Vector2(8,8),size-Vector2(16,16))
+	for sh in shapes: # Largest countries first, smaller labels yield on collision.
+		var poly: PackedVector2Array = sh.main_poly
+		if poly.is_empty(): continue
+		if not sh.has("label_bounds"):
+			var bounds := Rect2(poly[0],Vector2.ZERO)
+			for p in poly: bounds = bounds.expand(p)
+			sh["label_bounds"] = bounds
+			var center := _centroid(poly)
+			if not Geometry2D.is_point_in_polygon(center,poly): center = capital_of(str(sh.iso))
+			sh["label_center"] = center
+		var bounds: Rect2 = sh.label_bounds
+		var available := bounds.size*sc
+		if available.x < 48 or available.y < 28: continue
+		var title := str(GameState.world.get(str(sh.iso),{}).get("name_sk",DataLoader.countries.get(str(sh.iso),{}).get("name_sk",str(sh.iso))))
+		var lines := AtlasStyle.label_lines(title)
+		var fs := AtlasStyle.label_size(lines,available)
+		if fs < 11: continue
+		var width := 0.0
+		for line in lines: width = maxf(width,font.get_string_size(line,HORIZONTAL_ALIGNMENT_LEFT,-1,fs).x)
+		var height := font.get_height(fs)*lines.size()
+		var center := _to_screen(sh.label_center)
+		var rect := Rect2(center-Vector2(width,height)*.5,Vector2(width,height))
+		if not AtlasStyle.reserve_label(rect,_atlas_label_boxes,view): continue
+		for i in lines.size():
+			var line := lines[i]
+			var line_width := font.get_string_size(line,HORIZONTAL_ALIGNMENT_LEFT,-1,fs).x
+			var pos := Vector2(center.x-line_width*.5,rect.position.y+font.get_ascent(fs)+i*font.get_height(fs))
+			draw_string_outline(font,pos,line,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,2,Color(AtlasStyle.LABEL_SHADOW,opacity*.85))
+			draw_string(font,pos,line,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,Color(AtlasStyle.LABEL,opacity))
 
 func _draw_capital(iso: String) -> void:
 	var cap = _to_screen(capital_of(iso))
@@ -900,7 +937,7 @@ func _color(iso: String) -> Color:
 	if atlas:  # JUAN20: priesvitna politicka vrstva nad zapecenym terenom
 		if cust_mode:
 			return Color(cust_color(iso), 0.62)
-		var pc2 = Color.from_hsv(float(absi(iso.hash()) % 360) / 360.0, 0.5, 0.9, lerpf(0.30, 0.12, clampf((zoom - 1.0) / 8.0, 0.0, 1.0)))
+		var pc2 = AtlasStyle.political_color(iso,_fit()*zoom)
 		if GameState.running and GeopoliticsSystem.at_war(iso):
 			pc2 = Color(UiPalette.BAD, 0.4)
 		return pc2
@@ -1173,9 +1210,9 @@ func _draw_player_glow() -> void:
 			if sp.size() < 3:
 				continue
 			sp.append(sp[0])
-			draw_polyline(sp, Color(UiPalette.ACCENT, 0.12), 7.0, true)
-			draw_polyline(sp, Color(UiPalette.ACCENT, 0.25), 3.5, true)
-			draw_polyline(sp, Color(UiPalette.ACCENT, 0.75), 1.2, true)
+			draw_polyline(sp, Color(AtlasStyle.SELECTED if atlas else UiPalette.ACCENT, 0.12), 7.0, true)
+			draw_polyline(sp, Color(AtlasStyle.SELECTED if atlas else UiPalette.ACCENT, 0.25), 3.5, true)
+			draw_polyline(sp, Color(AtlasStyle.SELECTED if atlas else UiPalette.ACCENT, 0.75), 1.2, true)
 
 # --- mesto zhora (procedurálne, ziadne realne snimky) ---
 const ROOFS = [Color("8E4A3A"), Color("A65A42"), Color("6E6E72"), Color("85878C"), Color("C9C4B8"), Color("4F5257"), Color("9B7B5B"), Color("B7B0A3")]
@@ -1695,7 +1732,6 @@ func _draw_atlas_near(sc: float) -> void:
 	var _tq = Time.get_ticks_usec()
 	var u = _fit() * zoom  # px na svetovu jednotku (0.25 st.)
 	var w = clampf(u * 0.16, 1.0, 7.0)
-	var fade_city = clampf((CITY_ZOOM - zoom) / (CITY_ZOOM * 0.35), 0.0, 1.0)  # 3D mesta prechadzaju do satelitneho detailu
 	# JUAN23: segmenty sa zbieraju a kreslia jednym draw_multiline na styl (namiesto tisicov draw_line)
 	var aa = not GFX.low()
 	# JUAN23: staticke siete (cesty, zeleznice, dialnice) ako predpocitane polia vo svetovych suradniciach, kreslene cez transformaciu
@@ -1711,8 +1747,9 @@ func _draw_atlas_near(sc: float) -> void:
 			draw_multiline(_wdash("rails", st.rails, w * 3.0 * inv, w * 3.0 * inv), Color("ECECEC"), maxf(1.0, w * 0.45) * inv, false)
 		draw_set_transform(o, 0.0, Vector2(u, u))
 	var hwl = _wl("highways", st.highways, Vector2.ZERO)
-	draw_multiline(hwl, Color("3C2814", 0.9), (w * 1.3 + 1.5) * inv, aa)
-	draw_multiline(hwl, Color("F0A840", 0.9), w * 1.3 * inv, aa)
+	if u >= 3.0:
+		draw_multiline(hwl, Color("41433c",0.6), (w*0.7+1.0)*inv, aa)
+		draw_multiline(hwl, Color("c6bda2",0.7), maxf(0.7,w*0.7)*inv, aa)
 	if u >= 20.0:
 		draw_multiline(_wdash("highways", st.highways, 6.0 * inv, 6.0 * inv), Color(1, 1, 1, 0.7), 1.0 * inv, false)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
@@ -1740,12 +1777,14 @@ func _draw_atlas_near(sc: float) -> void:
 	prof["an0"] = Time.get_ticks_usec() - _tq; _tq = Time.get_ticks_usec()
 	var s2 = clampf(u * 0.5, 4.0, 16.0)
 	for pp in d.ports:
+		if u < 3.0: break
 		var q = _to_screen(pp) + Vector2(s2 * 1.2, s2 * 0.6)
 		if _vis(q, 30):
 			draw_rect(Rect2(q - Vector2(s2, s2 * 0.35), Vector2(s2 * 2.0, s2 * 0.7)), Color("46464C"))
 			for k in 3:
 				draw_line(q + Vector2(-s2 * 0.8 + k * s2 * 0.7, -s2 * 0.35), q + Vector2(-s2 * 0.8 + k * s2 * 0.7, -s2 * 1.3), Color("E6A028"), 2.0)
 	for ap in d.airports:
+		if u < 3.0: break
 		var q = _to_screen(ap) + Vector2(-s2 * 1.6, s2 * 0.8)
 		if _vis(q, 30):
 			draw_line(q + Vector2(-s2 * 1.5, s2 * 0.4), q + Vector2(s2 * 1.5, -s2 * 0.4), Color("505458"), s2 * 0.45)
@@ -1758,6 +1797,7 @@ func _draw_atlas_near(sc: float) -> void:
 		st["towns_big"] = st.towns.filter(func(t): return float(t.pop) >= 400000.0)
 	var far_lod = u < 8.0 and zoom < CITY_ZOOM * 0.75  # JUAN23: LOD - z dialky len velke mesta
 	for c in _visible_items("towns_big" if far_lod else "towns", st.towns_big if far_lod else st.towns, false, 300.0):
+		if u < 3.0: break
 		var cp = _to_screen(c.pos)
 		var rr = maxf(3.0, float(c.r) * sc)
 		if not _vis(cp, rr + 40.0):
@@ -1767,11 +1807,14 @@ func _draw_atlas_near(sc: float) -> void:
 	AD.begin_batch()  # JUAN23: 3D mesta + elektrarne jednym volanim
 	for cv in cities_vis:
 		var c: Dictionary = cv[0]
-		if zoom >= CITY_ZOOM * 0.75:
+		# A city's footprint on screen determines detail, not the layout-dependent
+		# zoom number. Avoid dense street grids in a continental/regional view.
+		var detailed_city: bool = float(c.r)*sc >= 85.0
+		if detailed_city:
 			AD.flush(self)
 			_draw_city_detail(c, sc)
-		if fade_city > 0.01 and (float(c.pop) >= (400000.0 if u < 8.0 else 30000.0)):
-			AD.city(self, c, cv[1], sc, fade_city)
+		elif float(c.pop) >= (400000.0 if u < 8.0 else 30000.0):
+			AD.city(self, c, cv[1], sc, 1.0)
 	prof["an2"] = Time.get_ticks_usec() - _tq; _tq = Time.get_ticks_usec()
 	for p0 in d.power:  # elektrarne (aj AI) ako modely
 		if str(p0[2].get("owner", "")) == "player": continue # Draw owned plants once, with their upgrade transition.
@@ -1792,11 +1835,16 @@ func _draw_atlas_near(sc: float) -> void:
 	prof["an4"] = Time.get_ticks_usec() - _tq; _tq = Time.get_ticks_usec()
 	# nazvy miest az navrchu, mensie, odsadene od stredu (neprekryvaju trasy v strede)
 	if label_font:
-		for cv in cities_vis:
+		var label_cities := cities_vis.duplicate()
+		label_cities.sort_custom(func(a,b): return float(a[0].pop)>float(b[0].pop))
+		for cv in label_cities:
 			var c2: Dictionary = cv[0]
 			if float(c2.pop) > (500000.0 if u < 8.0 else (100000.0 if u < 20.0 else 0.0)):
 				var lp = cv[1] + Vector2(clampf(float(c2.r) * sc * 0.6, 8.0, 60.0), 14.0)
 				var fs = 11 if u < 20.0 else 13
+				var label_size: Vector2 = label_font.get_string_size(str(c2.name),HORIZONTAL_ALIGNMENT_LEFT,-1,fs)
+				var label_rect := Rect2(lp-Vector2(0,label_font.get_ascent(fs)),Vector2(label_size.x,label_font.get_height(fs)))
+				if not AtlasStyle.reserve_label(label_rect,_atlas_label_boxes,Rect2(Vector2.ZERO,size)): continue
 				draw_string_outline(label_font, lp, str(c2.name), HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 3, Color(0.08, 0.06, 0.05, 0.9))
 				draw_string(label_font, lp, str(c2.name), HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color("F6EEDA"))
 
