@@ -118,9 +118,15 @@ function Compare-DemoTags([string]$installed, [string]$available) {
         $available -notmatch '^demo-([0-9]+)-([0-9]+)$') { return -1 }
     $a = [regex]::Match($installed, '^demo-([0-9]+)-([0-9]+)$')
     $b = [regex]::Match($available, '^demo-([0-9]+)-([0-9]+)$')
-    $first = [long]::Compare([long]::Parse($a.Groups[1].Value), [long]::Parse($b.Groups[1].Value))
-    if ($first -ne 0) { return $first }
-    return [long]::Compare([long]::Parse($a.Groups[2].Value), [long]::Parse($b.Groups[2].Value))
+    $firstA = [long]::Parse($a.Groups[1].Value)
+    $firstB = [long]::Parse($b.Groups[1].Value)
+    if ($firstA -lt $firstB) { return -1 }
+    if ($firstA -gt $firstB) { return 1 }
+    $secondA = [long]::Parse($a.Groups[2].Value)
+    $secondB = [long]::Parse($b.Groups[2].Value)
+    if ($secondA -lt $secondB) { return -1 }
+    if ($secondA -gt $secondB) { return 1 }
+    return 0
 }
 
 function Verify-And-Extract([string]$zipPath, [string]$sumPath, [string]$stage) {
@@ -194,10 +200,7 @@ if (-not $InstallPath) {
 $InstallPath = [IO.Path]::GetFullPath([Environment]::ExpandEnvironmentVariables($InstallPath))
 $gamePath = Join-Path $InstallPath 'Projekt-47.exe'
 $existing = Test-Path -LiteralPath $gamePath -PathType Leaf
-if ((Test-Path -LiteralPath $InstallPath) -and -not $existing) {
-    throw "Priečinok existuje, ale neobsahuje Projekt-47.exe: $InstallPath. Zvoľte -InstallPath."
-}
-if ($existing) {
+if (Test-Path -LiteralPath $InstallPath -PathType Container) {
     $work = Join-Path $InstallPath $workName
     if (Test-Path -LiteralPath $work) {
         $owned = Join-Path $work '.managed'
@@ -211,6 +214,10 @@ if ($existing) {
             Remove-Item -LiteralPath $work -Recurse -Force
         }
     }
+}
+$existing = Test-Path -LiteralPath $gamePath -PathType Leaf
+if ((Test-Path -LiteralPath $InstallPath) -and -not $existing) {
+    throw "Po obnove chýba Projekt-47.exe alebo zvolený priečinok nie je inštaláciou: $InstallPath"
 }
 $installedTag = if ($existing) { Get-InstalledTag $InstallPath } else { $null }
 Write-Host "Priečinok: $InstallPath"
@@ -299,6 +306,14 @@ try {
         if ($env:P47_UPDATER_TEST_FAIL_AFTER -eq "$written") { throw 'Simulované zlyhanie aktualizácie.' }
     }
     Copy-Item -LiteralPath (Join-Path $stage $metadataName) -Destination (Join-Path $InstallPath $metadataName) -Force
+    foreach ($name in $gameFiles) {
+        if ((Get-FileHash -LiteralPath (Join-Path $InstallPath $name) -Algorithm SHA256).Hash -ine $hashes[$name]) {
+            throw "Po aktualizácii sa nezhoduje obsah: $name"
+        }
+    }
+    # Commit is complete; remove the recovery journal before cleaning temporary files.
+    Remove-Item -LiteralPath (Join-Path $work 'transaction.json') -Force
+    $transactionStarted = $false
     Remove-Item -LiteralPath $work -Recurse -Force
     Write-Host "Hotovo. Verzia: $($release.tag). Uložené hry ani ostatné dáta sa nemenili."
     Write-Host "Spustiť: $gamePath"
