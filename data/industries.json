@@ -592,4 +592,33 @@
   "tier": "medium",
   "juan5": true
  }
+
+,
+ {
+  "id": "offshore_oil_rig",
+  "recipe": "offshore_oil_rig",
+  "cost": 3200000,
+  "zone": "industrial",
+  "name": "Morská ropná plošina",
+  "blurb": "Ťaží ropu na mori pri pobreží a ložisku. Drahšia a výdatnejšia než vrt na súši. Bez PSV alebo AHTS platí servis.",
+  "tier": "large"
+ },
+ {
+  "id": "offshore_gas_rig",
+  "recipe": "offshore_gas_rig",
+  "cost": 2600000,
+  "zone": "industrial",
+  "name": "Morská plynová plošina",
+  "blurb": "Ťaží zemný plyn na mori pri pobreží a ložisku. Bez zásobovacej lode platí servis.",
+  "tier": "large"
+ },
+ {
+  "id": "fpso",
+  "recipe": "fpso",
+  "cost": 4800000,
+  "zone": "industrial",
+  "name": "FPSO",
+  "blurb": "Plávajúca ťažba, sklad a výklad ropy. Najvyšší výnos, len na mori pri ložisku.",
+  "tier": "large"
+ }
 ]

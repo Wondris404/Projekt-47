@@ -575,6 +575,10 @@ func settle_chunk(start: int, count: int) -> int:
 			firm.cash = float(firm.cash) - zone_rent - maint
 			rent += zone_rent
 			maintain += maint
+			if str(firm.get("industry", "")) in ["offshore_oil_rig", "offshore_gas_rig", "fpso"] and not _rig_has_service():
+				var fee = 12000.0
+				firm.cash = float(firm.cash) - fee
+				maintain += fee
 		var freight_cut = 0.0
 		for fac2 in firm.facilities:
 			if str(fac2.get("recipe", "")) == "logistics_hub":
@@ -965,6 +969,14 @@ func _production_spec(firm: Dictionary, recipe: Dictionary) -> Dictionary:
 	spec.inputs.electricity = _input_qty(firm, recipe, "electricity")
 	return spec
 
+func _rig_has_service() -> bool:
+	if not has_node("/root/ShipSystem"):
+		return false
+	for s in ShipSystem.fleet():
+		if str(s.get("kind_id", "")) in ["psv", "ahts"]:
+			return true
+	return false
+
 func _yield_mult(firm: Dictionary, recipe_id: String) -> float:
 	if firm.get("owner", "") != "player":
 		return 1.0
@@ -986,7 +998,7 @@ func _yield_mult0(firm: Dictionary, recipe_id: String) -> float:
 	if recipe_id == "aircraft_plant":
 		return float(m.get("yield_factory", 1.0)) * (ArmsSystem.air_mult() if has_node("/root/ArmsSystem") else 1.0)
 	# JUAN5: research tree - tazba, tovarne, spotrebne produkty
-	if recipe_id in ["oil_well", "coal_mine", "iron_mine", "copper_mine"]:
+	if recipe_id in ["oil_well", "coal_mine", "iron_mine", "copper_mine", "offshore_oil_rig", "offshore_gas_rig", "fpso"]:
 		return float(m.get("yield_mining", 1.0))
 	var y = 1.0
 	if recipe_id in ["steel_mill", "auto_plant", "electronics_plant", "textile_mill", "power_coal"]:
