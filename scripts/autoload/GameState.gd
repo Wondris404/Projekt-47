@@ -267,6 +267,8 @@ func _finish_day(month_before: int, year_before: int) -> void:
 		StockMarket.weekly()  # JUAN5 #19
 		Empire.weekly()  # JUAN10 financna divizia
 		_weekly_prices()
+	if has_node("/root/ShipSystem"):
+		ShipSystem.daily()
 	day_passed.emit(day_index)
 
 func _macro() -> void:

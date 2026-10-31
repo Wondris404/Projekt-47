@@ -476,6 +476,12 @@ func _build_play() -> void:
 	news_b.tooltip_text = "Správy z hry: firmy, vojna, ceny, politika a šoky. Mapa: Pixelová ostáva vedľa."
 	news_b.pressed.connect(_toggle_news)
 	zoom_row.add_child(news_b)
+	var ship_b = Button.new()
+	ship_b.name = "ShipsButton"
+	ship_b.text = "Lode"
+	ship_b.tooltip_text = "Kúpa lodí od štátu alebo stavba v lodenici za 72 %. Vojenské lode sa predávajú štátom, civilné vozia náklad."
+	ship_b.pressed.connect(_toggle_ships)
+	zoom_row.add_child(ship_b)
 	var preview_3d_button = Button.new()
 	preview_3d_button.name = "Prototype3DButton"
 	preview_3d_button.text = "3D skúška"
@@ -2095,6 +2101,73 @@ func _fill_news(cat: String) -> void:
 		if lines.size() >= 40:
 			break
 	lab.text = "NOVINY\n" + ("\n".join(lines) if lines.size() > 0 else "Zatiaľ žiadna správa v tomto filtri.")
+
+func _toggle_ships() -> void:
+	var p = get_node_or_null("ShipsPanel")
+	if p == null:
+		p = PanelContainer.new()
+		p.name = "ShipsPanel"
+		p.z_index = 46
+		p.position = Vector2(24, 110)
+		add_child(p)
+		var box = VBoxContainer.new()
+		box.name = "ShipsBox"
+		p.add_child(box)
+		var pick = OptionButton.new()
+		pick.name = "ShipPick"
+		for id in ShipSystem.catalog.keys():
+			var row: Dictionary = ShipSystem.spec(str(id))
+			pick.add_item("%s (%s)" % [str(row.get("name", id)), EconMath.eur(float(row.get("price", 0)))])
+			pick.set_item_metadata(pick.item_count - 1, str(id))
+		box.add_child(pick)
+		var buy = Button.new()
+		buy.text = "Kúpiť od štátu"
+		buy.pressed.connect(func():
+			var e = ShipSystem.buy(str(pick.get_item_metadata(pick.selected)), false)
+			_feedback(e if e != "" else "Loď kúpená.", e == "")
+			_fill_ships())
+		box.add_child(buy)
+		var yard = Button.new()
+		yard.text = "Postaviť v lodenici (72 %)"
+		yard.pressed.connect(func():
+			var e2 = ShipSystem.buy(str(pick.get_item_metadata(pick.selected)), true)
+			_feedback(e2 if e2 != "" else "Loď postavená.", e2 == "")
+			_fill_ships())
+		box.add_child(yard)
+		var sell = Button.new()
+		sell.text = "Predať prvú vojenskú loď štátu"
+		sell.pressed.connect(func():
+			var e3 = ""
+			for s in ShipSystem.fleet():
+				if str(s.get("kind", "")) == "military":
+					e3 = ShipSystem.sell_military(str(s.get("id", "")))
+					break
+			if e3 == "" and ShipSystem.fleet().is_empty():
+				e3 = "Žiadna vojenská loď."
+			_feedback(e3 if e3 != "" else "Predané.", e3 == "")
+			_fill_ships())
+		box.add_child(sell)
+		var lab = Label.new()
+		lab.name = "ShipsBody"
+		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lab.custom_minimum_size = Vector2(420, 0)
+		box.add_child(lab)
+		var close = Button.new()
+		close.text = "Zavrieť"
+		close.pressed.connect(func(): p.visible = false)
+		box.add_child(close)
+	p.visible = not p.visible
+	if p.visible:
+		_fill_ships()
+
+func _fill_ships() -> void:
+	var lab = get_node_or_null("ShipsPanel/ShipsBox/ShipsBody")
+	if lab == null:
+		return
+	var lines: PackedStringArray = PackedStringArray()
+	for s in ShipSystem.fleet():
+		lines.append(ShipSystem.info(str(s.get("id", ""))))
+	lab.text = "\n".join(lines) if lines.size() > 0 else "Žiadna loď. Prázdna flotila nemení dopravu."
 
 func _refresh_label_minister(iso: String) -> void:
 	if minister_label:

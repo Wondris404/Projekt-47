@@ -45,6 +45,7 @@ func _process(delta: float) -> void:
 	_active = live
 
 func _draw() -> void:
+	_draw_ships()
 	if not map.atlas or map.zoom < 4.0 or map.GFX.low(): return
 	var visible_lines = 0
 	for line in Transport.lines():
@@ -95,3 +96,25 @@ func _train(p: Vector2, direction: Vector2, normal: Vector2, load: float) -> voi
 			draw_line(start, start + direction * 7.0 * scale_px, Color("121920"), 3 * scale_px)
 			var cargo = wagon_load(load, car - 1, cars - 1)
 			if cargo > 0.0: draw_line(start, start + direction * 7.0 * scale_px * cargo, Color("C99060"), 3 * scale_px)
+
+func _draw_ships() -> void:
+	if not map.atlas or not has_node("/root/ShipSystem"):
+		return
+	if typeof(GameState.ext) != TYPE_DICTIONARY:
+		return
+	var ships = GameState.ext.get("fleet", [])
+	if typeof(ships) != TYPE_ARRAY or ships.is_empty():
+		return
+	var n = 0
+	for s in ships:
+		if n >= 32:
+			break
+		if str(s.get("kind", "")) == "military":
+			continue
+		n += 1
+		var sp = map._to_screen(ShipSystem.pos_of(s))
+		if not Rect2(Vector2.ZERO, map.size).grow(40).has_point(sp):
+			continue
+		var heading = Vector2.RIGHT
+		draw_colored_polygon(PackedVector2Array([sp + heading * 7, sp - heading * 5 + Vector2(0, 3), sp - heading * 5 - Vector2(0, 3)]), Color("D5AB39"))
+
