@@ -1,0 +1,8 @@
+{
+  "blueprints": [
+    {"id": "kalas", "name": "Kalašnikovič AK-47ish", "kind": "weapon", "price": 250000, "power": 40, "plant": "arms_plant"},
+    {"id": "leopardik", "name": "Leopardík 2", "kind": "tank", "price": 1800000, "power": 70, "plant": "arms_plant"},
+    {"id": "bleskovec", "name": "F-35 Bleskovec", "kind": "aircraft", "price": 9000000, "power": 90, "plant": "aircraft_plant"},
+    {"id": "obalovac", "name": "Obalovač 737", "kind": "civil_air", "price": 4200000, "power": 55, "plant": "aircraft_plant"}
+  ]
+}

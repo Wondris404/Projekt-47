@@ -482,6 +482,12 @@ func _build_play() -> void:
 	ship_b.tooltip_text = "Kúpa lodí od štátu alebo stavba v lodenici za 72 %. Vojenské lode sa predávajú štátom, civilné vozia náklad."
 	ship_b.pressed.connect(_toggle_ships)
 	zoom_row.add_child(ship_b)
+	var arms_b = Button.new()
+	arms_b.name = "ArmsButton"
+	arms_b.text = "Návrhy"
+	arms_b.tooltip_text = "Vlastná zbraň, tank alebo lietadlo, ak máš zbrojovku alebo letecký závod."
+	arms_b.pressed.connect(_toggle_arms)
+	zoom_row.add_child(arms_b)
 	var preview_3d_button = Button.new()
 	preview_3d_button.name = "Prototype3DButton"
 	preview_3d_button.text = "3D skúška"
@@ -2168,6 +2174,73 @@ func _fill_ships() -> void:
 	for s in ShipSystem.fleet():
 		lines.append(ShipSystem.info(str(s.get("id", ""))))
 	lab.text = "\n".join(lines) if lines.size() > 0 else "Žiadna loď. Prázdna flotila nemení dopravu."
+
+func _toggle_arms() -> void:
+	var p = get_node_or_null("ArmsPanel")
+	if p == null:
+		p = PanelContainer.new()
+		p.name = "ArmsPanel"
+		p.z_index = 46
+		p.position = Vector2(40, 120)
+		add_child(p)
+		var box = VBoxContainer.new()
+		box.name = "ArmsBox"
+		p.add_child(box)
+		var pick = OptionButton.new()
+		pick.name = "BpPick"
+		for id in ArmsSystem.catalog.keys():
+			var row: Dictionary = ArmsSystem.catalog[str(id)]
+			pick.add_item(str(row.get("name", id)))
+			pick.set_item_metadata(pick.item_count - 1, str(id))
+		box.add_child(pick)
+		var name_box = LineEdit.new()
+		name_box.name = "DesignName"
+		name_box.placeholder_text = "Vlastný názov"
+		box.add_child(name_box)
+		var buy = Button.new()
+		buy.text = "Kúpiť blueprint"
+		buy.pressed.connect(func():
+			var e = ArmsSystem.buy_bp(str(pick.get_item_metadata(pick.selected)))
+			_feedback(e if e != "" else "Blueprint kúpený.", e == "")
+			_fill_arms())
+		box.add_child(buy)
+		var make = Button.new()
+		make.text = "Navrhnúť"
+		make.pressed.connect(func():
+			var e2 = ArmsSystem.design(str(pick.get_item_metadata(pick.selected)), name_box.text, 100000.0, 50.0, 60.0)
+			_feedback(e2 if e2 != "" else "Návrh hotový.", e2 == "")
+			_fill_arms())
+		box.add_child(make)
+		var sell = Button.new()
+		sell.text = "Predať prvý návrh štátu"
+		sell.pressed.connect(func():
+			var rows = ArmsSystem.designs()
+			var e3 = "Žiadny návrh." if rows.is_empty() else ArmsSystem.sell(str(rows[0].get("id", "")))
+			_feedback(e3 if e3 != "" else "Predané.", e3 == "")
+			_fill_arms())
+		box.add_child(sell)
+		var lab = Label.new()
+		lab.name = "ArmsBody"
+		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lab.custom_minimum_size = Vector2(420, 0)
+		box.add_child(lab)
+		var close = Button.new()
+		close.text = "Zavrieť"
+		close.pressed.connect(func(): p.visible = false)
+		box.add_child(close)
+	p.visible = not p.visible
+	if p.visible:
+		_fill_arms()
+
+func _fill_arms() -> void:
+	var lab = get_node_or_null("ArmsPanel/ArmsBox/ArmsBody")
+	if lab == null:
+		return
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append("Zbrojný bonus ×%.3f, letecký ×%.3f (bez návrhov je 1)." % [ArmsSystem.arms_mult(), ArmsSystem.air_mult()])
+	for d in ArmsSystem.designs():
+		lines.append("%s (%s) kvalita %.0f" % [str(d.get("name", "")), str(d.get("kind", "")), float(d.get("quality", 0))])
+	lab.text = "\n".join(lines)
 
 func _refresh_label_minister(iso: String) -> void:
 	if minister_label:

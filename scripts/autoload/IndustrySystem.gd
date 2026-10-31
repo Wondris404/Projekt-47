@@ -982,7 +982,9 @@ func _yield_mult0(firm: Dictionary, recipe_id: String) -> float:
 	if recipe_id in ["chem_plant", "pharma_lab"]:
 		return float(m.get("yield_chem", 1.0))
 	if recipe_id == "arms_plant":
-		return float(m.get("yield_weapons", 1.0)) * float(m.get("yield_factory", 1.0))
+		return float(m.get("yield_weapons", 1.0)) * float(m.get("yield_factory", 1.0)) * (ArmsSystem.arms_mult() if has_node("/root/ArmsSystem") else 1.0)
+	if recipe_id == "aircraft_plant":
+		return float(m.get("yield_factory", 1.0)) * (ArmsSystem.air_mult() if has_node("/root/ArmsSystem") else 1.0)
 	# JUAN5: research tree - tazba, tovarne, spotrebne produkty
 	if recipe_id in ["oil_well", "coal_mine", "iron_mine", "copper_mine"]:
 		return float(m.get("yield_mining", 1.0))
