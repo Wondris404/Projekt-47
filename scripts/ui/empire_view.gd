@@ -232,7 +232,7 @@ func _fill_fin(cid: String) -> void:
 	var d = Empire.fin(cid)
 	var on = CheckBox.new()
 	on.name = "FinOn"
-	on.text = "Finančná divízia (pravá ruka) zapnutá" + ("" if not h.is_empty() else " – vyžaduje HQ")
+	on.text = "Finančná divízia zapnutá" + ("" if not h.is_empty() else " – vyžaduje HQ")
 	on.button_pressed = bool(d.on)
 	on.toggled.connect(func(v): d.on = v)
 	fin_box.add_child(on)
