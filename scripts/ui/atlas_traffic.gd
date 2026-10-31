@@ -40,11 +40,14 @@ func _process(delta: float) -> void:
 			if Transport.utilization(line) > 0.0 and not clipped(map._to_screen(Transport._pt(line.a)), map._to_screen(Transport._pt(line.b)), Rect2(Vector2.ZERO, map.size).grow(32)).is_empty():
 				live = true
 				break
+	if has_node("/root/ZombieSystem") and ZombieSystem.active() and ZombieSystem.z().get("flights", []).size() > 0:
+		live = true
 	if live: map.anim_time += dt
 	if live or _active: queue_redraw()
 	_active = live
 
 func _draw() -> void:
+	_draw_dlc_craft()
 	if not map.atlas or map.zoom < 4.0 or map.GFX.low(): return
 	var visible_lines = 0
 	for line in Transport.lines():
@@ -95,3 +98,50 @@ func _train(p: Vector2, direction: Vector2, normal: Vector2, load: float) -> voi
 			draw_line(start, start + direction * 7.0 * scale_px, Color("121920"), 3 * scale_px)
 			var cargo = wagon_load(load, car - 1, cars - 1)
 			if cargo > 0.0: draw_line(start, start + direction * 7.0 * scale_px * cargo, Color("C99060"), 3 * scale_px)
+
+func _draw_dlc_craft() -> void:
+	# Fáza C (lode) na main nie je. Stíhačky a helikoptéry DLC sa kreslia tu samy.
+	if not has_node("/root/ZombieSystem") or not ZombieSystem.active():
+		return
+	if map.GFX.low():
+		return
+	var flights: Array = ZombieSystem.z().get("flights", [])
+	var icon = map.zoom < 8.0
+	var n = 0
+	for fl in flights:
+		if n >= 24:
+			break
+		n += 1
+		if typeof(fl) != TYPE_DICTIONARY:
+			continue
+		var aa = fl.get("a", [0, 0])
+		var bb = fl.get("b", [0, 0])
+		var a = Vector2(float(aa[0]), float(aa[1]))
+		var b = Vector2(float(bb[0]), float(bb[1]))
+		var base_t = clampf(float(fl.get("t", 0.0)), 0.0, 1.0)
+		var wobble = fposmod(map.anim_time * 0.15, 1.0)
+		var pos: Vector2
+		var heading: Vector2
+		if bool(fl.get("patrol", false)):
+			var ang = (base_t + wobble) * TAU
+			pos = a + Vector2(cos(ang), sin(ang)) * 3.2
+			heading = Vector2(-sin(ang), cos(ang))
+		else:
+			var t = clampf(base_t + wobble * 0.08, 0.0, 1.0)
+			pos = a.lerp(b, t)
+			heading = (b - a).normalized() if a.distance_to(b) > 0.05 else Vector2.RIGHT
+		var sp = map._to_screen(pos)
+		if not Rect2(Vector2.ZERO, map.size).grow(48).has_point(sp):
+			continue
+		if bool(fl.get("crash", false)):
+			draw_circle(sp, 7.0, Color(1.0, 0.25, 0.1, 0.85))
+			continue
+		var col = Color(0.95, 0.86, 0.28) if str(fl.get("kind", "")) == "heli" else Color(0.45, 0.78, 1.0)
+		if icon:
+			draw_circle(sp, 3.5, col)
+		else:
+			var side = Vector2(-heading.y, heading.x)
+			var pts = PackedVector2Array([sp + heading * 8.0, sp - heading * 6.0 + side * 4.0, sp - heading * 4.0, sp - heading * 6.0 - side * 4.0])
+			draw_colored_polygon(pts, col)
+		if str(fl.get("kind", "")) == "fighter" and int(fl.get("flash", 0)) > 0 and int(Time.get_ticks_msec() / 180) % 2 == 0:
+			draw_circle(sp, 11.0, Color(1.0, 0.35, 0.15, 0.35))

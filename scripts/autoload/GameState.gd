@@ -37,6 +37,8 @@ var next_loan = 1
 var next_bank = 1
 var usd_per_eur = 1.08
 var ext: Dictionary = {}  # JUAN4: politika, focus tree, AI konkurenti (volitelny kluc savu "ext")
+var game_settings: Dictionary = {}  # volitelne: zombie_mode, zombie_start_money
+var zombie: Dictionary = {}  # Halloween DLC, stary save ma prazdny slovnik
 var state_revision := 0  # Runtime only: distinguish worlds even at the same saved day.
 
 const SAVE_VERSION = 3  # v2: dlhopisy z knihy maju kupon = statny vynos (v1 mohol mat kupon = cena/100); v3 (etapa 1): dref, cpi_hist/cpi_acc/cpi_n, prev_rate/upd_day povinne
@@ -56,7 +58,7 @@ const _SAVE_TYPES = {
 	"bond_orders": [TYPE_ARRAY], "stock_orders": [TYPE_ARRAY], "sites": [TYPE_ARRAY],
 	"news": [TYPE_ARRAY], "stories": [TYPE_ARRAY], "config": [TYPE_DICTIONARY],
 	"selected_iso": [TYPE_STRING], "next_firm": _NUM, "next_loan": _NUM, "next_bank": _NUM,
-	"usd_per_eur": _NUM, "ext": [TYPE_DICTIONARY], "rng_seed": [TYPE_STRING], "rng_state": [TYPE_STRING], "v": _NUM,
+	"usd_per_eur": _NUM, "ext": [TYPE_DICTIONARY], "game_settings": [TYPE_DICTIONARY], "zombie": [TYPE_DICTIONARY], "rng_seed": [TYPE_STRING], "rng_state": [TYPE_STRING], "v": _NUM,
 }
 const _SAVE_ARRAYS_OF_DICTS = ["firms", "banks", "wars", "bond_orders", "stock_orders", "sites"]
 
@@ -129,6 +131,11 @@ func new_game(cfg: Dictionary) -> void:
 	GeopoliticsSystem.setup()
 	AgentSystem.spawn_ai()
 	ext = {}
+	game_settings = {
+		"zombie_mode": bool(cfg.get("zombie_mode", false)),
+		"zombie_start_money": int(cfg.get("zombie_start_money", 0)),
+	}
+	zombie = {}
 	PoliticsSystem.setup()  # JUAN4
 	RivalSystem.setup()
 	_open_starter(float(cfg.get("loan", 250000.0)), int(cfg.get("years", 5)), home)
@@ -266,6 +273,8 @@ func _finish_day(month_before: int, year_before: int) -> void:
 	if day_index % 7 == 0:
 		StockMarket.weekly()  # JUAN5 #19
 		Empire.weekly()  # JUAN10 financna divizia
+	if has_node("/root/ZombieSystem"):
+		ZombieSystem.daily()
 	day_passed.emit(day_index)
 
 func _macro() -> void:
@@ -697,6 +706,8 @@ func to_dict() -> Dictionary:
 		"next_bank": next_bank,
 		"usd_per_eur": usd_per_eur,
 		"ext": ext.duplicate(true),
+		"game_settings": game_settings.duplicate(true),
+		"zombie": zombie.duplicate(true),
 	}
 
 # Overi savedata BEZ zmeny zivého stavu. Vrati "" ak je v poriadku, inak text chyby.
@@ -976,6 +987,18 @@ func from_dict(d: Dictionary) -> String:
 	next_bank = int(d.get("next_bank", 1))
 	usd_per_eur = float(d.get("usd_per_eur", DataLoader.usd_per_eur))
 	ext = d.get("ext", {})  # JUAN4: stary save nema -> prazdne, PoliticsSystem.ensure() doplni
+	if typeof(ext) != TYPE_DICTIONARY:
+		ext = {}
+	game_settings = d.get("game_settings", {})
+	if typeof(game_settings) != TYPE_DICTIONARY:
+		game_settings = {}
+	if not game_settings.has("zombie_mode"):
+		game_settings["zombie_mode"] = false
+	if not game_settings.has("zombie_start_money"):
+		game_settings["zombie_start_money"] = 0
+	zombie = d.get("zombie", {})
+	if typeof(zombie) != TYPE_DICTIONARY:
+		zombie = {}
 	if typeof(ext) != TYPE_DICTIONARY:
 		ext = {}
 	if usd_per_eur <= 0.1:

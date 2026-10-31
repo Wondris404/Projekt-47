@@ -46,6 +46,7 @@ func run() -> int:
 	load("res://tests/juan5.gd").new().run(self)  # JUAN5
 	load("res://tests/juan9.gd").new().run(self)  # JUAN9
 	load("res://tests/descriptions.gd").new().run(self)
+	load("res://tests/zombie_dlc.gd").new().run(self)
 	SaveSystem.cleanup_test_dir()
 	return 1 if fails > 0 else 0
 

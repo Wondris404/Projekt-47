@@ -1308,6 +1308,7 @@ func _on_menu_load(slot: int) -> void:
 	if main_menu:
 		main_menu.visible = false
 	_refresh_label()
+	_ensure_zombie_ui()
 	var loaded_message = "Hra načítaná zo záložnej kópie" if SaveSystem.last_load_from_backup else "Hra načítaná"
 	_feedback("%s (slot %d). Pauza – stlač 1." % [loaded_message, slot], true)
 
@@ -1374,6 +1375,8 @@ func _on_start(cfg: Dictionary = {}) -> void:
 		"difficulty": str(cfg.get("mode", "medium")),
 		"politics": from_menu,
 		"rivals": from_menu,
+		"zombie_mode": bool(cfg.get("zombie_mode", false)),
+		"zombie_start_money": int(cfg.get("zombie_start_money", 0)),
 	})
 	# JUAN4: postava + obtiaznost (vojny medzi AI statmi len v Medium/Hard/Realistic z menu)
 	GameState.config.wars = from_menu and bool(Difficulty.MODES[Difficulty.mode()].wars)
@@ -1381,7 +1384,10 @@ func _on_start(cfg: Dictionary = {}) -> void:
 	GameState.player.gender = str(cfg.get("gender", "muž"))
 	PoliticsSystem.apply_gender_start()
 	if from_menu:
-		GameState.player.cash = float(GameState.player.cash) + Difficulty.start_cash(Difficulty.mode())
+		if bool(cfg.get("zombie_mode", false)):
+			GameState.player.cash = float(cfg.get("zombie_start_money", Difficulty.start_cash(Difficulty.mode())))
+		else:
+			GameState.player.cash = float(GameState.player.cash) + Difficulty.start_cash(Difficulty.mode())
 		RivalSystem.setup()
 		GameState.config.progression = not bool(cfg.get("dev", false))  # JUAN5 #18: male -> stredne -> velke
 		StockMarket.setup()  # JUAN5 #19
@@ -1403,10 +1409,136 @@ func _on_start(cfg: Dictionary = {}) -> void:
 		_soak = true
 		print("P47_RUN start day %d" % GameState.day_index)
 	_refresh_label()
+	_ensure_zombie_ui()
 	if GameState.paused and not _soak:
 		_feedback("Hra je pozastavená – stlač 1×", true)
 	if from_menu and bool(cfg.get("tutorial", false)):
 		_begin_tutorial()
+
+func _ensure_zombie_ui() -> void:
+	var on = has_node("/root/ZombieSystem") and ZombieSystem.active()
+	var row = map_style_b.get_parent() if map_style_b else null
+	var layer = get_node_or_null("ZombieLayerButton")
+	var openb = get_node_or_null("ZombieOpenButton")
+	var panel = get_node_or_null("ZombiePanel")
+	if not on:
+		if map:
+			map.infection_mode = false
+			map.zone_draw = false
+		if layer:
+			layer.visible = false
+		if openb:
+			openb.visible = false
+		if panel:
+			panel.visible = false
+		return
+	if layer == null:
+		layer = Button.new()
+		layer.name = "ZombieLayerButton"
+		layer.text = "Nákaza"
+		layer.tooltip_text = "Vrstva nákazy. Zelená je čistá, žltá a oranžová rastie, tmavočervená je padnutý región. Funguje aj pri Mapa: Pixelová."
+		layer.pressed.connect(func():
+			if map == null:
+				return
+			map.infection_mode = not map.infection_mode
+			map.queue_redraw()
+			_feedback("Vrstva nákazy: %s." % ("zapnutá" if map.infection_mode else "vypnutá"), true))
+		if row:
+			row.add_child(layer)
+		else:
+			add_child(layer)
+	layer.visible = true
+	if openb == null:
+		openb = Button.new()
+		openb.name = "ZombieOpenButton"
+		openb.text = "Zombie"
+		openb.tooltip_text = "Ovládanie Halloween DLC: evakuácia, safe zóny, múr, politika, vakcína."
+		openb.pressed.connect(func():
+			var p = get_node_or_null("ZombiePanel")
+			if p == null:
+				return
+			_fill_zombie_panel()
+			p.visible = not p.visible)
+		if row:
+			row.add_child(openb)
+		else:
+			add_child(openb)
+	openb.visible = true
+	if panel == null:
+		_build_zombie_panel()
+
+func _build_zombie_panel() -> void:
+	var p = PanelContainer.new()
+	p.name = "ZombiePanel"
+	p.z_index = 45
+	p.position = Vector2(16, 96)
+	p.visible = false
+	add_child(p)
+	var sc = ScrollContainer.new()
+	sc.name = "ZombieScroll"
+	sc.custom_minimum_size = Vector2(420, 460)
+	p.add_child(sc)
+	var box = VBoxContainer.new()
+	box.name = "ZombieBox"
+	box.custom_minimum_size = Vector2(400, 0)
+	sc.add_child(box)
+	var title = Label.new()
+	title.name = "ZombieText"
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	title.custom_minimum_size = Vector2(390, 0)
+	box.add_child(title)
+	_zbtn(box, "Kresliť safe zónu", func():
+		if map == null:
+			return
+		map.zone_draw = not map.zone_draw
+		map.infection_mode = true
+		var why = ZombieSystem.can_zone(GameState.selected_iso)
+		_feedback(("Kreslenie zapnuté. " if map.zone_draw else "Kreslenie vypnuté. ") + why, why == "" or not map.zone_draw)
+		map.queue_redraw())
+	_zbtn(box, "Kúpiť helikoptéru", func(): _zact(ZombieSystem.buy_helicopter()))
+	_zbtn(box, "Kúpiť stíhačku", func(): _zact(ZombieSystem.buy_fighter()))
+	_zbtn(box, "Priradiť armádu a letectvo", func(): _zact(ZombieSystem.assign_army(GameState.selected_iso)))
+	for kind in ["nemocnica", "letisko", "karantena", "baraky", "pristav", "zeleznica", "mur"]:
+		var k = str(kind)
+		_zbtn(box, "Stavba v zóne: " + k, _zone_build.bind(k))
+	_zbtn(box, "Politika: vyhnanstvo helikoptérou", func(): _zact(ZombieSystem.set_policy(GameState.selected_iso, "exile")))
+	_zbtn(box, "Politika: zabiť nakazených", func(): _zact(ZombieSystem.set_policy(GameState.selected_iso, "kill")))
+	_zbtn(box, "Politika: nechať tak", func(): _zact(ZombieSystem.set_policy(GameState.selected_iso, "ignore")))
+	_zbtn(box, "Začať vakcínu", func(): _zact(ZombieSystem.start_vaccine(_zombie_lab())))
+	_zbtn(box, "Zrýchliť vakcínu", func(): _zact(ZombieSystem.boost_vaccine()))
+	_zbtn(box, "Nasadiť vakcínu", func(): _zact(ZombieSystem.deploy_vaccine()))
+	_zbtn(box, "Zavrieť", func(): p.visible = false)
+
+func _zone_build(k: String) -> void:
+	_zact(ZombieSystem.build_in_zone(k))
+
+func _zbtn(box: Node, text: String, cb: Callable) -> void:
+	var b = Button.new()
+	b.text = text
+	b.pressed.connect(cb)
+	box.add_child(b)
+
+func _zact(msg: String) -> void:
+	_feedback(msg if msg != "" else "Hotovo.", msg == "")
+	_fill_zombie_panel()
+	if map:
+		map.queue_redraw()
+
+func _fill_zombie_panel() -> void:
+	var lab = get_node_or_null("ZombiePanel/ZombieScroll/ZombieBox/ZombieText")
+	if lab:
+		lab.text = ZombieSystem.summary()
+
+func _zombie_lab() -> String:
+	if firm_detail_id != "":
+		return firm_detail_id
+	for f in GameState.player_firms():
+		if str(f.get("industry", "")) in ["pharma_lab", "hospital"]:
+			return str(f.get("id", ""))
+	for f in GameState.firms:
+		if str(f.get("industry", "")) == "pharma_lab":
+			return str(f.get("id", ""))
+	return _first_player_firm()
 
 func _feedback(text: String, ok: bool) -> void:
 	feedback_count += 1
@@ -2353,6 +2485,22 @@ func _fill_firm_detail() -> void:
 		_school_ui(firm)  # JUAN-P47
 	if str(firm.get("industry", "")) == "pmc_unit":
 		_pmc_ui(firm)  # JUAN-P47
+	if has_node("/root/ZombieSystem") and ZombieSystem.active():
+		var ev = Button.new()
+		ev.name = "ZombieEvac"
+		ev.text = "Označiť ako evakuačnú zónu"
+		ev.tooltip_text = "Prístav, letisko alebo tvoja dopravná budova. Helikoptéry odvážajú ľudí do safe zóny."
+		ev.pressed.connect(func():
+			var e = ZombieSystem.toggle_evac(firm_detail_id)
+			_feedback(e if e != "" else "Označené.", e == ""))
+		_detail_mgr.add_child(ev)
+		if str(firm.get("industry", "")) in ["pharma_lab", "hospital"]:
+			var vb = Button.new()
+			vb.text = "Skúmať vakcínu tu"
+			vb.pressed.connect(func():
+				var e2 = ZombieSystem.start_vaccine(firm_detail_id)
+				_feedback(e2 if e2 != "" else "Výskum beží.", e2 == ""))
+			_detail_mgr.add_child(vb)
 	_brand_ui(firm)  # JUAN21
 	var sb = Button.new()
 	sb.text = "Predať firmu"
@@ -3116,6 +3264,19 @@ func open_city_panel(iso: String, city_name: String) -> void:
 					_refresh_label())
 				dr.add_child(db)
 			break
+	if has_node("/root/ZombieSystem") and ZombieSystem.active():
+		city_label.text += "\n" + ZombieSystem.tip(iso, city_name)
+		var zold = cbox.find_child("ZombieCity", false, false)
+		if zold:
+			zold.free()
+		var zb = Button.new()
+		zb.name = "ZombieCity"
+		zb.text = "Toto mesto je safe zóna"
+		zb.tooltip_text = "Jedným klikom, ak mesto vlastníš firmou alebo celým štátom."
+		zb.pressed.connect(func():
+			var e = ZombieSystem.city_safe(iso, city_name)
+			_feedback(e if e != "" else "Mesto je safe zóna.", e == ""))
+		cbox.add_child(zb)
 	win_mgr.place("city")
 	city_panel.visible = true
 

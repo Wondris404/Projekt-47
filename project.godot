@@ -40,6 +40,7 @@ Empire="*res://scripts/autoload/Empire.gd"
 Transport="*res://scripts/autoload/Transport.gd"
 Brand="*res://scripts/autoload/Brand.gd"
 Society="*res://scripts/autoload/Society.gd"
+ZombieSystem="*res://scripts/autoload/ZombieSystem.gd"
 
 [display]
 

@@ -19,6 +19,10 @@ var country_list: ItemList
 var seed_box: SpinBox
 var tutorial_box: CheckBox
 var starter_box: CheckBox
+var dlc_box: CheckBox
+var dlc_pass: LineEdit
+var dlc_money: SpinBox
+var dlc_error: Label
 var load_note: Label
 var save_button: Button
 var load_buttons: Array = []
@@ -312,6 +316,30 @@ func _new_game() -> Control:
 	starter_box.text = "Štartovací balík (pôžička a kaviareň)"
 	starter_box.button_pressed = true
 	box.add_child(starter_box)
+	dlc_box = CheckBox.new()
+	dlc_box.text = "Halloween DLC: Zombie apokalypsa"
+	dlc_box.button_pressed = false
+	dlc_box.toggled.connect(_on_dlc_toggled)
+	box.add_child(dlc_box)
+	dlc_pass = LineEdit.new()
+	dlc_pass.placeholder_text = "Heslo DLC"
+	dlc_pass.secret = true
+	dlc_pass.visible = false
+	dlc_pass.text_submitted.connect(func(_t): _try_dlc_password())
+	box.add_child(dlc_pass)
+	dlc_error = Label.new()
+	dlc_error.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dlc_error.visible = false
+	box.add_child(dlc_error)
+	dlc_money = SpinBox.new()
+	dlc_money.min_value = 10000
+	dlc_money.max_value = 1000000000
+	dlc_money.step = 10000
+	dlc_money.value = 150000
+	dlc_money.prefix = "Štart "
+	dlc_money.tooltip_text = "Štartovné peniaze (€). Predvolená suma je ako v normálnej hre."
+	dlc_money.visible = false
+	box.add_child(dlc_money)
 	return box
 
 func _load_game() -> Control:
@@ -412,13 +440,49 @@ func _pick_mode(m: String) -> void:
 	mode_id = m
 	mode_label.text = Difficulty.describe(m) + ("\nTutoriál ťa prevedie 10 krokmi." if m == "tutorial" else "")
 	starter_box.button_pressed = m != "tutorial"
+	if dlc_money:
+		dlc_money.value = Difficulty.start_cash(m)
 	_show_only(new_panel)
+
+func _on_dlc_toggled(on: bool) -> void:
+	dlc_error.visible = false
+	dlc_error.text = ""
+	if not on:
+		dlc_pass.visible = false
+		dlc_money.visible = false
+		return
+	if ZombieSystem.unlocked():
+		dlc_pass.visible = false
+		dlc_money.visible = true
+	else:
+		dlc_pass.visible = true
+		dlc_pass.text = ""
+		dlc_money.visible = false
+
+func _try_dlc_password() -> bool:
+	if ZombieSystem.password_ok(dlc_pass.text):
+		ZombieSystem.set_unlocked()
+		dlc_pass.visible = false
+		dlc_money.visible = true
+		dlc_error.visible = false
+		return true
+	dlc_box.button_pressed = false
+	dlc_pass.visible = false
+	dlc_money.visible = false
+	dlc_error.visible = true
+	dlc_error.text = "Nesprávne heslo"
+	dlc_error.add_theme_color_override("font_color", Color(0.9, 0.2, 0.2))
+	return false
 
 func _emit_new() -> void:
 	var iso = "SK"
 	var selected = country_list.get_selected_items()
 	if selected.size() > 0:
 		iso = str(country_list.get_item_metadata(selected[0]))
+	var zombie_on = dlc_box != null and dlc_box.button_pressed
+	if zombie_on and not ZombieSystem.unlocked():
+		if not _try_dlc_password():
+			return
 	new_game_requested.emit({
 		"country": iso,
 		"year": 2024,
@@ -428,6 +492,8 @@ func _emit_new() -> void:
 		"mode": mode_id,
 		"nick": nick_box.text.strip_edges() if nick_box.text.strip_edges() != "" else "Hráč",
 		"gender": GENDERS[maxi(gender_box.selected, 0)],
+		"zombie_mode": zombie_on,
+		"zombie_start_money": int(dlc_money.value) if zombie_on and dlc_money else 0,
 	})
 
 func _emit_load(slot: int) -> void:

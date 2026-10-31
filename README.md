@@ -33,6 +33,14 @@ Pri výbere **viacerých** starých inštalácií ich skript automaticky nezluč
 
 Starý príkaz `tools/install-windows.ps1` zostáva zachovaný kvôli spätnej kompatibilite, ale vytvára vždy **novú** inštaláciu. Pre bežných hráčov používajte nový príkaz vyššie.
 
+## Halloween DLC
+
+Voliteľný režim zombie apokalypsy. V novej hre zaškrtni **Halloween DLC: Zombie apokalypsa**, zadaj heslo a nastav štartovacie peniaze. Heslo sa do hry neukladá v čitateľnej podobe, len ako overenie. Po prvom správnom hesle ostane odomknutie v `user://settings.cfg` (rovnaký Godot priečinok v editore aj v exportovanej Windows hre), takže ho netreba písať pri každej novej hre.
+
+Vypnuté DLC nič v bežnej hre nemení: žiadna nákaza, žiadne ceny, žiadny náhodný hod. Uložená pozícia bez týchto polí sa načíta ako bežná hra. Zapnutý režim má tlačidlá **Nákaza** a **Zombie**. Vrstva funguje aj pri **Mapa: Pixelová**.
+
+Noviny, lode a vlastné zbrane z iných vetiev v tejto verzii na `main` nie sú. DLC preto používa existujúce správy hry a vlastný pohyb helikoptér a stíhačiek. Modely zombie a lietadiel v `assets/models/` sú zelené a modré zástupné tvary, nie stiahnuté balíky tretích strán.
+
 > Ide o testovaciu verziu: pred aktualizáciou odporúčame zálohovať dôležité uložené pozície. Aktualizátor nemení ich súbory, no nový herný kód môže mať vlastné chyby alebo zmeny kompatibility save. PowerShell skripty spúšťajte len z dôveryhodného zdroja.
 
 ## Vývoj
