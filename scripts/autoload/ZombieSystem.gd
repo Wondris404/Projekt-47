@@ -517,8 +517,16 @@ func _flights(row: Dictionary) -> void:
 				var b = _zone_center(zone)
 				row.flights.append({"kind": "heli", "t": 0.0, "a": [a.x, a.y], "b": [b.x, b.y], "back": false, "flash": 0})
 	if not row.fighters.is_empty() and not zones.is_empty():
+		# Stíhačky štartujú z letiska a kryjú len safe zóny do 600 km.
 		var center = _zone_center(zones[0])
-		row.flights.append({"kind": "fighter", "t": 0.0, "a": [center.x, center.y], "b": [center.x + 4.0, center.y], "patrol": true, "flash": 1})
+		var base = airport_near(center)
+		if base.is_empty():
+			if not bool(row.get("no_base_news", false)):
+				row["no_base_news"] = true
+				_news("Stíhačky nemajú letisko do %.0f km od safe zóny." % num("fighter_radius_km", 600.0))
+		else:
+			var ap: Vector2 = base.pos
+			row.flights.append({"kind": "fighter", "t": 0.0, "a": [center.x, center.y], "b": [ap.x, ap.y], "patrol": true, "flash": 1})
 	var keep: Array = []
 	for fl in row.flights:
 		fl["t"] = float(fl.get("t", 0.0)) + 0.34
@@ -533,6 +541,32 @@ func _flights(row: Dictionary) -> void:
 		if float(fl.t) < 1.15:
 			keep.append(fl)
 	row["flights"] = keep.slice(-24)
+
+func km_between(a: Vector2, b: Vector2) -> float:
+	return a.distance_to(b) * 27.8
+
+func airport_near(center: Vector2) -> Dictionary:
+	var best := {}
+	var best_km = num("fighter_radius_km", 600.0)
+	for f in GameState.firms:
+		if str(f.get("owner", "")) != "player" or not str(f.get("industry", "")) in ["airport", "airline"]:
+			continue
+		var p = _firm_pos(f)
+		var km = km_between(p, center)
+		if km <= best_km:
+			best_km = km
+			best = {"id": str(f.get("id", "")), "pos": p, "km": km}
+	return best
+
+func _firm_pos(firm: Dictionary) -> Vector2:
+	var p = firm.get("pos", [0, 0])
+	if typeof(p) == TYPE_ARRAY and p.size() >= 2 and (float(p[0]) != 0.0 or float(p[1]) != 0.0):
+		return Vector2(float(p[0]), float(p[1]))
+	var city = TerrainSystem.city_named(str(firm.get("country", "")), str(firm.get("city", "")))
+	if not city.is_empty():
+		return city.pos
+	var cs = TerrainSystem.cities(str(firm.get("country", "")))
+	return cs[0].pos if not cs.is_empty() else Vector2.ZERO
 
 func _evac_pos(row: Dictionary) -> Vector2:
 	if row.evac.is_empty():
