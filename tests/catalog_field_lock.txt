@@ -1,0 +1,208 @@
+TECH	T01	Tranzistor (sériová výroba)	1951	IT		+5 % výskum	https://en.wikipedia.org/wiki/Transistor	OVERENE
+TECH	T02	Komerčný počítač (UNIVAC I)	1951	IT	T01	odomyká výpočtové uzly	https://en.wikipedia.org/wiki/UNIVAC_I	OVERENE
+TECH	T03	Termonukleárna zbraň	1952	VOJ		odomyká H-bombu, napätie +10	https://en.wikipedia.org/wiki/Ivy_Mike	OVERENE
+TECH	T04	Štruktúra DNA	1953	MED		odomyká genetiku	https://en.wikipedia.org/wiki/Molecular_Structure_of_Nucleic_Acids%3A_A_Structure_for_Deoxyribose_Nucleic_Acid	OVERENE
+TECH	T05	Jadrová elektráreň (Obninsk)	1954	ENE	T03	+energia, nový typ budovy	https://en.wikipedia.org/wiki/Obninsk_Nuclear_Power_Plant	OVERENE
+TECH	T06	Polio vakcína (Salk)	1955	MED	T04	+rast populácie	https://en.wikipedia.org/wiki/Polio_vaccine	OVERENE
+TECH	T07	Kontajnerová preprava	1956	DOP		−20 % náklady obchodu	https://en.wikipedia.org/wiki/Containerization	OVERENE
+TECH	T08	Prúdové dopravné lietadlo (Boeing 707)	1958	DOP		+turizmus, rýchly presun	https://en.wikipedia.org/wiki/Boeing_707	OVERENE
+TECH	T09	ICBM (R-7)	1957	VOJ	T03	jadrové odstrašenie	https://en.wikipedia.org/wiki/R-7_Semyorka	OVERENE
+TECH	T10	Umelá družica (Sputnik 1)	1957	VES	T09	prestíž +, odomyká vesmír	https://en.wikipedia.org/wiki/Sputnik_1	OVERENE
+TECH	T11	Integrovaný obvod	1958	IT	T01	+10 % výskum	https://en.wikipedia.org/wiki/Integrated_circuit	OVERENE
+TECH	T12	Jadrová ponorka (USS Nautilus, prvá plavba na jadrový pohon 17.1.1955)	1955	VOJ	T05	druhý úder	https://en.wikipedia.org/wiki/USS_Nautilus_%28SSN-571%29	OVERENE
+TECH	T13	Laser	1960	IT	T01	odomyká optiku	https://en.wikipedia.org/wiki/Laser	OVERENE
+TECH	T14	Pilotovaný let do vesmíru (Gagarin)	1961	VES	T10	prestíž ++	https://en.wikipedia.org/wiki/Yuri_Gagarin	OVERENE
+TECH	T15	Antikoncepčná pilulka (FDA)	1960	MED	T04	demografia, spoločnosť	https://en.wikipedia.org/wiki/Combined_oral_contraceptive_pill	OVERENE
+TECH	T16	Zelená revolúcia (vysokoúrodné odrody)	1965	MED		+40 % potraviny pre rozvojové krajiny	https://en.wikipedia.org/wiki/Green_Revolution	OVERENE
+TECH	T17	Komunikačná družica (Telstar/Syncom)	1962	VES	T10,T11	+obchod, propaganda	https://en.wikipedia.org/wiki/Telstar_1	OVERENE
+TECH	T18	Vysokorýchlostná železnica (Šinkansen)	1964	DOP		+produktivita	https://en.wikipedia.org/wiki/Shinkansen	OVERENE
+TECH	T19	Bankomat	1967	FIN	T11	+spotreba	https://en.wikipedia.org/wiki/ATM	OVERENE
+TECH	T20	Transplantácia srdca	1967	MED	T06	prestíž, zdravotníctvo	https://en.wikipedia.org/wiki/Heart_transplantation	OVERENE
+TECH	T21	Pristátie na Mesiaci (Apollo 11)	1969	VES	T14	prestíž +++, víťazstvo vo vesmírnych pretekoch	https://www.nasa.gov/mission/apollo-11/	OVERENE
+TECH	T22	ARPANET	1969	IT	T02	odomyká sieťové uzly	https://en.wikipedia.org/wiki/ARPANET	OVERENE
+TECH	T23	Mikroprocesor (Intel 4004)	1971	IT	T11	+15 % výskum	https://en.wikipedia.org/wiki/Intel_4004	OVERENE
+TECH	T24	Vesmírna stanica (Saľut 1)	1971	VES	T14	dlhodobé misie	https://en.wikipedia.org/wiki/Salyut_1	OVERENE
+TECH	T25	Elektronická burza (NASDAQ)	1971	FIN	T02	+kapitál	https://en.wikipedia.org/wiki/Nasdaq	OVERENE
+TECH	T26	Rekombinantná DNA	1973	MED	T04	odomyká biotech	https://en.wikipedia.org/wiki/Recombinant_DNA	OVERENE
+TECH	T27	Mobilný telefón (prototyp)	1973	IT	T11	– (prereq)	https://en.wikipedia.org/wiki/DynaTAC	OVERENE
+TECH	T28	Presne navádzané zbrane	1972	VOJ	T11,T13	+útok letectva	https://en.wikipedia.org/wiki/Guided_bomb	OVERENE
+TECH	T29	Osobný počítač (Apple II)	1977	IT	T23	+produktivita služieb	https://en.wikipedia.org/wiki/Apple_II	OVERENE
+TECH	T30	Optické vlákno (komerčné)	1977	IT	T13	+komunikácia	https://en.wikipedia.org/wiki/Optical_fiber	OVERENE
+TECH	T31	VHS – spotrebná elektronika	1976	EKO	T23	+spotrebiteľský priemysel	https://en.wikipedia.org/wiki/VHS	OVERENE
+TECH	T32	Priemyselný robot (Unimate v GM, 1961)	1961	EKO	T02	−pracovná sila v továrňach	https://en.wikipedia.org/wiki/Unimate	OVERENE
+TECH	T33	Stealth lietadlo (F-117)	1981	VOJ	T28	+prekvapenie	https://en.wikipedia.org/wiki/Lockheed_F-117_Nighthawk	OVERENE
+TECH	T34	Raketoplán	1981	VES	T21	lacnejší vynos (v hre)	https://www.nasa.gov/space-shuttle/	OVERENE
+TECH	T35	Bunkový mobil 1G (NTT Tokio)	1979	IT	T27	+ekonomika	https://en.wikipedia.org/wiki/1G	OVERENE
+TECH	T36	TCP/IP štandard	1983	IT	T22	odomyká internet	https://en.wikipedia.org/wiki/Internet_protocol_suite	OVERENE
+TECH	T37	GPS (plná prevádzka)	1995	VOJ	T17	+presnosť, civil. doprava	https://en.wikipedia.org/wiki/Global_Positioning_System	OVERENE
+TECH	T38	PCR	1983	MED	T26	+diagnostika	https://en.wikipedia.org/wiki/Polymerase_chain_reaction	OVERENE
+TECH	T39	Dlhodobá stanica (Mir)	1986	VES	T24	–	https://en.wikipedia.org/wiki/Mir	OVERENE
+TECH	T40	Vesmírny teleskop Hubble	1990	VES	T34	+výskum	https://science.nasa.gov/mission/hubble/	OVERENE
+TECH	T41	World Wide Web	1991	IT	T36	+20 % služby	https://en.wikipedia.org/wiki/World_Wide_Web	OVERENE
+TECH	T42	GSM 2G	1991	IT	T35	+ekonomika	https://en.wikipedia.org/wiki/GSM	OVERENE
+TECH	T43	Lítium-iónová batéria (komerčná)	1991	ENE		odomyká elektromobilitu	https://en.wikipedia.org/wiki/Lithium-ion_battery	OVERENE
+TECH	T44	Eurotunel	1994	DOP	T18	+obchod UK–EU	https://en.wikipedia.org/wiki/Channel_Tunnel	OVERENE
+TECH	T45	Klonovanie (ovca Dolly)	1996	MED	T26	etické napätie	https://en.wikipedia.org/wiki/Dolly_%28sheep%29	OVERENE
+TECH	T46	GMO plodiny (Flavr Savr, prvá komerčná)	1994	MED	T26	+potraviny, −stabilita EU	https://en.wikipedia.org/wiki/Flavr_Savr	OVERENE
+TECH	T47	Bojové drony (Predator)	1995	VOJ	T37	odomyká drony	https://en.wikipedia.org/wiki/General_Atomics_MQ-1_Predator	OVERENE
+TECH	T48	ISS (prvý modul)	1998	VES	T39	medzinárodná spolupráca	https://www.nasa.gov/international-space-station/	OVERENE
+TECH	T49	Hybridné auto (Prius)	1997	DOP	T43	−spotreba ropy	https://en.wikipedia.org/wiki/Toyota_Prius	OVERENE
+TECH	T50	Euro (bezhotovostne 1999, hotovosť 2002)	1999	FIN		menová únia EU	https://www.ecb.europa.eu/euro/intro/html/index.en.html	OVERENE
+TECH	T51	Ľudský genóm (dokončený)	2003	MED	T38	odomyká personalizovanú medicínu	https://www.genome.gov/human-genome-project	OVERENE
+TECH	T52	3G mobilný internet	2001	IT	T42	+služby	https://en.wikipedia.org/wiki/3G	OVERENE
+TECH	T53	Smartfón (iPhone)	2007	IT	T52,T43	+spotreba, sociálne siete	https://en.wikipedia.org/wiki/IPhone_%281st_generation%29	OVERENE
+TECH	T54	Frakovanie břidlíc (boom)	2008	ENE		ropa/plyn USA + (rast ťažby po 2008 = „shale revolution“)	https://en.wikipedia.org/wiki/Shale_gas_in_the_United_States	OVERENE
+TECH	T55	Bitcoin	2009	FIN	T41	kryptomena, volatilita	https://en.wikipedia.org/wiki/Bitcoin	OVERENE
+TECH	T56	Cloud computing (AWS)	2006	IT	T41	+IT ekonomika	https://en.wikipedia.org/wiki/Amazon_Web_Services	OVERENE
+TECH	T57	Lacná fotovoltika / vietor vo veľkom (NEOVERENE ako presný rok – trend)	2010	ENE		+zelená energia	https://www.iea.org/energy-system/renewables/solar-pv	OVERENE
+TECH	T58	Hlboké učenie (AlexNet)	2012	IT	T56	+výskum AI	https://en.wikipedia.org/wiki/AlexNet	OVERENE
+TECH	T59	CRISPR-Cas9	2012	MED	T51	+medicína, +poľnohospodárstvo	https://en.wikipedia.org/wiki/CRISPR_gene_editing	OVERENE
+TECH	T60	Masový elektromobil (Model S)	2012	DOP	T43	−ropa	https://en.wikipedia.org/wiki/Tesla_Model_S	OVERENE
+TECH	T61	Opakovane použiteľná raketa (Falcon 9 pristátie)	2015	VES	T34	−90 % cena vynosu (v hre)	https://en.wikipedia.org/wiki/Falcon_9_flight_20	OVERENE
+TECH	T62	4G LTE	2009	IT	T52	+služby	https://en.wikipedia.org/wiki/LTE_%28telecommunication%29	OVERENE
+TECH	T63	Hypersonické zbrane (Avangard v službe)	2019	VOJ	T09	obchádza PVO	https://en.wikipedia.org/wiki/Avangard_%28hypersonic_glide_vehicle%29	NEOVERENE: Wikipédia uvádza oznámenie 2018, rok nasadenia 2019 nepotvrdený
+TECH	T64	5G	2019	IT	T62	+IoT	https://en.wikipedia.org/wiki/5G	OVERENE
+TECH	T65	mRNA vakcína	2020	MED	T59	rýchla reakcia na pandémie	https://en.wikipedia.org/wiki/MRNA_vaccine	OVERENE
+TECH	T66	Megakonštelácie (Starlink)	2019	VES	T61	globálny internet, vojenská komunikácia	https://en.wikipedia.org/wiki/Starlink	OVERENE
+TECH	T67	Veľké jazykové modely (ChatGPT)	2022	IT	T58	+produktivita, dezinformácie	https://en.wikipedia.org/wiki/ChatGPT	OVERENE
+TECH	T68	Lacné FPV drony vo vojne (Ukrajina)	2023	VOJ	T47	+útok pechoty	https://en.wikipedia.org/wiki/Drone_warfare	NEOVERENE: rok masového nasadenia FPV nemá jednoznačný zdroj
+TECH	T69	Fúzne zapálenie (NIF, zisk)	2022	ENE	T13	odomyká fúzne uzly po 2026	https://www.llnl.gov/article/49306/lawrence-livermore-national-laboratory-achieves-fusion-ignition	OVERENE
+TECH	T70	Webbov teleskop (JWST)	2021	VES	T40	+výskum	https://science.nasa.gov/mission/webb/	OVERENE
+FOCUS	US1	Marshallov plán	1948				https://en.wikipedia.org/wiki/Marshall_Plan	OVERENE
+FOCUS	US2	Kórejská vojna	1950	US1	US2A		https://en.wikipedia.org/wiki/Korean_War	OVERENE
+FOCUS	US2A	Izolacionizmus	1950	US1	US2		https://en.wikipedia.org/wiki/Korean_War	OVERENE
+FOCUS	US3	Interstate Highway Act	1956				https://en.wikipedia.org/wiki/Federal-Aid_Highway_Act_of_1956	OVERENE
+FOCUS	US4	NASA	1958	US3			https://www.nasa.gov/history/	OVERENE
+FOCUS	US5	Kubánska kríza – blokáda	1962	US4	US5A		https://en.wikipedia.org/wiki/Cuban_Missile_Crisis	OVERENE
+FOCUS	US5A	Letecký úder	1962	US4	US5		https://en.wikipedia.org/wiki/Cuban_Missile_Crisis	OVERENE
+FOCUS	US6	Civil Rights Act	1964				https://en.wikipedia.org/wiki/Civil_Rights_Act_of_1964	OVERENE
+FOCUS	US7	Vietnam – eskalácia	1965	US2	US7A		https://en.wikipedia.org/wiki/Vietnam_War	OVERENE
+FOCUS	US7A	Neintervencia	1965	US2	US7		https://en.wikipedia.org/wiki/Vietnam_War	OVERENE
+FOCUS	US8	Koniec zlatého štandardu	1971	US7			https://en.wikipedia.org/wiki/Nixon_shock	OVERENE
+FOCUS	US9	Otvorenie Číne (Nixon)	1972	US8			https://en.wikipedia.org/wiki/1972_visit_by_Richard_Nixon_to_China	OVERENE
+FOCUS	US10	Reaganomika + SDI	1981/1983	US9	US10A		https://en.wikipedia.org/wiki/Strategic_Defense_Initiative	OVERENE
+FOCUS	US10A	Détente pokračuje	1981	US9	US10		https://en.wikipedia.org/wiki/Strategic_Defense_Initiative	OVERENE
+FOCUS	US11	Vojna proti terorizmu	2001	US10			https://en.wikipedia.org/wiki/War_on_terror	OVERENE
+FOCUS	US12	CHIPS and Science Act	2022	US11			https://en.wikipedia.org/wiki/CHIPS_and_Science_Act	OVERENE
+FOCUS	SU1	Smrť Stalina / kolektívne vedenie	1953				https://en.wikipedia.org/wiki/Death_and_state_funeral_of_Joseph_Stalin	OVERENE
+FOCUS	SU2	Destalinizácia	1956	SU1	SU2A		https://en.wikipedia.org/wiki/On_the_Cult_of_Personality_and_Its_Consequences	OVERENE
+FOCUS	SU2A	Stalinistická línia	1956	SU1	SU2		https://en.wikipedia.org/wiki/On_the_Cult_of_Personality_and_Its_Consequences	OVERENE
+FOCUS	SU3	Potlačenie Maďarska	1956	SU2			https://en.wikipedia.org/wiki/Hungarian_Revolution_of_1956	OVERENE
+FOCUS	SU4	Sputnik / vesmírny program	1957	SU2			https://www.nasa.gov/history/sputnik/	OVERENE
+FOCUS	SU5	Čínsko-sovietska roztržka	1960	SU2	SU5A		https://en.wikipedia.org/wiki/Sino-Soviet_split	OVERENE
+FOCUS	SU5A	Zachovať alianciu	1960	SU2	SU5		https://en.wikipedia.org/wiki/Sino-Soviet_split	OVERENE
+FOCUS	SU6	Brežnevova doktrína / invázia do ČSSR	1968	SU3			https://en.wikipedia.org/wiki/Warsaw_Pact_invasion_of_Czechoslovakia	OVERENE
+FOCUS	SU7	Afganistan	1979	SU6	SU7A		https://en.wikipedia.org/wiki/Soviet%E2%80%93Afghan_War	OVERENE
+FOCUS	SU7A	Neintervencia	1979	SU6	SU7		https://en.wikipedia.org/wiki/Soviet%E2%80%93Afghan_War	OVERENE
+FOCUS	SU8	Perestrojka/glasnosť	1985–86	SU7	SU8A		https://en.wikipedia.org/wiki/Perestroika	OVERENE
+FOCUS	SU8A	Tvrdá línia	1985	SU7	SU8		https://en.wikipedia.org/wiki/Perestroika	OVERENE
+FOCUS	SU9	Rozpad ZSSR	1991	SU8			https://en.wikipedia.org/wiki/Dissolution_of_the_Soviet_Union	OVERENE
+FOCUS	SU10	Šoková terapia / privatizácia	1992	SU9			https://en.wikipedia.org/wiki/Shock_therapy_%28economics%29	OVERENE
+FOCUS	SU11	Anexia Krymu	2014	SU10			https://en.wikipedia.org/wiki/2014_Russian_annexation_of_Crimea	OVERENE
+FOCUS	SU12	Invázia na Ukrajinu	2022	SU11	SU12A		https://en.wikipedia.org/wiki/Russo-Ukrainian_war_%282022%E2%80%93present%29	OVERENE
+FOCUS	SU12A	Zmrazený konflikt	2022	SU11	SU12		https://en.wikipedia.org/wiki/Russo-Ukrainian_war_%282022%E2%80%93present%29	OVERENE
+FOCUS	CN1	Vstup do Kórejskej vojny	1950				https://en.wikipedia.org/wiki/Korean_War	OVERENE
+FOCUS	CN2	Prvá päťročnica	1953	CN1			https://en.wikipedia.org/wiki/1st_Five-Year_Plan_%28China%29	OVERENE
+FOCUS	CN3	Veľký skok vpred	1958	CN2	CN3A		https://en.wikipedia.org/wiki/Great_Leap_Forward	OVERENE
+FOCUS	CN3A	Pokračovať sovietsky model	1958	CN2	CN3		https://en.wikipedia.org/wiki/Great_Leap_Forward	OVERENE
+FOCUS	CN4	Jadrová zbraň	1964	CN2			https://en.wikipedia.org/wiki/Project_596	OVERENE
+FOCUS	CN5	Kultúrna revolúcia	1966	CN3			https://en.wikipedia.org/wiki/Cultural_Revolution	OVERENE
+FOCUS	CN6	Kreslo v OSN	1971	CN5			https://en.wikipedia.org/wiki/United_Nations_General_Assembly_Resolution_2758_%28XXVI%29	OVERENE
+FOCUS	CN7	Reforma a otvorenie	1978	CN6	CN7A		https://en.wikipedia.org/wiki/Reform_and_opening_up	OVERENE
+FOCUS	CN7A	Maoistická línia	1978	CN6	CN7		https://en.wikipedia.org/wiki/Reform_and_opening_up	OVERENE
+FOCUS	CN8	Tchien-an-men	1989	CN7	CN8A		https://en.wikipedia.org/wiki/1989_Tiananmen_Square_protests_and_massacre	OVERENE
+FOCUS	CN8A	Politická liberalizácia	1989	CN7	CN8		https://en.wikipedia.org/wiki/1989_Tiananmen_Square_protests_and_massacre	OVERENE
+FOCUS	CN9	Návrat Hongkongu	1997	CN7			https://en.wikipedia.org/wiki/Handover_of_Hong_Kong	OVERENE
+FOCUS	CN10	Vstup do WTO	2001	CN9			https://www.wto.org/english/thewto_e/countries_e/china_e.htm	OVERENE
+FOCUS	CN11	Iniciatíva Pás a cesta	2013	CN10			https://en.wikipedia.org/wiki/Belt_and_Road_Initiative	OVERENE
+FOCUS	UK1	Jadrová zbraň	1952				https://en.wikipedia.org/wiki/Operation_Hurricane	OVERENE
+FOCUS	UK2	Suezská kríza	1956	UK1	UK2A		https://en.wikipedia.org/wiki/Suez_Crisis	OVERENE
+FOCUS	UK2A	Nezasahovať	1956	UK1	UK2		https://en.wikipedia.org/wiki/Suez_Crisis	OVERENE
+FOCUS	UK3	Vietor zmien – dekolonizácia Afriky	1960	UK2			https://en.wikipedia.org/wiki/Wind_of_Change_%28speech%29	OVERENE
+FOCUS	UK4	Vstup do EEC	1973	UK3	UK4A		https://en.wikipedia.org/wiki/1973_enlargement_of_the_European_Communities	OVERENE
+FOCUS	UK4A	EFTA navždy	1973	UK3	UK4		https://en.wikipedia.org/wiki/1973_enlargement_of_the_European_Communities	OVERENE
+FOCUS	UK5	Ropa v Severnom mori	1975				https://en.wikipedia.org/wiki/North_Sea_oil	OVERENE
+FOCUS	UK6	Thatcherizmus	1979	UK4			https://en.wikipedia.org/wiki/Thatcherism	OVERENE
+FOCUS	UK7	Falklandy	1982	UK6			https://en.wikipedia.org/wiki/Falklands_War	OVERENE
+FOCUS	UK8	Big Bang deregulácia City	1986	UK6			https://en.wikipedia.org/wiki/Big_Bang_%28financial_markets%29	OVERENE
+FOCUS	UK9	Dohoda Veľkého piatku	1998				https://en.wikipedia.org/wiki/Good_Friday_Agreement	OVERENE
+FOCUS	UK10	Brexit (referendum 2016, odchod 2020)	2016	UK4	UK10A		https://en.wikipedia.org/wiki/Brexit	OVERENE
+FOCUS	UK10A	Zostať v EÚ	2016	UK4	UK10		https://en.wikipedia.org/wiki/Brexit	OVERENE
+FOCUS	FR1	ESUO/Schumanov plán	1951				https://en.wikipedia.org/wiki/European_Coal_and_Steel_Community	OVERENE
+FOCUS	FR2	Dien Bien Phu – odchod z Indočíny	1954				https://en.wikipedia.org/wiki/Battle_of_Dien_Bien_Phu	OVERENE
+FOCUS	FR3	Alžírska vojna	1954–62	FR2	FR3A		https://en.wikipedia.org/wiki/Algerian_War	OVERENE
+FOCUS	FR3A	Skorá nezávislosť	1954	FR2	FR3		https://en.wikipedia.org/wiki/Algerian_War	OVERENE
+FOCUS	FR4	Piata republika	1958	FR3			https://en.wikipedia.org/wiki/French_Fifth_Republic	OVERENE
+FOCUS	FR5	Force de frappe	1960	FR4			https://en.wikipedia.org/wiki/Gerboise_Bleue_%28nuclear_test%29	OVERENE
+FOCUS	FR6	Odchod z vojenskej štruktúry NATO	1966	FR5	FR6A		https://www.nato.int/cps/en/natohq/declassified_139272.htm	OVERENE
+FOCUS	FR6A	Zostať	1966	FR5	FR6		https://www.nato.int/cps/en/natohq/declassified_139272.htm	OVERENE
+FOCUS	FR7	Máj 1968	1968	FR4			https://en.wikipedia.org/wiki/May_68	OVERENE
+FOCUS	FR8	Messmerov jadrový plán	1974	FR5			https://en.wikipedia.org/wiki/Nuclear_power_in_France	OVERENE
+FOCUS	FR9	Maastricht / euro	1992	FR1			https://en.wikipedia.org/wiki/Maastricht_Treaty	OVERENE
+FOCUS	FR10	Návrat do velenia NATO	2009	FR6			https://www.nato.int/cps/en/natohq/topics_52044.htm	OVERENE
+FOCUS	DE1	Wirtschaftswunder / sociálne trhové hospodárstvo	1950s				https://en.wikipedia.org/wiki/Wirtschaftswunder	OVERENE
+FOCUS	DE2	Vstup do NATO	1955	DE1	DE2A		https://en.wikipedia.org/wiki/Germany%E2%80%93NATO_relations	OVERENE
+FOCUS	DE2A	Neutrálne zjednotené Nemecko (Stalinova nóta 1952)	1952	DE1	DE2		https://en.wikipedia.org/wiki/Germany%E2%80%93NATO_relations	OVERENE
+FOCUS	DE3	Rímske zmluvy – EEC	1957	DE1			https://en.wikipedia.org/wiki/Treaty_of_Rome	OVERENE
+FOCUS	DE4	Berlínsky múr – reakcia	1961	DE2			https://en.wikipedia.org/wiki/Berlin_Wall	OVERENE
+FOCUS	DE5	Elyzejská zmluva	1963	DE3			https://en.wikipedia.org/wiki/%C3%89lys%C3%A9e_Treaty	OVERENE
+FOCUS	DE6	Ostpolitik	1969–72	DE4	DE6A		https://en.wikipedia.org/wiki/Ostpolitik	OVERENE
+FOCUS	DE6A	Hallsteinova doktrína	1969	DE4	DE6		https://en.wikipedia.org/wiki/Ostpolitik	OVERENE
+FOCUS	DE7	Znovuzjednotenie	1990	DE6			https://en.wikipedia.org/wiki/German_reunification	OVERENE
+FOCUS	DE8	Agenda 2010	2003	DE7			https://en.wikipedia.org/wiki/Agenda_2010	OVERENE
+FOCUS	DE9	Energiewende / odchod z jadra	2011	DE8	DE9A		https://en.wikipedia.org/wiki/Nuclear_power_phase-out	OVERENE
+FOCUS	DE9A	Jadro zostáva	2011	DE8	DE9		https://en.wikipedia.org/wiki/Nuclear_power_phase-out	OVERENE
+FOCUS	DE10	Zeitenwende – fond 100 mld. €	2022	DE9			https://en.wikipedia.org/wiki/Zeitenwende_speech	OVERENE
+FOCUS	JP1	Sanfranciská mierová zmluva	1951				https://en.wikipedia.org/wiki/Treaty_of_San_Francisco	OVERENE
+FOCUS	JP2	Bezpečnostná zmluva s USA	1951/1960	JP1	JP2A		https://en.wikipedia.org/wiki/Security_Treaty_between_the_United_States_and_Japan	OVERENE
+FOCUS	JP2A	Neutralita	1951	JP1	JP2		https://en.wikipedia.org/wiki/Security_Treaty_between_the_United_States_and_Japan	OVERENE
+FOCUS	JP3	Systém 1955 (dominancia LDP)	1955	JP2			https://en.wikipedia.org/wiki/1955_System	OVERENE
+FOCUS	JP4	Plán zdvojnásobenia príjmov	1960	JP3			https://en.wikipedia.org/wiki/Income_Doubling_Plan	OVERENE
+FOCUS	JP5	Olympiáda Tokio + Šinkansen	1964	JP4			https://en.wikipedia.org/wiki/Shinkansen	OVERENE
+FOCUS	JP6	Plazzská dohoda	1985	JP5			https://en.wikipedia.org/wiki/Plaza_Accord	OVERENE
+FOCUS	JP7	Prasknutie bubliny / stratená dekáda	1991	JP6	JP7A		https://en.wikipedia.org/wiki/Lost_Decades	OVERENE
+FOCUS	JP7A	Mäkké pristátie	1991	JP6	JP7		https://en.wikipedia.org/wiki/Lost_Decades	OVERENE
+FOCUS	JP8	Fukušima	2011				https://en.wikipedia.org/wiki/Fukushima_nuclear_accident	OVERENE
+FOCUS	JP9	Abenomika	2012	JP7			https://en.wikipedia.org/wiki/Abenomics	OVERENE
+FOCUS	IN1	Ústava / republika	1950				https://en.wikipedia.org/wiki/Constitution_of_India	OVERENE
+FOCUS	IN2	Prvá päťročnica	1951	IN1			https://en.wikipedia.org/wiki/Five-Year_Plans_of_India	OVERENE
+FOCUS	IN3	Hnutie nezúčastnených	1961	IN1	IN3A		https://en.wikipedia.org/wiki/Non-Aligned_Movement	OVERENE
+FOCUS	IN3A	Spojenectvo s blokom	1961	IN1	IN3		https://en.wikipedia.org/wiki/Non-Aligned_Movement	OVERENE
+FOCUS	IN4	Vojna s Čínou	1962	IN3			https://en.wikipedia.org/wiki/Sino-Indian_War	OVERENE
+FOCUS	IN5	Zelená revolúcia	1965–	IN2			https://en.wikipedia.org/wiki/Green_Revolution_in_India	OVERENE
+FOCUS	IN6	Vojna 1971 / Bangladéš	1971	IN4			https://en.wikipedia.org/wiki/India%E2%80%93Pakistan_war_of_1971	OVERENE
+FOCUS	IN7	Jadrový test Smiling Buddha	1974	IN6			https://en.wikipedia.org/wiki/Smiling_Buddha	OVERENE
+FOCUS	IN8	Výnimočný stav	1975	IN7	IN8A		https://en.wikipedia.org/wiki/The_Emergency_%28India%29	OVERENE
+FOCUS	IN8A	Bez núdzového stavu	1975	IN7	IN8		https://en.wikipedia.org/wiki/The_Emergency_%28India%29	OVERENE
+FOCUS	IN9	Liberalizácia	1991	IN8			https://en.wikipedia.org/wiki/Economic_liberalisation_in_India	OVERENE
+FOCUS	IN10	Chandrayaan-3 pristátie	2023	IN9			https://www.isro.gov.in/Chandrayaan3_Details.html	OVERENE
+FOCUS	G1	Dekolonizácia – nezávislosť	1947–1975		G1A,G1B		https://en.wikipedia.org/wiki/Decolonization	OVERENE
+FOCUS	G1A	Pokojný prechod	1947–1975		G1,G1B		https://en.wikipedia.org/wiki/Decolonization	OVERENE
+FOCUS	G1B	Oslobodzovacia vojna	1947–1975		G1,G1A		https://en.wikipedia.org/wiki/Decolonization	OVERENE
+FOCUS	G2	Vstup do NATO	1949–		G3,G4		https://www.nato.int/cps/en/natohq/topics_52044.htm	OVERENE
+FOCUS	G3	Varšavská zmluva	1955		G2,G4		https://en.wikipedia.org/wiki/Warsaw_Pact	OVERENE
+FOCUS	G4	Hnutie nezúčastnených	1961	G1	G2,G3		https://en.wikipedia.org/wiki/Non-Aligned_Movement	OVERENE
+FOCUS	G5	EEC (1957) → EÚ (Maastricht 1992)	1957–1992	G2			https://en.wikipedia.org/wiki/European_Union	OVERENE
+FOCUS	G6	Koniec Bretton Woods – reakcia	1971			plávajúci kurz,fixácia	https://en.wikipedia.org/wiki/Nixon_shock	OVERENE
+FOCUS	G7	Ropný šok 1973 (embargo OAPEC)	1973	G6		šetrenie,jadro,nové náleziská	https://en.wikipedia.org/wiki/1973_oil_crisis	OVERENE
+FOCUS	G8	Ropný šok 1979 (Irán)	1979	G7			https://en.wikipedia.org/wiki/1979_oil_crisis	OVERENE
+FOCUS	G9	Dlhová kríza / štrukturálne programy MMF	1982–	G8			https://en.wikipedia.org/wiki/Latin_American_debt_crisis	OVERENE
+FOCUS	G10	Pád komunizmu v strednej Európe	1989	G3			https://en.wikipedia.org/wiki/Revolutions_of_1989	OVERENE
+FOCUS	G11	Rozpad ZSSR – nové štáty	1991	G10			https://en.wikipedia.org/wiki/Dissolution_of_the_Soviet_Union	OVERENE
+FOCUS	G12	Vstup do WTO	1995–	G9			https://en.wikipedia.org/wiki/World_Trade_Organization	OVERENE
+FOCUS	G13	Finančná kríza	2008	G12			https://en.wikipedia.org/wiki/2008_financial_crisis	OVERENE
+FOCUS	G14	Parížska dohoda	2015	G12			https://unfccc.int/process-and-meetings/the-paris-agreement	OVERENE
+FOCUS	TRHOVA	Trhová reforma	1978	G10			https://en.wikipedia.org/wiki/Reform_and_opening_up	OVERENE
+FORECAST	F1	ITER – začiatok výskumnej prevádzky	ODHAD	ODHAD 2034, plná magnetická energia 2036, deutérium-trícium 2039	https://www.iter.org/few-lines (nová baseline 2024)	Rada ITER schválila celkový prístup v 11/2024; harmonogram sa v minulosti posúval	OVERENE
+FORECAST	F2	Fúzna demo elektráreň (DEMO, komerčná fúzia)	ODHAD	ODHAD: EU DEMO prevádzka 2051 (EUROfusion), UK STEP 2040	https://en.wikipedia.org/wiki/DEMOnstration_Power_Plant (IAEA World Fusion Outlook)	súkromné firmy sľubujú 2030s – NEOVERENE	OVERENE
+FORECAST	F3	AI na úrovni človeka (HLMI)	ODHAD	ODHAD 50 % pravdepodobnosť do 2047	Grace et al. 2024, „Thousands of AI Authors on the Future of AI“ https://arxiv.org/abs/2401.02843	prieskum medzi výskumníkmi, nie predpoveď faktu	OVERENE
+FORECAST	F4	AGI podľa Metaculus	ODHAD	ODHAD 8. 11. 2030 (medián, interval 26. 3. 2028 – 10/2036), odčítané 24. 10. 2026, ~1,9k predpovedí	https://www.metaculus.com/questions/5121/date-of-artificial-general-intelligence/	hodnotu pred použitím odčítať aktuálne	OVERENE
+FORECAST	F5	Kvantový počítač odolný voči chybám	ODHAD	ODHAD 2029 (IBM Starling, ~200 logických qubitov)	https://www.ibm.com/quantum/technology	plán výrobcu, nie nezávislé overenie	OVERENE
+FORECAST	F6	Kvantové prelomenie RSA-2048	ODHAD	ODHAD 2030s+, vysoká neistota	Wikipédia: Post-quantum cryptography (GRI report nedostupný) https://en.wikipedia.org/wiki/Post-quantum_cryptography	prieskum expertov	NEOVERENE: zdroj nedostupný (globalriskinst.com neodpovedá)
+FORECAST	F7	Návrat človeka na Mesiac (Artemis)	ODHAD	Artemis II prebehla 1.–10. 4. 2026 (fakt); Artemis III = test v LEO, ODHAD leto 2027; prvé pristátie Artemis IV ODHAD 2028 (NASA 23. 10. 2026)	https://www.nasa.gov/missions/artemis/nasas-artemis-iii-mission-to-test-future-moon-lander-operations/	aktuálny termín pred použitím overiť	OVERENE
+FORECAST	F8	Koniec ISS, komerčné stanice	ODHAD	ODHAD 2030 (štart deorbitačného vozidla)	https://en.wikipedia.org/wiki/International_Space_Station		OVERENE
+FORECAST	F9	Pilotovaný let na Mars	ODHAD	ODHAD 2040s, NEOVERENE	NASA Moon to Mars https://www.nasa.gov/moontomars/	bez pevného termínu	NEOVERENE: NASA neuvádza pevný rok
+FORECAST	F10	Otepľovanie 1,5 °C prekročené	ODHAD	ODHAD začiatok 2030s (v krátkodobom horizonte, vo všetkých scenároch pravdepodobne do 2021–2040)	IPCC AR6 SYR https://www.ipcc.ch/report/ar6/syr/		OVERENE
+FORECAST	F11	Vrchol dopytu po fosílnych palivách	ODHAD	ODHAD ropa vrchol ~2030 na 102 mb/d (STEPS, WEO 2025); v CPS rastie do 113 mb/d v 2050	IEA World Energy Outlook https://www.iea.org/reports/world-energy-outlook-2025/stated-policies-scenario	scenár, nie prognóza; WEO 2025 je najnovšie vydanie k 24. 10. 2026 (NEOVERENE, či nevyšlo WEO 2026)	OVERENE
+FORECAST	F12	Čisté nulové emisie energetiky	ODHAD	ODHAD 2050 iba v normatívnom scenári NZE	IEA Net Zero Roadmap https://www.iea.org/reports/net-zero-roadmap-a-global-pathway-to-keep-the-15-0c-goal-in-reach		OVERENE
+FORECAST	F13	EÚ klimatická neutralita	ODHAD	cieľ 2050 (zákon)	https://climate.ec.europa.eu/eu-action/climate-strategies-targets/2050-long-term-strategy_en	legislatívny cieľ, splnenie je ODHAD	OVERENE
