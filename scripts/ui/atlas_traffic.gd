@@ -185,7 +185,8 @@ func _near_texture(model_path: String) -> Texture2D:
 	vp.own_world_3d = true
 	vp.size = Vector2i(128, 96)
 	vp.gui_disable_input = true
-	vp.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
+	# Loď sa nehýbe v 3D, stačí jeden snímok. Každý snímok by stiahol FPS pod 30.
+	vp.render_target_update_mode = SubViewport.UPDATE_ONCE
 	add_child(vp)
 	var world := Node3D.new()
 	vp.add_child(world)
