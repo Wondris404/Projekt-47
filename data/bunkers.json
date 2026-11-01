@@ -1,0 +1,14 @@
+{
+  "levels": [
+    {"level": 1, "price": 2000000, "capacity": 5000, "build_days": 3},
+    {"level": 2, "price": 4000000, "capacity": 20000, "build_days": 0}
+  ],
+  "hp": 100,
+  "food_days": 30,
+  "maintain": 20000,
+  "lab_price": 1000000,
+  "lab_vaccine_boost": 0.10,
+  "starve_hp": 5,
+  "attack": 10,
+  "model": "res://assets/models/bunker/bunker.glb"
+}
