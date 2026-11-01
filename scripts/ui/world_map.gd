@@ -1086,8 +1086,11 @@ func _draw_zombie() -> void:
 		var rp = reg.get("pos", [0, 0])
 		var base = _to_screen(Vector2(float(rp[0]), float(rp[1])))
 		for i in n:
-			draw_rect(Rect2(base + Vector2(i * 7.0, -10.0), Vector2(4, 9)), Color(0.32, 0.82, 0.28))
+			# 3D model Quaternius zombie (render zombie.glb), 1 až 5 kusov na región.
+			draw_texture_rect(ZOMBIE_TEX, Rect2(base + Vector2(i * 9.0 - 8.0, -18.0), Vector2(16, 16)), false)
 		shown += 1
+
+const ZOMBIE_TEX = preload("res://assets/models/zombies/zombie_sprite.png")
 
 func _zoom_at(mouse: Vector2, new_zoom: float, smooth: bool = false) -> void:
 	new_zoom = clampf(new_zoom, 1.0, MAX_ZOOM)
