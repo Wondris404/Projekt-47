@@ -38,6 +38,10 @@ func set_unlocked() -> void:
 	cf.set_value("dlc", "unlocked", true)
 	cf.save(SETTINGS)
 
+func _news(text: String) -> void:
+	# DLC správy idú do panelu Noviny (fáza B) vo vlastnej kategórii.
+	GameState.post_news(text, "nákaza")
+
 func z() -> Dictionary:
 	if typeof(GameState.zombie) != TYPE_DICTIONARY:
 		GameState.zombie = {}
@@ -123,13 +127,13 @@ func _spawn_corp(row: Dictionary) -> void:
 func _story(row: Dictionary) -> void:
 	if GameState.day_index == int(num("news_day", 7)) and not bool(row.get("news_shock", false)):
 		row["news_shock"] = true
-		GameState.post_news("ŠOKUJÚCE: United Wealth Corp. tajne vyvíjala pre USA vírus, ktorý mení ľudí na zombie.")
+		_news("ŠOKUJÚCE: United Wealth Corp. tajne vyvíjala pre USA vírus, ktorý mení ľudí na zombie.")
 	if GameState.day_index == int(num("outbreak_day", 8)) and not bool(row.get("outbreak", false)):
 		row["outbreak"] = true
 		var reg = _region("PL", "Kraków")
 		reg["infection"] = num("outbreak_pct", 5.0)
 		_refresh(reg)
-		GameState.post_news("Nákaza vypukla v Krakove!")
+		_news("Nákaza vypukla v Krakove!")
 
 func _region(iso: String, city_name: String) -> Dictionary:
 	var row = z()
@@ -160,7 +164,7 @@ func _refresh(reg: Dictionary) -> void:
 		reg["status"] = "padol"
 		if not bool(reg.get("fell_news", false)):
 			reg["fell_news"] = true
-			GameState.post_news("%s padlo." % str(reg.get("name", "Mesto")))
+			_news("%s padlo." % str(reg.get("name", "Mesto")))
 	else:
 		reg["status"] = "ohrozený"
 
@@ -234,7 +238,7 @@ func _spread_from(reg: Dictionary) -> void:
 			_seed(iso, str(city.name), num("transfer", 4.0))
 			if kind == "air" and not bool(reg.get("air_news", false)):
 				reg["air_news"] = true
-				GameState.post_news("Letisko %s zatvorené." % origin)
+				_news("Letisko %s zatvorené." % origin)
 	if nearest_name != "" and nearest_km <= num("neighbor_km", 260.0) * 1.4:
 		_seed(iso, nearest_name, num("min_spread", 1.5))
 	for border in DataLoader.countries.get(iso, {}).get("borders", []):
@@ -304,7 +308,7 @@ func buy_helicopter() -> String:
 	GameState.player.cash = float(GameState.player.cash) - price
 	var id = "h%d" % (z().helicopters.size() + 1)
 	z().helicopters.append({"id": id, "lost": false})
-	GameState.post_news("Kúpená helikoptéra %s." % id)
+	_news("Kúpená helikoptéra %s." % id)
 	return ""
 
 func buy_fighter() -> String:
@@ -315,7 +319,7 @@ func buy_fighter() -> String:
 		return "Stíhačka stojí %s." % EconMath.eur(price)
 	GameState.player.cash = float(GameState.player.cash) - price
 	z().fighters.append({"id": "f%d" % (z().fighters.size() + 1)})
-	GameState.post_news("Kúpená stíhačka. Lietadlá z fázy C v tejto vetve nie sú, pohyb je vlastný.")
+	_news("Kúpená stíhačka.")
 	return ""
 
 func toggle_evac(firm_id: String) -> String:
@@ -332,7 +336,7 @@ func toggle_evac(firm_id: String) -> String:
 		ids.erase(firm_id)
 		return "Označenie evakuácie zrušené."
 	ids.append(firm_id)
-	GameState.post_news("Evakuačná zóna: %s." % str(firm.get("name", firm_id)))
+	_news("Evakuačná zóna: %s." % str(firm.get("name", firm_id)))
 	return ""
 
 func can_zone(iso: String) -> String:
@@ -352,7 +356,7 @@ func add_draw_point(world: Vector2, close_it: bool) -> String:
 	if close_it or (pts.size() >= 3 and world.distance_to(Vector2(float(pts[0][0]), float(pts[0][1]))) < 1.2):
 		var msg = _close_zone(row)
 		if msg != "":
-			GameState.post_news(msg)
+			_news(msg)
 		return msg
 	pts.append([world.x, world.y])
 	row["draw"] = pts
@@ -379,7 +383,7 @@ func _close_zone(row: Dictionary) -> String:
 		"alive": true,
 	})
 	row["draw"] = []
-	GameState.post_news("Safe zóna v krajine %s." % str(GameState.world.get(iso, {}).get("name_sk", iso)))
+	_news("Safe zóna v krajine %s." % str(GameState.world.get(iso, {}).get("name_sk", iso)))
 	return ""
 
 func city_safe(iso: String, city_name: String) -> String:
@@ -413,7 +417,7 @@ func city_safe(iso: String, city_name: String) -> String:
 		"defense": 20.0,
 		"alive": true,
 	})
-	GameState.post_news("Mesto %s je safe zóna." % city_name)
+	_news("Mesto %s je safe zóna." % city_name)
 	return ""
 
 func build_in_zone(kind: String) -> String:
@@ -444,7 +448,7 @@ func build_in_zone(kind: String) -> String:
 	})
 	if kind == "baraky":
 		zone["cap_bonus"] = int(zone.get("cap_bonus", 0)) + int(num("zone_people", 8000))
-	GameState.post_news("V safe zóne stojí %s (úroveň 1)." % names[kind])
+	_news("V safe zóne stojí %s (úroveň 1)." % names[kind])
 	return ""
 
 func upgrade_building(bid: String) -> String:
@@ -476,14 +480,14 @@ func set_policy(iso: String, pol: String) -> String:
 	}
 	if pol == "kill":
 		GameState.player.rating = maxf(0.0, float(GameState.player.get("rating", 55.0)) - num("kill_rating", 12.0))
-		GameState.post_news("Svet odsudzuje postup v krajine %s. Reputácia padá." % str(GameState.world.get(iso, {}).get("name_sk", iso)))
+		_news("Svet odsudzuje postup v krajine %s. Reputácia padá." % str(GameState.world.get(iso, {}).get("name_sk", iso)))
 		if GameState.world.has("US"):
 			GeopoliticsSystem.security_council(iso)
 	elif pol == "exile":
 		if z().helicopters.is_empty():
 			return "Na vyhnanstvo treba aspoň jednu helikoptéru."
 		GameState.player.cash = maxf(0.0, float(GameState.player.cash) - 150000.0)
-	GameState.post_news(text[pol])
+	_news(text[pol])
 	return ""
 
 func _flights(row: Dictionary) -> void:
@@ -514,7 +518,7 @@ func _flights(row: Dictionary) -> void:
 				fl["t"] = 1.1
 				if row.helicopters.size() > 0:
 					row.helicopters.pop_back()
-				GameState.post_news("Helikoptéra sa stratila nad padnutým regiónom.")
+				_news("Helikoptéra sa stratila nad padnutým regiónom.")
 		if float(fl.t) < 1.15:
 			keep.append(fl)
 	row["flights"] = keep.slice(-24)
@@ -577,7 +581,7 @@ func _zones(row: Dictionary) -> void:
 		if pressure > num("wall_breach", 80000.0) * (0.4 + hold):
 			zone["alive"] = false
 			var where = str(zone.get("city", str(GameState.world.get(str(zone.get("iso", "")), {}).get("name_sk", "zóna"))))
-			GameState.post_news("Múr v %s prelomený!" % where)
+			_news("Múr v %s prelomený!" % where)
 
 func _economy(row: Dictionary) -> void:
 	if not bool(row.get("outbreak", false)):
@@ -600,7 +604,7 @@ func _economy(row: Dictionary) -> void:
 			var target = base * (1.0 + mix * g / 100.0)
 			book["price"] = lerpf(float(book.get("price", base)), target, 0.05)
 	if GameState.day_index % 7 == 0:
-		GameState.post_news("Nákaza: akcie a turizmus klesajú, zbrane, lieky, jedlo a palivo dražejú.")
+		_news("Nákaza: akcie a turizmus klesajú, zbrane, lieky, jedlo a palivo dražejú.")
 
 func _vaccine(row: Dictionary) -> void:
 	var vac: Dictionary = row.vaccine
@@ -608,7 +612,7 @@ func _vaccine(row: Dictionary) -> void:
 		return
 	var firm = GameState.firm_by_id(str(vac.firm))
 	if firm.is_empty() or bool(firm.get("closed", false)):
-		GameState.post_news("Laboratórium %s zničené." % str(vac.get("name", "firmy")))
+		_news("Laboratórium %s zničené." % str(vac.get("name", "firmy")))
 		vac["firm"] = ""
 		vac["progress"] = 0.0
 		return
@@ -616,7 +620,7 @@ func _vaccine(row: Dictionary) -> void:
 	var city = str(firm.get("city", ""))
 	if city != "" and str(region_at(iso, city).get("status", "")) == "padol":
 		firm["closed"] = true
-		GameState.post_news("Laboratórium %s zničené." % str(firm.get("name", "")))
+		_news("Laboratórium %s zničené." % str(firm.get("name", "")))
 		vac["firm"] = ""
 		vac["progress"] = 0.0
 		return
@@ -624,7 +628,7 @@ func _vaccine(row: Dictionary) -> void:
 	if float(vac.progress) >= num("vaccine_days", 360.0):
 		vac["done"] = true
 		vac["owner"] = str(firm.get("owner", "player"))
-		GameState.post_news("Vakcína je hotová: %s." % str(firm.get("name", "laboratórium")))
+		_news("Vakcína je hotová: %s." % str(firm.get("name", "laboratórium")))
 
 func start_vaccine(firm_id: String) -> String:
 	if not active():
@@ -643,7 +647,7 @@ func start_vaccine(firm_id: String) -> String:
 	vac["firm"] = firm_id
 	vac["name"] = str(firm.get("name", "laboratórium"))
 	vac["progress"] = float(vac.get("progress", 0.0))
-	GameState.post_news("Výskum vakcíny začal v %s. Trvá to mesiace, ďalšie peniaze ho zrýchlia." % str(firm.get("name", "")))
+	_news("Výskum vakcíny začal v %s. Trvá to mesiace, ďalšie peniaze ho zrýchlia." % str(firm.get("name", "")))
 	return ""
 
 func boost_vaccine() -> String:
@@ -663,7 +667,7 @@ func deploy_vaccine() -> String:
 		return "Vakcína ešte nie je hotová."
 	vac["deployed"] = true
 	GameState.player.cash = float(GameState.player.cash) + 2000000.0
-	GameState.post_news("Vakcína ide do štátov. Nákaza začína klesať.")
+	_news("Vakcína ide do štátov. Nákaza začína klesať.")
 	for reg in z().regions.values():
 		reg["infection"] = float(reg.get("infection", 0.0)) * 0.85
 		_refresh(reg)
@@ -681,13 +685,13 @@ func _ending(row: Dictionary) -> void:
 		row["ended"] = true
 		row["result"] = "prehra"
 		GameState.paused = true
-		GameState.post_news(_stats(row, "Prehra. Všetky tvoje safe zóny padli."))
+		_news(_stats(row, "Prehra. Všetky tvoje safe zóny padli."))
 		return
 	if win and bool(row.get("outbreak", false)):
 		row["ended"] = true
 		row["result"] = "výhra"
 		GameState.paused = true
-		GameState.post_news(_stats(row, "Výhra."))
+		_news(_stats(row, "Výhra."))
 
 func _stats(row: Dictionary, title: String) -> String:
 	var alive = 0
@@ -717,5 +721,5 @@ func assign_army(iso: String) -> String:
 	if typeof(z().get("army")) != TYPE_DICTIONARY:
 		z()["army"] = {}
 	z().army[iso] = int(z().army.get(iso, 0)) + 1
-	GameState.post_news("Armáda a letectvo kryjú %s a evakuačné trasy. Okruh stíhačiek je 600 km." % str(GameState.world.get(iso, {}).get("name_sk", iso)))
+	_news("Armáda a letectvo kryjú %s a evakuačné trasy. Okruh stíhačiek je 600 km." % str(GameState.world.get(iso, {}).get("name_sk", iso)))
 	return ""

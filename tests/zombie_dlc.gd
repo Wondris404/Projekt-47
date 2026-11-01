@@ -26,3 +26,8 @@ func run(u) -> void:
 		if str(reg.get("iso", "")) == "PL" and float(reg.get("infection", 0.0)) > 0.0:
 			infected += 1
 	u._chk("zombie_krakow_spread", infected >= 2, "nakazenych miest PL=%d den=%d" % [infected, GameState.day_index])
+	var dlc_news = 0
+	for item in GameState.news:
+		if typeof(item) == TYPE_DICTIONARY and str(item.get("category", "")) == "nákaza":
+			dlc_news += 1
+	u._chk("zombie_news_in_noviny", dlc_news >= 2, "nakaza spravy=%d" % dlc_news)

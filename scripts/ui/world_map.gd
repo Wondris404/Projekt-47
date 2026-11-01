@@ -1004,7 +1004,7 @@ func _click_at(sp: Vector2) -> void:
 		_zone_click_ms = now
 		var msg = ZombieSystem.add_draw_point(_to_world(sp), close_it)
 		if msg != "":
-			GameState.post_news(msg)
+			GameState.post_news(msg, "nákaza")
 		queue_redraw()
 		return
 	if has_node("/root/ShipSystem"):

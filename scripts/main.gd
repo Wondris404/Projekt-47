@@ -2210,7 +2210,7 @@ func _build_news_panel() -> void:
 	p.add_child(box)
 	var filters = HFlowContainer.new()
 	box.add_child(filters)
-	for cat in ["všetko", "firmy", "vojna", "ceny", "politika", "šoky", "ostatné"]:
+	for cat in ["všetko", "firmy", "vojna", "ceny", "politika", "šoky", "nákaza", "ostatné"]:
 		var b = Button.new()
 		b.text = cat
 		var c = cat
