@@ -2,11 +2,16 @@ extends RefCounted
 # Fáza F: nové sprity existujú, ale nepridávajú odvetvia do industries.json.
 
 const BUILDINGS = ["ai_services", "crude_oil", "fuel", "weapons", "offshore_oil_rig", "offshore_gas_rig", "fpso"]
+const PHASE_E = ["offshore_oil_rig", "offshore_gas_rig", "fpso"]
 const SHIPS = ["feeder", "vlcc", "destroyer", "psv", "ahts"]
 
 func run(u) -> void:
 	for id in BUILDINGS:
-		u._chk("atlas_no_new_industry_%s" % id, not DataLoader.industries.has(id))
+		# Fáza E pridala morské odvetvia; fáza F im dáva len sprity, nové odvetvie nepridáva.
+		if id in PHASE_E:
+			u._chk("atlas_phase_e_industry_%s" % id, DataLoader.industries.has(id))
+		else:
+			u._chk("atlas_no_new_industry_%s" % id, not DataLoader.industries.has(id))
 		for lv in range(1, 4):
 			var path = "res://assets/map_models/levels/%s_%d.png" % [id, lv]
 			var img = Image.new()
