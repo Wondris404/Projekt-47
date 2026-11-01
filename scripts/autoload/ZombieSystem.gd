@@ -548,6 +548,17 @@ func km_between(a: Vector2, b: Vector2) -> float:
 func airport_near(center: Vector2) -> Dictionary:
 	var best := {}
 	var best_km = num("fighter_radius_km", 600.0)
+	# Letisko postavené v safe zóne má prednosť.
+	for bld in z().get("buildings", []):
+		if str(bld.get("kind", "")) != "letisko":
+			continue
+		for zone in z().get("zones", []):
+			if str(zone.get("id", "")) == str(bld.get("zone", "")) and bool(zone.get("alive", true)):
+				var zp = _zone_center(zone)
+				var zkm = km_between(zp, center)
+				if zkm <= best_km:
+					best_km = zkm
+					best = {"id": str(bld.get("id", "")), "pos": zp, "km": zkm}
 	for f in GameState.firms:
 		if str(f.get("owner", "")) != "player" or not str(f.get("industry", "")) in ["airport", "airline"]:
 			continue
