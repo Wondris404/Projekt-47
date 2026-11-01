@@ -31,3 +31,9 @@ func run(u) -> void:
 		if typeof(item) == TYPE_DICTIONARY and str(item.get("category", "")) == "nákaza":
 			dlc_news += 1
 	u._chk("zombie_news_in_noviny", dlc_news >= 2, "nakaza spravy=%d" % dlc_news)
+	u._chk("zombie_vaccine_not_dlc_lab", ZombieSystem.start_vaccine("uwc") != "")
+	var row = ZombieSystem.z()
+	row.ai_vaccine["firm"] = "neexistuje"
+	row.ai_vaccine["progress"] = 50.0
+	ZombieSystem._vaccine(row)
+	u._chk("zombie_ai_lab_lost", str(row.ai_vaccine.firm) == "" and float(row.ai_vaccine.progress) == 0.0 or str(row.ai_vaccine.firm) != "neexistuje")

@@ -617,28 +617,63 @@ func _economy(row: Dictionary) -> void:
 		_news("Nákaza: akcie a turizmus klesajú, zbrane, lieky, jedlo a palivo dražejú.")
 
 func _vaccine(row: Dictionary) -> void:
-	var vac: Dictionary = row.vaccine
-	if bool(vac.get("deployed", false)) or str(vac.get("firm", "")) == "":
-		return
+	# Vakcínu vyvíja len hráč alebo AI firma. Keď ich laboratórium zničia zombíci, výskum je stratený.
+	if not row.has("ai_vaccine"):
+		row["ai_vaccine"] = {"progress": 0.0, "owner": "ai", "firm": "", "done": false, "deployed": false, "name": ""}
+	_ai_pick_lab(row)
+	for key in ["vaccine", "ai_vaccine"]:
+		var vac: Dictionary = row[key]
+		if bool(vac.get("done", false)) or str(vac.get("firm", "")) == "":
+			continue
+		_vaccine_step(row, key, vac)
+
+func _vaccine_step(row: Dictionary, key: String, vac: Dictionary) -> void:
 	var firm = GameState.firm_by_id(str(vac.firm))
-	if firm.is_empty() or bool(firm.get("closed", false)):
-		_news("Laboratórium %s zničené." % str(vac.get("name", "firmy")))
-		vac["firm"] = ""
-		vac["progress"] = 0.0
-		return
-	var iso = str(firm.get("country", ""))
-	var city = str(firm.get("city", ""))
-	if city != "" and str(region_at(iso, city).get("status", "")) == "padol":
-		firm["closed"] = true
-		_news("Laboratórium %s zničené." % str(firm.get("name", "")))
+	var lost = firm.is_empty() or bool(firm.get("closed", false))
+	if not lost:
+		var city = str(firm.get("city", ""))
+		if city != "" and str(region_at(str(firm.get("country", "")), city).get("status", "")) == "padol":
+			firm["closed"] = true
+			lost = true
+	if lost:
+		_news("Zombíci zničili laboratórium %s. Výskum vakcíny je stratený." % str(vac.get("name", "firmy")))
 		vac["firm"] = ""
 		vac["progress"] = 0.0
 		return
 	vac["progress"] = float(vac.get("progress", 0.0)) + 1.0
 	if float(vac.progress) >= num("vaccine_days", 360.0):
 		vac["done"] = true
-		vac["owner"] = str(firm.get("owner", "player"))
-		_news("Vakcína je hotová: %s." % str(firm.get("name", "laboratórium")))
+		_news("Vakcína je hotová: %s." % str(vac.get("name", "")))
+		if key == "ai_vaccine" and not bool(row.vaccine.get("deployed", false)):
+			# AI firma vakcínu nasadí sama, hráč za ňu nedostane odmenu.
+			row.vaccine["deployed"] = true
+			row.vaccine["name"] = str(vac.get("name", ""))
+			_apply_vaccine()
+
+func _ai_pick_lab(row: Dictionary) -> void:
+	var vac: Dictionary = row.ai_vaccine
+	if bool(vac.get("done", false)) or str(vac.get("firm", "")) != "" or not bool(row.get("outbreak", false)):
+		return
+	if GameState.day_index % 30 != 0:
+		return
+	var best := {}
+	for f in GameState.firms:
+		if str(f.get("owner", "")) != "ai" or bool(f.get("closed", false)):
+			continue
+		var city = str(f.get("city", ""))
+		if city != "" and str(region_at(str(f.get("country", "")), city).get("status", "")) == "padol":
+			continue
+		if best.is_empty() or (str(f.get("industry", "")) == "pharma_lab" and str(best.get("industry", "")) != "pharma_lab"):
+			best = f
+	if best.is_empty():
+		return
+	vac["firm"] = str(best.get("id", ""))
+	vac["name"] = str(best.get("name", "AI firma"))
+	vac["progress"] = 0.0
+	_news("AI firma %s začala vyvíjať vakcínu." % vac.name)
+
+func can_research(firm: Dictionary) -> bool:
+	return str(firm.get("owner", "")) in ["player", "ai"] and not bool(firm.get("closed", false))
 
 func start_vaccine(firm_id: String) -> String:
 	if not active():
@@ -646,8 +681,8 @@ func start_vaccine(firm_id: String) -> String:
 	var firm = GameState.firm_by_id(firm_id)
 	if firm.is_empty():
 		return "Firma neexistuje."
-	if not str(firm.get("industry", "")) in ["pharma_lab", "hospital"]:
-		return "Vakcínu skúma len laboratórium alebo nemocnica."
+	if str(firm.get("owner", "")) != "player":
+		return "Vakcínu môžeš vyvíjať len vo svojej firme. AI firmy si výskum začnú samy."
 	var cost = num("vaccine_cost", 250000.0)
 	if float(GameState.player.cash) < cost and str(firm.get("owner", "")) == "player":
 		return "Výskum stojí %s." % EconMath.eur(cost)
@@ -675,13 +710,18 @@ func deploy_vaccine() -> String:
 	var vac: Dictionary = z().vaccine
 	if not bool(vac.get("done", false)):
 		return "Vakcína ešte nie je hotová."
+	if bool(vac.get("deployed", false)):
+		return "Vakcína už je nasadená."
 	vac["deployed"] = true
 	GameState.player.cash = float(GameState.player.cash) + 2000000.0
+	_apply_vaccine()
+	return ""
+
+func _apply_vaccine() -> void:
 	_news("Vakcína ide do štátov. Nákaza začína klesať.")
 	for reg in z().regions.values():
 		reg["infection"] = float(reg.get("infection", 0.0)) * 0.85
 		_refresh(reg)
-	return ""
 
 func _ending(row: Dictionary) -> void:
 	var vac: Dictionary = row.get("vaccine", {})

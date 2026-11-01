@@ -1551,9 +1551,6 @@ func _zombie_lab() -> String:
 	if firm_detail_id != "":
 		return firm_detail_id
 	for f in GameState.player_firms():
-		if str(f.get("industry", "")) in ["pharma_lab", "hospital"]:
-			return str(f.get("id", ""))
-	for f in GameState.firms:
 		if str(f.get("industry", "")) == "pharma_lab":
 			return str(f.get("id", ""))
 	return _first_player_firm()
