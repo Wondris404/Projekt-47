@@ -465,7 +465,8 @@ func upgrade_building(bid: String) -> String:
 	for bld in z().get("buildings", []):
 		if str(bld.get("id", "")) != bid:
 			continue
-		if int(bld.get("level", 1)) >= 3:
+		var top = 2 if str(bld.get("kind", "")) == "mur" else 3
+		if int(bld.get("level", 1)) >= top:
 			return "Stavba je na maxime."
 		var cost = 500000.0 * int(bld.level)
 		if float(GameState.player.cash) < cost:
@@ -585,8 +586,9 @@ func _zones(row: Dictionary) -> void:
 		var hold = 0.2
 		for bld in row.buildings:
 			if str(bld.get("zone", "")) == str(zone.get("id", "")) and str(bld.get("kind", "")) == "mur":
-				var lv = clampi(int(bld.get("level", 1)), 1, 3)
-				var table: Array = balance.get("wall_hold", [0.5, 0.7, 0.9])
+				# Múr má presne 2 úrovne: 50 % a 90 %. Starý save s úrovňou 3 sa číta ako 90 %.
+				var table: Array = balance.get("wall_hold", [0.5, 0.9])
+				var lv = clampi(int(bld.get("level", 1)), 1, table.size())
 				hold = float(table[lv - 1])
 		if pressure > num("wall_breach", 80000.0) * (0.4 + hold):
 			zone["alive"] = false

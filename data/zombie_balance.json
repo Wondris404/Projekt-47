@@ -21,7 +21,7 @@
   "heli_loss": 0.08,
   "fighter_price": 2500000,
   "fighter_radius_km": 600.0,
-  "wall_hold": [0.5, 0.7, 0.9],
+  "wall_hold": [0.5, 0.9],
   "wall_breach": 80000,
   "pmc_price": 3.0,
   "pmc_effect": 3.0,
