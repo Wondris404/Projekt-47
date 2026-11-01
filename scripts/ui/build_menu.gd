@@ -4,7 +4,7 @@ const DESCRIPTIONS = preload("res://scripts/business_descriptions.gd")
 
 const GROUPS = {
 	"Poľnohospodárstvo": ["cafe", "wheat_farm", "coffee_farm", "livestock"],
-	"Ťažba": ["oil_well", "gas_well", "coal_mine", "iron_mine", "copper_mine"],
+	"Ťažba": ["oil_well", "gas_well", "offshore_oil_rig", "offshore_gas_rig", "fpso", "coal_mine", "iron_mine", "copper_mine"],
 	"Priemysel": ["power_coal", "steel_mill", "chem_plant", "pharma_lab", "textile_mill", "electronics_plant", "auto_plant", "arms_plant", "construction_co", "oil_refinery", "gas_works"],
 	"Služby": ["logistics_hub", "finance_office", "pmc_unit", "trade_desk", "cargo_port", "hospital"],
 	"Školstvo": ["school_primary", "school_high", "university", "corp_academy"],  # JUAN-P47: len sukromne skoly

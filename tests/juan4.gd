@@ -266,8 +266,11 @@ func _gender_focus() -> void:
 	GameState.player.cash = 1.0e6
 	GameState.found_firm("cafe", "", "SK")
 	var f: Dictionary = GameState.player_firms()[0]
-	IndustrySystem.hire_manager(str(f.id), {"name": "X", "skill": 0.5, "salary": 1000.0})
-	u._chk("j4_gfocus_network", is_equal_approx(float(f.manager.salary), 920.0))
+	var w_on = IndustrySystem._wage("SK", f)
+	PoliticsSystem.focus_state().done.erase("g_f1")
+	var w_off = IndustrySystem._wage("SK", f)
+	PoliticsSystem.focus_state().done.append("g_f1")
+	u._chk("j4_gfocus_network", is_equal_approx(w_on, w_off * 0.97) and w_on < w_off, "on %.4f off %.4f" % [w_on, w_off])
 	PoliticsSystem.focus_state().done.append("g_f2")
 	GameState.config.politics = true
 	var r0 = int(GameState.player.rating)

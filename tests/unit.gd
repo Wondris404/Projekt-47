@@ -46,6 +46,12 @@ func run() -> int:
 	load("res://tests/juan5.gd").new().run(self)  # JUAN5
 	load("res://tests/juan9.gd").new().run(self)  # JUAN9
 	load("res://tests/descriptions.gd").new().run(self)
+	load("res://tests/phase_a_no_manager.gd").new().run(self)
+	load("res://tests/phase_b_news.gd").new().run(self)
+	load("res://tests/phase_c_ships.gd").new().run(self)
+	load("res://tests/phase_d_arms.gd").new().run(self)
+	load("res://tests/phase_e_offshore.gd").new().run(self)
+	load("res://tests/atlas_new_models.gd").new().run(self)
 	load("res://tests/zombie_dlc.gd").new().run(self)
 	SaveSystem.cleanup_test_dir()
 	return 1 if fails > 0 else 0
@@ -982,8 +988,8 @@ func _juan3_manager() -> void:
 	_chk("juan3_baseline_management", abs(e0 - IndustrySystem.NO_MANAGER_EFF) < 0.001 and IndustrySystem.buy_share(f) == IndustrySystem.NO_MANAGER_BUY)
 	var cands = IndustrySystem.manager_candidates(f)
 	_chk("juan3_candidates", cands.size() == 3 and float(cands[0].salary) > 0.0)
-	IndustrySystem.hire_manager(str(f.id), {"name": "A", "skill": 0.8, "salary": 3000.0})
-	_chk("juan3_manager_eff", abs(IndustrySystem.firm_efficiency(f) - 1.14) < 0.001 and IndustrySystem.buy_share(f) == 1.0)
+	IndustrySystem.hire_manager(str(f.id), {"name": "A", "skill": 0.8, "salary": 3000000.0})
+	_chk("juan3_manager_eff", abs(IndustrySystem.firm_efficiency(f) - IndustrySystem.NO_MANAGER_EFF) < 0.001 and IndustrySystem.buy_share(f) == 1.0)
 	f.workers = 1.0
 	IndustrySystem.close_month(2024, 1)
 	_chk("juan3_manager_hires", abs(float(f.workers) - IndustrySystem.target_workers(f)) < 0.001)
@@ -993,7 +999,7 @@ func _juan3_manager() -> void:
 	f.history = []
 	GameState.simulate_day()
 	var h: Dictionary = f.history[f.history.size() - 1]
-	_chk("juan3_salary_cost", float(h.wages) >= 100.0 - 0.01, "wages %.2f" % float(h.wages))
+	_chk("juan3_salary_cost", float(h.wages) < 5000.0, "wages %.2f" % float(h.wages))
 	IndustrySystem.fire_manager(str(f.id))
 	var w0 = float(f.workers)
 	IndustrySystem.close_month(2024, 2)
@@ -1008,7 +1014,7 @@ func _juan3_manager() -> void:
 	for _i in 20:
 		GameState.simulate_day()
 	var rev_yes = IndustrySystem.firm_summary(f3).rev
-	_chk("juan3_manager_more_revenue", rev_yes > rev_no, "%.0f vs %.0f" % [rev_yes, rev_no])
+	_chk("juan3_manager_more_revenue", is_equal_approx(rev_yes, rev_no), "%.0f vs %.0f" % [rev_yes, rev_no])
 	_chk("juan3_needs_listed", IndustrySystem.firm_needs(f3).size() >= 1 and float(IndustrySystem.firm_needs(f3)[0].cost) >= 0.0)
 
 func _juan3_history_save() -> void:

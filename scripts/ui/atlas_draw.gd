@@ -171,20 +171,20 @@ static func city(m: CanvasItem, c: Dictionary, cp: Vector2, sc: float, a: float)
 # modely firiem podla typu
 static func kind_of(ind: String) -> String:
 	if ind in ["coal_mine", "iron_mine", "copper_mine"]: return "mine"
-	if ind in ["oil_well", "gas_well"]: return "well"
+	if ind in ["oil_well", "gas_well", "crude_oil", "offshore_oil_rig", "offshore_gas_rig", "fpso"]: return "well"
 	if ind in ["power_coal", "gas_plant"]: return "power"
 	if ind == "nuclear_plant": return "nuclear"
 	if ind == "solar_plant": return "solar"
-	if ind in ["oil_refinery", "chem_plant", "gas_works", "pharma_lab"]: return "tanks"
+	if ind in ["oil_refinery", "chem_plant", "gas_works", "pharma_lab", "fuel"]: return "tanks"
 	if ind in ["wheat_farm", "coffee_farm", "livestock"]: return "farm"
 	if ind in ["logistics_hub", "warehouse", "trade_desk"]: return "logi"
 	if ind in ["bank", "finance_office", "software", "insurance", "invest_fund", "stock_broker", "offshore", "telecom", "tv_station", "social_network", "ad_agency", "newspaper", "hq", "real_estate", "hotel", "casino"]: return "tower"
 	if ind == "airport" or ind == "airline": return "airport"
 	if ind == "shipyard": return "shipyard"
-	if ind == "data_center": return "datacenter"
+	if ind == "data_center" or ind == "ai_services": return "datacenter"
 	if ind == "ai_firm": return "ai"
 	if ind == "aircraft_plant": return "hangar"
-	if ind in ["steel_mill", "textile_mill", "electronics_plant", "auto_plant", "arms_plant", "chip_fab", "construction_co"]: return "factory"
+	if ind in ["steel_mill", "textile_mill", "electronics_plant", "auto_plant", "arms_plant", "chip_fab", "construction_co", "weapons"]: return "factory"
 	return "shop"
 
 static func firm(m: CanvasItem, p: Vector2, s: float, ind: String, mine: bool, icon: Texture2D, level: int = 1, weights: Array = []) -> void:
