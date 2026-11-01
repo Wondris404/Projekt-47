@@ -37,3 +37,11 @@ func run(u) -> void:
 	row.ai_vaccine["progress"] = 50.0
 	ZombieSystem._vaccine(row)
 	u._chk("zombie_ai_lab_lost", str(row.ai_vaccine.firm) == "" and float(row.ai_vaccine.progress) == 0.0 or str(row.ai_vaccine.firm) != "neexistuje")
+	var far_ok = true
+	var home = Vector2(-500, -500)
+	var t = ZombieSystem.fighter_target(home)
+	if not t.is_empty():
+		var rp = t.get("pos", [0, 0])
+		far_ok = ZombieSystem.km_between(home, Vector2(float(rp[0]), float(rp[1]))) <= 600.0
+	var near = ZombieSystem.fighter_target(Vector2(float(ZombieSystem._region("PL", "Kraków").pos[0]), float(ZombieSystem._region("PL", "Kraków").pos[1])))
+	u._chk("zombie_fighter_600km", far_ok and not near.is_empty())

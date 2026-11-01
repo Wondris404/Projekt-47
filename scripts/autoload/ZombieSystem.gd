@@ -516,17 +516,7 @@ func _flights(row: Dictionary) -> void:
 				var a = _evac_pos(row)
 				var b = _zone_center(zone)
 				row.flights.append({"kind": "heli", "t": 0.0, "a": [a.x, a.y], "b": [b.x, b.y], "back": false, "flash": 0})
-	if not row.fighters.is_empty() and not zones.is_empty():
-		# Stíhačky štartujú z letiska a kryjú len safe zóny do 600 km.
-		var center = _zone_center(zones[0])
-		var base = airport_near(center)
-		if base.is_empty():
-			if not bool(row.get("no_base_news", false)):
-				row["no_base_news"] = true
-				_news("Stíhačky nemajú letisko do %.0f km od safe zóny." % num("fighter_radius_km", 600.0))
-		else:
-			var ap: Vector2 = base.pos
-			row.flights.append({"kind": "fighter", "t": 0.0, "a": [center.x, center.y], "b": [ap.x, ap.y], "patrol": true, "flash": 1})
+	_fighters(row)
 	var keep: Array = []
 	for fl in row.flights:
 		fl["t"] = float(fl.get("t", 0.0)) + 0.34
@@ -544,6 +534,65 @@ func _flights(row: Dictionary) -> void:
 
 func km_between(a: Vector2, b: Vector2) -> float:
 	return a.distance_to(b) * 27.8
+
+# Každá stíhačka má domovské letisko (letisko v safe zóne alebo tvoje letisko).
+# Útočí len na nakazené regióny do 600 km od neho a potom sa vráti na základňu.
+func _fighters(row: Dictionary) -> void:
+	if row.fighters.is_empty():
+		return
+	var bases = air_bases()
+	if bases.is_empty():
+		if not bool(row.get("no_base_news", false)):
+			row["no_base_news"] = true
+			_news("Stíhačky nemajú domovské letisko. Postav letisko v safe zóne alebo kúp letisko.")
+		return
+	var i = 0
+	for fi in row.fighters:
+		var home = {}
+		for bs in bases:
+			if str(bs.id) == str(fi.get("home", "")):
+				home = bs
+		if home.is_empty():
+			home = bases[i % bases.size()]
+			fi["home"] = str(home.id)
+		i += 1
+		var hp: Vector2 = home.pos
+		var reg = fighter_target(hp)
+		if reg.is_empty():
+			row.flights.append({"kind": "fighter", "t": 0.0, "a": [hp.x, hp.y], "b": [hp.x, hp.y], "patrol": true, "flash": 0})
+			continue
+		var rp = reg.get("pos", [0, 0])
+		var tp = Vector2(float(rp[0]), float(rp[1]))
+		reg["infection"] = maxf(0.0, float(reg.get("infection", 0.0)) * (1.0 - num("fighter_hit", 0.03)))
+		_refresh(reg)
+		row.flights.append({"kind": "fighter", "t": 0.0, "a": [tp.x, tp.y], "b": [hp.x, hp.y], "patrol": true, "flash": 1})
+		row.flights.append({"kind": "fighter", "t": 0.0, "a": [tp.x, tp.y], "b": [hp.x, hp.y], "back": true, "flash": 0})
+
+func fighter_target(home: Vector2) -> Dictionary:
+	var best := {}
+	var radius = num("fighter_radius_km", 600.0)
+	for reg in z().get("regions", {}).values():
+		if float(reg.get("infection", 0.0)) <= 0.0:
+			continue
+		var rp = reg.get("pos", [0, 0])
+		if km_between(home, Vector2(float(rp[0]), float(rp[1]))) > radius:
+			continue
+		if best.is_empty() or int(reg.get("zombies", 0)) > int(best.get("zombies", 0)):
+			best = reg
+	return best
+
+func air_bases() -> Array:
+	var out: Array = []
+	for bld in z().get("buildings", []):
+		if str(bld.get("kind", "")) != "letisko":
+			continue
+		for zone in z().get("zones", []):
+			if str(zone.get("id", "")) == str(bld.get("zone", "")) and bool(zone.get("alive", true)):
+				out.append({"id": str(bld.get("id", "")), "pos": _zone_center(zone)})
+	for f in GameState.firms:
+		if str(f.get("owner", "")) == "player" and str(f.get("industry", "")) in ["airport", "airline"] and not bool(f.get("closed", false)):
+			out.append({"id": str(f.get("id", "")), "pos": _firm_pos(f)})
+	return out
 
 func airport_near(center: Vector2) -> Dictionary:
 	var best := {}

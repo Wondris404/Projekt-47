@@ -24,7 +24,7 @@ Stav: ✅ hotové · 🟡 hotové s obmedzením · ⬜ chýba.
 | Z8 | Helikoptéry: nákup, odvoz ľudí do safe zóny, strata nad padnutým regiónom | `buy_helicopter`, `_flights` | ✅ |
 | Z9 | Safe zóny kreslené čiarami; len so zmluvou s vládou, vplyvom ≥ 50 % alebo vlastným štátom | `can_zone`, `add_draw_point`, `_close_zone` | ✅ |
 | Z10 | Stavby v zóne: nemocnica, letisko, karanténa, baráky, prístav, železnica, múr; zásoby jedla/liekov/paliva | `build_in_zone`, `_zones` | ✅ |
-| Z11 | Múr (WWZ) presne 2 úrovne: 50 % a 90 %; stíhačky z letiska v safe zóne (alebo tvojho letiska) do 600 km, armáda | `wall_hold`, `airport_near`, `assign_army` | ✅ |
+| Z11 | Múr (WWZ) presne 2 úrovne: 50 % a 90 %; každá stíhačka má domovské letisko (v safe zóne alebo tvoje) a útočí len na nakazené regióny do 600 km od neho, potom sa vráti, armáda | `wall_hold`, `airport_near`, `assign_army` | ✅ |
 | Z11b | Animácie: stíhačky hliadkujú a útočia (záblesk, strely), helikoptéra sa pri nakladaní vznáša, havária (oheň a dym), pri oddialení ikony; modely CC0/CC-BY v `assets/models/aircraft/` | `ShipSystem.air_traffic`, `atlas_traffic._draw_air` | ✅ |
 | Z12 | Ekonomika: zbrane, lieky, jedlo, palivo dražejú; PMC kontrakt má ~3× účinok armády | `_economy`, `has_pmc`, `pmc_effect` | ✅ |
 | Z13 | Politika nakazených vo vlastnom štáte: vyhnať (helikoptéra, peniaze), zabiť (pokles reputácie + sankcie BR OSN), nechať | `set_policy` | ✅ |
