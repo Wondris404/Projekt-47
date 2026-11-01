@@ -9,8 +9,7 @@
    "price": 2800000000,
    "maintain": 900000,
    "fuel": 220000,
-   "cargo": "",
-   "model": "res://assets/models/ships/carrier.glb"
+   "cargo": ""
   },
   {
    "id": "lhd",
@@ -21,8 +20,7 @@
    "price": 1600000000,
    "maintain": 500000,
    "fuel": 140000,
-   "cargo": "",
-   "model": "res://assets/models/ships/landing.glb"
+   "cargo": ""
   },
   {
    "id": "lpd",
@@ -33,8 +31,7 @@
    "price": 700000000,
    "maintain": 180000,
    "fuel": 60000,
-   "cargo": "",
-   "model": "res://assets/models/ships/landing.glb"
+   "cargo": ""
   },
   {
    "id": "lst",
@@ -45,8 +42,7 @@
    "price": 220000000,
    "maintain": 60000,
    "fuel": 25000,
-   "cargo": "",
-   "model": "res://assets/models/ships/landing.glb"
+   "cargo": ""
   },
   {
    "id": "cruiser",
@@ -57,8 +53,7 @@
    "price": 1400000000,
    "maintain": 320000,
    "fuel": 90000,
-   "cargo": "",
-   "model": "res://assets/models/ships/destroyer.glb"
+   "cargo": ""
   },
   {
    "id": "destroyer",
@@ -69,8 +64,7 @@
    "price": 900000000,
    "maintain": 200000,
    "fuel": 70000,
-   "cargo": "",
-   "model": "res://assets/models/ships/destroyer.glb"
+   "cargo": ""
   },
   {
    "id": "frigate",
@@ -81,8 +75,7 @@
    "price": 450000000,
    "maintain": 90000,
    "fuel": 35000,
-   "cargo": "",
-   "model": "res://assets/models/ships/frigate.glb"
+   "cargo": ""
   },
   {
    "id": "corvette",
@@ -93,8 +86,7 @@
    "price": 180000000,
    "maintain": 40000,
    "fuel": 18000,
-   "cargo": "",
-   "model": "res://assets/models/ships/frigate.glb"
+   "cargo": ""
   },
   {
    "id": "patrol",
@@ -105,8 +97,7 @@
    "price": 40000000,
    "maintain": 8000,
    "fuel": 5000,
-   "cargo": "",
-   "model": "res://assets/models/ships/patrol.glb"
+   "cargo": ""
   },
   {
    "id": "missile",
@@ -117,8 +108,7 @@
    "price": 55000000,
    "maintain": 10000,
    "fuel": 7000,
-   "cargo": "",
-   "model": "res://assets/models/ships/patrol.glb"
+   "cargo": ""
   },
   {
    "id": "ssn",
@@ -173,8 +163,7 @@
    "price": 80000000,
    "maintain": 15000,
    "fuel": 8000,
-   "cargo": "",
-   "model": "res://assets/models/ships/patrol.glb"
+   "cargo": ""
   },
   {
    "id": "minelayer",
@@ -185,8 +174,7 @@
    "price": 90000000,
    "maintain": 16000,
    "fuel": 9000,
-   "cargo": "",
-   "model": "res://assets/models/ships/patrol.glb"
+   "cargo": ""
   },
   {
    "id": "oiler",
@@ -197,8 +185,7 @@
    "price": 150000000,
    "maintain": 25000,
    "fuel": 20000,
-   "cargo": "",
-   "model": "res://assets/models/ships/tanker.glb"
+   "cargo": ""
   },
   {
    "id": "hospital",
@@ -209,8 +196,7 @@
    "price": 300000000,
    "maintain": 40000,
    "fuel": 15000,
-   "cargo": "",
-   "model": "res://assets/models/ships/landing.glb"
+   "cargo": ""
   },
   {
    "id": "handy_tanker",
@@ -221,8 +207,7 @@
    "price": 28000000,
    "maintain": 6000,
    "fuel": 8000,
-   "cargo": "crude_oil",
-   "model": "res://assets/models/ships/tanker.glb"
+   "cargo": "crude_oil"
   },
   {
    "id": "panamax_tanker",
@@ -233,8 +218,7 @@
    "price": 45000000,
    "maintain": 9000,
    "fuel": 12000,
-   "cargo": "crude_oil",
-   "model": "res://assets/models/ships/tanker.glb"
+   "cargo": "crude_oil"
   },
   {
    "id": "aframax",
@@ -245,8 +229,7 @@
    "price": 62000000,
    "maintain": 12000,
    "fuel": 16000,
-   "cargo": "crude_oil",
-   "model": "res://assets/models/ships/tanker.glb"
+   "cargo": "crude_oil"
   },
   {
    "id": "suezmax",
@@ -257,8 +240,7 @@
    "price": 80000000,
    "maintain": 15000,
    "fuel": 20000,
-   "cargo": "crude_oil",
-   "model": "res://assets/models/ships/tanker.glb"
+   "cargo": "crude_oil"
   },
   {
    "id": "vlcc",
@@ -269,8 +251,7 @@
    "price": 120000000,
    "maintain": 22000,
    "fuel": 28000,
-   "cargo": "crude_oil",
-   "model": "res://assets/models/ships/tanker.glb"
+   "cargo": "crude_oil"
   },
   {
    "id": "ulcc",
@@ -281,8 +262,7 @@
    "price": 150000000,
    "maintain": 28000,
    "fuel": 34000,
-   "cargo": "crude_oil",
-   "model": "res://assets/models/ships/tanker.glb"
+   "cargo": "crude_oil"
   },
   {
    "id": "mr",
@@ -293,8 +273,7 @@
    "price": 32000000,
    "maintain": 7000,
    "fuel": 9000,
-   "cargo": "fuel",
-   "model": "res://assets/models/ships/tanker.glb"
+   "cargo": "fuel"
   },
   {
    "id": "lr",
@@ -305,8 +284,7 @@
    "price": 55000000,
    "maintain": 11000,
    "fuel": 14000,
-   "cargo": "fuel",
-   "model": "res://assets/models/ships/tanker.glb"
+   "cargo": "fuel"
   },
   {
    "id": "chem_tanker",
@@ -317,8 +295,7 @@
    "price": 40000000,
    "maintain": 10000,
    "fuel": 9000,
-   "cargo": "chemicals",
-   "model": "res://assets/models/ships/tanker.glb"
+   "cargo": "chemicals"
   },
   {
    "id": "lng",
@@ -329,8 +306,7 @@
    "price": 180000000,
    "maintain": 30000,
    "fuel": 22000,
-   "cargo": "natural_gas",
-   "model": "res://assets/models/ships/lng.glb"
+   "cargo": "natural_gas"
   },
   {
    "id": "lpg",
@@ -341,8 +317,7 @@
    "price": 90000000,
    "maintain": 18000,
    "fuel": 14000,
-   "cargo": "natural_gas",
-   "model": "res://assets/models/ships/lng.glb"
+   "cargo": "natural_gas"
   },
   {
    "id": "feeder",

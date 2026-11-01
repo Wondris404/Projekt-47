@@ -15,5 +15,4 @@ Staré `*_placeholder.png` ostávajú v repe ako záloha, hra ich už nepoužív
 ## Lode
 
 - **Boat Tug** (`boat-tug-a`) – Kenney – CC0 1.0 – https://kenney.nl/assets/watercraft-kit. Súbor `assets/models/ships/psv.glb` je prevod tohto modelu (predok na osi -Z, trup na Y = 0, textúra 512×512 vložená). `assets/sprites/ships/psv.png` je pohľad zhora. Používajú ho `psv` a `ahts`.
-- **Ship Large, Ship Ocean Liner, Ship Cargo A/B, Ship Small, Boat Tug B** – Kenney – CC0 1.0 – https://kenney.nl/assets/watercraft-kit. Náhrada za modely, ktorých licencia sa nedá overiť alebo chýba. Súbory `carrier.glb`, `landing.glb`, `destroyer.glb`, `frigate.glb`, `patrol.glb`, `tanker.glb`, `lng.glb` (tanker plus štyri gule). Predok na -Z, trup na Y = 0, textúra najviac 1024 px.
-- Kontajnerové a hromadné lode a ponorky model zatiaľ nemajú: Sketchfab CC-BY ide stiahnuť len po prihlásení. Súbory patria do `assets/models/ships/_inbox/`.
+- Súbory `carrier.glb`, `landing.glb`, `destroyer.glb`, `frigate.glb`, `patrol.glb`, `tanker.glb` a `lng.glb` sú tiež z Kenney Watercraft Kit (CC0, https://kenney.nl/assets/watercraft-kit), ale flotila ich nepoužíva. Povolený Kenney trup v zadaní je len Boat Tug. Ostatné typy ostávajú placeholder, kým nie je originál s overenou licenciou v repe.
