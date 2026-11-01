@@ -24,6 +24,7 @@
   "wall_hold": [0.5, 0.7, 0.9],
   "wall_breach": 80000,
   "pmc_price": 3.0,
+  "pmc_effect": 3.0,
   "price_mix": 0.55,
   "vaccine_days": 360,
   "vaccine_boost_days": 15,

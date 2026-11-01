@@ -183,6 +183,9 @@ func _slow(reg: Dictionary) -> float:
 			s *= num("quarantine_block", 0.82) - (lv - 1) * 0.06
 	if int(row.get("army", {}).get(str(reg.get("iso", "")), 0)) > 0:
 		s *= num("army_slow", 0.7)
+	if has_pmc(str(reg.get("iso", ""))):
+		# PMC má asi 3x silnejší účinok než armáda.
+		s *= 1.0 - minf(0.75, (1.0 - num("army_slow", 0.7)) * num("pmc_effect", 3.0))
 	var pol = str(row.get("policy", {}).get(str(reg.get("iso", "")), "ignore"))
 	if pol == "exile":
 		s *= num("exile_slow", 0.8)
@@ -191,6 +194,13 @@ func _slow(reg: Dictionary) -> float:
 	if bool(row.get("vaccine", {}).get("deployed", false)):
 		s *= 0.55
 	return clampf(s, 0.15, 1.0)
+
+func has_pmc(iso: String) -> bool:
+	for f in GameState.firms:
+		var c = f.get("pmc_contract", {})
+		if typeof(c) == TYPE_DICTIONARY and bool(c.get("active", false)) and str(c.get("government", "")) == iso:
+			return true
+	return false
 
 func _grow_and_spread(row: Dictionary) -> void:
 	if not bool(row.get("outbreak", false)):
