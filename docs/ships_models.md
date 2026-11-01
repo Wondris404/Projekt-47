@@ -52,18 +52,14 @@ Sketchfab vyžaduje účet. Súbory patria do `C:\Users\ondre\Downloads\p47-ship
 
 Tanker sa nesťahuje: https://sketchfab.com/3d-models/tanker-ship-143b1286b149487ebc0afd194afef3ae
 
-## Náhrady Kenney CC0
+## Stav po overení licencií
 
-Free3D vracia 403, licenciu neviem prečítať, preto vojnové trupy nie sú z Free3D. Tanker na Sketchfabe nemá licenciu. Namiesto nich je Kenney Watercraft Kit (CC0):
+Jediný model napojený v `data/ships.json` je `psv.glb` (Kenney Boat Tug, CC0) pre `psv` a `ahts`.
 
-| Súbor | Zdroj Kenney | Typy v `ships.json` |
-| --- | --- | --- |
-| `carrier.glb` | ship-large | carrier |
-| `landing.glb` | ship-ocean-liner | lhd, lpd, lst, hospital |
-| `destroyer.glb` | ship-cargo-b | destroyer, cruiser |
-| `frigate.glb` | ship-small | frigate, corvette |
-| `patrol.glb` | boat-tug-b | patrol, missile, sweeper, minelayer |
-| `tanker.glb` | ship-cargo-a | ropné tankery a oiler |
-| `lng.glb` | ship-cargo-a + 4 gule | lng, lpg |
+Ostatné typy nemajú pole `model` a na mape ostáva zlatý trojuholník:
 
-Kontajnerové lode, bulk, general a ponorky pole `model` nemajú. CC-BY modely zo Sketchfabu treba stiahnuť ručne do `assets/models/ships/_inbox/`.
+- Tanker, LNG a FPSO: Sketchfab tanker nemá licenciu (`license` prázdne, `isDownloadable` false). Bez povoleného trupu tankera sa LNG ani FPSO neskladajú.
+- Free3D (Essex, Kuznetsov, Huitfeldt, Gorškov, Vichr): stránka vracia 403, licencia sa nedá prečítať, preto sú zakázané. Náhradné Sketchfab modely sú CC-BY 4.0, ale download API vracia 401 bez prihlásenia, takže v repe nie sú.
+- Cargo, merchant, korveta, ponorka a výsadková loď: CC-BY 4.0, download bez prihlásenia nejde (401). Placeholder.
+
+Súbory `carrier.glb`, `landing.glb`, `destroyer.glb`, `frigate.glb`, `patrol.glb`, `tanker.glb` a `lng.glb` ostávajú na disku ako Kenney CC0, ale žiadny riadok flotily na ne neukazuje. Zadanie dovoľuje z tohto balíka len Boat Tug.
