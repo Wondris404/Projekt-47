@@ -1053,6 +1053,8 @@ func from_dict(d: Dictionary) -> String:
 	zombie = d.get("zombie", {})
 	if typeof(zombie) != TYPE_DICTIONARY:
 		zombie = {}
+	if typeof(zombie.get("bunkers")) != TYPE_ARRAY:
+		zombie["bunkers"] = []
 	if typeof(ext) != TYPE_DICTIONARY:
 		ext = {}
 	if usd_per_eur <= 0.1:

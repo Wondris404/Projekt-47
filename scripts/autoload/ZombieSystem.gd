@@ -4,6 +4,7 @@ extends Node
 const PASS_HASH := "e3d9de4005aed8f1dc9e87df9aeefbc1dfa64ec76ad57b9b83a26c67aad57714"
 const SETTINGS := "user://settings.cfg"
 var balance: Dictionary = {}
+var bunker_rules: Dictionary = {}
 
 func _ready() -> void:
 	var f = FileAccess.open("res://data/zombie_balance.json", FileAccess.READ)
@@ -12,6 +13,12 @@ func _ready() -> void:
 	var parsed = JSON.parse_string(f.get_as_text())
 	if typeof(parsed) == TYPE_DICTIONARY:
 		balance = parsed
+	var bf = FileAccess.open("res://data/bunkers.json", FileAccess.READ)
+	if bf == null:
+		return
+	var bparsed = JSON.parse_string(bf.get_as_text())
+	if typeof(bparsed) == TYPE_DICTIONARY:
+		bunker_rules = bparsed
 
 func num(key: String, fallback: float) -> float:
 	return float(balance.get(key, fallback))
@@ -57,6 +64,7 @@ func daily() -> void:
 	_story(row)
 	_grow_and_spread(row)
 	_flights(row)
+	_tick_bunkers(row)
 	_zones(row)
 	_economy(row)
 	_vaccine(row)
@@ -83,6 +91,8 @@ func _ensure(row: Dictionary) -> void:
 		row["vaccine"] = {"progress": 0.0, "owner": "", "firm": "", "done": false, "deployed": false, "name": ""}
 	if not row.has("saved"):
 		row["saved"] = 0
+	if not row.has("bunkers") or typeof(row.get("bunkers")) != TYPE_ARRAY:
+		row["bunkers"] = []
 	if not row.has("draw"):
 		row["draw"] = []
 	if not row.has("corp"):
@@ -516,6 +526,25 @@ func _flights(row: Dictionary) -> void:
 				var a = _evac_pos(row)
 				var b = _zone_center(zone)
 				row.flights.append({"kind": "heli", "t": 0.0, "a": [a.x, a.y], "b": [b.x, b.y], "back": false, "flash": 0})
+	if not row.helicopters.is_empty():
+		for bunker in row.get("bunkers", []):
+			if not bool(bunker.get("alive", false)) or int(bunker.get("build_left", 0)) > 0:
+				continue
+			var room_b = int(bunker.get("capacity", 0)) - int(bunker.get("people", 0))
+			var haul_b = mini(maxi(room_b, 0), int(num("heli_people", 120)) * row.helicopters.size())
+			if haul_b <= 0:
+				shelter_into(bunker, 0)
+				continue
+			var took = shelter_into(bunker, haul_b)
+			if took <= 0:
+				continue
+			row["saved"] = int(row.get("saved", 0)) + took
+			var bp = bunker.get("pos", [0, 0])
+			var dest = Vector2(float(bp[0]), float(bp[1]))
+			var origin = _evac_pos(row)
+			if origin == Vector2.ZERO:
+				origin = dest
+			row.flights.append({"kind": "heli", "t": 0.0, "a": [origin.x, origin.y], "b": [dest.x, dest.y], "back": false, "flash": 0})
 	_fighters(row)
 	var keep: Array = []
 	for fl in row.flights:
@@ -736,7 +765,7 @@ func _vaccine_step(row: Dictionary, key: String, vac: Dictionary) -> void:
 		vac["firm"] = ""
 		vac["progress"] = 0.0
 		return
-	vac["progress"] = float(vac.get("progress", 0.0)) + 1.0
+	vac["progress"] = float(vac.get("progress", 0.0)) + 1.0 * (1.0 + _lab_boost(str(vac.get("firm", "")), key))
 	if float(vac.progress) >= num("vaccine_days", 360.0):
 		vac["done"] = true
 		_news("Vakcína je hotová: %s." % str(vac.get("name", "")))
@@ -859,6 +888,8 @@ func summary() -> String:
 		lines.append("Zóna %s: ľudia %d, jedlo %.0f, lieky %.0f, palivo %.0f, %s" % [str(zone.get("id", "")), int(zone.get("people", 0)), float(zone.get("food", 0)), float(zone.get("meds", 0)), float(zone.get("fuel", 0)), "drží" if bool(zone.get("alive", true)) else "padla"])
 	var vac: Dictionary = row.get("vaccine", {})
 	lines.append("Vakcína: %.0f / %.0f dní." % [float(vac.get("progress", 0.0)), num("vaccine_days", 360.0)])
+	for bunker in row.get("bunkers", []):
+		lines.append(bunker_info(bunker))
 	return "\n".join(lines)
 
 func assign_army(iso: String) -> String:
@@ -869,3 +900,236 @@ func assign_army(iso: String) -> String:
 	z().army[iso] = int(z().army.get(iso, 0)) + 1
 	_news("Armáda a letectvo kryjú %s a evakuačné trasy. Okruh stíhačiek je 600 km." % str(GameState.world.get(iso, {}).get("name_sk", iso)))
 	return ""
+
+func bunker_model_path() -> String:
+	return str(bunker_rules.get("model", "res://assets/models/bunker/bunker.glb"))
+
+func hp_color(hp: float) -> Color:
+	if hp > 60.0:
+		return Color(0.2, 0.85, 0.35)
+	if hp >= 30.0:
+		return Color(0.95, 0.55, 0.12)
+	return Color(0.9, 0.15, 0.12)
+
+func _bunker_level(level: int) -> Dictionary:
+	for row in bunker_rules.get("levels", []):
+		if int(row.get("level", 0)) == level:
+			return row
+	if level <= 1:
+		return {"level": 1, "price": 2000000, "capacity": 5000, "build_days": 3}
+	return {"level": 2, "price": 4000000, "capacity": 20000, "build_days": 0}
+
+func _bunker_by_id(bid: String) -> Dictionary:
+	for bunker in z().get("bunkers", []):
+		if str(bunker.get("id", "")) == bid:
+			return bunker
+	return {}
+
+func _home_city(iso: String) -> Dictionary:
+	for firm in GameState.player_firms():
+		if str(firm.get("country", "")) == iso and str(firm.get("city", "")) != "":
+			var owned = TerrainSystem.city_named(iso, str(firm.get("city", "")))
+			if not owned.is_empty():
+				return owned
+	var best := {}
+	for city in TerrainSystem.cities(iso):
+		if best.is_empty() or float(city.get("pop", 0.0)) > float(best.get("pop", 0.0)):
+			best = city
+	return best
+
+func _bunker_place(bunker: Dictionary) -> String:
+	var city = str(bunker.get("city", ""))
+	if city != "":
+		return city
+	return str(GameState.world.get(str(bunker.get("iso", "")), {}).get("name_sk", "krajina"))
+
+func bunker_info(bunker: Dictionary) -> String:
+	var cap = int(bunker.get("capacity", 0))
+	var state = "padol"
+	if int(bunker.get("build_left", 0)) > 0:
+		state = "vo výstavbe, ešte %d dní" % int(bunker.get("build_left", 0))
+	elif bool(bunker.get("alive", false)):
+		state = "stojí"
+	return "Bunker %s (%s)\nÚroveň %d\nHP %d\nObyvatelia %d / %d\nJedlo %d dní\nLaboratórium: %s" % [
+		_bunker_place(bunker), state, int(bunker.get("level", 1)), int(round(float(bunker.get("hp", 0)))),
+		int(bunker.get("people", 0)), cap, int(bunker.get("food_days", 0)),
+		"áno" if bool(bunker.get("lab", false)) else "nie"]
+
+func build_bunker() -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var row = z()
+	_ensure(row)
+	var iso = GameState.selected_iso
+	if iso == "":
+		iso = str(GameState.player.get("home", ""))
+	var city = _home_city(iso)
+	if city.is_empty():
+		return "V tejto krajine nie je mesto na bunker."
+	var spec = _bunker_level(1)
+	var price = float(spec.get("price", 2000000))
+	if float(GameState.player.cash) < price:
+		return "Bunker stojí %s." % EconMath.eur(price)
+	GameState.player.cash = float(GameState.player.cash) - price
+	var pos: Vector2 = city.pos
+	row.bunkers.append({
+		"id": "bk%d" % (row.bunkers.size() + 1),
+		"iso": iso,
+		"city": str(city.get("name", "")),
+		"pos": [pos.x, pos.y],
+		"level": 1,
+		"hp": float(bunker_rules.get("hp", 100)),
+		"people": 0,
+		"capacity": int(spec.get("capacity", 5000)),
+		"food_days": int(bunker_rules.get("food_days", 30)),
+		"lab": false,
+		"lab_owner": "",
+		"lab_firm": "",
+		"build_left": int(spec.get("build_days", 3)),
+		"alive": true,
+		"full_news": false,
+	})
+	return ""
+
+func upgrade_bunker(bid: String) -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var bunker = _bunker_by_id(bid)
+	if bunker.is_empty():
+		return "Bunker nenájdený."
+	if int(bunker.get("build_left", 0)) > 0 or not bool(bunker.get("alive", false)):
+		return "Bunker ešte nestojí."
+	if int(bunker.get("level", 1)) >= 2:
+		return "Bunker je na maxime."
+	var spec = _bunker_level(2)
+	var price = float(spec.get("price", 4000000))
+	if float(GameState.player.cash) < price:
+		return "Vylepšenie stojí %s." % EconMath.eur(price)
+	GameState.player.cash = float(GameState.player.cash) - price
+	bunker["level"] = 2
+	bunker["capacity"] = int(spec.get("capacity", 20000))
+	if int(bunker.get("people", 0)) < int(bunker.capacity):
+		bunker["full_news"] = false
+	_news("Bunker v %s je na úrovni 2." % _bunker_place(bunker))
+	return ""
+
+func build_bunker_lab(bid: String, firm_id: String = "") -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var bunker = _bunker_by_id(bid)
+	if bunker.is_empty():
+		return "Bunker nenájdený."
+	if int(bunker.get("build_left", 0)) > 0 or not bool(bunker.get("alive", false)):
+		return "Bunker ešte nestojí."
+	if bool(bunker.get("lab", false)):
+		return "Laboratórium už stojí."
+	var price = float(bunker_rules.get("lab_price", 1000000))
+	var owner = "player"
+	var firm_name = "hráč"
+	if firm_id != "":
+		var firm = GameState.firm_by_id(firm_id)
+		if firm.is_empty() or not can_research(firm):
+			return "Laboratórium môže mať len hráč alebo AI firma."
+		owner = str(firm.get("owner", ""))
+		firm_name = str(firm.get("name", firm_id))
+		if owner == "ai":
+			if float(firm.get("cash", 0.0)) < price:
+				return "Laboratórium stojí %s." % EconMath.eur(price)
+			firm["cash"] = float(firm.cash) - price
+		elif owner == "player":
+			if float(GameState.player.cash) < price:
+				return "Laboratórium stojí %s." % EconMath.eur(price)
+			GameState.player.cash = float(GameState.player.cash) - price
+		else:
+			return "Laboratórium môže mať len hráč alebo AI firma."
+	else:
+		if float(GameState.player.cash) < price:
+			return "Laboratórium stojí %s." % EconMath.eur(price)
+		GameState.player.cash = float(GameState.player.cash) - price
+	bunker["lab"] = true
+	bunker["lab_owner"] = owner
+	bunker["lab_firm"] = firm_id
+	_news("V bunkri v %s je laboratórium (%s). Vakcína ide o 10 %% rýchlejšie." % [_bunker_place(bunker), firm_name])
+	return ""
+
+func shelter_into(bunker: Dictionary, n: int) -> int:
+	if not bool(bunker.get("alive", false)) or int(bunker.get("build_left", 0)) > 0:
+		return 0
+	var room = maxi(0, int(bunker.get("capacity", 0)) - int(bunker.get("people", 0)))
+	var add = mini(room, maxi(0, n))
+	bunker["people"] = int(bunker.get("people", 0)) + add
+	if int(bunker.people) >= int(bunker.get("capacity", 0)) and int(bunker.get("capacity", 0)) > 0 and not bool(bunker.get("full_news", false)):
+		bunker["full_news"] = true
+		_news("Bunker v %s je preplnený." % _bunker_place(bunker))
+	return add
+
+func _lab_boost(firm_id: String, key: String) -> float:
+	var boost = float(bunker_rules.get("lab_vaccine_boost", 0.10))
+	for bunker in z().get("bunkers", []):
+		if not bool(bunker.get("alive", false)) or not bool(bunker.get("lab", false)) or int(bunker.get("build_left", 0)) > 0:
+			continue
+		if key == "vaccine" and str(bunker.get("lab_owner", "")) == "player":
+			return boost
+		if key == "ai_vaccine" and str(bunker.get("lab_owner", "")) == "ai" and str(bunker.get("lab_firm", "")) == firm_id:
+			return boost
+	return 0.0
+
+func _wall_hold(iso: String) -> float:
+	var best = 0.0
+	var table: Array = balance.get("wall_hold", [0.5, 0.9])
+	for bld in z().get("buildings", []):
+		if str(bld.get("kind", "")) != "mur":
+			continue
+		var zone_iso = ""
+		for zone in z().get("zones", []):
+			if str(zone.get("id", "")) == str(bld.get("zone", "")):
+				zone_iso = str(zone.get("iso", ""))
+		if zone_iso != iso:
+			continue
+		var lv = clampi(int(bld.get("level", 1)), 1, table.size())
+		best = maxf(best, float(table[lv - 1]))
+	return best
+
+func _tick_bunkers(row: Dictionary) -> void:
+	for bunker in row.get("bunkers", []):
+		if int(bunker.get("build_left", 0)) > 0:
+			bunker["build_left"] = int(bunker.build_left) - 1
+			if int(bunker.build_left) == 0:
+				_news("Bunker postavený v %s." % _bunker_place(bunker))
+			continue
+		if not bool(bunker.get("alive", false)):
+			continue
+		var cost = float(bunker_rules.get("maintain", 20000))
+		if float(GameState.player.cash) >= cost:
+			GameState.player.cash = float(GameState.player.cash) - cost
+		elif not bool(bunker.get("broke_news", false)):
+			bunker["broke_news"] = true
+			_news("Bunker v %s nemá na údržbu." % _bunker_place(bunker))
+		if int(bunker.get("food_days", 0)) <= 0:
+			bunker["hp"] = float(bunker.get("hp", 0.0)) - float(bunker_rules.get("starve_hp", 5))
+		else:
+			bunker["food_days"] = int(bunker.food_days) - 1
+		var dmg = 0.0
+		var reg = region_at(str(bunker.get("iso", "")), str(bunker.get("city", "")))
+		if int(reg.get("zombies", 0)) > 0 or float(reg.get("infection", 0.0)) > 0.0:
+			dmg = float(bunker_rules.get("attack", 10.0)) * (1.0 - _wall_hold(str(bunker.get("iso", ""))))
+		if dmg > 0.0:
+			bunker["hp"] = float(bunker.get("hp", 0.0)) - dmg
+		if float(bunker.get("hp", 0.0)) <= 0.0:
+			_bunker_fall(bunker)
+
+func _bunker_fall(bunker: Dictionary) -> void:
+	if not bool(bunker.get("alive", true)):
+		return
+	bunker["alive"] = false
+	bunker["hp"] = 0.0
+	var people = int(bunker.get("people", 0))
+	var row = z()
+	row["saved"] = maxi(0, int(row.get("saved", 0)) - people)
+	var iso = str(bunker.get("iso", ""))
+	var city = str(bunker.get("city", ""))
+	if people > 0 and city != "":
+		_seed(iso, city, maxf(2.0, float(people) / 500.0))
+	bunker["people"] = 0
+	_news("Bunker v %s padol. Ľudia vnútri sú nakazení." % _bunker_place(bunker))
+
