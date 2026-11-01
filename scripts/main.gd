@@ -1525,6 +1525,7 @@ func _build_zombie_panel() -> void:
 	_zbtn(box, "Začať vakcínu", func(): _zact(ZombieSystem.start_vaccine(_zombie_lab())))
 	_zbtn(box, "Zrýchliť vakcínu", func(): _zact(ZombieSystem.boost_vaccine()))
 	_zbtn(box, "Nasadiť vakcínu", func(): _zact(ZombieSystem.deploy_vaccine()))
+	_zbtn(box, "Postaviť bunker", func(): _zact(ZombieSystem.build_bunker()))
 	_zbtn(box, "Zavrieť", func(): p.visible = false)
 
 func _zone_build(k: String) -> void:
@@ -1546,6 +1547,52 @@ func _fill_zombie_panel() -> void:
 	var lab = get_node_or_null("ZombiePanel/ZombieScroll/ZombieBox/ZombieText")
 	if lab:
 		lab.text = ZombieSystem.summary()
+	_fill_bunker_cards()
+
+func _fill_bunker_cards() -> void:
+	var box = get_node_or_null("ZombiePanel/ZombieScroll/ZombieBox")
+	if box == null:
+		return
+	var list = box.get_node_or_null("BunkerList")
+	if list == null:
+		list = VBoxContainer.new()
+		list.name = "BunkerList"
+		box.add_child(list)
+		box.move_child(list, 1)
+	for c in list.get_children():
+		list.remove_child(c)
+		c.free()
+	if not has_node("/root/ZombieSystem") or not ZombieSystem.active():
+		return
+	var head = Label.new()
+	head.text = "Bunkre"
+	list.add_child(head)
+	var bunkers: Array = ZombieSystem.z().get("bunkers", [])
+	if bunkers.is_empty():
+		var empty = Label.new()
+		empty.text = "Žiadny bunker. Postaví sa vo vybranej krajine."
+		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		list.add_child(empty)
+		return
+	for bunker in bunkers:
+		var bid := str(bunker.get("id", ""))
+		var card = PanelContainer.new()
+		var vb = VBoxContainer.new()
+		card.add_child(vb)
+		var info = Label.new()
+		info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		info.custom_minimum_size = Vector2(380, 0)
+		info.text = ZombieSystem.bunker_info(bunker)
+		vb.add_child(info)
+		_zbtn(vb, "Vylepšiť", _bunker_upgrade.bind(bid))
+		_zbtn(vb, "Postaviť laboratórium", _bunker_lab.bind(bid))
+		list.add_child(card)
+
+func _bunker_upgrade(bid: String) -> void:
+	_zact(ZombieSystem.upgrade_bunker(bid))
+
+func _bunker_lab(bid: String) -> void:
+	_zact(ZombieSystem.build_bunker_lab(bid, _zombie_lab()))
 
 func _zombie_lab() -> String:
 	if firm_detail_id != "":
