@@ -6,6 +6,10 @@ var _active := false
 const MAX_TRAINS = 4
 const MAX_MARKERS = 24
 const MAX_VISIBLE_LINES = 64
+const MAX_CIVIL_SHIPS = 32
+const NEAR_ZOOM = 8.0
+var _far_tex := {}
+var _near := {}
 
 static func train_count(util: float) -> int:
 	if util <= 0.0: return 0
@@ -40,6 +44,10 @@ func _process(delta: float) -> void:
 			if Transport.utilization(line) > 0.0 and not clipped(map._to_screen(Transport._pt(line.a)), map._to_screen(Transport._pt(line.b)), Rect2(Vector2.ZERO, map.size).grow(32)).is_empty():
 				live = true
 				break
+	if map.atlas and has_node("/root/ShipSystem") and ShipSystem.civil_count() > 0 and map.is_visible_in_tree():
+		live = true
+		if map.zoom >= NEAR_ZOOM and not map.GFX.low():
+			_prepare_near_views()
 	if live: map.anim_time += dt
 	if live or _active: queue_redraw()
 	_active = live
@@ -107,7 +115,7 @@ func _draw_ships() -> void:
 		return
 	var n = 0
 	for s in ships:
-		if n >= 32:
+		if n >= MAX_CIVIL_SHIPS:
 			break
 		if str(s.get("kind", "")) == "military":
 			continue
@@ -115,6 +123,100 @@ func _draw_ships() -> void:
 		var sp = map._to_screen(ShipSystem.pos_of(s))
 		if not Rect2(Vector2.ZERO, map.size).grow(40).has_point(sp):
 			continue
-		var heading = Vector2.RIGHT
+		var heading = _ship_heading(s)
+		var model_path := ShipSystem.model_path(str(s.get("kind_id", "")))
+		if model_path != "":
+			var near = map.zoom >= NEAR_ZOOM and not map.GFX.low() and _near.has(model_path)
+			var tex: Texture2D = (_near[model_path] as SubViewport).get_texture() if near else _far_sprite(model_path)
+			if tex == null:
+				tex = _far_sprite(model_path)
+			if tex != null:
+				var sz = Vector2(36, 22) if near else Vector2(18, 10)
+				_draw_ship_tex(sp, heading, tex, sz)
+				continue
+		# Chýbajúci model: pôvodný zlatý trojuholník.
 		draw_colored_polygon(PackedVector2Array([sp + heading * 7, sp - heading * 5 + Vector2(0, 3), sp - heading * 5 - Vector2(0, 3)]), Color("D5AB39"))
+
+func _ship_heading(ship: Dictionary) -> Vector2:
+	var a = ShipSystem._port_pos(str(ship.get("src", "")))
+	var b = ShipSystem._port_pos(str(ship.get("dst", "")))
+	var d = b - a
+	if d.length_squared() < 0.0001:
+		return Vector2.RIGHT
+	return d.normalized()
+
+func _far_sprite(model_path: String) -> Texture2D:
+	var sprite_path := "res://assets/sprites/ships/%s.png" % model_path.get_file().get_basename()
+	if _far_tex.has(sprite_path):
+		return _far_tex[sprite_path]
+	if not ResourceLoader.exists(sprite_path):
+		_far_tex[sprite_path] = null
+		return null
+	var tex = load(sprite_path)
+	_far_tex[sprite_path] = tex
+	return tex
+
+func _prepare_near_views() -> void:
+	var ships = GameState.ext.get("fleet", []) if typeof(GameState.ext) == TYPE_DICTIONARY else []
+	if typeof(ships) != TYPE_ARRAY:
+		return
+	var n = 0
+	for s in ships:
+		if n >= MAX_CIVIL_SHIPS:
+			break
+		if str(s.get("kind", "")) == "military":
+			continue
+		n += 1
+		var path := ShipSystem.model_path(str(s.get("kind_id", "")))
+		if path != "":
+			_near_texture(path)
+
+func _near_texture(model_path: String) -> Texture2D:
+	if _near.has(model_path):
+		return (_near[model_path] as SubViewport).get_texture()
+	if not ResourceLoader.exists(model_path):
+		return null
+	var packed = load(model_path)
+	if packed == null or not (packed is PackedScene):
+		return null
+	var vp := SubViewport.new()
+	vp.name = "Ship3D"
+	vp.transparent_bg = true
+	vp.own_world_3d = true
+	vp.size = Vector2i(128, 96)
+	vp.gui_disable_input = true
+	vp.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
+	add_child(vp)
+	var world := Node3D.new()
+	vp.add_child(world)
+	var env := Environment.new()
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color(0, 0, 0, 0)
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.86, 0.9, 0.94)
+	env.ambient_light_energy = 1.15
+	var lighting := WorldEnvironment.new()
+	lighting.environment = env
+	world.add_child(lighting)
+	var sun := DirectionalLight3D.new()
+	sun.rotation_degrees = Vector3(-48, -30, 0)
+	sun.light_energy = 1.5
+	world.add_child(sun)
+	var inst = (packed as PackedScene).instantiate()
+	world.add_child(inst)
+	var cam := Camera3D.new()
+	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
+	cam.size = 4.8
+	cam.position = Vector3(2.1, 2.3, 2.6)
+	cam.look_at(Vector3(0, 0.55, 0))
+	cam.current = true
+	world.add_child(cam)
+	_near[model_path] = vp
+	return vp.get_texture()
+
+func _draw_ship_tex(sp: Vector2, heading: Vector2, tex: Texture2D, sz: Vector2) -> void:
+	# Sprite má predok hore (-Y). Otočenie zarovná predok na smer plavby.
+	draw_set_transform(sp, heading.angle() + PI * 0.5, Vector2.ONE)
+	draw_texture_rect(tex, Rect2(-sz * 0.5, sz), false)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 

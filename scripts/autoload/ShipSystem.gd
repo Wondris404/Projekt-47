@@ -17,6 +17,13 @@ func _ready() -> void:
 func spec(kind_id: String) -> Dictionary:
 	return catalog.get(kind_id, {})
 
+# Prázdna cesta = na mape ostane starý placeholder. Chýbajúci súbor hru nespustí pád.
+func model_path(kind_id: String) -> String:
+	var path := str(spec(kind_id).get("model", ""))
+	if path == "" or not FileAccess.file_exists(path):
+		return ""
+	return path
+
 func fleet() -> Array:
 	if typeof(GameState.ext) != TYPE_DICTIONARY:
 		GameState.ext = {}

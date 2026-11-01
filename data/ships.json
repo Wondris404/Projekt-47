@@ -482,7 +482,8 @@
    "price": 35000000,
    "maintain": 8000,
    "fuel": 7000,
-   "cargo": "fuel"
+   "cargo": "fuel",
+   "model": "res://assets/models/ships/psv.glb"
   },
   {
    "id": "ahts",
@@ -493,7 +494,8 @@
    "price": 42000000,
    "maintain": 9000,
    "fuel": 8000,
-   "cargo": "fuel"
+   "cargo": "fuel",
+   "model": "res://assets/models/ships/psv.glb"
   }
  ]
 }
