@@ -44,7 +44,7 @@ func _process(delta: float) -> void:
 			if Transport.utilization(line) > 0.0 and not clipped(map._to_screen(Transport._pt(line.a)), map._to_screen(Transport._pt(line.b)), Rect2(Vector2.ZERO, map.size).grow(32)).is_empty():
 				live = true
 				break
-	if map.atlas and has_node("/root/ShipSystem") and ShipSystem.civil_count() > 0 and map.is_visible_in_tree():
+	if map.atlas and has_node("/root/ShipSystem") and ShipSystem.fleet().size() > 0 and map.is_visible_in_tree():
 		live = true
 		if map.zoom >= NEAR_ZOOM and not map.GFX.low():
 			_prepare_near_views()
@@ -114,12 +114,17 @@ func _draw_ships() -> void:
 	if typeof(ships) != TYPE_ARRAY or ships.is_empty():
 		return
 	var n = 0
+	var mil = 0
 	for s in ships:
-		if n >= MAX_CIVIL_SHIPS:
-			break
-		if str(s.get("kind", "")) == "military":
-			continue
-		n += 1
+		var military = str(s.get("kind", "")) == "military"
+		if military:
+			if mil >= MAX_CIVIL_SHIPS:
+				continue
+			mil += 1
+		else:
+			if n >= MAX_CIVIL_SHIPS:
+				continue
+			n += 1
 		var sp = map._to_screen(ShipSystem.pos_of(s))
 		if not Rect2(Vector2.ZERO, map.size).grow(40).has_point(sp):
 			continue
@@ -131,11 +136,22 @@ func _draw_ships() -> void:
 			if tex == null:
 				tex = _far_sprite(model_path)
 			if tex != null:
-				var sz = Vector2(36, 22) if near else Vector2(18, 10)
-				_draw_ship_tex(sp, heading, tex, sz)
+				_draw_ship_tex(sp, heading, tex, _ship_px(model_path, near))
 				continue
 		# Chýbajúci model: pôvodný zlatý trojuholník.
 		draw_colored_polygon(PackedVector2Array([sp + heading * 7, sp - heading * 5 + Vector2(0, 3), sp - heading * 5 - Vector2(0, 3)]), Color("D5AB39"))
+
+func _ship_px(model_path: String, near: bool) -> Vector2:
+	var stem = model_path.get_file().get_basename()
+	var scale = 1.0
+	if stem == "carrier" or stem == "landing":
+		scale = 1.4
+	elif stem == "tanker" or stem == "lng":
+		scale = 1.15
+	elif stem == "patrol" or stem == "psv":
+		scale = 0.82
+	var base = Vector2(36, 22) if near else Vector2(18, 10)
+	return base * scale
 
 func _ship_heading(ship: Dictionary) -> Vector2:
 	var a = ShipSystem._port_pos(str(ship.get("src", "")))
@@ -162,10 +178,8 @@ func _prepare_near_views() -> void:
 		return
 	var n = 0
 	for s in ships:
-		if n >= MAX_CIVIL_SHIPS:
+		if n >= MAX_CIVIL_SHIPS * 2:
 			break
-		if str(s.get("kind", "")) == "military":
-			continue
 		n += 1
 		var path := ShipSystem.model_path(str(s.get("kind_id", "")))
 		if path != "":
