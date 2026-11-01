@@ -51,3 +51,19 @@ Sketchfab vyžaduje účet. Súbory patria do `C:\Users\ondre\Downloads\p47-ship
 - https://sketchfab.com/3d-models/2346efbaa7074b958e0e487e5e209700
 
 Tanker sa nesťahuje: https://sketchfab.com/3d-models/tanker-ship-143b1286b149487ebc0afd194afef3ae
+
+## Náhrady Kenney CC0
+
+Free3D vracia 403, licenciu neviem prečítať, preto vojnové trupy nie sú z Free3D. Tanker na Sketchfabe nemá licenciu. Namiesto nich je Kenney Watercraft Kit (CC0):
+
+| Súbor | Zdroj Kenney | Typy v `ships.json` |
+| --- | --- | --- |
+| `carrier.glb` | ship-large | carrier |
+| `landing.glb` | ship-ocean-liner | lhd, lpd, lst, hospital |
+| `destroyer.glb` | ship-cargo-b | destroyer, cruiser |
+| `frigate.glb` | ship-small | frigate, corvette |
+| `patrol.glb` | boat-tug-b | patrol, missile, sweeper, minelayer |
+| `tanker.glb` | ship-cargo-a | ropné tankery a oiler |
+| `lng.glb` | ship-cargo-a + 4 gule | lng, lpg |
+
+Kontajnerové lode, bulk, general a ponorky pole `model` nemajú. CC-BY modely zo Sketchfabu treba stiahnuť ručne do `assets/models/ships/_inbox/`.

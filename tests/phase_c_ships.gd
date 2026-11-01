@@ -28,12 +28,13 @@ func run(u) -> void:
 			mid = str(s.id)
 	u._chk("ships_sell_mil", merr == "" and ShipSystem.sell_military(mid) == "" and ShipSystem.civil_count() == 1)
 	u._chk("ships_civil_cap", preload("res://scripts/ui/atlas_traffic.gd").MAX_CIVIL_SHIPS == 32)
-	u._chk("ship_model_missing_fallback", ShipSystem.model_path("feeder") == "" and ShipSystem.model_path("carrier") == "")
+	u._chk("ship_model_missing_fallback", ShipSystem.model_path("feeder") == "" and ShipSystem.model_path("ssn") == "")
 	var model_rows = 0
 	for id in ShipSystem.catalog.keys():
 		var raw = str(ShipSystem.spec(str(id)).get("model", ""))
 		if raw == "":
 			continue
 		model_rows += 1
-		u._chk("ship_model_file_%s" % str(id), FileAccess.file_exists(raw) and ShipSystem.model_path(str(id)) == raw, raw)
+		u._chk("ship_model_file_%s" % str(id), raw.ends_with(".glb") and FileAccess.file_exists(raw) and ShipSystem.model_path(str(id)) == raw, raw)
 	u._chk("ship_model_psv_ahts", model_rows >= 2 and ShipSystem.model_path("psv").ends_with("psv.glb") and ShipSystem.model_path("ahts") == ShipSystem.model_path("psv"))
+	u._chk("ship_model_carrier_tanker", ShipSystem.model_path("carrier").ends_with("carrier.glb") and ShipSystem.model_path("vlcc").ends_with("tanker.glb") and ShipSystem.model_path("lng").ends_with("lng.glb"))
