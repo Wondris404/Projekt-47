@@ -1,0 +1,9 @@
+Star Wars Endor Bunker
+Autor: aclarke064 (https://sketchfab.com/aclarke064)
+Zdroj: https://sketchfab.com/3d-models/star-wars-endor-bunker-1c54abb1c6824f26a0a087d2bd7a635a
+Licencia: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+Použitie: nekomerčné použitie. Autor musí byť uvedený. Úpravy sa šíria pod tou istou licenciou.
+
+This work is based on "Star Wars Endor Bunker" (https://sketchfab.com/3d-models/star-wars-endor-bunker-1c54abb1c6824f26a0a087d2bd7a635a) by aclarke064 (https://sketchfab.com/aclarke064) licensed under CC-BY-NC-SA-4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+Súbor bunker.glb je prevod tohto modelu: predok na osi -Z, spodok na Y = 0, textúry najviac 1024 px. Asi 24 000 trojuholníkov.

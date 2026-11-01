@@ -12,6 +12,10 @@ Nové sprity budov (`ai_services`, `crude_oil`, `fuel`, `weapons`, `offshore_oil
 
 Staré `*_placeholder.png` ostávajú v repe ako záloha, hra ich už nepoužíva.
 
+## Bunker (Halloween DLC)
+
+- **Star Wars Endor Bunker** – aclarke064 – CC BY-NC-SA 4.0 – https://sketchfab.com/3d-models/star-wars-endor-bunker-1c54abb1c6824f26a0a087d2bd7a635a – nekomerčné použitie. `assets/models/bunker/bunker.glb` je prevod (predok na -Z, spodok na Y = 0, textúry 1024 px). Licencia je v `assets/models/bunker/LICENSE.txt`.
+
 ## Lode
 
 - **Boat Tug** (`boat-tug-a`) – Kenney – CC0 1.0 – https://kenney.nl/assets/watercraft-kit. Súbor `assets/models/ships/psv.glb` je prevod tohto modelu (predok na osi -Z, trup na Y = 0, textúra 512×512 vložená). `assets/sprites/ships/psv.png` je pohľad zhora. Používajú ho `psv` a `ahts`.

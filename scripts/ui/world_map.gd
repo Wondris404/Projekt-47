@@ -405,6 +405,7 @@ func _draw() -> void:
 	_draw_lines()  # JUAN19
 	_draw_products()  # JUAN21
 	_draw_zombie()
+	_draw_bunkers()
 	prof["rest"] = Time.get_ticks_usec() - _tp
 	last_draw_ms = float(Time.get_ticks_usec() - t0) / 1000.0
 
@@ -1091,6 +1092,79 @@ func _draw_zombie() -> void:
 		shown += 1
 
 const ZOMBIE_TEX = preload("res://assets/models/zombies/zombie_sprite.png")
+var _bunker_vp: SubViewport
+var _bunker_failed := false
+
+func _draw_bunkers() -> void:
+	if not GameState.running or not has_node("/root/ZombieSystem") or not ZombieSystem.active():
+		return
+	var tex = _bunker_tex()
+	for bunker in ZombieSystem.z().get("bunkers", []):
+		var p = bunker.get("pos", [0, 0])
+		if typeof(p) != TYPE_ARRAY or p.size() < 2:
+			continue
+		var sp = _to_screen(Vector2(float(p[0]), float(p[1])))
+		if not Rect2(Vector2.ZERO, size).grow(48).has_point(sp):
+			continue
+		var col = ZombieSystem.hp_color(float(bunker.get("hp", 0.0)))
+		draw_arc(sp, 16.0, 0.0, TAU, 28, col, 2.5, true)
+		if tex != null:
+			draw_texture_rect(tex, Rect2(sp - Vector2(14, 14), Vector2(28, 28)), false)
+		else:
+			draw_rect(Rect2(sp - Vector2(8, 6), Vector2(16, 12)), Color(0.35, 0.4, 0.32))
+			draw_rect(Rect2(sp - Vector2(2, 1), Vector2(4, 7)), Color(0.12, 0.1, 0.08))
+
+# Model bunkra sa renderuje raz (ako loď), aby mapa držala FPS. Keď súbor chýba, ostane ikona.
+func _bunker_tex() -> Texture2D:
+	if _bunker_failed:
+		return null
+	if _bunker_vp != null:
+		return _bunker_vp.get_texture()
+	var path := ZombieSystem.bunker_model_path()
+	if path == "" or not ResourceLoader.exists(path):
+		_bunker_failed = true
+		return null
+	var packed = load(path)
+	if packed == null or not (packed is PackedScene):
+		_bunker_failed = true
+		return null
+	var vp := SubViewport.new()
+	vp.name = "Bunker3D"
+	vp.transparent_bg = true
+	vp.own_world_3d = true
+	vp.size = Vector2i(128, 128)
+	vp.gui_disable_input = true
+	vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	add_child(vp)
+	var world := Node3D.new()
+	vp.add_child(world)
+	var env := Environment.new()
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color(0, 0, 0, 0)
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.82, 0.86, 0.8)
+	env.ambient_light_energy = 1.1
+	var lighting := WorldEnvironment.new()
+	lighting.environment = env
+	world.add_child(lighting)
+	var sun := DirectionalLight3D.new()
+	sun.rotation_degrees = Vector3(-42, 20, 0)
+	sun.light_energy = 1.4
+	world.add_child(sun)
+	var inst = (packed as PackedScene).instantiate()
+	if inst == null:
+		_bunker_failed = true
+		vp.queue_free()
+		return null
+	world.add_child(inst)
+	var cam := Camera3D.new()
+	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
+	cam.size = 2.6
+	cam.look_at_from_position(Vector3(0.35, 1.15, -2.6), Vector3(0, 0.28, 0), Vector3.UP)
+	cam.current = true
+	world.add_child(cam)
+	_bunker_vp = vp
+	return vp.get_texture()
 
 func _zoom_at(mouse: Vector2, new_zoom: float, smooth: bool = false) -> void:
 	new_zoom = clampf(new_zoom, 1.0, MAX_ZOOM)
