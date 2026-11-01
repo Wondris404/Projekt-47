@@ -57,11 +57,11 @@ func _ready() -> void:
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "atlas_style_unit":
 			var unit = load("res://tests/unit.gd").new()
-			load("res://tests/atlas_style.gd").new().run(unit,self)
+			load("res://tests/unit.gd").AtlasStyleCheck.new().run(unit, self)
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "atlas_city_scale_unit":
 			var unit = load("res://tests/unit.gd").new()
-			load("res://tests/atlas_city_scale.gd").new().run(unit,self)
+			load("res://tests/unit.gd").AtlasCityScaleCheck.new().run(unit, self)
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "strategic_hud_unit":
 			var unit = load("res://tests/unit.gd").new()
@@ -81,7 +81,7 @@ func _ready() -> void:
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "goods_icons_unit":
 			var unit = load("res://tests/unit.gd").new()
-			load("res://tests/goods_icons_test.gd").new().run(unit)
+			load("res://tests/unit.gd").GoodsIconsCheck.new().run(unit)
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "bank_audit_unit":
 			var unit = load("res://tests/unit.gd").new()
@@ -97,7 +97,7 @@ func _ready() -> void:
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "employment_stats_unit":
 			var unit = load("res://tests/unit.gd").new()
-			load("res://tests/employment_stats.gd").new().run(unit)
+			load("res://tests/unit.gd").EmploymentCheck.new().run(unit)
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "society_unit":  # JUAN-P47
 			var unit = load("res://tests/unit.gd").new()
@@ -105,7 +105,7 @@ func _ready() -> void:
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "local_comp_unit":
 			var unit = load("res://tests/unit.gd").new()
-			load("res://tests/local_comp.gd").new().run(unit)
+			load("res://tests/unit.gd").LocalCompCheck.new().run(unit)
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "performance_audit":
 			load("res://tests/performance_audit.gd").new().run()
