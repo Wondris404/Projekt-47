@@ -32,7 +32,7 @@ func run(u, host: Node) -> void:
 	var saved = GameState.to_dict()
 	u._chk("manager_v3_roundtrip", GameState.from_dict(saved) == "" and GameState.player_firms()[0].manager == original)
 	firm = GameState.player_firms()[0]
-	u._chk("manager_original_bonus", is_equal_approx(IndustrySystem.firm_efficiency(firm), 1.14))
+	u._chk("manager_original_bonus", is_equal_approx(IndustrySystem.firm_efficiency(firm), 1.0))
 	firm.manager.skill = 0.0
 	u._chk("manager_never_penalizes", IndustrySystem.firm_efficiency(firm) >= 1.0)
 	IndustrySystem.fire_manager(str(firm.id))

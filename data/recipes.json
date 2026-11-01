@@ -1031,4 +1031,57 @@
   "capacity": 300,
   "edu": 0.6
  }
+
+,
+ {
+  "id": "offshore_oil_rig",
+  "name": "Morská ropná plošina",
+  "labor": 14,
+  "rent": 80,
+  "maintain": 160,
+  "inputs": {
+   "electricity": 4.0,
+   "steel": 0.05
+  },
+  "outputs": {
+   "crude_oil": 140
+  },
+  "endow": "crude_oil",
+  "local": false,
+  "staff": 220
+ },
+ {
+  "id": "offshore_gas_rig",
+  "name": "Morská plynová plošina",
+  "labor": 12,
+  "rent": 70,
+  "maintain": 120,
+  "inputs": {
+   "electricity": 3.0,
+   "steel": 0.04
+  },
+  "outputs": {
+   "natural_gas": 130
+  },
+  "endow": "",
+  "local": false,
+  "staff": 180
+ },
+ {
+  "id": "fpso",
+  "name": "FPSO",
+  "labor": 16,
+  "rent": 90,
+  "maintain": 200,
+  "inputs": {
+   "electricity": 5.0,
+   "steel": 0.06
+  },
+  "outputs": {
+   "crude_oil": 170
+  },
+  "endow": "crude_oil",
+  "local": false,
+  "staff": 260
+ }
 ]

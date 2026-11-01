@@ -266,6 +266,9 @@ func _finish_day(month_before: int, year_before: int) -> void:
 	if day_index % 7 == 0:
 		StockMarket.weekly()  # JUAN5 #19
 		Empire.weekly()  # JUAN10 financna divizia
+		_weekly_prices()
+	if has_node("/root/ShipSystem"):
+		ShipSystem.daily()
 	day_passed.emit(day_index)
 
 func _macro() -> void:
@@ -640,15 +643,62 @@ func newspaper(kind: String) -> Array:
 			out.append(row)
 	return out
 
-func post_news(text: String) -> void:
+func post_news(text: String, category: String = "") -> void:
+	var cat = category if category != "" else news_category(text)
+	var head = text
+	if head.length() > 90:
+		head = head.substr(0, 87) + "..."
 	news.push_front({
 		"day": day_index,
 		"date": EconMath.date_sk(int(date.y), int(date.m), int(date.d)),
+		"category": cat,
+		"headline": head,
 		"text": text,
 	})
-	if news.size() > 80:
+	while news.size() > 200:
 		news.pop_back()
 	news_posted.emit(text)
+
+func news_category(text: String) -> String:
+	var t = text.to_lower()
+	if "vojn" in t or "mier" in t or "prímer" in t or "primer" in t or "sankci" in t:
+		return "vojna"
+	if "šok" in t or "sok" in t or "kríz" in t or "kriz" in t or "reces" in t or "katastrof" in t or "zemetras" in t or "povod" in t:
+		return "šoky"
+	if "založ" in t or "zaloz" in t or "krach" in t or "prevz" in t or "zmluv" in t or "kontrakt" in t or "firma " in t or "firmu" in t:
+		return "firmy"
+	if "ropa" in t or "plyn" in t or "cena " in t or "ceny" in t or "%" in t:
+		return "ceny"
+	if "voľb" in t or "volb" in t or "zákon" in t or "zakon" in t or "parlament" in t:
+		return "politika"
+	return "ostatné"
+
+func news_row(item) -> Dictionary:
+	if typeof(item) == TYPE_STRING:
+		return {"day": 0, "date": "", "category": news_category(item), "headline": item, "text": item}
+	if typeof(item) != TYPE_DICTIONARY:
+		return {"day": 0, "date": "", "category": "ostatné", "headline": "", "text": ""}
+	var text = str(item.get("text", item.get("headline", "")))
+	var cat = str(item.get("category", item.get("kategoria", "")))
+	if cat == "":
+		cat = news_category(text)
+	var head = str(item.get("headline", text))
+	return {"day": int(item.get("day", 0)), "date": str(item.get("date", "")), "category": cat, "headline": head, "text": text}
+
+func _weekly_prices() -> void:
+	if typeof(ext) != TYPE_DICTIONARY:
+		ext = {}
+	var iso = selected_iso if markets.has(selected_iso) else str(player.get("home", "SK"))
+	if not markets.has(iso):
+		return
+	var oil = MarketSystem.price(iso, "crude_oil")
+	var gas = MarketSystem.price(iso, "natural_gas")
+	var prev = ext.get("px_week", {})
+	if typeof(prev) == TYPE_DICTIONARY and prev.has("oil") and prev.has("gas"):
+		var od = (oil - float(prev.oil)) / maxf(float(prev.oil), 0.01) * 100.0
+		var gd = (gas - float(prev.gas)) / maxf(float(prev.gas), 0.01) * 100.0
+		post_news("Ropa %+.1f %%, zemný plyn %+.1f %% za týždeň (%s)." % [od, gd, str(world.get(iso, {}).get("name_sk", iso))], "ceny")
+	ext["px_week"] = {"oil": oil, "gas": gas, "day": day_index}
 
 func industries_ok(ind_id: String) -> bool:
 	return DataLoader.industries.has(ind_id)
@@ -968,6 +1018,10 @@ func from_dict(d: Dictionary) -> String:
 	stock_orders = d.get("stock_orders", [])
 	sites = d.get("sites", DataLoader.sites.duplicate(true))
 	news = d.get("news", [])
+	if typeof(news) != TYPE_ARRAY:
+		news = []
+	while news.size() > 200:
+		news.pop_back()
 	stories = d.get("stories", [])
 	config = d.get("config", {})
 	selected_iso = str(d.get("selected_iso", player.get("home", "SK")))

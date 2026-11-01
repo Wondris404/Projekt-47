@@ -470,6 +470,24 @@ func _build_play() -> void:
 	map_style_b.name = "MapStyleToggle"
 	map_style_b.pressed.connect(func(): set_map_style("pixel" if map_style() == "hoi" else "hoi"))
 	zoom_row.add_child(map_style_b)
+	var news_b = Button.new()
+	news_b.name = "NewsButton"
+	news_b.text = "Noviny"
+	news_b.tooltip_text = "Správy z hry: firmy, vojna, ceny, politika a šoky. Mapa: Pixelová ostáva vedľa."
+	news_b.pressed.connect(_toggle_news)
+	zoom_row.add_child(news_b)
+	var ship_b = Button.new()
+	ship_b.name = "ShipsButton"
+	ship_b.text = "Lode"
+	ship_b.tooltip_text = "Kúpa lodí od štátu alebo stavba v lodenici za 72 %. Vojenské lode sa predávajú štátom, civilné vozia náklad."
+	ship_b.pressed.connect(_toggle_ships)
+	zoom_row.add_child(ship_b)
+	var arms_b = Button.new()
+	arms_b.name = "ArmsButton"
+	arms_b.text = "Návrhy"
+	arms_b.tooltip_text = "Vlastná zbraň, tank alebo lietadlo, ak máš zbrojovku alebo letecký závod."
+	arms_b.pressed.connect(_toggle_arms)
+	zoom_row.add_child(arms_b)
 	var preview_3d_button = Button.new()
 	preview_3d_button.name = "Prototype3DButton"
 	preview_3d_button.text = "3D skúška"
@@ -2021,7 +2039,8 @@ func _refresh_label(force_firm_list: bool = true) -> void:
 	var news = ""
 	var shown = 0
 	for item in GameState.news:
-		news += str(item.get("text", "")) + "\n"
+		var row = GameState.news_row(item)
+		news += "[%s] %s\n" % [str(row.category), str(row.headline)]
 		shown += 1
 		if shown >= 6:
 			break
@@ -2036,6 +2055,194 @@ func _refresh_label(force_firm_list: bool = true) -> void:
 		paper_label.text = paper
 	if climate_label:
 		climate_label.text = EventSystem.climate_board()
+	_refresh_label_minister(iso)
+
+func _toggle_news() -> void:
+	var p = get_node_or_null("NewsPanel")
+	if p == null:
+		_build_news_panel()
+		p = get_node("NewsPanel")
+	p.visible = not p.visible
+	if p.visible:
+		_fill_news("všetko")
+
+func _build_news_panel() -> void:
+	var p = PanelContainer.new()
+	p.name = "NewsPanel"
+	p.z_index = 46
+	p.position = Vector2(16, 96)
+	p.visible = false
+	add_child(p)
+	var box = VBoxContainer.new()
+	box.name = "NewsBox"
+	p.add_child(box)
+	var filters = HFlowContainer.new()
+	box.add_child(filters)
+	for cat in ["všetko", "firmy", "vojna", "ceny", "politika", "šoky", "ostatné"]:
+		var b = Button.new()
+		b.text = cat
+		var c = cat
+		b.pressed.connect(_fill_news.bind(c))
+		filters.add_child(b)
+	var close = Button.new()
+	close.text = "Zavrieť"
+	close.pressed.connect(func(): p.visible = false)
+	box.add_child(close)
+	var lab = Label.new()
+	lab.name = "NewsBody"
+	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lab.custom_minimum_size = Vector2(460, 0)
+	box.add_child(lab)
+
+func _fill_news(cat: String) -> void:
+	var lab = get_node_or_null("NewsPanel/NewsBox/NewsBody")
+	if lab == null:
+		return
+	var lines: PackedStringArray = PackedStringArray()
+	for item in GameState.news:
+		var row = GameState.news_row(item)
+		if cat != "všetko" and str(row.category) != cat:
+			continue
+		lines.append("[%s] %s" % [str(row.category), str(row.headline)])
+		if lines.size() >= 40:
+			break
+	lab.text = "NOVINY\n" + ("\n".join(lines) if lines.size() > 0 else "Zatiaľ žiadna správa v tomto filtri.")
+
+func _toggle_ships() -> void:
+	var p = get_node_or_null("ShipsPanel")
+	if p == null:
+		p = PanelContainer.new()
+		p.name = "ShipsPanel"
+		p.z_index = 46
+		p.position = Vector2(24, 110)
+		add_child(p)
+		var box = VBoxContainer.new()
+		box.name = "ShipsBox"
+		p.add_child(box)
+		var pick = OptionButton.new()
+		pick.name = "ShipPick"
+		for id in ShipSystem.catalog.keys():
+			var row: Dictionary = ShipSystem.spec(str(id))
+			pick.add_item("%s (%s)" % [str(row.get("name", id)), EconMath.eur(float(row.get("price", 0)))])
+			pick.set_item_metadata(pick.item_count - 1, str(id))
+		box.add_child(pick)
+		var buy = Button.new()
+		buy.text = "Kúpiť od štátu"
+		buy.pressed.connect(func():
+			var e = ShipSystem.buy(str(pick.get_item_metadata(pick.selected)), false)
+			_feedback(e if e != "" else "Loď kúpená.", e == "")
+			_fill_ships())
+		box.add_child(buy)
+		var yard = Button.new()
+		yard.text = "Postaviť v lodenici (72 %)"
+		yard.pressed.connect(func():
+			var e2 = ShipSystem.buy(str(pick.get_item_metadata(pick.selected)), true)
+			_feedback(e2 if e2 != "" else "Loď postavená.", e2 == "")
+			_fill_ships())
+		box.add_child(yard)
+		var sell = Button.new()
+		sell.text = "Predať prvú vojenskú loď štátu"
+		sell.pressed.connect(func():
+			var e3 = ""
+			for s in ShipSystem.fleet():
+				if str(s.get("kind", "")) == "military":
+					e3 = ShipSystem.sell_military(str(s.get("id", "")))
+					break
+			if e3 == "" and ShipSystem.fleet().is_empty():
+				e3 = "Žiadna vojenská loď."
+			_feedback(e3 if e3 != "" else "Predané.", e3 == "")
+			_fill_ships())
+		box.add_child(sell)
+		var lab = Label.new()
+		lab.name = "ShipsBody"
+		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lab.custom_minimum_size = Vector2(420, 0)
+		box.add_child(lab)
+		var close = Button.new()
+		close.text = "Zavrieť"
+		close.pressed.connect(func(): p.visible = false)
+		box.add_child(close)
+	p.visible = not p.visible
+	if p.visible:
+		_fill_ships()
+
+func _fill_ships() -> void:
+	var lab = get_node_or_null("ShipsPanel/ShipsBox/ShipsBody")
+	if lab == null:
+		return
+	var lines: PackedStringArray = PackedStringArray()
+	for s in ShipSystem.fleet():
+		lines.append(ShipSystem.info(str(s.get("id", ""))))
+	lab.text = "\n".join(lines) if lines.size() > 0 else "Žiadna loď. Prázdna flotila nemení dopravu."
+
+func _toggle_arms() -> void:
+	var p = get_node_or_null("ArmsPanel")
+	if p == null:
+		p = PanelContainer.new()
+		p.name = "ArmsPanel"
+		p.z_index = 46
+		p.position = Vector2(40, 120)
+		add_child(p)
+		var box = VBoxContainer.new()
+		box.name = "ArmsBox"
+		p.add_child(box)
+		var pick = OptionButton.new()
+		pick.name = "BpPick"
+		for id in ArmsSystem.catalog.keys():
+			var row: Dictionary = ArmsSystem.catalog[str(id)]
+			pick.add_item(str(row.get("name", id)))
+			pick.set_item_metadata(pick.item_count - 1, str(id))
+		box.add_child(pick)
+		var name_box = LineEdit.new()
+		name_box.name = "DesignName"
+		name_box.placeholder_text = "Vlastný názov"
+		box.add_child(name_box)
+		var buy = Button.new()
+		buy.text = "Kúpiť blueprint"
+		buy.pressed.connect(func():
+			var e = ArmsSystem.buy_bp(str(pick.get_item_metadata(pick.selected)))
+			_feedback(e if e != "" else "Blueprint kúpený.", e == "")
+			_fill_arms())
+		box.add_child(buy)
+		var make = Button.new()
+		make.text = "Navrhnúť"
+		make.pressed.connect(func():
+			var e2 = ArmsSystem.design(str(pick.get_item_metadata(pick.selected)), name_box.text, 100000.0, 50.0, 60.0)
+			_feedback(e2 if e2 != "" else "Návrh hotový.", e2 == "")
+			_fill_arms())
+		box.add_child(make)
+		var sell = Button.new()
+		sell.text = "Predať prvý návrh štátu"
+		sell.pressed.connect(func():
+			var rows = ArmsSystem.designs()
+			var e3 = "Žiadny návrh." if rows.is_empty() else ArmsSystem.sell(str(rows[0].get("id", "")))
+			_feedback(e3 if e3 != "" else "Predané.", e3 == "")
+			_fill_arms())
+		box.add_child(sell)
+		var lab = Label.new()
+		lab.name = "ArmsBody"
+		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lab.custom_minimum_size = Vector2(420, 0)
+		box.add_child(lab)
+		var close = Button.new()
+		close.text = "Zavrieť"
+		close.pressed.connect(func(): p.visible = false)
+		box.add_child(close)
+	p.visible = not p.visible
+	if p.visible:
+		_fill_arms()
+
+func _fill_arms() -> void:
+	var lab = get_node_or_null("ArmsPanel/ArmsBox/ArmsBody")
+	if lab == null:
+		return
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append("Zbrojný bonus ×%.3f, letecký ×%.3f (bez návrhov je 1)." % [ArmsSystem.arms_mult(), ArmsSystem.air_mult()])
+	for d in ArmsSystem.designs():
+		lines.append("%s (%s) kvalita %.0f" % [str(d.get("name", "")), str(d.get("kind", "")), float(d.get("quality", 0))])
+	lab.text = "\n".join(lines)
+
+func _refresh_label_minister(iso: String) -> void:
 	if minister_label:
 		var sheet: Dictionary = LawSystem.minister_sheet(iso)
 		var ai_names = ""
@@ -2065,7 +2272,7 @@ func _refresh_label(force_firm_list: bool = true) -> void:
 		]
 
 
-# ===== JUAN3: Postaviť tu, detail firmy, pravá ruka, úvery banky =====
+# ===== JUAN3: Postaviť tu, detail firmy, úvery banky =====
 var place_kind: OptionButton
 var place_hint: Label
 var my_firms_buttons: VBoxContainer
@@ -2282,8 +2489,7 @@ func firm_detail_text(firm: Dictionary) -> String:
 	if str(firm.get("industry", "")) in ["trade_desk", "stock_broker"]:
 		out += IndustrySystem.trade_flow_text(firm)
 	out += "\n" + Transport.supply_text(firm)  # JUAN19
-	if not IndustrySystem.has_manager(firm):
-		out += "\nZákladný manažment zabezpečuje nákup materiálu a dopĺňanie ľudí. Pravá ruka je voliteľný bonus k výkonu a spokojnosti.\n"
+	out += "\nZákladný manažment zabezpečuje nákup materiálu a dopĺňanie ľudí.\n"
 	return out
 
 func _fill_firm_detail() -> void:
@@ -2304,27 +2510,6 @@ func _fill_firm_detail() -> void:
 	goods_row.name = "FirmGoodsIcons"
 	_detail_mgr.add_child(goods_row)
 	GoodsIcons.fill(goods_row, str(firm.get("industry", "")))
-	var head = Label.new()
-	head.text = "PRAVÁ RUKA (VOLITEĽNÁ)"
-	_detail_mgr.add_child(head)
-	if IndustrySystem.has_manager(firm):
-		var m: Dictionary = firm.manager
-		var l = Label.new()
-		l.text = "%s, schopnosť %d/100, plat %s mesačne. Prináša bonus k výkonu a spokojnosti." % [str(m.name), int(float(m.skill) * 100), EconMath.eur(float(m.salary))]
-		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_detail_mgr.add_child(l)
-		var fb = Button.new()
-		fb.text = "Prepustiť pravú ruku"
-		fb.pressed.connect(_on_fire_manager)
-		_detail_mgr.add_child(fb)
-	else:
-		for cand in IndustrySystem.manager_candidates(firm):
-			var hb = Button.new()
-			hb.text = "Najať pravú ruku: %s (schopnosť %d, plat %s/mes.)" % [str(cand.name), int(float(cand.skill) * 100), EconMath.eur(float(cand.salary))]
-			hb.pressed.connect(_on_hire_manager.bind(cand))
-			_detail_mgr.add_child(hb)
-
-	# JUAN5 #18/#19: uroven, predaj, IPO
 	var lv = Label.new()
 	lv.text = "ÚROVEŇ %d/3%s" % [IndustrySystem.firm_level(firm), "  (založená v banke)" if str(firm.get("pledged", "")) != "" else ""]
 	_detail_mgr.add_child(lv)
@@ -2421,16 +2606,6 @@ func _fund_ui(firm: Dictionary) -> void:
 		_refresh_label())
 	cash_row.add_child(withdraw)
 
-func _on_hire_manager(cand: Dictionary) -> void:
-	var err = IndustrySystem.hire_manager(firm_detail_id, cand)
-	_feedback("Pravá ruka: %s" % ("%s nastupuje." % str(cand.get("name", "")) if err == "" else err), err == "")
-	_fill_firm_detail()
-
-func _on_fire_manager() -> void:
-	var err = IndustrySystem.fire_manager(firm_detail_id)
-	_feedback("Pravá ruka: %s" % ("prepustená." if err == "" else err), err == "")
-	_fill_firm_detail()
-
 func bank_consumer_text(b: Dictionary) -> String:
 	var st: Dictionary = b.get("cons_stats", {})
 	var out = "ÚVERY ĽUĎOM (úrok nových úverov %s)\n" % EconMath.pct(BankingSystem.consumer_rate(b))
@@ -2467,11 +2642,7 @@ func _juan3_ui_checks() -> void:
 	if placed:
 		open_firm_detail(str(f.id))
 		await get_tree().process_frame
-		var hire = _find_button(firm_detail_panel, "Najať pravú ruku")
-		if hire:
-			hire.emit_signal("pressed")
-		await get_tree().process_frame
-		print("P47_UI_DETAIL open=%d manager=%d" % [int(firm_detail_panel.visible), int(IndustrySystem.has_manager(f))])
+		print("P47_UI_DETAIL open=%d" % int(firm_detail_panel.visible))
 		close_firm_detail()
 
 # ===================== JUAN4 =====================

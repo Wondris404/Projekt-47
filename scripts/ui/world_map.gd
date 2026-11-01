@@ -983,6 +983,12 @@ func _hover_tip(iso: String) -> void:
 
 func _click_at(sp: Vector2) -> void:
 	# JUAN14: jedno miesto pre vyhodnotenie kliku (aj pre testy)
+	if has_node("/root/ShipSystem"):
+		var sid = ShipSystem.ship_at(_to_world(sp))
+		if sid != "":
+			GameState.post_news(ShipSystem.info(sid), "firmy")
+			queue_redraw()
+			return
 	if line_mode != "":  # JUAN19: stavba trate - 1. klik zaciatok, 2. klik koniec
 		if not _line_has_a:
 			_line_a = _to_world(sp)
@@ -1497,7 +1503,8 @@ func _draw_lines() -> void:
 			draw_circle(e, w * 0.55, UiPalette.ACCENT)
 		if label_font and zoom >= 2.0:
 			var mid = (a + b) * 0.5 + Vector2(6, -6)
-			var txt = "%s %.0f km · vyťaženie %.0f %%" % ["Železnica" if str(l.kind) == "rail" else "Ropovod", float(l.km), u * 100.0]
+			var flow = float(l.get("used_prev", 0.0))
+			var txt = "%s %.0f km · prietok %.1f · vyťaženie %.0f %%" % ["Železnica" if str(l.kind) == "rail" else "Potrubie", float(l.km), flow, u * 100.0]
 			draw_string_outline(label_font, mid, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, 3, UiPalette.OUTLINE)
 			draw_string(label_font, mid, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UiPalette.BAD if u > 1.0 else (UiPalette.WARN if u > 0.7 else UiPalette.OK))
 	if line_mode != "":
@@ -1605,7 +1612,7 @@ func _nearest_links(pts: Array, k: int, maxd: float) -> Array:
 	return out
 
 const POWER_IND = ["power_coal", "gas_plant", "nuclear_plant", "solar_plant"]
-const WELL_IND = ["oil_well", "gas_well"]
+const WELL_IND = ["oil_well", "gas_well", "offshore_oil_rig", "offshore_gas_rig", "fpso"]
 const PIPE_DEST = ["oil_refinery", "gas_plant", "gas_works", "chem_plant"]
 
 # infrastruktura z realnych dat: mesta (cesty, dialnice, zeleznice, pristavy, letiska) + firmy v ulozenej hre (elektrarne, vrty)
@@ -1668,8 +1675,9 @@ func atlas_infra() -> Dictionary:
 		var best = null
 		var bd = 60.0 * 60.0
 		for d2 in dests:
-			if str(w[1]) == "gas_well" and str(d2[1]) == "oil_refinery":
-				continue
+			if str(w[1]) == "gas_well" or str(w[1]) == "offshore_gas_rig":
+				if str(d2[1]) == "oil_refinery":
+					continue
 			var dd = (d2[0] as Vector2).distance_squared_to(w[0])
 			if dd < bd and dd > 0.01:
 				bd = dd
