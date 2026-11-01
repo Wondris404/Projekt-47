@@ -5,3 +5,5 @@
 /saves/
 /build/
 *.tmp
+# Godot pri importe doplní .uid vedľa skriptov. Nie sú testy a do limitu tests/ sa nepočítajú.
+tests/*.uid
