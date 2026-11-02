@@ -48,6 +48,7 @@ func run() -> int:
 	DescriptionsCheck.new().run(self)
 	load("res://tests/phase_a_no_manager.gd").new().run(self)
 	load("res://tests/phase_b_news.gd").new().run(self)
+	load("res://tests/phase_c_ships.gd").new().run(self)
 	SaveSystem.cleanup_test_dir()
 	return 1 if fails > 0 else 0
 

@@ -983,6 +983,12 @@ func _hover_tip(iso: String) -> void:
 
 func _click_at(sp: Vector2) -> void:
 	# JUAN14: jedno miesto pre vyhodnotenie kliku (aj pre testy)
+	if has_node("/root/ShipSystem"):
+		var sid = ShipSystem.ship_at(_to_world(sp))
+		if sid != "":
+			GameState.post_news(ShipSystem.info(sid), "firmy")
+			queue_redraw()
+			return
 	if line_mode != "":  # JUAN19: stavba trate - 1. klik zaciatok, 2. klik koniec
 		if not _line_has_a:
 			_line_a = _to_world(sp)

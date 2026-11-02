@@ -871,6 +871,8 @@ func _run_desks(firm: Dictionary, _rev_in: float, flow: Dictionary = {}) -> Dict
 		if str(firm.get("owner", "")) == "player":
 			fmult = float(GameState.player.modifiers.get("freight_mult", 1.0))
 		var freight = MarketSystem.freight_unit(src, dst, cid) * fmult
+		if str(firm.get("owner", "")) == "player" and has_node("/root/ShipSystem") and ShipSystem.civil_count() > 0:
+			freight = ShipSystem.own_freight(src, dst, cid)
 		var tariff = GeopoliticsSystem.tariff(src, dst)
 		var unit_cost = src_px * (1.0 + tariff) + freight
 		if dst_px <= unit_cost * 1.02:
