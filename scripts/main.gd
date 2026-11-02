@@ -470,6 +470,12 @@ func _build_play() -> void:
 	map_style_b.name = "MapStyleToggle"
 	map_style_b.pressed.connect(func(): set_map_style("pixel" if map_style() == "hoi" else "hoi"))
 	zoom_row.add_child(map_style_b)
+	var news_b = Button.new()
+	news_b.name = "NewsButton"
+	news_b.text = "Noviny"
+	news_b.tooltip_text = "Správy z hry: firmy, vojna, ceny, politika a šoky. Mapa: Pixelová ostáva vedľa."
+	news_b.pressed.connect(_toggle_news)
+	zoom_row.add_child(news_b)
 	var preview_3d_button = Button.new()
 	preview_3d_button.name = "Prototype3DButton"
 	preview_3d_button.text = "3D skúška"
@@ -2021,7 +2027,8 @@ func _refresh_label(force_firm_list: bool = true) -> void:
 	var news = ""
 	var shown = 0
 	for item in GameState.news:
-		news += str(item.get("text", "")) + "\n"
+		var row = GameState.news_row(item)
+		news += "[%s] %s\n" % [str(row.category), str(row.headline)]
 		shown += 1
 		if shown >= 6:
 			break
@@ -2036,6 +2043,60 @@ func _refresh_label(force_firm_list: bool = true) -> void:
 		paper_label.text = paper
 	if climate_label:
 		climate_label.text = EventSystem.climate_board()
+	_refresh_label_minister(iso)
+
+func _toggle_news() -> void:
+	var p = get_node_or_null("NewsPanel")
+	if p == null:
+		_build_news_panel()
+		p = get_node("NewsPanel")
+	p.visible = not p.visible
+	if p.visible:
+		_fill_news("všetko")
+
+func _build_news_panel() -> void:
+	var p = PanelContainer.new()
+	p.name = "NewsPanel"
+	p.z_index = 46
+	p.position = Vector2(16, 96)
+	p.visible = false
+	add_child(p)
+	var box = VBoxContainer.new()
+	box.name = "NewsBox"
+	p.add_child(box)
+	var filters = HFlowContainer.new()
+	box.add_child(filters)
+	for cat in ["všetko", "firmy", "vojna", "ceny", "politika", "šoky", "ostatné"]:
+		var b = Button.new()
+		b.text = cat
+		var c = cat
+		b.pressed.connect(_fill_news.bind(c))
+		filters.add_child(b)
+	var close = Button.new()
+	close.text = "Zavrieť"
+	close.pressed.connect(func(): p.visible = false)
+	box.add_child(close)
+	var lab = Label.new()
+	lab.name = "NewsBody"
+	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lab.custom_minimum_size = Vector2(460, 0)
+	box.add_child(lab)
+
+func _fill_news(cat: String) -> void:
+	var lab = get_node_or_null("NewsPanel/NewsBox/NewsBody")
+	if lab == null:
+		return
+	var lines: PackedStringArray = PackedStringArray()
+	for item in GameState.news:
+		var row = GameState.news_row(item)
+		if cat != "všetko" and str(row.category) != cat:
+			continue
+		lines.append("[%s] %s" % [str(row.category), str(row.headline)])
+		if lines.size() >= 40:
+			break
+	lab.text = "NOVINY\n" + ("\n".join(lines) if lines.size() > 0 else "Zatiaľ žiadna správa v tomto filtri.")
+
+func _refresh_label_minister(iso: String) -> void:
 	if minister_label:
 		var sheet: Dictionary = LawSystem.minister_sheet(iso)
 		var ai_names = ""
