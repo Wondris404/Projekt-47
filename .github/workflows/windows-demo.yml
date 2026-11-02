@@ -11,6 +11,7 @@ on:
       - 'scenes/**'
       - 'ui/**'
       - 'project.godot'
+      - 'README.md'
   push:
     branches: [main]
     paths:
@@ -22,6 +23,7 @@ on:
       - 'scenes/**'
       - 'ui/**'
       - 'project.godot'
+      - 'README.md'
   workflow_dispatch:
 
 permissions:
