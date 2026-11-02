@@ -662,9 +662,6 @@ func compute_happiness(firm: Dictionary, svc: Dictionary, crow: Dictionary, prot
 	var why: Array = []
 	var h = 52.0
 	why.append(["základ", 52.0])
-	if IndustrySystem.has_manager(firm):
-		h += 5.0
-		why.append(["pravá ruka", 5.0])
 	var crime_pen = -float(crow.crime) * 0.15 * (1.0 - prot)
 	h += crime_pen
 	why.append(["kriminalita mesta", crime_pen])
@@ -829,10 +826,7 @@ func _firm_month(f: Dictionary, iso: String, cname: String, crow: Dictionary, sv
 	var h = float(hv.h)
 	if h < 50.0:
 		var q = (50.0 - h) / 50.0 * 0.04
-		if IndustrySystem.has_manager(f):
-			f.cash = float(f.cash) - q * IndustrySystem.workers(f) * IndustrySystem._wage(iso, f) * 20.0  # nabor nahrady
-		else:
-			f["workers"] = maxf(0.0, IndustrySystem.workers(f) * (1.0 - q))
+		f["workers"] = maxf(0.0, IndustrySystem.workers(f) * (1.0 - q))
 	# multiplikator vykonu: spokojnost, vzdelanie mesta, akademia, univerzita
 	var m = output_mult_h(h)
 	var ind = str(f.get("industry", ""))
@@ -872,8 +866,7 @@ func _crime_event(f: Dictionary, cname: String, crow: Dictionary, r: RandomNumbe
 		"attack":
 			loss = 1500.0
 			f["crime_hit"] = 2
-			if not IndustrySystem.has_manager(f):
-				f["workers"] = maxf(0.0, IndustrySystem.workers(f) * 0.98)
+			f["workers"] = maxf(0.0, IndustrySystem.workers(f) * 0.98)
 			txt = "napadli zamestnancov (nižšia spokojnosť)"
 	f.cash = float(f.cash) - loss
 	var msg = "%s v meste %s: %s (%s) – %s, škoda %s." % [str(CRIME_EVENTS[kind]), cname, str(f.get("name", "")), gang, txt, EconMath.eur(loss)]

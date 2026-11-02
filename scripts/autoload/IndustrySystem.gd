@@ -520,7 +520,7 @@ func settle_chunk(start: int, count: int) -> int:
 				firm.cash = float(firm.cash) - own_cost
 				cogs += own_cost
 				have += own_in
-				var bought = max(0.0, need - have) * buy_fill * buy_share(firm)  # zakladny manazment aj prava ruka obstaraju vstupy
+				var bought = max(0.0, need - have) * buy_fill * buy_share(firm)  # zakladny manazment obstara vstupy
 				var cost = bought * MarketSystem.price(iso, in_id)
 				if is_pl:  # JUAN19: kupene od konkurencie = cena + doprava (zlava zeleznica/ropovod/logistika)
 					var mt = cost * (Transport.MARKET_TRANSPORT if in_id in Transport.GOODS else 0.0)
@@ -586,10 +586,6 @@ func settle_chunk(start: int, count: int) -> int:
 		var desk_totals = _run_desks(firm, rev, flow)
 		rev += float(desk_totals.revenue)
 		cogs += float(desk_totals.cost)
-		if str(firm.get("owner", "")) == "player" and not firm.get("manager", {}).is_empty():  # JUAN3: plat pravej ruky
-			var sal = float(firm.manager.get("salary", 0.0)) / 30.0
-			firm.cash = float(firm.cash) - sal
-			wages += sal
 		var ops = rev - cogs - wages - rent - maintain
 		var tiso = Empire.tax_iso(firm)  # JUAN10: korporacia plati dane v krajine centraly (HQ)
 		var tax_rate = LawSystem.corporate_tax(tiso)
@@ -1000,7 +996,7 @@ func _wage(iso: String, firm: Dictionary) -> float:
 	var eur_pc = float(c.get("gdp_pc_usd", 20000.0)) / max(GameState.usd_per_eur, 0.2)
 	var mult = 1.0
 	if firm.get("owner", "") == "player":
-		mult = float(GameState.player.modifiers.get("labor_mult", 1.0))
+		mult = float(GameState.player.modifiers.get("labor_mult", 1.0)) * PoliticsSystem.bonus_mult("wage")
 	return eur_pc * 0.40 / 365.0 * mult * LawSystem.wage_mult(iso)
 
 func _local_mult(firm: Dictionary, fac: Dictionary, cid: String) -> float:
@@ -1216,22 +1212,19 @@ func has_manager(firm: Dictionary) -> bool:
 	var m = firm.get("manager", {})
 	return typeof(m) == TYPE_DICTIONARY and not m.is_empty()
 
-# Zakladny manazment: 1.0; prava ruka pridava bonus, nikdy penalizaciu.
+# Zakladny manazment plati pre vsetky firmy rovnako. Stare pole firm.manager sa pri nacitani nepouziva.
 func firm_efficiency(firm: Dictionary) -> float:
 	if str(firm.get("owner", "")) != "player":
 		return 1.0
 	var tgt = target_workers(firm)
 	var staff = 1.0 if tgt <= 0.0 else clampf(workers(firm) / tgt, 0.0, 1.0)
-	var soc = float(firm.get("soc_mult", 1.0))  # JUAN-P47: spokojnost, vzdelanie, akademia, univerzita (mesacne)
-	if has_manager(firm):
-		return maxf(1.0, 0.9 + 0.3 * clampf(float(firm.manager.get("skill", 0.5)), 0.0, 1.0)) * staff * soc
+	var soc = float(firm.get("soc_mult", 1.0))
 	return NO_MANAGER_EFF * staff * soc
 
-func buy_share(firm: Dictionary) -> float:
-	if str(firm.get("owner", "")) != "player" or has_manager(firm):
-		return 1.0
-	return NO_MANAGER_BUY
+func buy_share(_firm: Dictionary) -> float:
+	return 1.0
 
+# DEPRECATED: kandidati pravej ruky sa uz nezobrazuju. Funkcia ostava, hra ju nevola.
 func manager_candidates(firm: Dictionary) -> Array:
 	var out: Array = []
 	var iso = str(firm.get("country", "SK"))
@@ -1246,19 +1239,19 @@ func manager_candidates(firm: Dictionary) -> Array:
 			"salary": snappedf(base * (2.0 + 4.0 * skill), 10.0)})
 	return out
 
+# DEPRECATED: hra uz pravu ruku nenajima. Pole sa da zapisat len kvoli starym testom a savom.
 func hire_manager(firm_id: String, cand: Dictionary) -> String:
 	var firm = _player_firm(firm_id)
 	if firm.is_empty():
 		return "Firma nie je tvoja."
-	firm["manager"] = {"name": str(cand.get("name", "?")), "gender": str(cand.get("gender", "m")), "skill": float(cand.get("skill", 0.5)), "salary": float(cand.get("salary", 0.0)) * PoliticsSystem.bonus_mult("mgr_cost")}  # JUAN4: focus Siet zien
-	GameState.post_news("%s je nová pravá ruka vo firme %s." % [firm.manager.name, firm.name])
+	firm["manager"] = {"name": str(cand.get("name", "?")), "gender": str(cand.get("gender", "m")), "skill": float(cand.get("skill", 0.5)), "salary": float(cand.get("salary", 0.0))}
 	return ""
 
+# DEPRECATED: hra uz pravu ruku neprepusta. Pole sa da zmazat len kvoli starym testom.
 func fire_manager(firm_id: String) -> String:
 	var firm = _player_firm(firm_id)
 	if firm.is_empty() or not has_manager(firm):
-		return "Firma nemá pravú ruku."
-	GameState.post_news("%s odchádza z firmy %s." % [firm.manager.name, firm.name])
+		return "Firma nemá záznam manažéra."
 	firm["manager"] = {}
 	return ""
 

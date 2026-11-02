@@ -45,7 +45,8 @@ func run() -> int:
 	load("res://tests/juan4.gd").new().run(self)  # JUAN4
 	load("res://tests/juan5.gd").new().run(self)  # JUAN5
 	load("res://tests/juan9.gd").new().run(self)  # JUAN9
-	load("res://tests/descriptions.gd").new().run(self)
+	DescriptionsCheck.new().run(self)
+	load("res://tests/phase_a_no_manager.gd").new().run(self)
 	SaveSystem.cleanup_test_dir()
 	return 1 if fails > 0 else 0
 
@@ -981,8 +982,8 @@ func _juan3_manager() -> void:
 	_chk("juan3_baseline_management", abs(e0 - IndustrySystem.NO_MANAGER_EFF) < 0.001 and IndustrySystem.buy_share(f) == IndustrySystem.NO_MANAGER_BUY)
 	var cands = IndustrySystem.manager_candidates(f)
 	_chk("juan3_candidates", cands.size() == 3 and float(cands[0].salary) > 0.0)
-	IndustrySystem.hire_manager(str(f.id), {"name": "A", "skill": 0.8, "salary": 3000.0})
-	_chk("juan3_manager_eff", abs(IndustrySystem.firm_efficiency(f) - 1.14) < 0.001 and IndustrySystem.buy_share(f) == 1.0)
+	IndustrySystem.hire_manager(str(f.id), {"name": "A", "skill": 0.8, "salary": 3000000.0})
+	_chk("juan3_manager_eff", abs(IndustrySystem.firm_efficiency(f) - IndustrySystem.NO_MANAGER_EFF) < 0.001 and IndustrySystem.buy_share(f) == 1.0)
 	f.workers = 1.0
 	IndustrySystem.close_month(2024, 1)
 	_chk("juan3_manager_hires", abs(float(f.workers) - IndustrySystem.target_workers(f)) < 0.001)
@@ -992,7 +993,7 @@ func _juan3_manager() -> void:
 	f.history = []
 	GameState.simulate_day()
 	var h: Dictionary = f.history[f.history.size() - 1]
-	_chk("juan3_salary_cost", float(h.wages) >= 100.0 - 0.01, "wages %.2f" % float(h.wages))
+	_chk("juan3_salary_cost", float(h.wages) < 5000.0, "wages %.2f" % float(h.wages))
 	IndustrySystem.fire_manager(str(f.id))
 	var w0 = float(f.workers)
 	IndustrySystem.close_month(2024, 2)
@@ -1007,7 +1008,7 @@ func _juan3_manager() -> void:
 	for _i in 20:
 		GameState.simulate_day()
 	var rev_yes = IndustrySystem.firm_summary(f3).rev
-	_chk("juan3_manager_more_revenue", rev_yes > rev_no, "%.0f vs %.0f" % [rev_yes, rev_no])
+	_chk("juan3_manager_more_revenue", is_equal_approx(rev_yes, rev_no), "%.0f vs %.0f" % [rev_yes, rev_no])
 	_chk("juan3_needs_listed", IndustrySystem.firm_needs(f3).size() >= 1 and float(IndustrySystem.firm_needs(f3)[0].cost) >= 0.0)
 
 func _juan3_history_save() -> void:
@@ -1055,3 +1056,236 @@ func _juan3_placement() -> void:
 	var r4 = IndustrySystem.place_at("SK", "cafe", Vector2(1, 1))
 	_chk("juan3_place_no_money", not bool(r4.ok) and str(r4.reason) != "")
 	_chk("juan3_place_bad_kind", not bool(IndustrySystem.place_at("SK", "xyz", Vector2.ZERO).ok))
+
+
+# Zlúčené malé kontroly (pôvodné súbory sú v _unused/tests/, asserty ostávajú tu).
+
+class DescriptionsCheck:
+	const Descriptions = preload("res://scripts/business_descriptions.gd")
+	const BuildMenu = preload("res://scripts/ui/build_menu.gd")
+
+	func run(u) -> void:
+		var missing_summary: Array[String] = []
+		var missing_goods: Array[String] = []
+		var missing_menu: Array[String] = []
+		var listed := {}
+		for group in BuildMenu.GROUPS.values():
+			for id in group:
+				listed[str(id)] = true
+		for id in DataLoader.industry_ids:
+			var description = Descriptions.describe(id)
+			if not Descriptions.SUMMARY.has(id) or description.length() < 30:
+				missing_summary.append(id)
+			if not listed.has(id):
+				missing_menu.append(id)
+			var recipe: Dictionary = DataLoader.recipes.get(str(DataLoader.industries[id].get("recipe", "")), {})
+			if recipe.is_empty():
+				missing_goods.append(id + ":recipe")
+			elif not recipe.get("trade", false):
+				for cid in recipe.get("inputs", {}).keys() + recipe.get("outputs", {}).keys():
+					var name = str(DataLoader.commodity(str(cid)).get("name", cid)).to_lower()
+					if not description.to_lower().contains(name):
+						missing_goods.append(id + ":" + str(cid))
+		u._chk("descriptions_all_industries", missing_summary.is_empty(), str(missing_summary))
+		u._chk("descriptions_match_recipes", missing_goods.is_empty(), str(missing_goods))
+		u._chk("descriptions_build_menu_coverage", missing_menu.is_empty(), str(missing_menu))
+		u._chk("description_bank", Descriptions.describe("bank").contains("vklady") and Descriptions.describe("bank").contains("úvery"))
+
+class GoodsIconsCheck:
+	const Icons = preload("res://scripts/ui/goods_icons.gd")
+
+	func run(u) -> void:
+		u._new()
+		var missing := []
+		var sizes := []
+		for cid in DataLoader.commodity_ids:
+			var icon = Icons.icon(str(cid))
+			if icon == null:
+				missing.append(cid)
+			elif icon.get_width() != 32 or icon.get_height() != 32:
+				sizes.append(cid)
+		u._chk("goods_icons_complete", missing.is_empty(), str(missing))
+		u._chk("goods_icons_size", sizes.is_empty(), str(sizes))
+		u._chk("goods_icons_cache", Icons.icon("wheat") == Icons.icon("wheat"))
+		u._chk("goods_icons_unknown", Icons.icon("neexistuje") == null)
+		var row = HFlowContainer.new()
+		Icons.fill(row, "cafe")
+		var item = row.get_node_or_null("GoodIcon_coffee")
+		u._chk("goods_icons_inputs", item != null and str(item.tooltip_text).contains("Káva"))
+		u._chk("goods_icons_outputs", row.get_node_or_null("GoodIcon_food_service") != null)
+		Icons.fill(row, "bank")
+		u._chk("goods_icons_no_recipe", row.get_child_count() == 0)
+		row.free()
+
+class EmploymentCheck:
+	func run(u) -> void:
+		u._new()
+		GameState.config.progression = false
+		GameState.player.cash = 1.0e7
+		var err = GameState.found_firm("cafe", "Test personálu", "SK")
+		u._chk("employment_firm_created", err == "", err)
+		if err != "":
+			return
+		var firm: Dictionary = GameState.player_firms()[-1]
+		var target = IndustrySystem.target_workers(firm)
+		var people = IndustrySystem.target_headcount(firm)  # JUAN-P47: staty a zavislost pocitaju realnych ludi
+		u._chk("employment_default_consistent", target > 0.0 and is_equal_approx(float(Empire.stats().employees), people))
+		var population = float(GameState.world.SK.population)
+		u._chk("employment_dependency_default", is_equal_approx(float(Empire.dependency("SK").emp_share), people / (population * 0.5)))
+		firm.workers = 0.0
+		u._chk("employment_zero_respected", float(Empire.stats().employees) == 0.0 and float(Empire.dependency("SK").emp_share) == 0.0)
+		firm.workers = target * 0.5
+		u._chk("employment_partial_respected", is_equal_approx(float(Empire.stats().employees), round(people * 0.5)))
+		var saved = JSON.parse_string(JSON.stringify(GameState.to_dict()))
+		var load_error = GameState.from_dict(saved)
+		u._chk("employment_save_v3", load_error == "" and int(saved.v) == 3 and is_equal_approx(float(Empire.stats().employees), round(people * 0.5)), load_error)
+		u._new()
+		GameState.player.cash = 1.0e7
+		BankingSystem.found_player_bank("Zahraničná banka", "CZ")
+		var bank: Dictionary = BankingSystem._player_bank()
+		var err_loan = SovereignLoans.lend(bank, "SK", 100000.0, SovereignLoans.suggested_rate("SK"), 12)
+		u._chk("dependency_sovereign_other_country", err_loan == "" and is_equal_approx(float(Empire.dependency("SK").loans), 100000.0), err_loan)
+		u._chk("dependency_sovereign_not_home_country", float(Empire.dependency("CZ").loans) == 0.0)
+
+class LocalCompCheck:
+	func run(u) -> void:
+		u._new()
+		GameState.config.progression = false
+		GameState.player.cash = 1.0e9
+		for i in 16:
+			GameState.found_firm("cafe", "Kaviareň %d" % i, "SK" if i < 12 else "CZ")
+		for i in 8:
+			GameState.found_firm("restaurant", "Reštaurácia %d" % i, "SK")
+		var firms = GameState.player_firms()
+		u._chk("local_comp_setup", firms.size() == 24)
+		if firms.size() != 24:
+			return
+		firms[1].closed = true
+		IndustrySystem._prepare_local_competition()
+		var equal = true
+		for firm in firms:
+			var fac: Dictionary = firm.facilities[0]
+			IndustrySystem.use_local_competition_cache = false
+			var old = IndustrySystem._local_mult(firm, fac, "food_service")
+			IndustrySystem.use_local_competition_cache = true
+			var cached = IndustrySystem._local_mult(firm, fac, "food_service")
+			if old != cached:
+				equal = false
+		u._chk("local_comp_matches_scan", equal)
+		var cross: Dictionary = firms[0].facilities[0].duplicate(true)
+		cross.country = "CZ"
+		IndustrySystem.use_local_competition_cache = false
+		var cross_original = IndustrySystem._local_mult(firms[0], cross, "food_service")
+		IndustrySystem.use_local_competition_cache = true
+		u._chk("local_comp_foreign_facility", cross_original == IndustrySystem._local_mult(firms[0], cross, "food_service"))
+		var fac: Dictionary = firms[0].facilities[0]
+		IndustrySystem.use_local_competition_cache = false
+		var t0 = Time.get_ticks_usec()
+		for i in 2000:
+			IndustrySystem._local_mult(firms[0], fac, "food_service")
+		var old_us = Time.get_ticks_usec() - t0
+		IndustrySystem.use_local_competition_cache = true
+		t0 = Time.get_ticks_usec()
+		for i in 2000:
+			IndustrySystem._local_mult(firms[0], fac, "food_service")
+		print("P47_LOCAL_COMP original_ms=%.2f cached_ms=%.2f" % [old_us / 1000.0, (Time.get_ticks_usec() - t0) / 1000.0])
+		MarketSystem._distance_cache.wait_for_completion()
+		var start = GameState.to_dict().duplicate(true)
+		GameState.from_dict(start.duplicate(true))
+		IndustrySystem.use_local_competition_cache = false
+		t0 = Time.get_ticks_usec()
+		for i in 3:
+			GameState.simulate_day()
+		var sim_original = (Time.get_ticks_usec() - t0) / 3000.0
+		var original = GameState.to_dict().duplicate(true)
+		GameState.from_dict(start.duplicate(true))
+		IndustrySystem.use_local_competition_cache = true
+		t0 = Time.get_ticks_usec()
+		for i in 3:
+			GameState.simulate_day()
+		var sim_cached = (Time.get_ticks_usec() - t0) / 3000.0
+		print("P47_LOCAL_SIM original_ms_per_day=%.2f cached_ms_per_day=%.2f" % [sim_original, sim_cached])
+		var cached = GameState.to_dict().duplicate(true)
+		u._chk("local_comp_full_state_identical", JSON.stringify(original) == JSON.stringify(cached))
+
+class AtlasStyleCheck:
+	const Style = preload("res://scripts/ui/atlas_style.gd")
+
+	func run(u, host: Node) -> void:
+		u._new()
+		# Existing customer overlay lazily initializes optional v3 Empire fields.
+		# Warm those defaults before checking presentation for state changes.
+		Empire.st()
+		var before = GameState.to_dict()
+		var rng = GameState.rng.state
+		var far := Style.political_color("SK",1.0)
+		var close := Style.political_color("SK",22.0)
+		u._chk("atlas_style_political_lod", far.a > close.a and is_equal_approx(close.a,.1))
+		u._chk("atlas_style_stable_country_color", far == Style.political_color("SK",1.0) and far != Style.political_color("FR",1.0))
+		u._chk("atlas_style_long_name_wrap", Style.label_lines("Spojené kráľovstvo").size()==2 and Style.label_lines("Slovensko")==PackedStringArray(["SLOVENSKO"]))
+		u._chk("atlas_style_small_country_hidden", Style.label_size(Style.label_lines("Slovensko"),Vector2(10,10))<11)
+		u._chk("atlas_style_large_name_bounded", Style.label_size(Style.label_lines("Slovensko"),Vector2(1000,1000))<=40)
+		var occupied: Array = []
+		var view := Rect2(0,0,400,300)
+		var first := Style.reserve_label(Rect2(10,10,100,20),occupied,view)
+		var overlap := Style.reserve_label(Rect2(50,15,100,20),occupied,view)
+		u._chk("atlas_style_label_collision", first and not overlap and occupied.size()==1)
+		u._chk("atlas_style_label_clipping", not Style.reserve_label(Rect2(390,290,50,20),occupied,view))
+		var map = WorldMap.new()
+		host.add_child(map)
+		map.size = Vector2(800,600)
+		map.atlas = true
+		map._zoom_at(Vector2(400,300),5.0)
+		var original = map.capital_of("SK")
+		u._chk("atlas_style_geography_picking", map._pick(map._to_screen(original))=="SK")
+		map.cust_mode = true
+		u._chk("atlas_style_custom_overlay_retained", is_equal_approx(map._color("SK").a,.62))
+		u._chk("atlas_style_simulation_unchanged", GameState.rng.state==rng and JSON.stringify(GameState.to_dict())==JSON.stringify(before))
+		map.free()
+
+class AtlasCityScaleCheck:
+	const Urban = preload("res://scripts/ui/atlas_urban_layer.gd")
+
+	func covered(layer, point: Vector2) -> bool:
+		for tile in layer._tiles:
+			if not tile.bounds.has_point(point): continue
+			var arrays: Array = layer.mesh_for(tile).surface_get_arrays(0)
+			var vertices: PackedVector2Array = arrays[Mesh.ARRAY_VERTEX]
+			var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+			for i in range(0,indices.size(),3):
+				if Geometry2D.is_point_in_polygon(point,PackedVector2Array([vertices[indices[i]],vertices[indices[i+1]],vertices[indices[i+2]]])): return true
+		return false
+
+	func run(u, host: Node) -> void:
+		u._new()
+		Empire.st()
+		var before := JSON.stringify(GameState.to_dict())
+		var rng = GameState.rng.state
+		var map := WorldMap.new()
+		host.add_child(map)
+		map.size = Vector2(800,600)
+		map.atlas = true
+		var layer = Urban.new()
+		layer.map = map
+		map.add_child(layer)
+		layer.load_data()
+		for city in [["bratislava",48.1482,17.1067],["vienna",48.2082,16.3738],["paris",48.8566,2.3522],["tokyo",35.6895,139.6917]]:
+			u._chk("urban_real_"+city[0],covered(layer,map.project(city[1],city[2])))
+		u._chk("urban_rural_gap",not covered(layer,map.project(48.3,16.8)))
+		var audit: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/atlas/urban_footprints_audit.json"))
+		u._chk("urban_bratislava_extent_km",audit.samples.Bratislava.width_km > 20.0 and audit.samples.Bratislava.width_km < 25.0 and audit.samples.Bratislava.height_km < 25.0)
+		u._chk("urban_holes_and_area",audit.holes_preserved==228 and absf(audit.area_ratio_after_simplification-1.0)<0.005 and audit.max_triangulation_area_error_degrees2<1e-8)
+		map.atlas = false
+		layer._process(0)
+		u._chk("urban_atlas_only",not layer.visible)
+		map.atlas = true
+		map._zoom_at(map.size*.5,10)
+		layer._process(0)
+		var a := map.project(48.15,17.0)
+		var b := map.project(48.15,17.3)
+		var first := map._to_screen(a).distance_to(map._to_screen(b))
+		map._zoom_at(map.size*.5,20)
+		var second := map._to_screen(a).distance_to(map._to_screen(b))
+		u._chk("urban_geographic_scale",is_equal_approx(second/first,2.0) and layer.visible)
+		u._chk("urban_save_and_rng_unchanged",JSON.stringify(GameState.to_dict())==before and GameState.rng.state==rng)
+		map.free()

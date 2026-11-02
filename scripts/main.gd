@@ -57,11 +57,11 @@ func _ready() -> void:
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "atlas_style_unit":
 			var unit = load("res://tests/unit.gd").new()
-			load("res://tests/atlas_style.gd").new().run(unit,self)
+			load("res://tests/unit.gd").AtlasStyleCheck.new().run(unit, self)
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "atlas_city_scale_unit":
 			var unit = load("res://tests/unit.gd").new()
-			load("res://tests/atlas_city_scale.gd").new().run(unit,self)
+			load("res://tests/unit.gd").AtlasCityScaleCheck.new().run(unit, self)
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "strategic_hud_unit":
 			var unit = load("res://tests/unit.gd").new()
@@ -81,7 +81,7 @@ func _ready() -> void:
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "goods_icons_unit":
 			var unit = load("res://tests/unit.gd").new()
-			load("res://tests/goods_icons_test.gd").new().run(unit)
+			load("res://tests/unit.gd").GoodsIconsCheck.new().run(unit)
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "bank_audit_unit":
 			var unit = load("res://tests/unit.gd").new()
@@ -97,7 +97,7 @@ func _ready() -> void:
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "employment_stats_unit":
 			var unit = load("res://tests/unit.gd").new()
-			load("res://tests/employment_stats.gd").new().run(unit)
+			load("res://tests/unit.gd").EmploymentCheck.new().run(unit)
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "society_unit":  # JUAN-P47
 			var unit = load("res://tests/unit.gd").new()
@@ -105,7 +105,7 @@ func _ready() -> void:
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "local_comp_unit":
 			var unit = load("res://tests/unit.gd").new()
-			load("res://tests/local_comp.gd").new().run(unit)
+			load("res://tests/unit.gd").LocalCompCheck.new().run(unit)
 			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "performance_audit":
 			load("res://tests/performance_audit.gd").new().run()
@@ -2065,7 +2065,7 @@ func _refresh_label(force_firm_list: bool = true) -> void:
 		]
 
 
-# ===== JUAN3: Postaviť tu, detail firmy, pravá ruka, úvery banky =====
+# ===== JUAN3: Postaviť tu, detail firmy, úvery banky =====
 var place_kind: OptionButton
 var place_hint: Label
 var my_firms_buttons: VBoxContainer
@@ -2282,8 +2282,7 @@ func firm_detail_text(firm: Dictionary) -> String:
 	if str(firm.get("industry", "")) in ["trade_desk", "stock_broker"]:
 		out += IndustrySystem.trade_flow_text(firm)
 	out += "\n" + Transport.supply_text(firm)  # JUAN19
-	if not IndustrySystem.has_manager(firm):
-		out += "\nZákladný manažment zabezpečuje nákup materiálu a dopĺňanie ľudí. Pravá ruka je voliteľný bonus k výkonu a spokojnosti.\n"
+	out += "\nZákladný manažment zabezpečuje nákup materiálu a dopĺňanie ľudí.\n"
 	return out
 
 func _fill_firm_detail() -> void:
@@ -2304,27 +2303,6 @@ func _fill_firm_detail() -> void:
 	goods_row.name = "FirmGoodsIcons"
 	_detail_mgr.add_child(goods_row)
 	GoodsIcons.fill(goods_row, str(firm.get("industry", "")))
-	var head = Label.new()
-	head.text = "PRAVÁ RUKA (VOLITEĽNÁ)"
-	_detail_mgr.add_child(head)
-	if IndustrySystem.has_manager(firm):
-		var m: Dictionary = firm.manager
-		var l = Label.new()
-		l.text = "%s, schopnosť %d/100, plat %s mesačne. Prináša bonus k výkonu a spokojnosti." % [str(m.name), int(float(m.skill) * 100), EconMath.eur(float(m.salary))]
-		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_detail_mgr.add_child(l)
-		var fb = Button.new()
-		fb.text = "Prepustiť pravú ruku"
-		fb.pressed.connect(_on_fire_manager)
-		_detail_mgr.add_child(fb)
-	else:
-		for cand in IndustrySystem.manager_candidates(firm):
-			var hb = Button.new()
-			hb.text = "Najať pravú ruku: %s (schopnosť %d, plat %s/mes.)" % [str(cand.name), int(float(cand.skill) * 100), EconMath.eur(float(cand.salary))]
-			hb.pressed.connect(_on_hire_manager.bind(cand))
-			_detail_mgr.add_child(hb)
-
-	# JUAN5 #18/#19: uroven, predaj, IPO
 	var lv = Label.new()
 	lv.text = "ÚROVEŇ %d/3%s" % [IndustrySystem.firm_level(firm), "  (založená v banke)" if str(firm.get("pledged", "")) != "" else ""]
 	_detail_mgr.add_child(lv)
@@ -2421,16 +2399,6 @@ func _fund_ui(firm: Dictionary) -> void:
 		_refresh_label())
 	cash_row.add_child(withdraw)
 
-func _on_hire_manager(cand: Dictionary) -> void:
-	var err = IndustrySystem.hire_manager(firm_detail_id, cand)
-	_feedback("Pravá ruka: %s" % ("%s nastupuje." % str(cand.get("name", "")) if err == "" else err), err == "")
-	_fill_firm_detail()
-
-func _on_fire_manager() -> void:
-	var err = IndustrySystem.fire_manager(firm_detail_id)
-	_feedback("Pravá ruka: %s" % ("prepustená." if err == "" else err), err == "")
-	_fill_firm_detail()
-
 func bank_consumer_text(b: Dictionary) -> String:
 	var st: Dictionary = b.get("cons_stats", {})
 	var out = "ÚVERY ĽUĎOM (úrok nových úverov %s)\n" % EconMath.pct(BankingSystem.consumer_rate(b))
@@ -2467,11 +2435,7 @@ func _juan3_ui_checks() -> void:
 	if placed:
 		open_firm_detail(str(f.id))
 		await get_tree().process_frame
-		var hire = _find_button(firm_detail_panel, "Najať pravú ruku")
-		if hire:
-			hire.emit_signal("pressed")
-		await get_tree().process_frame
-		print("P47_UI_DETAIL open=%d manager=%d" % [int(firm_detail_panel.visible), int(IndustrySystem.has_manager(f))])
+		print("P47_UI_DETAIL open=%d" % int(firm_detail_panel.visible))
 		close_firm_detail()
 
 # ===================== JUAN4 =====================

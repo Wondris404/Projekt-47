@@ -69,7 +69,7 @@ const FOCUS = [
 	{"id": "pmc_net", "branch": "Podsvetie", "x": 5, "y": 2, "name": "Bezpečnostné kontakty", "days": 60, "req": ["lob_gov"], "bonus": {"pmc": 0.10}, "desc": "PMC vymôže o 10 % viac"},
 	{"id": "g_m1", "branch": "Pohlavie", "gender": "muž", "x": 6, "y": 0, "name": "Old boys club", "days": 45, "req": [], "bonus": {"act_cost": 0.92, "scandal": 0.92}, "desc": "lobing a úplatky −8 % cena, škandál ×0,92"},
 	{"id": "g_m2", "branch": "Pohlavie", "gender": "muž", "x": 6, "y": 1, "name": "Tvrdý vyjednávač", "days": 45, "req": [], "bonus": {"rate": -0.006}, "desc": "úvery −0,6 p.b."},
-	{"id": "g_f1", "branch": "Pohlavie", "gender": "žena", "x": 6, "y": 0, "name": "Sieť žien v biznise", "days": 45, "req": [], "bonus": {"mgr_cost": 0.92}, "desc": "pravá ruka −8 % plat"},
+	{"id": "g_f1", "branch": "Pohlavie", "gender": "žena", "x": 6, "y": 0, "name": "Sieť žien v biznise", "days": 45, "req": [], "bonus": {"wage": 0.97}, "desc": "mzdy −3 %"},
 	{"id": "g_f2", "branch": "Pohlavie", "gender": "žena", "x": 6, "y": 1, "name": "Mediálna ikona", "days": 45, "req": [], "bonus": {"rep": 1.0}, "desc": "reputácia +1 mesačne (max 100), kampane účinnejšie"},
 ]
 
