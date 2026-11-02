@@ -295,7 +295,10 @@ func contract_fair_price(iso: String, city_crime: float = -1.0) -> float:
 	var crime = city_crime
 	if crime < 0.0:
 		crime = country_crime(iso)
-	return monthly_unit_cost(iso) / 0.35 * 1.25 * (1.0 + crime / 100.0)
+	var price = monthly_unit_cost(iso) / 0.35 * 1.25 * (1.0 + crime / 100.0)
+	if has_node("/root/ZombieSystem") and ZombieSystem.active() and bool(ZombieSystem.z().get("outbreak", false)):
+		price *= ZombieSystem.num("pmc_price", 3.0)
+	return price
 
 func country_crime(iso: String) -> float:
 	var cs: Array = TerrainSystem.cities(iso)

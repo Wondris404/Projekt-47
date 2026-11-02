@@ -42,6 +42,7 @@ Brand="*res://scripts/autoload/Brand.gd"
 Society="*res://scripts/autoload/Society.gd"
 ShipSystem="*res://scripts/autoload/ShipSystem.gd"
 ArmsSystem="*res://scripts/autoload/ArmsSystem.gd"
+ZombieSystem="*res://scripts/autoload/ZombieSystem.gd"
 
 [display]
 

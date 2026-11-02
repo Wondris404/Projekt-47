@@ -1,0 +1,1135 @@
+extends Node
+# Halloween DLC. Keď je zombie_mode vypnuté, daily() nič nespraví a hru nemení.
+
+const PASS_HASH := "e3d9de4005aed8f1dc9e87df9aeefbc1dfa64ec76ad57b9b83a26c67aad57714"
+const SETTINGS := "user://settings.cfg"
+var balance: Dictionary = {}
+var bunker_rules: Dictionary = {}
+
+func _ready() -> void:
+	var f = FileAccess.open("res://data/zombie_balance.json", FileAccess.READ)
+	if f == null:
+		return
+	var parsed = JSON.parse_string(f.get_as_text())
+	if typeof(parsed) == TYPE_DICTIONARY:
+		balance = parsed
+	var bf = FileAccess.open("res://data/bunkers.json", FileAccess.READ)
+	if bf == null:
+		return
+	var bparsed = JSON.parse_string(bf.get_as_text())
+	if typeof(bparsed) == TYPE_DICTIONARY:
+		bunker_rules = bparsed
+
+func num(key: String, fallback: float) -> float:
+	return float(balance.get(key, fallback))
+
+func active() -> bool:
+	var gs = GameState.get("game_settings")
+	return typeof(gs) == TYPE_DICTIONARY and bool(gs.get("zombie_mode", false))
+
+func password_ok(text: String) -> bool:
+	var ctx = HashingContext.new()
+	ctx.start(HashingContext.HASH_SHA256)
+	ctx.update(text.to_utf8_buffer())
+	return ctx.finish().hex_encode() == PASS_HASH
+
+func unlocked() -> bool:
+	var cf = ConfigFile.new()
+	if cf.load(SETTINGS) != OK:
+		return false
+	return bool(cf.get_value("dlc", "unlocked", false))
+
+func set_unlocked() -> void:
+	var cf = ConfigFile.new()
+	cf.load(SETTINGS)
+	cf.set_value("dlc", "unlocked", true)
+	cf.save(SETTINGS)
+
+func _news(text: String) -> void:
+	# DLC správy idú do panelu Noviny (fáza B) vo vlastnej kategórii.
+	GameState.post_news(text, "nákaza")
+
+func z() -> Dictionary:
+	if typeof(GameState.zombie) != TYPE_DICTIONARY:
+		GameState.zombie = {}
+	return GameState.zombie
+
+func daily() -> void:
+	if not active():
+		return
+	var row = z()
+	if bool(row.get("ended", false)):
+		return
+	_ensure(row)
+	_story(row)
+	_grow_and_spread(row)
+	_flights(row)
+	_tick_bunkers(row)
+	_zones(row)
+	_economy(row)
+	_vaccine(row)
+	_ending(row)
+
+func _ensure(row: Dictionary) -> void:
+	if not row.has("regions"):
+		row["regions"] = {}
+	if not row.has("flights"):
+		row["flights"] = []
+	if not row.has("zones"):
+		row["zones"] = []
+	if not row.has("evac"):
+		row["evac"] = []
+	if not row.has("buildings"):
+		row["buildings"] = []
+	if not row.has("policy"):
+		row["policy"] = {}
+	if not row.has("helicopters"):
+		row["helicopters"] = []
+	if not row.has("fighters"):
+		row["fighters"] = []
+	if not row.has("vaccine"):
+		row["vaccine"] = {"progress": 0.0, "owner": "", "firm": "", "done": false, "deployed": false, "name": ""}
+	if not row.has("saved"):
+		row["saved"] = 0
+	if not row.has("bunkers") or typeof(row.get("bunkers")) != TYPE_ARRAY:
+		row["bunkers"] = []
+	if not row.has("draw"):
+		row["draw"] = []
+	if not row.has("corp"):
+		_spawn_corp(row)
+
+func _spawn_corp(row: Dictionary) -> void:
+	row["corp"] = {"name": "United Wealth Corp.", "country": "US", "note": "Fiktívna firma len v tomto DLC."}
+	if not GameState.world.has("US"):
+		return
+	for f in GameState.firms:
+		if str(f.get("name", "")) == "United Wealth Corp.":
+			return
+	var ind: Dictionary = DataLoader.industries.get("pharma_lab", {})
+	GameState.firms.append({
+		"id": "uwc",
+		"name": "United Wealth Corp.",
+		"owner": "dlc",
+		"country": "US",
+		"industry": "pharma_lab",
+		"cash": 5000000.0,
+		"closed": false,
+		"shares": 1000,
+		"public": 0.0,
+		"share_price": 1000.0,
+		"history": [],
+		"distress": 0,
+		"workers": 40.0,
+		"facilities": [{
+			"recipe": str(ind.get("recipe", "pharma_lab")),
+			"country": "US",
+			"scale": 1.0,
+			"auto": false,
+			"util": 0.0,
+			"zone": "industrial",
+			"inventory": {},
+			"cargo": "",
+			"src": "US",
+			"dst": "",
+		}],
+	})
+
+func _story(row: Dictionary) -> void:
+	if GameState.day_index == int(num("news_day", 7)) and not bool(row.get("news_shock", false)):
+		row["news_shock"] = true
+		_news("ŠOKUJÚCE: United Wealth Corp. tajne vyvíjala pre USA vírus, ktorý mení ľudí na zombie.")
+	if GameState.day_index == int(num("outbreak_day", 8)) and not bool(row.get("outbreak", false)):
+		row["outbreak"] = true
+		var reg = _region("PL", "Kraków")
+		reg["infection"] = num("outbreak_pct", 5.0)
+		_refresh(reg)
+		_news("Nákaza vypukla v Krakove!")
+
+func _region(iso: String, city_name: String) -> Dictionary:
+	var row = z()
+	var key = iso + "|" + city_name
+	if not row.regions.has(key):
+		var city = TerrainSystem.city_named(iso, city_name)
+		var pos = city.get("pos", Vector2.ZERO)
+		row.regions[key] = {
+			"iso": iso,
+			"name": city_name,
+			"pop": float(city.get("pop", 100000.0)),
+			"pos": [pos.x, pos.y],
+			"infection": 0.0,
+			"zombies": 0,
+			"status": "čistý",
+			"fell_news": false,
+			"air_news": false,
+		}
+	return row.regions[key]
+
+func _refresh(reg: Dictionary) -> void:
+	var inf = clampf(float(reg.get("infection", 0.0)), 0.0, 100.0)
+	reg["infection"] = inf
+	reg["zombies"] = int(float(reg.get("pop", 0.0)) * inf / 100.0 * num("zombie_pop_frac", 0.35))
+	if inf <= 0.0:
+		reg["status"] = "čistý"
+	elif inf >= num("fallen_at", 70.0):
+		reg["status"] = "padol"
+		if not bool(reg.get("fell_news", false)):
+			reg["fell_news"] = true
+			_news("%s padlo." % str(reg.get("name", "Mesto")))
+	else:
+		reg["status"] = "ohrozený"
+
+func _slow(reg: Dictionary) -> float:
+	var s = 1.0
+	var row = z()
+	var key = str(reg.get("iso", "")) + "|" + str(reg.get("name", ""))
+	for bld in row.get("buildings", []):
+		if str(bld.get("region", "")) != key:
+			continue
+		var kind = str(bld.get("kind", ""))
+		var lv = clampi(int(bld.get("level", 1)), 1, 3)
+		if kind == "nemocnica":
+			s *= num("hospital_slow", 0.72) - (lv - 1) * 0.05
+		elif kind == "karantena":
+			s *= num("quarantine_block", 0.82) - (lv - 1) * 0.06
+	if int(row.get("army", {}).get(str(reg.get("iso", "")), 0)) > 0:
+		s *= num("army_slow", 0.7)
+	if has_pmc(str(reg.get("iso", ""))):
+		# PMC má asi 3x silnejší účinok než armáda.
+		s *= 1.0 - minf(0.75, (1.0 - num("army_slow", 0.7)) * num("pmc_effect", 3.0))
+	var pol = str(row.get("policy", {}).get(str(reg.get("iso", "")), "ignore"))
+	if pol == "exile":
+		s *= num("exile_slow", 0.8)
+	elif pol == "kill":
+		s *= num("kill_slow", 0.45)
+	if bool(row.get("vaccine", {}).get("deployed", false)):
+		s *= 0.55
+	return clampf(s, 0.15, 1.0)
+
+func has_pmc(iso: String) -> bool:
+	for f in GameState.firms:
+		var c = f.get("pmc_contract", {})
+		if typeof(c) == TYPE_DICTIONARY and bool(c.get("active", false)) and str(c.get("government", "")) == iso:
+			return true
+	return false
+
+func _grow_and_spread(row: Dictionary) -> void:
+	if not bool(row.get("outbreak", false)):
+		return
+	var keys = row.regions.keys()
+	for key in keys:
+		var reg: Dictionary = row.regions[key]
+		if float(reg.get("infection", 0.0)) <= 0.0:
+			continue
+		var dens = float(reg.get("pop", 0.0)) / 1000000.0 * num("density", 0.35)
+		reg["infection"] = float(reg.infection) + (num("daily_growth", 3.0) + dens) * _slow(reg)
+		_refresh(reg)
+		if float(reg.infection) < num("spread_at", 10.0):
+			continue
+		_spread_from(reg)
+
+func _spread_from(reg: Dictionary) -> void:
+	var iso = str(reg.get("iso", ""))
+	var origin = str(reg.get("name", ""))
+	var here = TerrainSystem.city_named(iso, origin)
+	if here.is_empty():
+		return
+	var nearest_name := ""
+	var nearest_km := 1.0e12
+	var cities = TerrainSystem.cities(iso)
+	for city in cities:
+		if str(city.name) == origin:
+			continue
+		var km = here.pos.distance_to(city.pos) * 27.8
+		if km < nearest_km:
+			nearest_km = km
+			nearest_name = str(city.name)
+		if km > num("neighbor_km", 260.0):
+			continue
+		var kind = "road"
+		if float(city.pop) >= 400000.0 and float(here.get("pop", 0.0)) >= 400000.0:
+			kind = "air"
+		elif Society.is_port_city(iso, str(city.name)) or Society.is_port_city(iso, origin):
+			kind = "port"
+		elif km < 120.0:
+			kind = "rail"
+		var chance = num(kind + "_chance", 0.2)
+		var roll = float(absi(hash(str(GameState.day_index) + origin + str(city.name))) % 10000) / 10000.0
+		if roll < chance:
+			_seed(iso, str(city.name), num("transfer", 4.0))
+			if kind == "air" and not bool(reg.get("air_news", false)):
+				reg["air_news"] = true
+				_news("Letisko %s zatvorené." % origin)
+	if nearest_name != "" and nearest_km <= num("neighbor_km", 260.0) * 1.4:
+		_seed(iso, nearest_name, num("min_spread", 1.5))
+	for border in DataLoader.countries.get(iso, {}).get("borders", []):
+		var other = str(border)
+		if not DataLoader.countries.has(other):
+			continue
+		var foreign = TerrainSystem.cities(other)
+		if foreign.is_empty():
+			continue
+		var hop = foreign[0]
+		var hkm = here.pos.distance_to(hop.pos) * 27.8
+		if hkm > 700.0:
+			continue
+		var roll2 = float(absi(hash("x" + str(GameState.day_index) + iso + other)) % 10000) / 10000.0
+		if roll2 < num("air_chance", 0.72) * 0.25:
+			_seed(other, str(hop.name), num("transfer", 4.0) * 0.5)
+
+func _seed(iso: String, city_name: String, amount: float) -> void:
+	if city_name == "":
+		return
+	var reg = _region(iso, city_name)
+	if str(reg.get("status", "")) == "padol":
+		return
+	reg["infection"] = float(reg.get("infection", 0.0)) + amount
+	_refresh(reg)
+
+func country_infection(iso: String) -> float:
+	if not active():
+		return 0.0
+	var worst = 0.0
+	for reg in z().get("regions", {}).values():
+		if str(reg.get("iso", "")) == iso:
+			worst = maxf(worst, float(reg.get("infection", 0.0)))
+	return worst
+
+func region_at(iso: String, city_name: String) -> Dictionary:
+	if not active() or city_name == "":
+		return {}
+	var key = iso + "|" + city_name
+	return z().get("regions", {}).get(key, {})
+
+func tip(iso: String, city_name: String) -> String:
+	if not active():
+		return ""
+	var reg = region_at(iso, city_name)
+	if reg.is_empty():
+		return "Nákaza: čistý región"
+	return "Nákaza %s: %.0f %%, zombie %d, stav %s" % [str(reg.get("name", city_name)), float(reg.infection), int(reg.zombies), str(reg.status)]
+
+func color_for(iso: String) -> Color:
+	var p = country_infection(iso) / 100.0
+	var c = Color(0.25, 0.72, 0.32)
+	c = c.lerp(Color(0.92, 0.82, 0.2), clampf(p / 0.35, 0.0, 1.0))
+	c = c.lerp(Color(0.95, 0.45, 0.12), clampf((p - 0.25) / 0.45, 0.0, 1.0))
+	return c.lerp(Color(0.45, 0.05, 0.08), clampf((p - 0.7) / 0.3, 0.0, 1.0))
+
+func model_count(reg: Dictionary) -> int:
+	var n = int(ceil(float(reg.get("zombies", 0)) / maxf(num("models_per", 10000.0), 1.0)))
+	return clampi(n, 0, int(num("max_models", 5)))
+
+func buy_helicopter() -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var price = num("heli_price", 900000.0)
+	if float(GameState.player.cash) < price:
+		return "Helikoptéra stojí %s." % EconMath.eur(price)
+	GameState.player.cash = float(GameState.player.cash) - price
+	var id = "h%d" % (z().helicopters.size() + 1)
+	z().helicopters.append({"id": id, "lost": false})
+	_news("Kúpená helikoptéra %s." % id)
+	return ""
+
+func buy_fighter() -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var price = num("fighter_price", 2500000.0)
+	if float(GameState.player.cash) < price:
+		return "Stíhačka stojí %s." % EconMath.eur(price)
+	GameState.player.cash = float(GameState.player.cash) - price
+	z().fighters.append({"id": "f%d" % (z().fighters.size() + 1)})
+	_news("Kúpená stíhačka.")
+	return ""
+
+func toggle_evac(firm_id: String) -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var firm = GameState.firm_by_id(firm_id)
+	if firm.is_empty():
+		return "Firma neexistuje."
+	var ind = str(firm.get("industry", ""))
+	if not ind in ["cargo_port", "airport", "airline", "shipyard", "logistics_hub"]:
+		return "Evakuačná zóna môže byť prístav, letisko alebo tvoja budova dopravy."
+	var ids: Array = z().evac
+	if firm_id in ids:
+		ids.erase(firm_id)
+		return "Označenie evakuácie zrušené."
+	ids.append(firm_id)
+	_news("Evakuačná zóna: %s." % str(firm.get("name", firm_id)))
+	return ""
+
+func can_zone(iso: String) -> String:
+	if Empire.owns_state(iso):
+		return ""
+	if not Society.st().get("contracts", {}).get(iso, {}).is_empty():
+		return ""
+	if float(PoliticsSystem.influence(iso)) >= 50.0:
+		return ""
+	return "Safe zónu môžeš kresliť len so zmluvou s vládou, s vplyvom aspoň 50 % alebo ak vlastníš štát."
+
+func add_draw_point(world: Vector2, close_it: bool) -> String:
+	if not active():
+		return ""
+	var row = z()
+	var pts: Array = row.draw
+	if close_it or (pts.size() >= 3 and world.distance_to(Vector2(float(pts[0][0]), float(pts[0][1]))) < 1.2):
+		var msg = _close_zone(row)
+		if msg != "":
+			_news(msg)
+		return msg
+	pts.append([world.x, world.y])
+	row["draw"] = pts
+	return ""
+
+func _close_zone(row: Dictionary) -> String:
+	var pts: Array = row.get("draw", [])
+	if pts.size() < 3:
+		return "Safe zóna potrebuje aspoň tri body."
+	var iso = GameState.selected_iso
+	var why = can_zone(iso)
+	if why != "":
+		row["draw"] = []
+		return why
+	row.zones.append({
+		"id": "sz%d" % (row.zones.size() + 1),
+		"iso": iso,
+		"pts": pts.duplicate(),
+		"people": 0,
+		"food": 20.0,
+		"meds": 10.0,
+		"fuel": 10.0,
+		"defense": 10.0,
+		"alive": true,
+	})
+	row["draw"] = []
+	_news("Safe zóna v krajine %s." % str(GameState.world.get(iso, {}).get("name_sk", iso)))
+	return ""
+
+func city_safe(iso: String, city_name: String) -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var why = can_zone(iso)
+	if why != "":
+		return why
+	var city = TerrainSystem.city_named(iso, city_name)
+	if city.is_empty():
+		return "Mesto nenájdené."
+	var owned = false
+	for f in GameState.player_firms():
+		if str(f.get("country", "")) == iso and str(f.get("city", "")) == city_name:
+			owned = true
+	if Empire.owns_state(iso):
+		owned = true
+	if not owned:
+		return "Toto mesto nevlastníš. Kresli polygón, alebo ho vlastni firmou či celým štátom."
+	var p: Vector2 = city.pos
+	var r = float(city.get("r", 2.0))
+	z().zones.append({
+		"id": "sz%d" % (z().zones.size() + 1),
+		"iso": iso,
+		"city": city_name,
+		"pts": [[p.x - r, p.y - r], [p.x + r, p.y - r], [p.x + r, p.y + r], [p.x - r, p.y + r]],
+		"people": 0,
+		"food": 30.0,
+		"meds": 15.0,
+		"fuel": 15.0,
+		"defense": 20.0,
+		"alive": true,
+	})
+	_news("Mesto %s je safe zóna." % city_name)
+	return ""
+
+func build_in_zone(kind: String) -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	if z().zones.is_empty():
+		return "Najprv nakresli safe zónu."
+	var zone: Dictionary = z().zones[z().zones.size() - 1]
+	if not bool(zone.get("alive", true)):
+		return "Táto safe zóna padla."
+	var cost = 400000.0 * Difficulty.cost_mult()
+	if float(GameState.player.cash) < cost:
+		return "Stavba stojí %s." % EconMath.eur(cost)
+	GameState.player.cash = float(GameState.player.cash) - cost
+	var names = {
+		"nemocnica": "Nemocnica", "letisko": "Letisko pre evakuovaných", "karantena": "Karanténna zóna",
+		"baraky": "Baráky", "pristav": "Prístav", "zeleznica": "Železnica", "mur": "Múr",
+	}
+	if not names.has(kind):
+		return "Neznáma stavba."
+	z().buildings.append({
+		"id": "zb%d" % (z().buildings.size() + 1),
+		"kind": kind,
+		"name": names[kind],
+		"level": 1,
+		"zone": str(zone.get("id", "")),
+		"region": str(zone.get("iso", "")) + "|" + str(zone.get("city", "")),
+	})
+	if kind == "baraky":
+		zone["cap_bonus"] = int(zone.get("cap_bonus", 0)) + int(num("zone_people", 8000))
+	_news("V safe zóne stojí %s (úroveň 1)." % names[kind])
+	return ""
+
+func upgrade_building(bid: String) -> String:
+	for bld in z().get("buildings", []):
+		if str(bld.get("id", "")) != bid:
+			continue
+		var top = 2 if str(bld.get("kind", "")) == "mur" else 3
+		if int(bld.get("level", 1)) >= top:
+			return "Stavba je na maxime."
+		var cost = 500000.0 * int(bld.level)
+		if float(GameState.player.cash) < cost:
+			return "Vylepšenie stojí %s." % EconMath.eur(cost)
+		GameState.player.cash = float(GameState.player.cash) - cost
+		bld["level"] = int(bld.level) + 1
+		return "%s je na úrovni %d." % [str(bld.name), int(bld.level)]
+	return "Stavba nenájdená."
+
+func set_policy(iso: String, pol: String) -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	if not Empire.owns_state(iso):
+		return "Politiku nákazy nastavíš len v štáte, ktorý vlastníš."
+	if not pol in ["exile", "kill", "ignore"]:
+		return "Neznáma voľba."
+	z().policy[iso] = pol
+	var text = {
+		"exile": "Poslať helikoptérami do vyhnanstva: stojí peniaze a stroje, nákaza sa spomalí stredne.",
+		"kill": "Zabiť nakazených a podozrivých: nákaza sa spomalí silno, reputácia prudko klesne a hrozia sankcie.",
+		"ignore": "Nechať tak: nič nestojí a nákaza sa šíri voľne.",
+	}
+	if pol == "kill":
+		GameState.player.rating = maxf(0.0, float(GameState.player.get("rating", 55.0)) - num("kill_rating", 12.0))
+		_news("Svet odsudzuje postup v krajine %s. Reputácia padá." % str(GameState.world.get(iso, {}).get("name_sk", iso)))
+		if GameState.world.has("US"):
+			GeopoliticsSystem.security_council(iso)
+	elif pol == "exile":
+		if z().helicopters.is_empty():
+			return "Na vyhnanstvo treba aspoň jednu helikoptéru."
+		GameState.player.cash = maxf(0.0, float(GameState.player.cash) - 150000.0)
+	_news(text[pol])
+	return ""
+
+func _flights(row: Dictionary) -> void:
+	if not bool(row.get("outbreak", false)):
+		return
+	var zones: Array = row.get("zones", [])
+	if not zones.is_empty() and not row.helicopters.is_empty() and not row.evac.is_empty():
+		var zone: Dictionary = zones[0]
+		if bool(zone.get("alive", true)):
+			var room = int(num("zone_people", 8000)) + int(zone.get("cap_bonus", 0)) - int(zone.get("people", 0))
+			var haul = mini(room, int(num("heli_people", 120)) * row.helicopters.size())
+			if haul > 0 and float(zone.get("food", 0.0)) > 0.0:
+				zone["people"] = int(zone.get("people", 0)) + haul
+				row["saved"] = int(row.get("saved", 0)) + haul
+				var a = _evac_pos(row)
+				var b = _zone_center(zone)
+				row.flights.append({"kind": "heli", "t": 0.0, "a": [a.x, a.y], "b": [b.x, b.y], "back": false, "flash": 0})
+	if not row.helicopters.is_empty():
+		for bunker in row.get("bunkers", []):
+			if not bool(bunker.get("alive", false)) or int(bunker.get("build_left", 0)) > 0:
+				continue
+			var room_b = int(bunker.get("capacity", 0)) - int(bunker.get("people", 0))
+			var haul_b = mini(maxi(room_b, 0), int(num("heli_people", 120)) * row.helicopters.size())
+			if haul_b <= 0:
+				shelter_into(bunker, 0)
+				continue
+			var took = shelter_into(bunker, haul_b)
+			if took <= 0:
+				continue
+			row["saved"] = int(row.get("saved", 0)) + took
+			var bp = bunker.get("pos", [0, 0])
+			var dest = Vector2(float(bp[0]), float(bp[1]))
+			var origin = _evac_pos(row)
+			if origin == Vector2.ZERO:
+				origin = dest
+			row.flights.append({"kind": "heli", "t": 0.0, "a": [origin.x, origin.y], "b": [dest.x, dest.y], "back": false, "flash": 0})
+	_fighters(row)
+	var keep: Array = []
+	for fl in row.flights:
+		fl["t"] = float(fl.get("t", 0.0)) + 0.34
+		if str(fl.get("kind", "")) == "heli" and float(fl.t) >= 0.5 and not bool(fl.get("back", false)):
+			var mid = Vector2(float(fl.a[0]), float(fl.a[1])).lerp(Vector2(float(fl.b[0]), float(fl.b[1])), 0.5)
+			if _fallen_near(mid) and float(absi(hash(str(GameState.day_index) + str(fl.a))) % 100) / 100.0 < num("heli_loss", 0.08):
+				fl["crash"] = true
+				fl["t"] = 1.1
+				if row.helicopters.size() > 0:
+					row.helicopters.pop_back()
+				_news("Helikoptéra sa stratila nad padnutým regiónom.")
+		if float(fl.t) < 1.15:
+			keep.append(fl)
+	row["flights"] = keep.slice(-24)
+
+func km_between(a: Vector2, b: Vector2) -> float:
+	return a.distance_to(b) * 27.8
+
+# Každá stíhačka má domovské letisko (letisko v safe zóne alebo tvoje letisko).
+# Útočí len na nakazené regióny do 600 km od neho a potom sa vráti na základňu.
+func _fighters(row: Dictionary) -> void:
+	if row.fighters.is_empty():
+		return
+	var bases = air_bases()
+	if bases.is_empty():
+		if not bool(row.get("no_base_news", false)):
+			row["no_base_news"] = true
+			_news("Stíhačky nemajú domovské letisko. Postav letisko v safe zóne alebo kúp letisko.")
+		return
+	var i = 0
+	for fi in row.fighters:
+		var home = {}
+		for bs in bases:
+			if str(bs.id) == str(fi.get("home", "")):
+				home = bs
+		if home.is_empty():
+			home = bases[i % bases.size()]
+			fi["home"] = str(home.id)
+		i += 1
+		var hp: Vector2 = home.pos
+		var reg = fighter_target(hp)
+		if reg.is_empty():
+			row.flights.append({"kind": "fighter", "t": 0.0, "a": [hp.x, hp.y], "b": [hp.x, hp.y], "patrol": true, "flash": 0})
+			continue
+		var rp = reg.get("pos", [0, 0])
+		var tp = Vector2(float(rp[0]), float(rp[1]))
+		reg["infection"] = maxf(0.0, float(reg.get("infection", 0.0)) * (1.0 - num("fighter_hit", 0.03)))
+		_refresh(reg)
+		row.flights.append({"kind": "fighter", "t": 0.0, "a": [tp.x, tp.y], "b": [hp.x, hp.y], "patrol": true, "flash": 1})
+		row.flights.append({"kind": "fighter", "t": 0.0, "a": [tp.x, tp.y], "b": [hp.x, hp.y], "back": true, "flash": 0})
+
+func fighter_target(home: Vector2) -> Dictionary:
+	var best := {}
+	var radius = num("fighter_radius_km", 600.0)
+	for reg in z().get("regions", {}).values():
+		if float(reg.get("infection", 0.0)) <= 0.0:
+			continue
+		var rp = reg.get("pos", [0, 0])
+		if km_between(home, Vector2(float(rp[0]), float(rp[1]))) > radius:
+			continue
+		if best.is_empty() or int(reg.get("zombies", 0)) > int(best.get("zombies", 0)):
+			best = reg
+	return best
+
+func air_bases() -> Array:
+	var out: Array = []
+	for bld in z().get("buildings", []):
+		if str(bld.get("kind", "")) != "letisko":
+			continue
+		for zone in z().get("zones", []):
+			if str(zone.get("id", "")) == str(bld.get("zone", "")) and bool(zone.get("alive", true)):
+				out.append({"id": str(bld.get("id", "")), "pos": _zone_center(zone)})
+	for f in GameState.firms:
+		if str(f.get("owner", "")) == "player" and str(f.get("industry", "")) in ["airport", "airline"] and not bool(f.get("closed", false)):
+			out.append({"id": str(f.get("id", "")), "pos": _firm_pos(f)})
+	return out
+
+func airport_near(center: Vector2) -> Dictionary:
+	var best := {}
+	var best_km = num("fighter_radius_km", 600.0)
+	# Letisko postavené v safe zóne má prednosť.
+	for bld in z().get("buildings", []):
+		if str(bld.get("kind", "")) != "letisko":
+			continue
+		for zone in z().get("zones", []):
+			if str(zone.get("id", "")) == str(bld.get("zone", "")) and bool(zone.get("alive", true)):
+				var zp = _zone_center(zone)
+				var zkm = km_between(zp, center)
+				if zkm <= best_km:
+					best_km = zkm
+					best = {"id": str(bld.get("id", "")), "pos": zp, "km": zkm}
+	for f in GameState.firms:
+		if str(f.get("owner", "")) != "player" or not str(f.get("industry", "")) in ["airport", "airline"]:
+			continue
+		var p = _firm_pos(f)
+		var km = km_between(p, center)
+		if km <= best_km:
+			best_km = km
+			best = {"id": str(f.get("id", "")), "pos": p, "km": km}
+	return best
+
+func _firm_pos(firm: Dictionary) -> Vector2:
+	var p = firm.get("pos", [0, 0])
+	if typeof(p) == TYPE_ARRAY and p.size() >= 2 and (float(p[0]) != 0.0 or float(p[1]) != 0.0):
+		return Vector2(float(p[0]), float(p[1]))
+	var city = TerrainSystem.city_named(str(firm.get("country", "")), str(firm.get("city", "")))
+	if not city.is_empty():
+		return city.pos
+	var cs = TerrainSystem.cities(str(firm.get("country", "")))
+	return cs[0].pos if not cs.is_empty() else Vector2.ZERO
+
+func _evac_pos(row: Dictionary) -> Vector2:
+	if row.evac.is_empty():
+		return Vector2.ZERO
+	var firm = GameState.firm_by_id(str(row.evac[0]))
+	if firm.is_empty():
+		return Vector2.ZERO
+	var p = firm.get("pos", [0, 0])
+	if typeof(p) == TYPE_ARRAY and p.size() >= 2:
+		return Vector2(float(p[0]), float(p[1]))
+	var city = TerrainSystem.city_named(str(firm.get("country", "")), str(firm.get("city", "")))
+	return city.get("pos", Vector2.ZERO)
+
+func _zone_center(zone: Dictionary) -> Vector2:
+	var pts: Array = zone.get("pts", [])
+	if pts.is_empty():
+		return Vector2.ZERO
+	var s = Vector2.ZERO
+	for p in pts:
+		s += Vector2(float(p[0]), float(p[1]))
+	return s / float(pts.size())
+
+func _fallen_near(p: Vector2) -> bool:
+	for reg in z().get("regions", {}).values():
+		if str(reg.get("status", "")) != "padol":
+			continue
+		var rp = reg.get("pos", [0, 0])
+		if Vector2(float(rp[0]), float(rp[1])).distance_to(p) < 8.0:
+			return true
+	return false
+
+func _zones(row: Dictionary) -> void:
+	for zone in row.get("zones", []):
+		if not bool(zone.get("alive", true)):
+			continue
+		zone["food"] = float(zone.get("food", 0.0)) - int(zone.get("people", 0)) / 4000.0
+		zone["meds"] = float(zone.get("meds", 0.0)) - 0.15
+		zone["fuel"] = float(zone.get("fuel", 0.0)) - 0.1
+		if float(zone.food) <= 0.0 or float(zone.meds) <= 0.0:
+			var leave = mini(int(zone.get("people", 0)), 80)
+			zone["people"] = int(zone.people) - leave
+			row["saved"] = maxi(0, int(row.get("saved", 0)) - leave)
+			if float(absi(hash("q" + str(zone.get("id", "")) + str(GameState.day_index))) % 100) < 30:
+				var city = str(zone.get("city", ""))
+				if city != "":
+					_seed(str(zone.get("iso", "")), city, 2.0)
+		var pressure = 0.0
+		for reg in row.regions.values():
+			if str(reg.get("iso", "")) == str(zone.get("iso", "")) and str(reg.get("status", "")) == "padol":
+				pressure += float(reg.get("zombies", 0))
+		var hold = 0.2
+		for bld in row.buildings:
+			if str(bld.get("zone", "")) == str(zone.get("id", "")) and str(bld.get("kind", "")) == "mur":
+				# Múr má presne 2 úrovne: 50 % a 90 %. Starý save s úrovňou 3 sa číta ako 90 %.
+				var table: Array = balance.get("wall_hold", [0.5, 0.9])
+				var lv = clampi(int(bld.get("level", 1)), 1, table.size())
+				hold = float(table[lv - 1])
+		if pressure > num("wall_breach", 80000.0) * (0.4 + hold):
+			zone["alive"] = false
+			var where = str(zone.get("city", str(GameState.world.get(str(zone.get("iso", "")), {}).get("name_sk", "zóna"))))
+			_news("Múr v %s prelomený!" % where)
+
+func _economy(row: Dictionary) -> void:
+	if not bool(row.get("outbreak", false)):
+		return
+	var g = 0.0
+	var n = 0
+	for reg in row.regions.values():
+		g += float(reg.get("infection", 0.0))
+		n += 1
+	if n == 0:
+		return
+	g = g / float(n)
+	var mix = num("price_mix", 0.55)
+	for iso in GameState.markets.keys():
+		for cid in ["arms", "pharma", "wheat", "fuel", "pmc_services"]:
+			if not GameState.markets[iso].has(cid):
+				continue
+			var book: Dictionary = GameState.markets[iso][cid]
+			var base = float(DataLoader.commodity(cid).get("base_price", book.get("price", 1.0)))
+			var target = base * (1.0 + mix * g / 100.0)
+			book["price"] = lerpf(float(book.get("price", base)), target, 0.05)
+	if GameState.day_index % 7 == 0:
+		_news("Nákaza: akcie a turizmus klesajú, zbrane, lieky, jedlo a palivo dražejú.")
+
+func _vaccine(row: Dictionary) -> void:
+	# Vakcínu vyvíja len hráč alebo AI firma. Keď ich laboratórium zničia zombíci, výskum je stratený.
+	if not row.has("ai_vaccine"):
+		row["ai_vaccine"] = {"progress": 0.0, "owner": "ai", "firm": "", "done": false, "deployed": false, "name": ""}
+	_ai_pick_lab(row)
+	for key in ["vaccine", "ai_vaccine"]:
+		var vac: Dictionary = row[key]
+		if bool(vac.get("done", false)) or str(vac.get("firm", "")) == "":
+			continue
+		_vaccine_step(row, key, vac)
+
+func _vaccine_step(row: Dictionary, key: String, vac: Dictionary) -> void:
+	var firm = GameState.firm_by_id(str(vac.firm))
+	var lost = firm.is_empty() or bool(firm.get("closed", false))
+	if not lost:
+		var city = str(firm.get("city", ""))
+		if city != "" and str(region_at(str(firm.get("country", "")), city).get("status", "")) == "padol":
+			firm["closed"] = true
+			lost = true
+	if lost:
+		_news("Zombíci zničili laboratórium %s. Výskum vakcíny je stratený." % str(vac.get("name", "firmy")))
+		vac["firm"] = ""
+		vac["progress"] = 0.0
+		return
+	vac["progress"] = float(vac.get("progress", 0.0)) + 1.0 * (1.0 + _lab_boost(str(vac.get("firm", "")), key))
+	if float(vac.progress) >= num("vaccine_days", 360.0):
+		vac["done"] = true
+		_news("Vakcína je hotová: %s." % str(vac.get("name", "")))
+		if key == "ai_vaccine" and not bool(row.vaccine.get("deployed", false)):
+			# AI firma vakcínu nasadí sama, hráč za ňu nedostane odmenu.
+			row.vaccine["deployed"] = true
+			row.vaccine["name"] = str(vac.get("name", ""))
+			_apply_vaccine()
+
+func _ai_pick_lab(row: Dictionary) -> void:
+	var vac: Dictionary = row.ai_vaccine
+	if bool(vac.get("done", false)) or str(vac.get("firm", "")) != "" or not bool(row.get("outbreak", false)):
+		return
+	if GameState.day_index % 30 != 0:
+		return
+	var best := {}
+	for f in GameState.firms:
+		if str(f.get("owner", "")) != "ai" or bool(f.get("closed", false)):
+			continue
+		var city = str(f.get("city", ""))
+		if city != "" and str(region_at(str(f.get("country", "")), city).get("status", "")) == "padol":
+			continue
+		if best.is_empty() or (str(f.get("industry", "")) == "pharma_lab" and str(best.get("industry", "")) != "pharma_lab"):
+			best = f
+	if best.is_empty():
+		return
+	vac["firm"] = str(best.get("id", ""))
+	vac["name"] = str(best.get("name", "AI firma"))
+	vac["progress"] = 0.0
+	_news("AI firma %s začala vyvíjať vakcínu." % vac.name)
+
+func can_research(firm: Dictionary) -> bool:
+	return str(firm.get("owner", "")) in ["player", "ai"] and not bool(firm.get("closed", false))
+
+func start_vaccine(firm_id: String) -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var firm = GameState.firm_by_id(firm_id)
+	if firm.is_empty():
+		return "Firma neexistuje."
+	if str(firm.get("owner", "")) != "player":
+		return "Vakcínu môžeš vyvíjať len vo svojej firme. AI firmy si výskum začnú samy."
+	var cost = num("vaccine_cost", 250000.0)
+	if float(GameState.player.cash) < cost and str(firm.get("owner", "")) == "player":
+		return "Výskum stojí %s." % EconMath.eur(cost)
+	if str(firm.get("owner", "")) == "player":
+		GameState.player.cash = float(GameState.player.cash) - cost
+	var vac: Dictionary = z().vaccine
+	vac["firm"] = firm_id
+	vac["name"] = str(firm.get("name", "laboratórium"))
+	vac["progress"] = float(vac.get("progress", 0.0))
+	_news("Výskum vakcíny začal v %s. Trvá to mesiace, ďalšie peniaze ho zrýchlia." % str(firm.get("name", "")))
+	return ""
+
+func boost_vaccine() -> String:
+	var vac: Dictionary = z().vaccine
+	if str(vac.get("firm", "")) == "":
+		return "Najprv začni výskum."
+	var cost = num("vaccine_cost", 250000.0)
+	if float(GameState.player.cash) < cost:
+		return "Investícia stojí %s." % EconMath.eur(cost)
+	GameState.player.cash = float(GameState.player.cash) - cost
+	vac["progress"] = float(vac.get("progress", 0.0)) + num("vaccine_boost_days", 15.0)
+	return "Výskum sa zrýchlil."
+
+func deploy_vaccine() -> String:
+	var vac: Dictionary = z().vaccine
+	if not bool(vac.get("done", false)):
+		return "Vakcína ešte nie je hotová."
+	if bool(vac.get("deployed", false)):
+		return "Vakcína už je nasadená."
+	vac["deployed"] = true
+	GameState.player.cash = float(GameState.player.cash) + 2000000.0
+	_apply_vaccine()
+	return ""
+
+func _apply_vaccine() -> void:
+	_news("Vakcína ide do štátov. Nákaza začína klesať.")
+	for reg in z().regions.values():
+		reg["infection"] = float(reg.get("infection", 0.0)) * 0.85
+		_refresh(reg)
+
+func _ending(row: Dictionary) -> void:
+	var vac: Dictionary = row.get("vaccine", {})
+	var win = bool(vac.get("deployed", false)) or GameState.day_index >= int(num("survive_days", 720))
+	var zones: Array = row.get("zones", [])
+	var alive = 0
+	for zone in zones:
+		if bool(zone.get("alive", true)):
+			alive += 1
+	if not zones.is_empty() and alive == 0:
+		row["ended"] = true
+		row["result"] = "prehra"
+		GameState.paused = true
+		_news(_stats(row, "Prehra. Všetky tvoje safe zóny padli."))
+		return
+	if win and bool(row.get("outbreak", false)):
+		row["ended"] = true
+		row["result"] = "výhra"
+		GameState.paused = true
+		_news(_stats(row, "Výhra."))
+
+func _stats(row: Dictionary, title: String) -> String:
+	var alive = 0
+	for zone in row.get("zones", []):
+		if bool(zone.get("alive", true)):
+			alive += 1
+	var who = str(row.get("vaccine", {}).get("name", "nikto"))
+	if not bool(row.get("vaccine", {}).get("done", false)):
+		who = "nikto"
+	return "%s Zachránených ľudí: %d. Safe zóny, ktoré držia: %d. Vakcínu vyvinul: %s." % [title, int(row.get("saved", 0)), alive, who]
+
+func summary() -> String:
+	if not active():
+		return "Halloween DLC je vypnuté."
+	var row = z()
+	var lines = ["HALLOWEEN DLC – ZOMBIE APOKALYPSA", _stats(row, str(row.get("result", "Prebieha.")))]
+	lines.append("Helikoptéry %d, stíhačky %d." % [row.get("helicopters", []).size(), row.get("fighters", []).size()])
+	for zone in row.get("zones", []):
+		lines.append("Zóna %s: ľudia %d, jedlo %.0f, lieky %.0f, palivo %.0f, %s" % [str(zone.get("id", "")), int(zone.get("people", 0)), float(zone.get("food", 0)), float(zone.get("meds", 0)), float(zone.get("fuel", 0)), "drží" if bool(zone.get("alive", true)) else "padla"])
+	var vac: Dictionary = row.get("vaccine", {})
+	lines.append("Vakcína: %.0f / %.0f dní." % [float(vac.get("progress", 0.0)), num("vaccine_days", 360.0)])
+	for bunker in row.get("bunkers", []):
+		lines.append(bunker_info(bunker))
+	return "\n".join(lines)
+
+func assign_army(iso: String) -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	if typeof(z().get("army")) != TYPE_DICTIONARY:
+		z()["army"] = {}
+	z().army[iso] = int(z().army.get(iso, 0)) + 1
+	_news("Armáda a letectvo kryjú %s a evakuačné trasy. Okruh stíhačiek je 600 km." % str(GameState.world.get(iso, {}).get("name_sk", iso)))
+	return ""
+
+func bunker_model_path() -> String:
+	return str(bunker_rules.get("model", "res://assets/models/bunker/bunker.glb"))
+
+func hp_color(hp: float) -> Color:
+	if hp > 60.0:
+		return Color(0.2, 0.85, 0.35)
+	if hp >= 30.0:
+		return Color(0.95, 0.55, 0.12)
+	return Color(0.9, 0.15, 0.12)
+
+func _bunker_level(level: int) -> Dictionary:
+	for row in bunker_rules.get("levels", []):
+		if int(row.get("level", 0)) == level:
+			return row
+	if level <= 1:
+		return {"level": 1, "price": 2000000, "capacity": 5000, "build_days": 3}
+	return {"level": 2, "price": 4000000, "capacity": 20000, "build_days": 0}
+
+func _bunker_by_id(bid: String) -> Dictionary:
+	for bunker in z().get("bunkers", []):
+		if str(bunker.get("id", "")) == bid:
+			return bunker
+	return {}
+
+func _home_city(iso: String) -> Dictionary:
+	for firm in GameState.player_firms():
+		if str(firm.get("country", "")) == iso and str(firm.get("city", "")) != "":
+			var owned = TerrainSystem.city_named(iso, str(firm.get("city", "")))
+			if not owned.is_empty():
+				return owned
+	var best := {}
+	for city in TerrainSystem.cities(iso):
+		if best.is_empty() or float(city.get("pop", 0.0)) > float(best.get("pop", 0.0)):
+			best = city
+	return best
+
+func _bunker_place(bunker: Dictionary) -> String:
+	var city = str(bunker.get("city", ""))
+	if city != "":
+		return city
+	return str(GameState.world.get(str(bunker.get("iso", "")), {}).get("name_sk", "krajina"))
+
+func bunker_info(bunker: Dictionary) -> String:
+	var cap = int(bunker.get("capacity", 0))
+	var state = "padol"
+	if int(bunker.get("build_left", 0)) > 0:
+		state = "vo výstavbe, ešte %d dní" % int(bunker.get("build_left", 0))
+	elif bool(bunker.get("alive", false)):
+		state = "stojí"
+	return "Bunker %s (%s)\nÚroveň %d\nHP %d\nObyvatelia %d / %d\nJedlo %d dní\nLaboratórium: %s" % [
+		_bunker_place(bunker), state, int(bunker.get("level", 1)), int(round(float(bunker.get("hp", 0)))),
+		int(bunker.get("people", 0)), cap, int(bunker.get("food_days", 0)),
+		"áno" if bool(bunker.get("lab", false)) else "nie"]
+
+func build_bunker() -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var row = z()
+	_ensure(row)
+	var iso = GameState.selected_iso
+	if iso == "":
+		iso = str(GameState.player.get("home", ""))
+	var city = _home_city(iso)
+	if city.is_empty():
+		return "V tejto krajine nie je mesto na bunker."
+	var spec = _bunker_level(1)
+	var price = float(spec.get("price", 2000000))
+	if float(GameState.player.cash) < price:
+		return "Bunker stojí %s." % EconMath.eur(price)
+	GameState.player.cash = float(GameState.player.cash) - price
+	var pos: Vector2 = city.pos
+	row.bunkers.append({
+		"id": "bk%d" % (row.bunkers.size() + 1),
+		"iso": iso,
+		"city": str(city.get("name", "")),
+		"pos": [pos.x, pos.y],
+		"level": 1,
+		"hp": float(bunker_rules.get("hp", 100)),
+		"people": 0,
+		"capacity": int(spec.get("capacity", 5000)),
+		"food_days": int(bunker_rules.get("food_days", 30)),
+		"lab": false,
+		"lab_owner": "",
+		"lab_firm": "",
+		"build_left": int(spec.get("build_days", 3)),
+		"alive": true,
+		"full_news": false,
+	})
+	return ""
+
+func upgrade_bunker(bid: String) -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var bunker = _bunker_by_id(bid)
+	if bunker.is_empty():
+		return "Bunker nenájdený."
+	if int(bunker.get("build_left", 0)) > 0 or not bool(bunker.get("alive", false)):
+		return "Bunker ešte nestojí."
+	if int(bunker.get("level", 1)) >= 2:
+		return "Bunker je na maxime."
+	var spec = _bunker_level(2)
+	var price = float(spec.get("price", 4000000))
+	if float(GameState.player.cash) < price:
+		return "Vylepšenie stojí %s." % EconMath.eur(price)
+	GameState.player.cash = float(GameState.player.cash) - price
+	bunker["level"] = 2
+	bunker["capacity"] = int(spec.get("capacity", 20000))
+	if int(bunker.get("people", 0)) < int(bunker.capacity):
+		bunker["full_news"] = false
+	_news("Bunker v %s je na úrovni 2." % _bunker_place(bunker))
+	return ""
+
+func build_bunker_lab(bid: String, firm_id: String = "") -> String:
+	if not active():
+		return "DLC nie je zapnuté."
+	var bunker = _bunker_by_id(bid)
+	if bunker.is_empty():
+		return "Bunker nenájdený."
+	if int(bunker.get("build_left", 0)) > 0 or not bool(bunker.get("alive", false)):
+		return "Bunker ešte nestojí."
+	if bool(bunker.get("lab", false)):
+		return "Laboratórium už stojí."
+	var price = float(bunker_rules.get("lab_price", 1000000))
+	var owner = "player"
+	var firm_name = "hráč"
+	if firm_id != "":
+		var firm = GameState.firm_by_id(firm_id)
+		if firm.is_empty() or not can_research(firm):
+			return "Laboratórium môže mať len hráč alebo AI firma."
+		owner = str(firm.get("owner", ""))
+		firm_name = str(firm.get("name", firm_id))
+		if owner == "ai":
+			if float(firm.get("cash", 0.0)) < price:
+				return "Laboratórium stojí %s." % EconMath.eur(price)
+			firm["cash"] = float(firm.cash) - price
+		elif owner == "player":
+			if float(GameState.player.cash) < price:
+				return "Laboratórium stojí %s." % EconMath.eur(price)
+			GameState.player.cash = float(GameState.player.cash) - price
+		else:
+			return "Laboratórium môže mať len hráč alebo AI firma."
+	else:
+		if float(GameState.player.cash) < price:
+			return "Laboratórium stojí %s." % EconMath.eur(price)
+		GameState.player.cash = float(GameState.player.cash) - price
+	bunker["lab"] = true
+	bunker["lab_owner"] = owner
+	bunker["lab_firm"] = firm_id
+	_news("V bunkri v %s je laboratórium (%s). Vakcína ide o 10 %% rýchlejšie." % [_bunker_place(bunker), firm_name])
+	return ""
+
+func shelter_into(bunker: Dictionary, n: int) -> int:
+	if not bool(bunker.get("alive", false)) or int(bunker.get("build_left", 0)) > 0:
+		return 0
+	var room = maxi(0, int(bunker.get("capacity", 0)) - int(bunker.get("people", 0)))
+	var add = mini(room, maxi(0, n))
+	bunker["people"] = int(bunker.get("people", 0)) + add
+	if int(bunker.people) >= int(bunker.get("capacity", 0)) and int(bunker.get("capacity", 0)) > 0 and not bool(bunker.get("full_news", false)):
+		bunker["full_news"] = true
+		_news("Bunker v %s je preplnený." % _bunker_place(bunker))
+	return add
+
+func _lab_boost(firm_id: String, key: String) -> float:
+	var boost = float(bunker_rules.get("lab_vaccine_boost", 0.10))
+	for bunker in z().get("bunkers", []):
+		if not bool(bunker.get("alive", false)) or not bool(bunker.get("lab", false)) or int(bunker.get("build_left", 0)) > 0:
+			continue
+		if key == "vaccine" and str(bunker.get("lab_owner", "")) == "player":
+			return boost
+		if key == "ai_vaccine" and str(bunker.get("lab_owner", "")) == "ai" and str(bunker.get("lab_firm", "")) == firm_id:
+			return boost
+	return 0.0
+
+func _wall_hold(iso: String) -> float:
+	var best = 0.0
+	var table: Array = balance.get("wall_hold", [0.5, 0.9])
+	for bld in z().get("buildings", []):
+		if str(bld.get("kind", "")) != "mur":
+			continue
+		var zone_iso = ""
+		for zone in z().get("zones", []):
+			if str(zone.get("id", "")) == str(bld.get("zone", "")):
+				zone_iso = str(zone.get("iso", ""))
+		if zone_iso != iso:
+			continue
+		var lv = clampi(int(bld.get("level", 1)), 1, table.size())
+		best = maxf(best, float(table[lv - 1]))
+	return best
+
+func _tick_bunkers(row: Dictionary) -> void:
+	for bunker in row.get("bunkers", []):
+		if int(bunker.get("build_left", 0)) > 0:
+			bunker["build_left"] = int(bunker.build_left) - 1
+			if int(bunker.build_left) == 0:
+				_news("Bunker postavený v %s." % _bunker_place(bunker))
+			continue
+		if not bool(bunker.get("alive", false)):
+			continue
+		var cost = float(bunker_rules.get("maintain", 20000))
+		if float(GameState.player.cash) >= cost:
+			GameState.player.cash = float(GameState.player.cash) - cost
+		elif not bool(bunker.get("broke_news", false)):
+			bunker["broke_news"] = true
+			_news("Bunker v %s nemá na údržbu." % _bunker_place(bunker))
+		if int(bunker.get("food_days", 0)) <= 0:
+			bunker["hp"] = float(bunker.get("hp", 0.0)) - float(bunker_rules.get("starve_hp", 5))
+		else:
+			bunker["food_days"] = int(bunker.food_days) - 1
+		var dmg = 0.0
+		var reg = region_at(str(bunker.get("iso", "")), str(bunker.get("city", "")))
+		if int(reg.get("zombies", 0)) > 0 or float(reg.get("infection", 0.0)) > 0.0:
+			dmg = float(bunker_rules.get("attack", 10.0)) * (1.0 - _wall_hold(str(bunker.get("iso", ""))))
+		if dmg > 0.0:
+			bunker["hp"] = float(bunker.get("hp", 0.0)) - dmg
+		if float(bunker.get("hp", 0.0)) <= 0.0:
+			_bunker_fall(bunker)
+
+func _bunker_fall(bunker: Dictionary) -> void:
+	if not bool(bunker.get("alive", true)):
+		return
+	bunker["alive"] = false
+	bunker["hp"] = 0.0
+	var people = int(bunker.get("people", 0))
+	var row = z()
+	row["saved"] = maxi(0, int(row.get("saved", 0)) - people)
+	var iso = str(bunker.get("iso", ""))
+	var city = str(bunker.get("city", ""))
+	if people > 0 and city != "":
+		_seed(iso, city, maxf(2.0, float(people) / 500.0))
+	bunker["people"] = 0
+	_news("Bunker v %s padol. Ľudia vnútri sú nakazení." % _bunker_place(bunker))
+

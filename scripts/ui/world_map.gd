@@ -64,6 +64,9 @@ var place_mode: bool = false  # JUAN3: dalsi klik vyberie miesto na stavbu
 var place_iso: String = ""
 var place_industry: String = ""  # JUAN4: pre zvyraznenie platnych miest
 var overlay: bool = false  # JUAN4: teren + suroviny
+var infection_mode: bool = false  # Halloween DLC: vrstva nákazy
+var zone_draw: bool = false
+var _zone_click_ms: int = 0
 
 var zoom = 1.0
 var pan = Vector2.ZERO
@@ -401,6 +404,8 @@ func _draw() -> void:
 	_draw_cust_legend()  # JUAN17
 	_draw_lines()  # JUAN19
 	_draw_products()  # JUAN21
+	_draw_zombie()
+	_draw_bunkers()
 	prof["rest"] = Time.get_ticks_usec() - _tp
 	last_draw_ms = float(Time.get_ticks_usec() - t0) / 1000.0
 
@@ -956,6 +961,8 @@ func _color(iso: String) -> Color:
 	var t = EconMath.cl(log(max(pc, 400.0)) / log(80000.0), 0.0, 1.0)
 	var col = _terrain_tint(iso, t)  # JUAN16: terenna paleta + jemny politicky odtien
 	if atlas:  # JUAN20: priesvitna politicka vrstva nad zapecenym terenom
+		if infection_mode and GameState.running and has_node("/root/ZombieSystem") and ZombieSystem.active():
+			return Color(ZombieSystem.color_for(iso), 0.72)
 		if cust_mode:
 			return Color(cust_color(iso), 0.62)
 		var pc2 = AtlasStyle.political_color(iso,_fit()*zoom)
@@ -966,6 +973,8 @@ func _color(iso: String) -> Color:
 		return cust_color(iso)
 	if GameState.running and GeopoliticsSystem.at_war(iso):
 		col = col.lerp(UiPalette.BAD, 0.35)
+	if infection_mode and GameState.running and has_node("/root/ZombieSystem") and ZombieSystem.active():
+		return col.lerp(ZombieSystem.color_for(iso), 0.75)
 	return col
 
 func _hover_tip(iso: String) -> void:
@@ -980,9 +989,25 @@ func _hover_tip(iso: String) -> void:
 	tooltip_text = "%s\nHDP/obyv. %.0f USD\n%s" % [title, gdp, war]
 	if cust_mode:
 		tooltip_text += "\n" + cust_tip(iso)
+	if infection_mode and has_node("/root/ZombieSystem") and ZombieSystem.active():
+		var city_name = ""
+		var near = city_at_screen(get_local_mouse_position()) if zoom >= 8.0 else {}
+		if not near.is_empty() and str(near.get("iso", "")) == iso:
+			city_name = str(near.get("name", ""))
+		tooltip_text += "\n" + ZombieSystem.tip(iso, city_name)
+		tooltip_text += "\nKrajina: nákaza až %.0f %%" % ZombieSystem.country_infection(iso)
 
 func _click_at(sp: Vector2) -> void:
 	# JUAN14: jedno miesto pre vyhodnotenie kliku (aj pre testy)
+	if zone_draw and has_node("/root/ZombieSystem") and ZombieSystem.active():
+		var now = Time.get_ticks_msec()
+		var close_it = now - _zone_click_ms < 400
+		_zone_click_ms = now
+		var msg = ZombieSystem.add_draw_point(_to_world(sp), close_it)
+		if msg != "":
+			GameState.post_news(msg, "nákaza")
+		queue_redraw()
+		return
 	if has_node("/root/ShipSystem"):
 		var sid = ShipSystem.ship_at(_to_world(sp))
 		if sid != "":
@@ -1021,6 +1046,125 @@ func _click_at(sp: Vector2) -> void:
 			else:
 				country_firms.emit(iso)
 
+
+func _draw_zombie() -> void:
+	if not infection_mode or not GameState.running:
+		return
+	if not has_node("/root/ZombieSystem") or not ZombieSystem.active():
+		return
+	var row: Dictionary = ZombieSystem.z()
+	for zone in row.get("zones", []):
+		var pts := PackedVector2Array()
+		for p in zone.get("pts", []):
+			if typeof(p) == TYPE_ARRAY and p.size() >= 2:
+				pts.append(_to_screen(Vector2(float(p[0]), float(p[1]))))
+		if pts.size() >= 3:
+			var alive = bool(zone.get("alive", true))
+			draw_colored_polygon(pts, Color(0.2, 0.85, 0.45, 0.28) if alive else Color(0.65, 0.08, 0.08, 0.35))
+			draw_polyline(pts, Color(0.75, 1.0, 0.82) if alive else Color(0.9, 0.2, 0.15), 2.0, true)
+	var draft: Array = row.get("draw", [])
+	if draft.size() >= 1:
+		var dpts := PackedVector2Array()
+		for p in draft:
+			dpts.append(_to_screen(Vector2(float(p[0]), float(p[1]))))
+		if dpts.size() >= 2:
+			draw_polyline(dpts, Color(1, 0.95, 0.35), 2.0, false)
+		for p2 in dpts:
+			draw_circle(p2, 3.0, Color(1, 0.95, 0.35))
+	if row.get("fighters", []).size() > 0:
+		var radius = 600.0 / 27.8 * _fit() * zoom
+		for zone2 in row.get("zones", []):
+			draw_arc(_to_screen(ZombieSystem._zone_center(zone2)), radius, 0.0, TAU, 40, Color(0.45, 0.75, 1.0, 0.45), 1.5, true)
+	if zoom < 8.0:
+		return
+	var shown = 0
+	for reg in row.get("regions", {}).values():
+		if shown >= 48:
+			break
+		var n = ZombieSystem.model_count(reg)
+		if n <= 0:
+			continue
+		var rp = reg.get("pos", [0, 0])
+		var base = _to_screen(Vector2(float(rp[0]), float(rp[1])))
+		for i in n:
+			# 3D model Quaternius zombie (render zombie.glb), 1 až 5 kusov na región.
+			draw_texture_rect(ZOMBIE_TEX, Rect2(base + Vector2(i * 9.0 - 8.0, -18.0), Vector2(16, 16)), false)
+		shown += 1
+
+const ZOMBIE_TEX = preload("res://assets/models/zombies/zombie_sprite.png")
+var _bunker_vp: SubViewport
+var _bunker_failed := false
+
+func _draw_bunkers() -> void:
+	if not GameState.running or not has_node("/root/ZombieSystem") or not ZombieSystem.active():
+		return
+	var tex = _bunker_tex()
+	for bunker in ZombieSystem.z().get("bunkers", []):
+		var p = bunker.get("pos", [0, 0])
+		if typeof(p) != TYPE_ARRAY or p.size() < 2:
+			continue
+		var sp = _to_screen(Vector2(float(p[0]), float(p[1])))
+		if not Rect2(Vector2.ZERO, size).grow(48).has_point(sp):
+			continue
+		var col = ZombieSystem.hp_color(float(bunker.get("hp", 0.0)))
+		draw_arc(sp, 16.0, 0.0, TAU, 28, col, 2.5, true)
+		if tex != null:
+			draw_texture_rect(tex, Rect2(sp - Vector2(14, 14), Vector2(28, 28)), false)
+		else:
+			draw_rect(Rect2(sp - Vector2(8, 6), Vector2(16, 12)), Color(0.35, 0.4, 0.32))
+			draw_rect(Rect2(sp - Vector2(2, 1), Vector2(4, 7)), Color(0.12, 0.1, 0.08))
+
+# Model bunkra sa renderuje raz (ako loď), aby mapa držala FPS. Keď súbor chýba, ostane ikona.
+func _bunker_tex() -> Texture2D:
+	if _bunker_failed:
+		return null
+	if _bunker_vp != null:
+		return _bunker_vp.get_texture()
+	var path := ZombieSystem.bunker_model_path()
+	if path == "" or not ResourceLoader.exists(path):
+		_bunker_failed = true
+		return null
+	var packed = load(path)
+	if packed == null or not (packed is PackedScene):
+		_bunker_failed = true
+		return null
+	var vp := SubViewport.new()
+	vp.name = "Bunker3D"
+	vp.transparent_bg = true
+	vp.own_world_3d = true
+	vp.size = Vector2i(128, 128)
+	vp.gui_disable_input = true
+	vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	add_child(vp)
+	var world := Node3D.new()
+	vp.add_child(world)
+	var env := Environment.new()
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color(0, 0, 0, 0)
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.82, 0.86, 0.8)
+	env.ambient_light_energy = 1.1
+	var lighting := WorldEnvironment.new()
+	lighting.environment = env
+	world.add_child(lighting)
+	var sun := DirectionalLight3D.new()
+	sun.rotation_degrees = Vector3(-42, 20, 0)
+	sun.light_energy = 1.4
+	world.add_child(sun)
+	var inst = (packed as PackedScene).instantiate()
+	if inst == null:
+		_bunker_failed = true
+		vp.queue_free()
+		return null
+	world.add_child(inst)
+	var cam := Camera3D.new()
+	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
+	cam.size = 2.6
+	cam.look_at_from_position(Vector3(0.35, 1.15, -2.6), Vector3(0, 0.28, 0), Vector3.UP)
+	cam.current = true
+	world.add_child(cam)
+	_bunker_vp = vp
+	return vp.get_texture()
 
 func _zoom_at(mouse: Vector2, new_zoom: float, smooth: bool = false) -> void:
 	new_zoom = clampf(new_zoom, 1.0, MAX_ZOOM)

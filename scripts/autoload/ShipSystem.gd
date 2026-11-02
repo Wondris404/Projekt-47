@@ -193,3 +193,38 @@ func info(ship_id: String) -> String:
 			int(s.get("eta", 1)),
 		]
 	return "Loď nenájdená."
+
+# Vzdušná doprava v rovnakom systéme ako lode (fáza C). Halloween DLC sem posiela
+# helikoptéry a stíhačky; len výpočet polohy pre mapu, nič sa neukladá.
+func air_traffic(anim_time: float) -> Array:
+	var out: Array = []
+	if not has_node("/root/ZombieSystem") or not ZombieSystem.active():
+		return out
+	var wobble = fposmod(anim_time * 0.15, 1.0)
+	for fl in ZombieSystem.z().get("flights", []):
+		if typeof(fl) != TYPE_DICTIONARY or out.size() >= 24:
+			continue
+		var aa = fl.get("a", [0, 0])
+		var bb = fl.get("b", [0, 0])
+		var a = Vector2(float(aa[0]), float(aa[1]))
+		var b = Vector2(float(bb[0]), float(bb[1]))
+		var t = clampf(float(fl.get("t", 0.0)), 0.0, 1.0)
+		var kind = str(fl.get("kind", "heli"))
+		var e = {"kind": kind, "state": "fly", "flash": int(fl.get("flash", 0)), "pos": a, "heading": Vector2.RIGHT}
+		if bool(fl.get("crash", false)):
+			e.state = "crash"
+			e.pos = a.lerp(b, 0.5)
+		elif bool(fl.get("patrol", false)):
+			var ang = (t + wobble) * TAU
+			e.state = "patrol"
+			e.pos = a + Vector2(cos(ang), sin(ang)) * 3.2
+			e.heading = Vector2(-sin(ang), cos(ang))
+		elif kind == "heli" and t < 0.12:
+			e.state = "hover"
+			e.pos = a
+		else:
+			var tt = clampf(t + wobble * 0.08, 0.0, 1.0)
+			e.pos = a.lerp(b, tt)
+			e.heading = (b - a).normalized() if a.distance_to(b) > 0.05 else Vector2.RIGHT
+		out.append(e)
+	return out

@@ -44,6 +44,8 @@ func _process(delta: float) -> void:
 			if Transport.utilization(line) > 0.0 and not clipped(map._to_screen(Transport._pt(line.a)), map._to_screen(Transport._pt(line.b)), Rect2(Vector2.ZERO, map.size).grow(32)).is_empty():
 				live = true
 				break
+	if has_node("/root/ZombieSystem") and ZombieSystem.active() and ZombieSystem.z().get("flights", []).size() > 0:
+		live = true
 	if map.atlas and has_node("/root/ShipSystem") and ShipSystem.fleet().size() > 0 and map.is_visible_in_tree():
 		live = true
 		if map.zoom >= NEAR_ZOOM and not map.GFX.low():
@@ -54,6 +56,7 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	_draw_ships()
+	_draw_air()
 	if not map.atlas or map.zoom < 4.0 or map.GFX.low(): return
 	var visible_lines = 0
 	for line in Transport.lines():
@@ -235,3 +238,42 @@ func _draw_ship_tex(sp: Vector2, heading: Vector2, tex: Texture2D, sz: Vector2) 
 	draw_texture_rect(tex, Rect2(-sz * 0.5, sz), false)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
+const AIR_TEX = {
+	"heli": preload("res://assets/models/aircraft/heli_sprite.png"),
+	"fighter": preload("res://assets/models/aircraft/fighter_sprite.png"),
+}
+
+# Lietadlá DLC idú cez dopravu lodí (ShipSystem.air_traffic), nie vlastný systém.
+func _draw_air() -> void:
+	if not has_node("/root/ShipSystem") or map.GFX.low():
+		return
+	var icon = map.zoom < 8.0
+	var now = Time.get_ticks_msec()
+	for e in ShipSystem.air_traffic(map.anim_time):
+		var sp = map._to_screen(e.pos)
+		if not Rect2(Vector2.ZERO, map.size).grow(48).has_point(sp):
+			continue
+		var kind = str(e.kind)
+		var col = Color(0.95, 0.86, 0.28) if kind == "heli" else Color(0.45, 0.78, 1.0)
+		if e.state == "crash":
+			var k = fposmod(now / 900.0, 1.0)
+			draw_circle(sp, 4.0 + 8.0 * k, Color(1.0, 0.35, 0.1, 0.9 - 0.8 * k))
+			draw_circle(sp + Vector2(2, -6.0 - 8.0 * k), 3.0 + 4.0 * k, Color(0.25, 0.25, 0.25, 0.6 - 0.5 * k))
+			continue
+		if e.state == "hover":
+			sp.y += sin(now / 160.0) * 2.0
+			draw_arc(sp, 9.0, 0.0, TAU, 16, Color(col, 0.5), 1.0)
+		if icon:
+			# Oddialená mapa: len malá ikona.
+			draw_circle(sp, 3.5, col)
+			draw_circle(sp, 1.5, Color.BLACK)
+		else:
+			var tex: Texture2D = AIR_TEX.get(kind)
+			var sz = Vector2(28, 28) if kind == "heli" else Vector2(32, 32)
+			draw_set_transform(sp, e.heading.angle(), Vector2.ONE)
+			draw_texture_rect(tex, Rect2(-sz / 2.0, sz), false)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		if kind == "fighter" and int(e.flash) > 0 and int(now / 180) % 2 == 0:
+			# Útok: záblesk a stopa striel.
+			draw_circle(sp, 11.0, Color(1.0, 0.35, 0.15, 0.35))
+			draw_line(sp, sp + e.heading * 18.0, Color(1.0, 0.8, 0.3, 0.9), 1.5)
