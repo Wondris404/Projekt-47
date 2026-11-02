@@ -8,9 +8,9 @@ Povolené: CC0, CC-BY, CC-BY-SA, Royalty Free s redistribúciou. Zakázané: Per
 
 | Typ | Súbor | Zdroj | Autor | Licencia | Stav |
 | --- | --- | --- | --- | --- | --- |
-| Nákladná / kontajnerová | `cargo.glb` | https://sketchfab.com/3d-models/cargo-ship-loaded-c14144edcd6f4827a84be12456b51e18 | gogiart | CC-BY 4.0 | Povolené. Sketchfab download API vracia 401 bez prihlásenia, súbor nie je v repe. Placeholder. |
+| Nákladná / kontajnerová | `cargo.glb` | https://kenney.nl/assets/watercraft-kit (`ship-cargo-a`) | Kenney | CC0 1.0 | Použité. Sketchfab cargo-ship-loaded ostal nestiahnutý (401). |
 | Ropný tanker | `tanker.glb` | https://sketchfab.com/3d-models/tanker-ship-143b1286b149487ebc0afd194afef3ae | anandeva777 | licencia v API chýba (`license` je prázdne, `isDownloadable` false) | Zamietnuté. Neznáma licencia. Placeholder. |
-| Všeobecná obchodná loď | `merchant.glb` | https://sketchfab.com/3d-models/ship-aaa-re-upload-0d869536fb064a288df36925e207c725 | gogiart | CC-BY 4.0 | Povolené. Download bez prihlásenia nie je (401). Placeholder. |
+| Všeobecná obchodná loď | `general.glb` | https://kenney.nl/assets/watercraft-kit (`ship-small`) | Kenney | CC0 1.0 | Použité namiesto Sketchfab ship-aaa (401). |
 | Plynový tanker (LNG) | `lng.glb` | ten istý trup ako tanker + 4–5 gúľ | anandeva777 | závisí od tankera | Zamietnuté spolu s tankerom. Placeholder. |
 | Ťažobná loď (FPSO) | `fpso.glb` | ten istý trup ako tanker + veža | anandeva777 | závisí od tankera | Zamietnuté spolu s tankerom. FPSO nie je riadok flotily, ostáva pixelový sprite odvetvia. |
 | Zásobovacia loď (PSV/AHTS) | `psv.glb` | https://kenney.nl/assets/watercraft-kit model Boat Tug (`boat-tug-a`) | Kenney | CC0 1.0 | Povolené a použité. `psv` aj `ahts` zdieľajú tento model. |
@@ -27,7 +27,7 @@ Stránky free3d.com vracajú 403 (Datadome). Text licencie sa nedá prečítať,
 | Fregata 2 / torpédoborec | `destroyer.glb` | https://free3d.com/3d-model/admiral-sergey-gorshkov-56966.html | neznáma (403) | https://sketchfab.com/3d-models/17be09c31c6047e4a5969b68c29eba03 | Yi Tsung Lee | CC-BY 4.0 | Náhrada povolená, download 401. Placeholder. |
 | Hliadkový / raketový čln | `patrol.glb` | https://free3d.com/3d-model/project-206mr-vikhr-ifq-8840.html | neznáma (403) | https://sketchfab.com/3d-models/ca6b98e1100e4c81adefdc36d1f5af19 | 42manako | CC-BY 4.0 | Náhrada povolená, download 401. Placeholder. |
 | Korveta | `corvette.glb` | https://sketchfab.com/3d-models/81e24f73ff084a05914767dc3b7774c6 | CC-BY 4.0 (42manako, Nanuchka) | — | 42manako | CC-BY 4.0 | Povolené, download 401. Placeholder. |
-| Ponorka | `submarine.glb` | https://sketchfab.com/3d-models/010dd1a5ac8243b890d80b3a026d9b1d | CC-BY 4.0 (spacelynxcanfly, Typhoon) | — | spacelynxcanfly | CC-BY 4.0 | Povolené, download 401. Placeholder. |
+| Ponorka | `submarine.glb` | https://sketchfab.com/3d-models/010dd1a5ac8243b890d80b3a026d9b1d | CC-BY 4.0 (spacelynxcanfly, Typhoon) | — | Projekt-47 originál | CC0 1.0 | Sketchfab 401. V repe je originálny nízkopolygónový trup, nie Typhoon. |
 | Výsadková loď | `landing.glb` | https://sketchfab.com/3d-models/2346efbaa7074b958e0e487e5e209700 | CC-BY 4.0 (42manako, Ropucha) | — | 42manako | CC-BY 4.0 | Povolené, download 401. Placeholder. |
 
 ## Čo hráč uvidí
@@ -46,7 +46,16 @@ Stránky free3d.com vracajú 403 (Datadome). Text licencie sa nedá prečítať,
 | `lng.glb` | lng, lpg |
 | `psv.glb` | psv, ahts |
 
-- Cargo, bulk, general a ponorky (`ssn`, `ssbn`, `ssgn`, `ssk`) nemajú pole `model`. Mapa kreslí fallback sprite alebo zlatý trojuholník. Hra nespadne, ak súbor chýba.
+- Cargo, bulk, general a ponorky majú vlastný model (nie zlatý trojuholník, ak existuje sprite aj glb):
+
+| Súbor | id | Zdroj |
+| --- | --- | --- |
+| `cargo.glb` | feeder, panamax_box, neo_panamax, ulcv | Kenney `ship-cargo-a`, CC0 |
+| `bulk.glb` | handy_bulk, supramax, panamax_bulk, capesize, vloc | Kenney `boat-tow-a`, CC0 |
+| `general.glb` | roro, pctc, general, reefer, heavy | Kenney `ship-small`, CC0 |
+| `submarine.glb` | ssn, ssbn, ssgn, ssk | originál Projekt-47, CC0 (Sketchfab Typhoon sa bez účtu nestiahol) |
+
+Sprite zhora: `assets/sprites/ships/<kmeň>.png`. Chýbajúci súbor hru nespustí pád; `ShipSystem.model_path` vráti prázdny reťazec a mapa kreslí zlatý trojuholník.
 - Civilných lodí na mape ostáva najviac 32. Vojenské sa na mape nekreslia, rovnako ako doteraz.
 - Sketchfab (401 bez prihlásenia) a Free3D (403) sa nesťahovali a ostávajú zakázané.
 
@@ -74,4 +83,4 @@ Sketchfab a Free3D sa do repa nedostali:
 
 - Tanker, LNG a FPSO zo Sketchfabu: tanker nemá licenciu (`license` prázdne, `isDownloadable` false). Namiesto nich je Kenney `tanker.glb` a `lng.glb`.
 - Free3D (Essex, Kuznetsov, Huitfeldt, Gorškov, Vichr): stránka vracia 403, licencia sa nedá prečítať, preto sú zakázané. Náhradné Sketchfab modely sú CC-BY 4.0, ale download API vracia 401 bez prihlásenia, takže v repe nie sú. Namiesto nich sú Kenney trupy.
-- Cargo, merchant, korveta zo Sketchfabu a ponorka: CC-BY 4.0, download bez prihlásenia nejde (401). Korveta používa Kenney `frigate.glb`. Cargo, bulk, general a ponorky ostávajú bez modelu.
+- Cargo, merchant, korveta zo Sketchfabu a ponorka Typhoon: CC-BY 4.0, download bez prihlásenia nejde (401). Korveta používa Kenney `frigate.glb`. Cargo, bulk a general používajú Kenney `cargo.glb`, `bulk.glb` a `general.glb` (CC0). Ponorka v hre je originál CC0 `submarine.glb`, nie Typhoon.

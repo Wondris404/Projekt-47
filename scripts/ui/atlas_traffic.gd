@@ -149,8 +149,12 @@ func _ship_px(model_path: String, near: bool) -> Vector2:
 	var scale = 1.0
 	if stem == "carrier" or stem == "landing":
 		scale = 1.4
-	elif stem == "tanker" or stem == "lng":
+	elif stem == "tanker" or stem == "lng" or stem == "cargo" or stem == "bulk":
 		scale = 1.15
+	elif stem == "general":
+		scale = 1.05
+	elif stem == "submarine":
+		scale = 0.9
 	elif stem == "patrol" or stem == "psv":
 		scale = 0.82
 	var base = Vector2(36, 22) if near else Vector2(18, 10)

@@ -1,0 +1,25 @@
+cargo.glb
+  Autor: Kenney (model ship-cargo-a z Watercraft Kit)
+  URL: https://kenney.nl/assets/watercraft-kit
+  Licencia: CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
+  Textúra: Kenney colormap.png 512×512, vložená v glb. Predok na osi -Z.
+
+bulk.glb
+  Autor: Kenney (model boat-tow-a z Watercraft Kit)
+  URL: https://kenney.nl/assets/watercraft-kit
+  Licencia: CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
+  Textúra: Kenney colormap.png 512×512, vložená v glb. Predok na osi -Z.
+
+general.glb
+  Autor: Kenney (model ship-small z Watercraft Kit)
+  URL: https://kenney.nl/assets/watercraft-kit
+  Licencia: CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
+  Textúra: Kenney colormap.png 512×512, vložená v glb. Predok na osi -Z.
+
+submarine.glb
+  Autor: Projekt-47 (originálny nízkopolygónový trup, nie fan-art, žiadna značka)
+  URL: https://github.com/Wondris404/Projekt-47
+  Licencia: CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
+  Dôvod originálu: Sketchfab model Typhoon (CC-BY 4.0, spacelynxcanfly) a Poly Pizza sa bez prihlásenia nestiahli (401/403). Súbor nemá textúru.
+
+Sprity assets/sprites/ships/cargo.png, bulk.png, general.png, submarine.png sú pohľad zhora pre mapu. cargo/bulk/general vychádzajú z rovnakých trupov (CC0). submarine.png je originál CC0.
