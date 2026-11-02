@@ -29,7 +29,7 @@ Stav: ✅ hotové · 🟡 hotové s obmedzením · ⬜ chýba.
 | Z12 | Ekonomika: zbrane, lieky, jedlo, palivo dražejú; PMC kontrakt má ~3× účinok armády | `_economy`, `has_pmc`, `pmc_effect` | ✅ |
 | Z13 | Politika nakazených vo vlastnom štáte: vyhnať (helikoptéra, peniaze), zabiť (pokles reputácie + sankcie BR OSN), nechať | `set_policy` | ✅ |
 | Z14 | Vakcína: vyvíja **len hráč alebo AI firma**. Zničené laboratórium (padnutý región) = výskum stratený. Bez vakcíny sa nákaza šíri ďalej. | `start_vaccine`, `_vaccine`, `_ai_pick_lab` | ✅ |
-| Z15 | Koniec hry a štatistiky (výhra: vakcína alebo prežitie, prehra: padli všetky safe zóny); funguje aj z GitHub Release ZIP a zo zdrojákov, bez online servera | `_ending`, `_stats` | 🟡 ZIP sa stavia CI / ručne, pozri report |
+| Z15 | Koniec hry a štatistiky (výhra: vakcína alebo prežitie, prehra: padli všetky safe zóny); funguje aj z GitHub Release ZIP a zo zdrojákov, bez online servera | `_ending`, `_stats` | ✅ ending/stats already in ZombieSystem; the playable ZIP is CI artifact Projekt-47-Halloween-DLC from .github/workflows/dlc-release-zip.yml (not a GitHub Release) |
 
 ## Testy
 `tests/zombie_dlc.gd`: starý save bez DLC, šírenie z Krakova, správy v Noviny, vakcína len hráč/AI, strata výskumu AI laboratória.
