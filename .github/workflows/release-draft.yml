@@ -1,0 +1,121 @@
+name: Draft Windows release
+
+on:
+  push:
+    tags: ['v*']
+  pull_request: # so this PR's CI actually builds and proves the workflow; do not create a release on pull_request
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and verify Godot and export templates
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = '4.7.2'
+          $base = "https://github.com/godotengine/godot/releases/download/$version-stable"
+          $godotZip = Join-Path $env:RUNNER_TEMP 'godot.zip'
+          $templatesZip = Join-Path $env:RUNNER_TEMP 'templates.zip'
+          Invoke-WebRequest "$base/Godot_v$version-stable_win64.exe.zip" -OutFile $godotZip
+          Invoke-WebRequest "$base/Godot_v$version-stable_export_templates.tpz" -OutFile $templatesZip
+          if ((Get-FileHash $godotZip -Algorithm SHA256).Hash -ne '731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953') { throw 'Godot checksum mismatch' }
+          if ((Get-FileHash $templatesZip -Algorithm SHA256).Hash -ne 'f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011') { throw 'Templates checksum mismatch' }
+          Expand-Archive $godotZip -DestinationPath (Join-Path $env:RUNNER_TEMP 'godot')
+          Expand-Archive $templatesZip -DestinationPath (Join-Path $env:RUNNER_TEMP 'templates')
+          $env:APPDATA = Join-Path $env:RUNNER_TEMP 'isolated-appdata'
+          $templateDir = Join-Path $env:APPDATA 'Godot/export_templates/4.7.2.stable'
+          New-Item -ItemType Directory -Force -Path $templateDir | Out-Null
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'templates/templates/*') $templateDir -Recurse
+          "APPDATA=$env:APPDATA" >> $env:GITHUB_ENV
+          "GODOT_EXE=$env:RUNNER_TEMP/godot/Godot_v4.7.2-stable_win64_console.exe" >> $env:GITHUB_ENV
+      - name: Import and export
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & $env:GODOT_EXE --headless --editor --path . --import
+          if ($LASTEXITCODE -ne 0) { throw 'Import failed' }
+          New-Item -ItemType Directory -Force -Path build | Out-Null
+          & $env:GODOT_EXE --headless --path . --export-release Windows build/Projekt-47.exe
+          if ($LASTEXITCODE -ne 0 -or !(Test-Path build/Projekt-47.exe)) { throw 'Export failed' }
+      - name: Verify exported game in isolated data directory
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $console = 'build/Projekt-47.console.exe'
+          if (!(Test-Path $console)) { throw 'Console wrapper missing' }
+          & $console --headless -- profile_sim 2>&1 | Tee-Object -FilePath "$env:RUNNER_TEMP/export-smoke.log"
+          if ($LASTEXITCODE -ne 0) { throw 'Exported game returned an error' }
+          if (!(Select-String -Path "$env:RUNNER_TEMP/export-smoke.log" -Pattern '^P47_PHASE_DONE .*days=10')) { throw 'Exported simulation did not complete' }
+          if (Select-String -Path "$env:RUNNER_TEMP/export-smoke.log" -Pattern '^SCRIPT ERROR:') { throw 'Exported game reported a script error' }
+      - name: Write version note and zip
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          @'
+          Projekt-47 – verziovaná zostava pre Windows 10/11 (64-bit).
+          Toto je označená verzia hry (tag v*), nie skúšobný demo balík.
+          Rozbaľte všetky súbory do jedného priečinka a spustite Projekt-47.exe.
+          Hra ukladá pozície do priečinka používateľských dát Godotu.
+          Kým je v hre model bunkra CC BY-NC-SA, verziu nepredávajte.
+          '@ | Set-Content -Encoding utf8 build/CITAJ-MA.txt
+          foreach ($need in @('build/Projekt-47.exe', 'build/Projekt-47.console.exe', 'build/CITAJ-MA.txt')) {
+            if (!(Test-Path -LiteralPath $need)) { throw "Missing $need" }
+          }
+          $stage = Join-Path $env:RUNNER_TEMP 'p47-release-stage'
+          if (Test-Path $stage) { Remove-Item -LiteralPath $stage -Recurse -Force }
+          New-Item -ItemType Directory -Path $stage | Out-Null
+          Copy-Item -LiteralPath 'build/Projekt-47.exe' -Destination $stage
+          Copy-Item -LiteralPath 'build/Projekt-47.console.exe' -Destination $stage
+          Copy-Item -LiteralPath 'build/CITAJ-MA.txt' -Destination $stage
+          Get-ChildItem -LiteralPath build -Filter *.pck -File | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination $stage
+          }
+          $zip = Join-Path (Get-Location) 'build/Projekt-47-Windows.zip'
+          if (Test-Path -LiteralPath $zip) { Remove-Item -LiteralPath $zip -Force }
+          Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip
+          if (!(Test-Path -LiteralPath $zip) -or (Get-Item -LiteralPath $zip).Length -eq 0) { throw 'Zip failed' }
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $archive = [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path -LiteralPath $zip).Path)
+          try {
+            $names = @($archive.Entries | ForEach-Object { $_.FullName })
+            Write-Host ("ZIP entries: " + ($names -join ', '))
+            foreach ($need in @('Projekt-47.exe', 'Projekt-47.console.exe', 'CITAJ-MA.txt')) {
+              if ($names -notcontains $need) { throw "Zip missing $need" }
+            }
+            foreach ($n in $names) {
+              if ($n -notin @('Projekt-47.exe', 'Projekt-47.console.exe', 'CITAJ-MA.txt') -and $n -notlike '*.pck') {
+                throw "Unexpected zip entry $n"
+              }
+            }
+          } finally { $archive.Dispose() }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Projekt-47-Windows-draft
+          path: build/Projekt-47-Windows.zip
+          if-no-files-found: error
+          retention-days: 30
+
+  draft-release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Projekt-47-Windows-draft
+          path: release-input
+      - name: Create unpublished draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test -f release-input/Projekt-47-Windows.zip
+          gh release create "$GITHUB_REF_NAME" release-input/Projekt-47-Windows.zip --repo $GITHUB_REPOSITORY --target $GITHUB_SHA --draft --latest=false --title "Projekt-47 $GITHUB_REF_NAME" --notes "Draft. Ondrej skontroluje a zverejní ručne. Hra obsahuje bunker CC BY-NC-SA, kým sa model nevymení, nesmie sa predávať."

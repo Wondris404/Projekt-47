@@ -1,4 +1,5 @@
 name: Windows demo package
+# Tagged v* drafts are built by release-draft.yml; this file stays the path-filtered Windows demo check.
 
 on:
   pull_request:
