@@ -51,6 +51,7 @@ func run() -> int:
 	load("res://tests/phase_c_ships.gd").new().run(self)
 	load("res://tests/phase_d_arms.gd").new().run(self)
 	load("res://tests/phase_e_offshore.gd").new().run(self)
+	load("res://tests/atlas_new_models.gd").new().run(self)
 	SaveSystem.cleanup_test_dir()
 	return 1 if fails > 0 else 0
 
@@ -865,7 +866,7 @@ func _history_catalog() -> void:
 	_chk("forecast_f10_source", str(DataLoader.forecast_by_id.get("F10", {}).get("source", "")).begins_with("IPCC AR6 SYR "))
 	_chk("forecast_f11_source", str(DataLoader.forecast_by_id.get("F11", {}).get("source", "")).begins_with("IEA World Energy Outlook "))
 	_chk("forecast_f12_source", str(DataLoader.forecast_by_id.get("F12", {}).get("source", "")).begins_with("IEA Net Zero Roadmap "))
-	_chk("catalog_fields_match_brief", _catalog_signature() == _read_text("res://tests/catalog_field_lock.txt"))
+	_chk("catalog_fields_match_brief", _catalog_signature() == _read_text("res://tests/catalog_field_lock.txt").replace("\r", ""))
 	_new()
 	GameState.player.cash = 1000000.0
 	var start_err = GameState.start_research("logistics1")
