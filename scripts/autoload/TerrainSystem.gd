@@ -9,6 +9,7 @@ const TERRAIN_NAMES = {"plains": "Nížina", "forest": "Les", "hills": "Pahorkat
 const TERRAIN_COLORS = {"plains": Color(0.42, 0.52, 0.28), "forest": Color(0.20, 0.36, 0.18), "hills": Color(0.50, 0.45, 0.30), "mountains": Color(0.55, 0.52, 0.50), "desert": Color(0.78, 0.68, 0.42), "tundra": Color(0.72, 0.76, 0.78), "urban": Color(0.95, 0.55, 0.15)}
 # odvetvie -> potrebne nalezisko ("" = nevyzaduje)
 const NEEDS_DEPOSIT = {"coal_mine": "coal", "iron_mine": "iron", "copper_mine": "copper", "oil_well": "oil", "gas_well": "gas", "wheat_farm": "farmland"}
+const SEA_DEPOSIT = {"offshore_oil_rig": "oil", "offshore_gas_rig": "gas", "fpso": "oil"}
 const URBAN_ONLY = ["cafe", "finance_office", "bank", "trade_desk", "stock_broker"]
 const DEPOSIT_R = 3.0
 # endow kluc v countries.json pre kazdu surovinu
@@ -201,6 +202,8 @@ func can_place(ind_id: String, iso: String, wp: Vector2) -> Dictionary:
 		if _near_city(iso, wp, 2.5, 0.0).is_empty():
 			return {"ok": false, "reason": "%s musí byť pri meste (prístav, sklady, doprava). Klikni blízko mesta." % _ind_name(ind_id)}
 		return {"ok": true, "reason": ""}
+	if SEA_DEPOSIT.has(ind_id):
+		return _sea_place(ind_id, iso, wp)
 	if ind_id in ["nuclear_plant", "power_coal", "gas_plant", "chem_plant", "steel_mill", "oil_refinery", "gas_works"] and not city.is_empty():
 		return {"ok": false, "reason": "%s nemôže stáť v meste %s (bezpečnosť, hluk). Klikni mimo mesta." % [_ind_name(ind_id), str(city.name)]}
 	var need = str(NEEDS_DEPOSIT.get(ind_id, ""))
@@ -234,6 +237,44 @@ func valid_spots(ind_id: String, iso: String) -> Array:
 	for d in deposits(iso):
 		if need == "" or str(d.res) == need:
 			out.append({"pos": d.pos, "r": d.r})
+	if SEA_DEPOSIT.has(ind_id):
+		out = _sea_spots(ind_id, iso)
+	return out
+
+func _sea_place(ind_id: String, iso: String, wp: Vector2) -> Dictionary:
+	if inside(iso, wp):
+		return {"ok": false, "reason": "%s patrí na more pri pobreží, nie na súš." % _ind_name(ind_id)}
+	if not _near_coast(iso, wp):
+		return {"ok": false, "reason": "%s musí byť tesne pri pobreží." % _ind_name(ind_id)}
+	var need = str(SEA_DEPOSIT[ind_id])
+	var hit = false
+	for d in deposits(iso):
+		if str(d.res) == need and wp.distance_to(d.pos) <= 18.0:
+			hit = true
+			break
+	if not hit:
+		return {"ok": false, "reason": "Pri pobreží nie je ložisko (%s) dosť blízko." % RES_NAMES.get(need, need)}
+	return {"ok": true, "reason": ""}
+
+func _near_coast(iso: String, wp: Vector2) -> bool:
+	for k in 8:
+		var a = TAU * float(k) / 8.0
+		if inside(iso, wp + Vector2(cos(a), sin(a)) * 2.4):
+			return true
+	return false
+
+func _sea_spots(ind_id: String, iso: String) -> Array:
+	var out: Array = []
+	var need = str(SEA_DEPOSIT[ind_id])
+	for d in deposits(iso):
+		if str(d.res) != need:
+			continue
+		for k in 8:
+			var a = TAU * float(k) / 8.0
+			var p = d.pos + Vector2(cos(a), sin(a)) * (float(d.r) + 3.0)
+			if bool(_sea_place(ind_id, iso, p).ok):
+				out.append({"pos": p, "r": 2.0})
+				break
 	return out
 
 func _ind_name(ind_id: String) -> String:

@@ -11,8 +11,8 @@ func run(u, host: Node) -> void:
 			var tex = Models.texture(str(kind), level)
 			complete = complete and tex != null and tex.get_size() == Vector2(64, 72)
 			if tex != null: hashes[tex.get_image().get_data().hex_encode().sha256_text()] = true
-	u._chk("levels_catalog_195", complete and kinds.size() == 65)
-	u._chk("levels_no_duplicate_images", hashes.size() == 195)
+	u._chk("levels_catalog_195", complete and kinds.size() == 68)
+	u._chk("levels_no_duplicate_images", hashes.size() == 204)
 	u._chk("levels_safe_range", Models.texture("hq", 0) == Models.texture("hq", 1) and Models.texture("hq", 99) == Models.texture("hq", 3))
 	u._chk("levels_unknown_is_null", Models.texture("missing_atlas_type", 2) == null)
 	var v = Visuals.new()
