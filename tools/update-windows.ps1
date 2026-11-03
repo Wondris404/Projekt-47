@@ -91,12 +91,13 @@ function Get-ReleaseInfo {
         }
     }
     if ($ReleaseTag) { throw '-ReleaseTag je určený len pre miestny archív.' }
-    $releases = @(Invoke-RestMethod -Uri 'https://api.github.com/repos/Wondris404/Projekt-47/releases?per_page=100' -Headers $headers)
+    # Windows PowerShell 5.1 returns a JSON array as one Object[] item; unroll it.
+    $releases = @(Invoke-RestMethod -Uri 'https://api.github.com/repos/Wondris404/Projekt-47/releases?per_page=100' -Headers $headers | ForEach-Object { $_ })
     $release = $releases | Where-Object {
         -not $_.draft -and $_.tag_name -match '^demo-[0-9]+-[0-9]+$' -and
         @($_.assets | Where-Object { $_.name -eq 'Projekt-47-Windows.zip' }).Count -eq 1 -and
         @($_.assets | Where-Object { $_.name -eq 'SHA256SUMS.txt' }).Count -eq 1
-    } | Sort-Object -Property published_at -Descending | Select-Object -First 1
+    } | Sort-Object -Property { [DateTime]$_.published_at } -Descending | Select-Object -First 1
     if (-not $release) { throw 'Na GitHube zatiaľ nie je dostupné kompatibilné vydanie.' }
     $prefix = 'https://github.com/Wondris404/Projekt-47/releases/download/' + $release.tag_name + '/'
     $archiveUrl = ($release.assets | Where-Object { $_.name -eq 'Projekt-47-Windows.zip' }).browser_download_url
