@@ -2889,6 +2889,9 @@ func bank_detail_text(b: Dictionary) -> String:
 	for loan in b.get("sovereign_loans", []):
 		var iso = str(loan.get("country", ""))
 		out += "\n• %s: %s, úrok %s, zostáva %d mesiacov" % [str(GameState.world.get(iso, {}).get("name_sk", iso)), EconMath.eur(float(loan.get("remaining", 0.0))), EconMath.pct(float(loan.get("rate", 0.0))), int(loan.get("months", 0))]
+	var sav = GameState.player.get("savings", {})
+	if typeof(sav) == TYPE_DICTIONARY and str(sav.get("bank_id", "")) == str(b.get("id", "")):
+		out += "\n\nTvoj sporiaci účet v tejto banke: %s, sadzba %s" % [EconMath.eur(float(sav.get("balance", 0.0))), EconMath.pct(float(sav.get("rate", 0.0)))]
 	return out
 
 # Zapamätané hodnoty polí oddelia automatickú zmenu od rozpracovaného vstupu hráča.

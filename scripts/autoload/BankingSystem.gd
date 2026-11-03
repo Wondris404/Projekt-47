@@ -771,7 +771,7 @@ func player_banks() -> Array:
 func set_active_bank(id: String) -> void:
 	GameState.player.bank_id = id
 
-const HELP = "AKO FUNGUJÚ ÚVERY\n• Limit: banka ti požičia najviac toľko, koľko dovoľuje obtiažnosť (100–200k na štarte) + polovica tvojho čistého imania, viac s dobrou reputáciou a splatenými úvermi.\n• Úrok = základná sadzba centrálnej banky + riziková prirážka (tvoje skóre, stabilita krajiny) + obtiažnosť; nezabezpečený úver +4 p.b.\n• Záloha: banka uzná z firmy 50 %, z hotovosti 70 % hodnoty. Založené veci nepredáš. Po 3 nesplatených splátkach si ich banka zoberie.\n• Splátka je mesačná (anuita). Splatený úver zvýši limit.\n• VLASTNÁ BANKA: postav ju na mape ako firmu (Založiť → Banka, v meste). Môžeš mať viac bánk. Banka berie vklady, dáva úvery ľuďom, hypotéky a firemné úvery; zisk = úroky − úroky z vkladov − straty z nesplácania."
+const HELP = "AKO FUNGUJÚ ÚVERY\n• Limit: banka ti požičia najviac toľko, koľko dovoľuje obtiažnosť (100–200k na štarte) + polovica tvojho čistého imania, viac s dobrou reputáciou a splatenými úvermi.\n• Úrok = základná sadzba centrálnej banky + riziková prirážka (tvoje skóre, stabilita krajiny) + obtiažnosť; nezabezpečený úver +4 p.b.\n• Záloha: banka uzná z firmy 50 %, z nehnuteľnosti 60 %, z hotovosti 70 % hodnoty. Založené veci nepredáš. Po 3 nesplatených splátkach si ich banka zoberie.\n• Splátka je mesačná (anuita). Splatený úver zvýši limit.\n• VLASTNÁ BANKA: postav ju na mape ako firmu (Založiť → Banka, v meste). Môžeš mať viac bánk. Banka berie vklady, dáva úvery ľuďom, hypotéky a firemné úvery; zisk = úroky − úroky z vkladov − straty z nesplácania."
 
 func _player_bank() -> Dictionary:
 	return _bank(str(GameState.player.get("bank_id", "")))
@@ -1006,6 +1006,23 @@ func annuity_payment(principal: float, annual_rate: float, months: int) -> float
 	if r <= 0.000001:
 		return principal / float(months)
 	return principal * r / (1.0 - pow(1.0 + r, -float(months)))
+
+# Nahľad sadzby a splátky bez zmeny sadzieb (update_rates sa nevolá).
+func loan_quote(amount: float, years: int, rate_add: float) -> Dictionary:
+	var iso = str(GameState.player.get("home", ""))
+	var score = float(GameState.player.get("credit_score", 55.0))
+	var rating = 50.0
+	if GameState.world.has(iso):
+		rating = float(GameState.world[iso].get("stability", 50.0))
+	var premium = risk_premium_for(score, rating)
+	var base = 0.02
+	if GameState.central.has(iso):
+		var row: Dictionary = GameState.central[iso]
+		base = float(row.get("base_rate", row.get("policy", 0.02)))
+	var rate = max(0.001, base + premium + rate_add + Difficulty.rate_add() + PoliticsSystem.rate_bonus())
+	var months = maxi(years, 1) * 12
+	var pay = annuity_payment(maxf(0.0, amount), rate, months)
+	return {"rate": rate, "payment": pay, "months": months}
 
 func consumer_rate(bank: Dictionary) -> float:
 	return float(bank.get("cons_rate", float(bank.get("lending_rate", bank.get("loan_rate", 0.06))) + 0.04))
