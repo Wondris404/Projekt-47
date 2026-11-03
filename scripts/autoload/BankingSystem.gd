@@ -1197,6 +1197,35 @@ func _loan_by_id(lid: String) -> Dictionary:
 			return l
 	return {}
 
+# Predcasne splatenie: ciastocne znizi zostatok a prepocita anuitu, uplne zavrie uver (paid).
+# Splateny uver ostava v player.loans (UI ho skryje). loans_repaid riesi _note_repaid.
+func repay_loan(loan_id: String, amount: float) -> Dictionary:
+	var loan = _loan_by_id(loan_id)
+	if loan.is_empty():
+		return {"ok": false, "reason": "Úver neexistuje."}
+	if bool(loan.get("paid", false)) or float(loan.get("remaining", 0.0)) <= 1.0:
+		return {"ok": false, "reason": "Úver je už splatený."}
+	if amount <= 0.0:
+		return {"ok": false, "reason": "Zlá suma."}
+	var remaining = float(loan.get("remaining", 0.0))
+	var pay = minf(amount, remaining)
+	if float(GameState.player.cash) + 0.001 < pay:
+		return {"ok": false, "reason": "Nemáš dosť hotovosti."}
+	GameState.player.cash = float(GameState.player.cash) - pay
+	loan.remaining = remaining - pay
+	var bank = _bank(str(loan.get("lender", "")))
+	if not bank.is_empty():
+		bank.reserves = float(bank.get("reserves", 0.0)) + pay
+		bank.explicit = maxf(0.0, float(bank.get("explicit", 0.0)) - pay)
+	if float(loan.remaining) <= 1.0:
+		loan.remaining = 0.0
+		loan.months_left = 0
+		loan.paid = true
+	else:
+		var months = maxi(1, int(loan.get("months_left", 1)))
+		loan.monthly_payment = annuity_payment(float(loan.remaining), float(loan.get("annual_rate", 0.0)), months)
+	return {"ok": true, "reason": "", "paid": pay, "remaining": float(loan.remaining), "payment": float(loan.get("monthly_payment", 0.0)), "closed": bool(loan.get("paid", false))}
+
 # mesacne: splatene uvery uvolnia zalohy (+ historia splacania), zabezpecene v defaulte -> banka zaberie zalohy
 func collateral_monthly() -> void:
 	for f in GameState.firms:
