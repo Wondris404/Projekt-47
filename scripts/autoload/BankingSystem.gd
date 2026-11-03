@@ -615,7 +615,7 @@ func _refresh_rating() -> void:
 	var debt = 0.0
 	for loan in GameState.player.loans:
 		debt += float(loan.remaining)
-	var assets = float(GameState.player.cash)
+	var assets = float(GameState.player.cash) + float(GameState.player.get("savings", {}).get("balance", 0.0))
 	for firm2 in GameState.firms:
 		if firm2.owner == "player" and not firm2.get("closed", false):
 			assets += float(firm2.cash)

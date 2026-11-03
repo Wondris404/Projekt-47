@@ -626,6 +626,7 @@ func net_worth() -> float:
 	s += Empire.extra_worth()  # JUAN10 budovy + rozpocet financnych divizii
 	for l in player.get("loans", []):
 		s += float(l.get("escrow", 0.0))  # JUAN5 #18: hotovost v zalohe
+	s += float(player.get("savings", {}).get("balance", 0.0))
 	return s
 
 func days_per_second() -> float:

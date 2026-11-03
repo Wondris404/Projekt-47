@@ -7,6 +7,7 @@ func run(u) -> void:
 	_early(u)
 	_miss(u)
 	_savings(u)
+	_savings_worth(u)
 	_save(u)
 
 func _annuity(u) -> void:
@@ -166,6 +167,24 @@ func _savings(u) -> void:
 		if str(row.get("text", "")).find("Garančný") >= 0 and str(row.get("text", "")).find("stratené") >= 0:
 			covered = true
 	u._chk("bf_guarantee", absf(float(GameState.player.cash) - (cash0 + 100000.0)) < 0.02 and float(GameState.player.savings.balance) == 0.0 and str(GameState.player.savings.bank_id) == "" and covered)
+
+func _savings_worth(u) -> void:
+	u._new()
+	GameState.player.cash = 2.0e5
+	var opened: Dictionary = BankingSystem.request_unsecured_loan(20000.0, 5)
+	u._chk("bf_worth_loan", bool(opened.get("ok", false)), str(opened))
+	if not bool(opened.get("ok", false)):
+		return
+	BankingSystem._refresh_rating()
+	var worth0 = GameState.net_worth()
+	var limit0 = BankingSystem.loan_limit()
+	var rating0 = int(GameState.player.get("rating", 0))
+	var score0 = float(GameState.player.get("credit_score", 0.0))
+	var put: Dictionary = BankingSystem.deposit(10000.0)
+	BankingSystem._refresh_rating()
+	u._chk("bf_worth_same", bool(put.get("ok", false)) and absf(GameState.net_worth() - worth0) < 0.01, "nw %.4f -> %.4f" % [worth0, GameState.net_worth()])
+	u._chk("bf_worth_limit", absf(BankingSystem.loan_limit() - limit0) < 0.01, "lim %.4f -> %.4f" % [limit0, BankingSystem.loan_limit()])
+	u._chk("bf_worth_score", int(GameState.player.get("rating", 0)) == rating0 and absf(float(GameState.player.get("credit_score", 0.0)) - score0) < 0.01)
 
 func _save(u) -> void:
 	u._new()
