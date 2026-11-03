@@ -1179,14 +1179,23 @@ func _on_menu_dev() -> void:
 	_on_start({"country": "SK", "year": 2024, "seed": 47, "starter": false, "tutorial": false, "mode": "easy", "nick": "Dev", "gender": "muž", "dev": true})
 
 func _apply_dev() -> void:
-	GameState.config.dev = true
-	GameState.config.progression = false
+	_cheat_unlock_all()
 	GameState.player.cash = float(GameState.player.cash) + 50000000.0
+	_cheat_research_all()
+
+func _cheat_research_all() -> int:
 	var done: Array = GameState.player.get("done", [])
+	var n := 0
 	for r in DataLoader.research:
 		if typeof(r) == TYPE_DICTIONARY and not str(r.get("id", "")) in done:
 			done.append(str(r.get("id", "")))
+			n += 1
 	GameState.player.done = done
+	return n
+
+func _cheat_unlock_all() -> void:
+	GameState.config.dev = true  # rovnaké efekty ako starý Dev mód (StockMarket, IndustrySystem, šedé odvetvia)
+	GameState.config.progression = false
 	var fs: Dictionary = PoliticsSystem.focus_state()
 	var fd: Array = fs.get("done", [])
 	for f in PoliticsSystem.FOCUS:
@@ -1225,48 +1234,37 @@ func _dev_war() -> void:
 		best = "UA" if a != "UA" else "RU"
 	GeopoliticsSystem._start_war(a, best)
 
-func _dev_panel_toggle() -> void:
-	if not bool(GameState.config.get("dev", false)):
-		return
-	var dp = get_node_or_null("DevPanel")
-	if dp:
-		dp.visible = not dp.visible
-		return
-	var pc = PanelContainer.new()
-	pc.name = "DevPanel"
-	pc.z_index = 40
-	pc.position = Vector2(20, 80)
-	var vb = VBoxContainer.new()
-	pc.add_child(vb)
-	var info = Label.new()
-	info.text = "DEV"
-	vb.add_child(info)
-	var b1 = Button.new(); b1.text = "+10 M €"; vb.add_child(b1)
-	b1.pressed.connect(func(): GameState.player.cash = float(GameState.player.cash) + 10000000.0; _refresh_label())
-	var b2 = Button.new(); b2.text = "Preskočiť 30 dní"; vb.add_child(b2)
-	b2.pressed.connect(func():
-		var t0 = Time.get_ticks_msec()
-		for i in 30: GameState.simulate_day()
-		info.text = "DEV  %.1f ms/deň  FPS %d" % [float(Time.get_ticks_msec() - t0) / 30.0, Engine.get_frames_per_second()]
-		_refresh_label())
-	var b3 = Button.new(); b3.text = "Dokončiť výskum a ciele"; vb.add_child(b3)
-	b3.pressed.connect(_apply_dev)
-	var b4 = Button.new(); b4.text = "Udalosť: recesia + pád burzy"; vb.add_child(b4)
-	b4.pressed.connect(func(): _dev_event(); _refresh_label())
-	var b5 = Button.new(); b5.text = "Vojna (vybraná krajina vs. sused)"; vb.add_child(b5)
-	b5.pressed.connect(func(): _dev_war(); _refresh_label())
-	var errs = Label.new()
-	errs.name = "DevErrors"
-	errs.custom_minimum_size = Vector2(320, 0)
-	errs.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vb.add_child(errs)
-	var b6 = Button.new(); b6.text = "Log chýb"; vb.add_child(b6)
-	b6.pressed.connect(func(): errs.text = _dev_error_text())
-	add_child(pc)
-	var dev_rect = func() -> Rect2:
-		return Rect2(Vector2(20, 80), pc.get_combined_minimum_size())
-	win_mgr.register(pc, "dev", dev_rect, 24.0, Vector2(200, 120))
-	win_mgr.place("dev")
+# Cheat konzola nahrádza Dev panel (F12). Otvára sa 3× Ctrl+C počas hry.
+var cheat_console: Control
+var _ctrl_c_times: Array = []
+
+func _cheat_console_toggle() -> void:
+	if cheat_console == null:
+		cheat_console = load("res://scripts/ui/cheat_console.gd").new()
+		cheat_console.setup(self)
+		add_child(cheat_console)
+	if cheat_console.visible:
+		cheat_console.close()
+	else:
+		move_child(cheat_console, get_child_count() - 1)
+		cheat_console.open()
+
+func _cheat_console_input(event: InputEvent) -> bool:
+	if not (event is InputEventKey) or not event.pressed or event.echo:
+		return cheat_console != null and cheat_console.visible
+	var k = event as InputEventKey
+	if k.keycode == KEY_C and k.ctrl_pressed and not k.alt_pressed and GameState.running and not (main_menu and main_menu.visible):
+		var now = Time.get_ticks_msec()
+		_ctrl_c_times.append(now)
+		_ctrl_c_times = _ctrl_c_times.filter(func(t): return now - int(t) <= 1500)
+		if _ctrl_c_times.size() >= 3:
+			_ctrl_c_times.clear()
+			_cheat_console_toggle()
+			get_viewport().set_input_as_handled()
+			return true
+		if cheat_console != null and cheat_console.visible:
+			return true  # Ctrl+C v konzole len počíta, nekopíruje
+	return cheat_console != null and cheat_console.visible
 
 func _dev_error_text() -> String:
 	var out: Array = dev_errors.duplicate()
@@ -1987,6 +1985,10 @@ var _day_finished_for_input := false
 func _input(event: InputEvent) -> void:
 	if _headless():
 		return
+	if _cheat_console_input(event):
+		if event is InputEventKey and (event as InputEventKey).ctrl_pressed and (event as InputEventKey).keycode == KEY_C:
+			get_viewport().set_input_as_handled()
+		return  # otvorená konzola blokuje vstup hre
 	_day_finished_for_input = false
 	var action_input = event is InputEventKey or (event is InputEventMouseButton and (event as InputEventMouseButton).button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE])
 	if action_input and GameState.day_in_progress():
@@ -2025,6 +2027,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _headless() or not (event is InputEventKey) or not event.pressed or _typing_focus():
 		return
 	var key = event as InputEventKey
+	if cheat_console != null and cheat_console.visible:
+		if key.keycode == KEY_ESCAPE:
+			cheat_console.close()
+		get_viewport().set_input_as_handled()
+		return
 	if _splash != null:
 		_end_splash()
 		return
@@ -2044,9 +2051,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			toggle_pause_popup()  # JUAN11: Esc = male pauzove okno, nie hlavne menu
 		else:
 			_show_menu()
-		return
-	if key.keycode == KEY_F12:
-		_dev_panel_toggle()
 		return
 	if key.keycode == KEY_TAB and GameState.running and not (main_menu and main_menu.visible):
 		toggle_side_panel()
@@ -3535,7 +3539,7 @@ func _juan4_ui_checks() -> void:
 	if story:
 		story.emit_signal("pressed")
 	var story_ok = main_menu.menu_note.text.find("wondris404") >= 0
-	var hidden_ok = map != null and not map.is_visible_in_tree() and main_menu.find_child("Logo", true, false) != null and main_menu.find_child("Dev", true, false) != null
+	var hidden_ok = map != null and not map.is_visible_in_tree() and main_menu.find_child("Logo", true, false) != null and main_menu.find_child("Dev", true, false) == null
 	print("P47_UI_MENU_FULLSCREEN %d" % int(hidden_ok))
 	var hard = main_menu.find_child("Mode_hard", true, false)
 	if hard:
@@ -3603,12 +3607,14 @@ func _juan4_ui_checks() -> void:
 	var credit_ok = cp != null and cp.find_child("SecuredLoan", true, false) != null
 	_show_menu()
 	await get_tree().process_frame
-	main_menu.find_child("Dev", true, false).emit_signal("pressed")
+	_on_menu_dev()
 	await get_tree().process_frame
 	var dev_ok = GameState.running and bool(GameState.config.get("dev", false)) and float(GameState.player.cash) >= 5.0e7 and IndustrySystem.unlock_reason("airport", "SK") == "" and _dev_save_roundtrip()
-	_dev_panel_toggle()
+	_cheat_console_toggle()
 	_dev_event()
-	var dp_ok = get_node_or_null("DevPanel") != null and _dev_error_text() != ""
+	var cc_ok = cheat_console != null and cheat_console.visible and cheat_console.run("money 5m").begins_with("Pridané") and cheat_console.run("help").find("research all") >= 0 and cheat_console.run("nieco") .begins_with("Neznámy")
+	cheat_console.close()
+	var dp_ok = cc_ok and _dev_error_text() != ""
 	print("P47_UI_J5 stock=%d credit=%d dev=%d devpanel=%d" % [int(stock_ok), int(credit_ok), int(dev_ok), int(dp_ok)])
 	_pause_checks()  # JUAN11
 	toggle_side_panel()

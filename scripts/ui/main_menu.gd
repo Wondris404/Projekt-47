@@ -243,9 +243,7 @@ func _home() -> Control:
 	save_button.visible = false
 	_button(box, "Načítať hru", _open_load)
 	_button(box, "Nastavenia", _open_settings)
-	dev_button = _button(box, "Dev", func(): dev_requested.emit())
-	dev_button.name = "Dev"
-	dev_button.tooltip_text = "Vývojársky mód: všetko odomknuté, veľa peňazí, dev panel (F12). Dá sa ukladať aj načítať (DEV save obnoví dev mód)."
+	# Dev tlačidlo zrušené: nahradila ho cheat konzola (3× Ctrl+C počas hry)
 	_button(box, "Koniec", func(): quit_requested.emit())
 	back_button = _button(box, "Späť do hry", func(): back_requested.emit())
 	back_button.visible = false
