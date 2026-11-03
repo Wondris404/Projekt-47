@@ -568,8 +568,9 @@ func _build_play() -> void:
 	lh.theme_type_variation = "HeaderLabel"
 	loans_tab.add_child(lh)
 	var loan_b = Button.new()
-	loan_b.text = "Pôžička"
-	loan_b.tooltip_text = BankingSystem.HELP
+	loan_b.name = "QuickLoan"
+	loan_b.text = "Rýchla pôžička 50k"
+	loan_b.tooltip_text = "50 000 € na 5 rokov, podmienky a iné sumy v paneli Úvery"
 	loan_b.pressed.connect(_on_loan)
 	loans_tab.add_child(loan_b)
 	var credit = preload("res://scripts/ui/credit_panel.gd").new()  # JUAN5 #18
@@ -1010,7 +1011,7 @@ func _uitest() -> void:
 func _click_checks() -> void:
 	if main_menu:
 		main_menu.visible = false
-	for fragment in ["Pôžička", "Založiť firmu", "Logistika I", "Dovoz"]:
+	for fragment in ["Rýchla pôžička", "Založiť firmu", "Logistika I", "Dovoz"]:
 		var button = _find_button(self, fragment)
 		var before = feedback_count
 		if button != null:

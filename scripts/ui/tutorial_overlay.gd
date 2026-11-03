@@ -45,7 +45,7 @@ func _steps() -> void:
 		{"text": "Tu vidíš dátum a hotovosť. Hotovosť klesá o mzdy a dane.", "button": "", "tab": "", "kind": "next"},
 		{"text": "Pozastav hru medzerníkom alebo tlačidlom Pauza, kým sa rozhoduješ.", "button": "Pauza", "tab": "", "kind": "pause"},
 		{"text": "Založ firmu v záložke Založiť. Sivé odvetvie je drahé. Vyber také, na ktoré máš.", "button": "", "tab": "Založiť", "kind": "firms"},
-		{"text": "Málo peňazí? Vezmi pôžičku v záložke Pôžičky. Splátka ide každý mesiac.", "button": "Pôžička", "tab": "Pôžičky", "kind": "debt"},
+		{"text": "Málo peňazí? Vezmi pôžičku v záložke Pôžičky. Splátka ide každý mesiac.", "button": "Rýchla pôžička", "tab": "Pôžičky", "kind": "debt"},
 		{"text": "Spusti výskum Logistika I. Zníži náklady na dopravu.", "button": "Logistika I", "tab": "Firma", "kind": "research"},
 		{"text": "Klikni na krajinu na mape. Panel vpravo ukáže jej názov.", "button": "", "tab": "", "kind": "country"},
 		{"text": "Tlačidlom Svet / Región priblížiš vybranú krajinu.", "button": "Svet / Región", "tab": "", "kind": "zoom"},
