@@ -401,7 +401,8 @@
    "price": 24000000,
    "maintain": 5000,
    "fuel": 7000,
-   "cargo": "wheat"
+   "cargo": "wheat",
+   "model": "res://assets/models/ships/bulk.glb"
   },
   {
    "id": "supramax",
@@ -412,7 +413,8 @@
    "price": 36000000,
    "maintain": 7000,
    "fuel": 9000,
-   "cargo": "wheat"
+   "cargo": "wheat",
+   "model": "res://assets/models/ships/bulk.glb"
   },
   {
    "id": "panamax_bulk",
@@ -423,7 +425,8 @@
    "price": 48000000,
    "maintain": 9000,
    "fuel": 11000,
-   "cargo": "coal"
+   "cargo": "coal",
+   "model": "res://assets/models/ships/bulk.glb"
   },
   {
    "id": "capesize",
@@ -434,7 +437,8 @@
    "price": 70000000,
    "maintain": 14000,
    "fuel": 16000,
-   "cargo": "iron_ore"
+   "cargo": "iron_ore",
+   "model": "res://assets/models/ships/bulk.glb"
   },
   {
    "id": "vloc",
@@ -445,7 +449,8 @@
    "price": 110000000,
    "maintain": 20000,
    "fuel": 22000,
-   "cargo": "iron_ore"
+   "cargo": "iron_ore",
+   "model": "res://assets/models/ships/bulk.glb"
   },
   {
    "id": "roro",
