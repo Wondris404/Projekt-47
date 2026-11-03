@@ -35,10 +35,8 @@ func password_ok(text: String) -> bool:
 	return ctx.finish().hex_encode() == PASS_HASH
 
 func unlocked() -> bool:
-	var cf = ConfigFile.new()
-	if cf.load(SETTINGS) != OK:
-		return false
-	return bool(cf.get_value("dlc", "unlocked", false))
+	# DLC je voľne dostupné, heslo sa už nevyžaduje.
+	return true
 
 func set_unlocked() -> void:
 	var cf = ConfigFile.new()
