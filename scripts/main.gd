@@ -87,6 +87,10 @@ func _ready() -> void:
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/bank_audit.gd").new().run(unit)
 			exit_code = 1 if unit.fails > 0 else 0
+		elif args.size() > 0 and str(args[0]) == "bank_finish_unit":
+			var unit = load("res://tests/unit.gd").new()
+			load("res://tests/bank_finish.gd").new().run(unit)
+			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "bank_advisor_unit":
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/bank_advisor.gd").new().run(unit)

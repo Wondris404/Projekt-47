@@ -59,3 +59,4 @@ func run(u) -> void:
 	var before_daily = float(bank.npc_loans)
 	BankingSystem._tick_player_bank(bank)
 	u._chk("bank_capital_limit_without_advisor", float(consumer.new) == 0.0 and float(products.mort_new) == 0.0 and float(products.corp_new) == 0.0 and float(bank.npc_loans) <= before_daily)
+	load("res://tests/bank_finish.gd").new().run(u)
