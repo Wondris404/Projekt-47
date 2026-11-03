@@ -1,5 +1,6 @@
 extends Node
 # Halloween DLC. Keď je zombie_mode vypnuté, daily() nič nespraví a hru nemení.
+# Windows ZIP artefakt Halloween DLC (nie GitHub Release) stavia .github/workflows/dlc-release-zip.yml.
 
 const PASS_HASH := "e3d9de4005aed8f1dc9e87df9aeefbc1dfa64ec76ad57b9b83a26c67aad57714"
 const SETTINGS := "user://settings.cfg"

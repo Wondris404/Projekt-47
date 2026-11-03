@@ -1,0 +1,107 @@
+name: Halloween DLC package
+
+# CI artifact only. This workflow does not publish a tag or a GitHub Release.
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  halloween-dlc-zip:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and verify Godot and export templates
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = '4.7.2'
+          $base = "https://github.com/godotengine/godot/releases/download/$version-stable"
+          $godotZip = Join-Path $env:RUNNER_TEMP 'godot.zip'
+          $templatesZip = Join-Path $env:RUNNER_TEMP 'templates.zip'
+          Invoke-WebRequest "$base/Godot_v$version-stable_win64.exe.zip" -OutFile $godotZip
+          Invoke-WebRequest "$base/Godot_v$version-stable_export_templates.tpz" -OutFile $templatesZip
+          if ((Get-FileHash $godotZip -Algorithm SHA256).Hash -ne '731980f9608d61333e5baf54a2ef17210acc7a538446c0cb9969f002aca1e953') { throw 'Godot checksum mismatch' }
+          if ((Get-FileHash $templatesZip -Algorithm SHA256).Hash -ne 'f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011') { throw 'Templates checksum mismatch' }
+          Expand-Archive $godotZip -DestinationPath (Join-Path $env:RUNNER_TEMP 'godot')
+          Expand-Archive $templatesZip -DestinationPath (Join-Path $env:RUNNER_TEMP 'templates')
+          $env:APPDATA = Join-Path $env:RUNNER_TEMP 'isolated-appdata'
+          $templateDir = Join-Path $env:APPDATA 'Godot/export_templates/4.7.2.stable'
+          New-Item -ItemType Directory -Force -Path $templateDir | Out-Null
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'templates/templates/*') $templateDir -Recurse
+          "APPDATA=$env:APPDATA" >> $env:GITHUB_ENV
+          "GODOT_EXE=$env:RUNNER_TEMP/godot/Godot_v4.7.2-stable_win64_console.exe" >> $env:GITHUB_ENV
+      - name: Import and export
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & $env:GODOT_EXE --headless --editor --path . --import
+          if ($LASTEXITCODE -ne 0) { throw 'Import failed' }
+          New-Item -ItemType Directory -Force -Path build | Out-Null
+          & $env:GODOT_EXE --headless --path . --export-release Windows build/Projekt-47.exe
+          if ($LASTEXITCODE -ne 0 -or !(Test-Path build/Projekt-47.exe)) { throw 'Export failed' }
+      - name: Verify exported game in isolated data directory
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $console = 'build/Projekt-47.console.exe'
+          if (!(Test-Path $console)) { throw 'Console wrapper missing' }
+          & $console --headless -- profile_sim 2>&1 | Tee-Object -FilePath "$env:RUNNER_TEMP/export-smoke.log"
+          if ($LASTEXITCODE -ne 0) { throw 'Exported game returned an error' }
+          if (!(Select-String -Path "$env:RUNNER_TEMP/export-smoke.log" -Pattern '^P47_PHASE_DONE .*days=10')) { throw 'Exported simulation did not complete' }
+          if (Select-String -Path "$env:RUNNER_TEMP/export-smoke.log" -Pattern '^SCRIPT ERROR:') { throw 'Exported game reported a script error' }
+      - name: Write CITAJ-MA and zip the build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          @'
+          Tento ZIP je hrateľný Windows build vrátane Halloween DLC (zombie mód).
+          Rozbaľte archív a spustite Projekt-47.exe.
+          Žiadny online server.
+          Uloženia ostávajú v Godot user://.
+          Toto je CI artefakt, nie publikovaný GitHub Release.
+          '@ | Set-Content -Encoding utf8 build/CITAJ-MA.txt
+          foreach ($name in @('Projekt-47.exe', 'Projekt-47.console.exe', 'CITAJ-MA.txt')) {
+            if (!(Test-Path -LiteralPath (Join-Path 'build' $name))) { throw "Missing build/$name" }
+          }
+          if (Test-Path -LiteralPath 'build/Projekt-47.pck') {
+            'Including separate Projekt-47.pck'
+          } else {
+            'No separate PCK (embed_pck); the exe still goes into the ZIP'
+          }
+          $stage = Join-Path $env:RUNNER_TEMP 'dlc-zip-stage'
+          if (Test-Path $stage) { Remove-Item -LiteralPath $stage -Recurse -Force }
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Get-ChildItem -Force -LiteralPath 'build' | Where-Object { $_.Name -ne 'Projekt-47-Halloween-DLC.zip' } | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination $stage -Recurse -Force
+          }
+          $zip = Join-Path (Resolve-Path 'build') 'Projekt-47-Halloween-DLC.zip'
+          if (Test-Path -LiteralPath $zip) { Remove-Item -LiteralPath $zip -Force }
+          if (-not ('System.IO.Compression.ZipFile' -as [type])) {
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+          }
+          # 2-arg overload puts build files at the ZIP root (no nested build/ folder) and uses forward-slash entries.
+          [System.IO.Compression.ZipFile]::CreateFromDirectory($stage, $zip)
+          if (!(Test-Path -LiteralPath $zip)) { throw 'ZIP was not created' }
+          $check = Join-Path $env:RUNNER_TEMP 'dlc-zip-check'
+          if (Test-Path $check) { Remove-Item -LiteralPath $check -Recurse -Force }
+          Expand-Archive -LiteralPath $zip -DestinationPath $check
+          $names = @(Get-ChildItem -Recurse -File -Force $check | ForEach-Object {
+            ($_.FullName.Substring($check.Length).TrimStart('\', '/') -replace '\\', '/')
+          })
+          $names | ForEach-Object { "ZIP: $_" }
+          if ($names -contains 'Projekt-47-Halloween-DLC.zip') { throw 'ZIP contains itself' }
+          foreach ($name in @('Projekt-47.exe', 'Projekt-47.console.exe', 'CITAJ-MA.txt')) {
+            if ($names -notcontains $name) { throw "ZIP missing $name" }
+          }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Projekt-47-Halloween-DLC
+          path: build/Projekt-47-Halloween-DLC.zip
+          if-no-files-found: error
+          retention-days: 30
