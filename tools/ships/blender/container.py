@@ -416,6 +416,60 @@ def _check(containers, fittings) -> None:
     print("OVERLAP_OK 0")
 
 
+PANE_THICK = 0.002
+PANE_PROUD = 0.0005
+
+
+def flush_pane(ship, center_on_wall, normal, w, h, mat, panes) -> None:
+    """Thin pane whose outer face sits 0.0005 in front of the wall."""
+    nx, ny, nz = normal
+    length = math.sqrt(nx * nx + ny * ny + nz * nz) or 1.0
+    nx, ny, nz = nx / length, ny / length, nz / length
+    # Outer face at +0.0005, glass runs back into the wall. A center at
+    # wall-0.0015 would leave the outer face 0.0025 proud and fail the check.
+    off = PANE_PROUD - PANE_THICK * 0.5
+    center = (
+        center_on_wall[0] + nx * off,
+        center_on_wall[1] + ny * off,
+        center_on_wall[2] + nz * off,
+    )
+    if abs(nx) > 0.5:
+        size = (PANE_THICK, h, w)
+    elif abs(nz) > 0.5:
+        size = (w, h, PANE_THICK)
+    else:
+        size = (w, PANE_THICK, h)
+    ship.box(center, size, mat)
+    panes.append(PANE_PROUD)
+
+
+def _check_panes(panes) -> None:
+    proud = max(panes) if panes else 0.0
+    if proud > 0.001:
+        print(f"PANE_FAIL {proud:.4f}")
+        sys.exit(1)
+    print(f"PANE_OK 0 max={proud:.4f} count={len(panes)}")
+
+
+def tapered_shell(ship, bottom, top, sx0, sz0, sx1, sz1, mat, uv=(0.5, 0.5)) -> None:
+    def ring(c, sx, sz):
+        x, y, z = c
+        return [
+            (x - sx * 0.5, y, z - sz * 0.5),
+            (x + sx * 0.5, y, z - sz * 0.5),
+            (x + sx * 0.5, y, z + sz * 0.5),
+            (x - sx * 0.5, y, z + sz * 0.5),
+        ]
+
+    b = ring(bottom, sx0, sz0)
+    t = ring(top, sx1, sz1)
+    u = (uv, uv, uv, uv)
+    for i in range(4):
+        j = (i + 1) % 4
+        ship.quad([b[i], b[j], t[j], t[i]], mat, u)
+    ship.quad([t[0], t[1], t[2], t[3]], mat, u)
+
+
 def build(out: Path, level: int = 0) -> None:
     reset()
     if level <= 0:
@@ -455,6 +509,7 @@ def build(out: Path, level: int = 0) -> None:
     )
     metal_mat = ship.add_mat(new_mat("metal", (0.45, 0.46, 0.48), 0.82, 0.32))
     glass_mat = ship.add_mat(new_mat("glass", (0.05, 0.08, 0.12), 0.10, 0.15))
+    funnel_mat = ship.add_mat(new_mat("funnel", (0.06, 0.06, 0.07), 0.20, 0.50))
     ship.hull(LENGTH, BEAM, HEIGHT, hull_mat, deck_mat, stations=stations, rings=rings)
 
     containers: list[tuple[str, tuple]] = []
@@ -575,47 +630,147 @@ def build(out: Path, level: int = 0) -> None:
     wh_s = (0.36, wh_h, 0.32)
     ship.box(wh_c, wh_s, paint_mat, (0.12, 0.5))
     front_z = wh_c[2] - wh_s[2] * 0.5
-    win_y = sill + 0.028
+    panes: list[float] = []
     if windows:
-        n_front = 9 if level == 0 else 6
-        span = wh_s[0] - 0.04
-        for i in range(n_front):
-            x = -span * 0.5 + (i + 0.5) * span / n_front
-            ship.box((x, win_y, front_z - 0.002 - 0.004), (0.026, 0.055, 0.008), glass_mat)
+        band_w = wh_s[0] - 0.04
+        band_h = 0.05
+        band_y = sill + band_h * 0.5
+        flush_pane(ship, (0.0, band_y, front_z), (0.0, 0.0, -1.0), band_w, band_h, glass_mat, panes)
+        mullions = 10 if level == 0 else 7
+        for i in range(mullions):
+            x = -band_w * 0.5 + i * band_w / (mullions - 1)
+            ship.box((x, band_y, front_z - 0.0022), (0.006, band_h + 0.006, 0.003), paint_mat, (0.12, 0.5))
         side_x = wh_s[0] * 0.5
         for sign in (1.0, -1.0):
             for i in range(3):
-                zz = wh_c[2] - 0.09 + i * 0.09
-                ship.box((sign * (side_x + 0.002 + 0.004), win_y, zz), (0.008, 0.055, 0.028), glass_mat)
-        # Accommodation, two or three rows, front and sides.
+                zz = wh_c[2] - 0.08 + i * 0.08
+                flush_pane(ship, (sign * side_x, band_y, zz), (sign, 0.0, 0.0), 0.04, band_h, glass_mat, panes)
+        margin = 0.03
         rows_w = 3 if level == 0 else 2
+        cols = 4 if level == 0 else 3
+        side_cols = 3 if level == 0 else 2
+        usable_w = house_s[0] - 2 * margin
+        usable_d = house_s[2] - 2 * margin
+        usable_h = house_h - 2 * margin
+        win_w = min(0.046, usable_w / cols * 0.62)
+        win_h = min(0.042, usable_h / rows_w * 0.55)
+        front_face = house_c[2] - house_s[2] * 0.5
         for row in range(rows_w):
-            yy = y_house + 0.08 + row * (house_h - 0.12) / max(1, rows_w - 1)
-            for i in range(5 if level == 0 else 3):
-                x = -0.16 + i * (0.32 / (4 if level == 0 else 2))
-                ship.box((x, yy, house_c[2] - house_s[2] * 0.5 - 0.006), (0.028, 0.032, 0.008), glass_mat)
+            yy = y_house + margin + (row + 0.5) * usable_h / rows_w
+            for col in range(cols):
+                x = -usable_w * 0.5 + (col + 0.5) * usable_w / cols
+                flush_pane(ship, (x, yy, front_face), (0.0, 0.0, -1.0), win_w, win_h, glass_mat, panes)
             for sign in (1.0, -1.0):
-                for i in range(3 if level == 0 else 2):
-                    zz = house_c[2] - 0.12 + i * 0.12
-                    ship.box((sign * (house_s[0] * 0.5 + 0.006), yy, zz), (0.008, 0.032, 0.03), glass_mat)
-    # Wings out to the hull at window height.
-    wing_y = win_y
-    reach = half_beam_at(wh_c[2]) - 0.015
-    for sign in (1.0, -1.0):
-        inner = wh_s[0] * 0.5
-        width = max(0.04, reach - inner)
-        ship.box((sign * (inner + width * 0.5), wing_y, wh_c[2] + 0.02), (width, 0.012, 0.10), paint_mat, (0.12, 0.5))
-    # Funnel, darker, banded, leaned aft.
-    funnel_base = (0.0, y_house + house_h * 0.55, 1.46)
-    funnel_top = (0.0, y_house + house_h * 0.55 + 0.36, 1.56)
-    ship.cylinder(funnel_base, funnel_top, 0.055, metal_mat, sides=8 if level == 0 else 5)
-    ship.cylinder(
-        (funnel_base[0], funnel_base[1] + 0.08, funnel_base[2] + 0.02),
-        (funnel_top[0], funnel_base[1] + 0.13, funnel_base[2] + 0.035),
-        0.050,
+                for col in range(side_cols):
+                    zz = house_c[2] - usable_d * 0.5 + (col + 0.5) * usable_d / side_cols
+                    flush_pane(
+                        ship,
+                        (sign * house_s[0] * 0.5, yy, zz),
+                        (sign, 0.0, 0.0),
+                        min(0.04, usable_d / side_cols * 0.62),
+                        win_h,
+                        glass_mat,
+                        panes,
+                    )
+    _check_panes(panes)
+
+    def add_wing(sign: float) -> float:
+        reach = max(half_beam_at(-1.2 + i * 2.5 / 49.0) for i in range(50)) - 0.01
+        inner = house_s[0] * 0.5 + 0.001
+        length = reach - inner
+        zc = wh_c[2]
+        ship.box((sign * (inner + length * 0.5), wh_bottom, zc), (length, 0.012, 0.10), paint_mat, (0.12, 0.5))
+        if level < 2:
+            rail_y = wh_bottom + 0.006 + 0.03
+            ship.box((sign * (reach - 0.006), rail_y, zc), (0.008, 0.008, 0.10), metal_mat)
+            for k in range(3):
+                zz = zc - 0.035 + k * 0.035
+                ship.box((sign * (reach - 0.006), wh_bottom + 0.02, zz), (0.008, 0.028, 0.008), metal_mat)
+            cab_y = wh_bottom + 0.006 + 0.02
+            ship.box((sign * (reach - 0.02), cab_y, zc), (0.04, 0.04, 0.04), paint_mat, (0.12, 0.5))
+            if windows:
+                flush_pane(
+                    ship,
+                    (sign * reach, cab_y, zc),
+                    (sign, 0.0, 0.0),
+                    0.022,
+                    0.022,
+                    glass_mat,
+                    panes,
+                )
+            ship.cylinder(
+                (sign * (inner + length * 0.72), wh_bottom - 0.006, zc),
+                (sign * inner, y_house + house_h * 0.62, zc + 0.02),
+                0.008,
+                metal_mat,
+                sides=5 if level == 0 else 4,
+            )
+        return length
+
+    wing_l = add_wing(1.0)
+    wing_r = add_wing(-1.0)
+    if abs(wing_l - wing_r) > 1e-6:
+        print(f"WING_FAIL {wing_l:.4f} {wing_r:.4f}")
+        sys.exit(1)
+    print(f"WING_OK length={wing_l:.3f}")
+    _check_panes(panes)
+
+    roof_y = y_house + house_h
+    wh_roof = wh_bottom + wh_h
+    funnel_h = (wh_roof + 0.12) - roof_y
+    lean = math.tan(math.radians(9.0))
+    base_z = 1.32
+    base = (0.0, roof_y, base_z)
+    top = (0.0, roof_y + funnel_h, base_z + funnel_h * lean)
+    white_h = funnel_h * 0.40
+    white_top = (0.0, roof_y + white_h, base_z + white_h * lean)
+
+    def lerp_size(y0, s0, s1):
+        t = y0 / funnel_h
+        return s0 + (s1 - s0) * t
+
+    tapered_shell(ship, base, top, 0.16, 0.12, 0.13, 0.10, funnel_mat)
+    tapered_shell(
+        ship,
+        (base[0], base[1], base[2]),
+        white_top,
+        0.168,
+        0.128,
+        lerp_size(white_h, 0.168, 0.138),
+        lerp_size(white_h, 0.128, 0.108),
         paint_mat,
-        sides=8 if level == 0 else 5,
+        (0.12, 0.5),
     )
+    band_h = 0.04
+    band_top_y = roof_y + funnel_h - 0.03
+    band_bot_y = band_top_y - band_h
+    tapered_shell(
+        ship,
+        (0.0, band_bot_y, base_z + (band_bot_y - roof_y) * lean),
+        (0.0, band_top_y, base_z + (band_top_y - roof_y) * lean),
+        lerp_size(band_bot_y - roof_y, 0.172, 0.142),
+        lerp_size(band_bot_y - roof_y, 0.132, 0.112),
+        lerp_size(band_top_y - roof_y, 0.172, 0.142),
+        lerp_size(band_top_y - roof_y, 0.132, 0.112),
+        paint_mat,
+        (0.62, 0.5),
+    )
+    rim_bot = roof_y + funnel_h - 0.03
+    tapered_shell(
+        ship,
+        (0.0, rim_bot, base_z + (rim_bot - roof_y) * lean),
+        (top[0], top[1], top[2]),
+        lerp_size(rim_bot - roof_y, 0.176, 0.146),
+        lerp_size(rim_bot - roof_y, 0.136, 0.116),
+        0.146,
+        0.116,
+        funnel_mat,
+    )
+    if level == 0:
+        for sign in (-0.03, 0.03):
+            foot = (sign, top[1], top[2] - 0.01)
+            ship.cylinder(foot, (foot[0], foot[1] + 0.02, foot[2] + 0.004), 0.012, metal_mat, sides=6)
+    print(f"FUNNEL base_y={roof_y:.3f} top_y={top[1]:.3f} above_roof={top[1] - wh_roof:.3f} z={base_z:.2f}")
     # Forecastle and hawse pipes with a short chain.
     bow_y = deck_y_at(-1.55)
     ship.box((0.0, bow_y + 0.03, -1.48), (0.22, 0.06, 0.22), paint_mat, (0.12, 0.5))
@@ -645,7 +800,7 @@ def build(out: Path, level: int = 0) -> None:
     if level == 0:
         render_shots(
             ROOT / "docs" / "ships" / "v2" / "after",
-            focus=(0.0, win_y, wh_c[2]),
+            focus=(0.0, roof_y + funnel_h * 0.45, 1.22),
         )
 
 
@@ -681,9 +836,10 @@ def render_shots(folder: Path, focus=(0.0, 0.9, 1.1)) -> None:
     folder.mkdir(parents=True, exist_ok=True)
     fx, fy, fz = focus
     shots = {
-        "cargo_hero.png": (B(2.6, 1.7, -2.4), B(0.0, 0.55, 0.1), False),
-        "cargo_profile.png": (B(4.4, 1.15, 0.1), B(0.0, 0.55, 0.1), False),
-        "cargo_bridge.png": (B(1.15, fy + 0.28, fz - 0.95), B(0.05, fy, fz), False),
+        "cargo_hero.png": (B(2.6, 1.85, -2.2), B(0.0, 0.7, 0.35), False),
+        "cargo_profile.png": (B(4.6, 1.25, 0.35), B(0.0, 0.7, 0.35), False),
+        "cargo_bridge.png": (B(1.7, fy + 0.55, fz - 0.15), B(0.05, fy, fz + 0.12), False),
+        "cargo_bridge_side.png": (B(2.5, fy + 0.05, fz + 0.05), B(0.0, fy, fz + 0.08), False),
         "cargo_top.png": (B(0.0, 4.6, 0.05), B(0.0, 0.4, 0.05), True),
     }
     for name, (eye, target, ortho) in shots.items():
