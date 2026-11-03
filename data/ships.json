@@ -353,7 +353,8 @@
    "price": 35000000,
    "maintain": 7000,
    "fuel": 6000,
-   "cargo": "electronics"
+   "cargo": "electronics",
+   "model": "res://assets/models/ships/cargo.glb"
   },
   {
    "id": "panamax_box",
@@ -364,7 +365,8 @@
    "price": 70000000,
    "maintain": 14000,
    "fuel": 12000,
-   "cargo": "electronics"
+   "cargo": "electronics",
+   "model": "res://assets/models/ships/cargo.glb"
   },
   {
    "id": "neo_panamax",
@@ -375,7 +377,8 @@
    "price": 140000000,
    "maintain": 25000,
    "fuel": 20000,
-   "cargo": "electronics"
+   "cargo": "electronics",
+   "model": "res://assets/models/ships/cargo.glb"
   },
   {
    "id": "ulcv",
@@ -386,7 +389,8 @@
    "price": 220000000,
    "maintain": 40000,
    "fuel": 30000,
-   "cargo": "electronics"
+   "cargo": "electronics",
+   "model": "res://assets/models/ships/cargo.glb"
   },
   {
    "id": "handy_bulk",
