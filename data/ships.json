@@ -461,7 +461,8 @@
    "price": 50000000,
    "maintain": 10000,
    "fuel": 11000,
-   "cargo": "automobiles"
+   "cargo": "automobiles",
+   "model": "res://assets/models/ships/merchant.glb"
   },
   {
    "id": "pctc",
@@ -472,7 +473,8 @@
    "price": 65000000,
    "maintain": 12000,
    "fuel": 12000,
-   "cargo": "automobiles"
+   "cargo": "automobiles",
+   "model": "res://assets/models/ships/merchant.glb"
   },
   {
    "id": "general",
@@ -483,7 +485,8 @@
    "price": 22000000,
    "maintain": 5000,
    "fuel": 6000,
-   "cargo": "steel"
+   "cargo": "steel",
+   "model": "res://assets/models/ships/merchant.glb"
   },
   {
    "id": "reefer",
@@ -494,7 +497,8 @@
    "price": 40000000,
    "maintain": 12000,
    "fuel": 9000,
-   "cargo": "meat"
+   "cargo": "meat",
+   "model": "res://assets/models/ships/merchant.glb"
   },
   {
    "id": "heavy",
@@ -505,7 +509,8 @@
    "price": 80000000,
    "maintain": 18000,
    "fuel": 14000,
-   "cargo": "steel"
+   "cargo": "steel",
+   "model": "res://assets/models/ships/merchant.glb"
   },
   {
    "id": "psv",
