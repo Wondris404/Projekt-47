@@ -895,6 +895,8 @@ func process_monthly_interest() -> void:
 			if not missed_bank.is_empty():
 				missed_bank.explicit = float(missed_bank.get("explicit", 0.0)) + interest
 				missed_bank.equity = float(missed_bank.get("equity", 0.0)) + interest
+			var left = maxi(1, int(loan.get("months_left", 1)))
+			loan.monthly_payment = annuity_payment(float(loan.remaining), float(loan.get("annual_rate", 0.0)), left)
 			any_miss = true
 			continue
 		GameState.player.cash = float(GameState.player.cash) - pay

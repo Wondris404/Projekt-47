@@ -6,6 +6,7 @@ func run(u) -> void:
 	_lender(u)
 	_early(u)
 	_miss(u)
+	_miss_schedule(u)
 	_savings(u)
 	_savings_worth(u)
 	_save(u)
@@ -125,6 +126,32 @@ func _miss(u) -> void:
 	u._chk("bf_miss_interest", absf(float(l0.remaining) - (r0 + i0)) < 0.05 and absf(float(l1.remaining) - (r1 + i1)) < 0.05, "%s %s" % [str(l0.remaining), str(l1.remaining)])
 	u._chk("bf_miss_months", int(l0.months_left) == m0 and int(l1.months_left) == m1 and m0 >= 0 and m1 >= 0)
 	u._chk("bf_one_bankruptcy", bust1 == bust0 + 1 and absf(float(GameState.player.credit_score) - (score0 - 15.0)) < 0.01, "events %d score %s" % [bust1 - bust0, str(GameState.player.credit_score)])
+
+func _miss_schedule(u) -> void:
+	u._new()
+	GameState.player.cash = 5.0e6
+	var opened: Dictionary = BankingSystem.request_unsecured_loan(20000.0, 5)
+	u._chk("bf_miss_sched_open", bool(opened.get("ok", false)), str(opened))
+	if not bool(opened.get("ok", false)):
+		return
+	var loan: Dictionary = GameState.player.loans[GameState.player.loans.size() - 1]
+	GameState.player.cash = 0.0
+	BankingSystem.process_monthly_interest()
+	var expect = BankingSystem.annuity_payment(float(loan.remaining), float(loan.get("annual_rate", 0.0)), maxi(1, int(loan.get("months_left", 1))))
+	u._chk("bf_miss_sched_recalc", absf(float(loan.monthly_payment) - expect) < 0.02, str(loan.monthly_payment))
+	GameState.player.cash = 5.0e6
+	var pays: Array = []
+	var guard = 0
+	while float(loan.get("remaining", 0.0)) > 1.0 and not bool(loan.get("paid", false)) and guard < 80:
+		var before = float(GameState.player.cash)
+		BankingSystem.process_monthly_interest()
+		pays.append(before - float(GameState.player.cash))
+		guard += 1
+	var last = float(pays[pays.size() - 1]) if pays.size() > 0 else 0.0
+	var peak = 0.0
+	for i in maxi(0, pays.size() - 1):
+		peak = maxf(peak, float(pays[i]))
+	u._chk("bf_miss_sched_tail", pays.size() > 2 and last <= peak * 1.01 + 0.02, "last %.4f peak %.4f n %d" % [last, peak, pays.size()])
 
 func _savings(u) -> void:
 	u._new()
