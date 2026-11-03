@@ -129,7 +129,8 @@
    "price": 1800000000,
    "maintain": 250000,
    "fuel": 40000,
-   "cargo": ""
+   "cargo": "",
+   "model": "res://assets/models/ships/submarine.glb"
   },
   {
    "id": "ssbn",
@@ -140,7 +141,8 @@
    "price": 3200000000,
    "maintain": 400000,
    "fuel": 50000,
-   "cargo": ""
+   "cargo": "",
+   "model": "res://assets/models/ships/submarine.glb"
   },
   {
    "id": "ssgn",
@@ -151,7 +153,8 @@
    "price": 2200000000,
    "maintain": 300000,
    "fuel": 45000,
-   "cargo": ""
+   "cargo": "",
+   "model": "res://assets/models/ships/submarine.glb"
   },
   {
    "id": "ssk",
@@ -162,7 +165,8 @@
    "price": 500000000,
    "maintain": 80000,
    "fuel": 15000,
-   "cargo": ""
+   "cargo": "",
+   "model": "res://assets/models/ships/submarine.glb"
   },
   {
    "id": "sweeper",
