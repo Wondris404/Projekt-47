@@ -9,6 +9,7 @@ func run(u) -> void:
 	_miss_schedule(u)
 	_savings(u)
 	_savings_worth(u)
+	_guarantee_now(u)
 	_save(u)
 
 func _annuity(u) -> void:
@@ -212,6 +213,24 @@ func _savings_worth(u) -> void:
 	u._chk("bf_worth_same", bool(put.get("ok", false)) and absf(GameState.net_worth() - worth0) < 0.01, "nw %.4f -> %.4f" % [worth0, GameState.net_worth()])
 	u._chk("bf_worth_limit", absf(BankingSystem.loan_limit() - limit0) < 0.01, "lim %.4f -> %.4f" % [limit0, BankingSystem.loan_limit()])
 	u._chk("bf_worth_score", int(GameState.player.get("rating", 0)) == rating0 and absf(float(GameState.player.get("credit_score", 0.0)) - score0) < 0.01)
+
+func _guarantee_now(u) -> void:
+	u._new()
+	GameState.player.cash = 2.0e5
+	var put: Dictionary = BankingSystem.deposit(150000.0)
+	u._chk("bf_guarantee_now_open", bool(put.get("ok", false)), str(put))
+	if not bool(put.get("ok", false)):
+		return
+	var bank = BankingSystem._bank(str(GameState.player.savings.bank_id))
+	var cash0 = float(GameState.player.cash)
+	bank.equity = -1.0e12
+	BankingSystem._tick_ai_bank(bank)
+	u._chk("bf_guarantee_now", bool(bank.get("failed", false)) and absf(float(GameState.player.cash) - (cash0 + 100000.0)) < 0.02 and float(GameState.player.savings.balance) == 0.0, "cash %.2f bal %s" % [float(GameState.player.cash), str(GameState.player.savings.balance)])
+	var again = float(GameState.player.cash)
+	BankingSystem.daily()
+	var pulled: Dictionary = BankingSystem.withdraw(1000.0)
+	var reason = str(pulled.get("reason", "")).to_lower()
+	u._chk("bf_guarantee_now_once", absf(float(GameState.player.cash) - again) < 0.02 and not bool(pulled.get("ok", false)) and reason.find("garan") < 0, str(pulled))
 
 func _save(u) -> void:
 	u._new()

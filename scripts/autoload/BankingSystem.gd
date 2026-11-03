@@ -19,6 +19,7 @@ func setup_central() -> void:
 
 func daily() -> void:
 	_service_explicit_loans()
+	settle_savings_guarantee()
 	for bank in GameState.banks:
 		if bank.get("failed", false):
 			continue
@@ -588,6 +589,7 @@ func _tick_player_bank(bank: Dictionary) -> void:
 		if str(GameState.player.get("bank_id", "")) == str(bank.get("id", "")):
 			GameState.player.bank_id = ""
 		GameState.post_news("%s skrachovala. Licencia zanikla, kapitál je preč." % bank.name)
+		settle_savings_guarantee()
 
 func _tick_ai_bank(bank: Dictionary) -> void:
 	var iso = str(bank.country)
@@ -604,6 +606,7 @@ func _tick_ai_bank(bank: Dictionary) -> void:
 	bank.reserves = float(bank.reserves) + inc - expn
 	if float(bank.equity) < 0.0:
 		bank.failed = true
+		settle_savings_guarantee()
 
 func _refresh_rating() -> void:
 	var profit = 0.0
@@ -1355,6 +1358,29 @@ func withdraw(amount: float) -> Dictionary:
 	GameState.player.cash = float(GameState.player.cash) + amount
 	return {"ok": true, "reason": "", "balance": float(s.balance), "cash": amount}
 
+func settle_savings_guarantee() -> void:
+	var raw = GameState.player.get("savings", {})
+	if typeof(raw) != TYPE_DICTIONARY:
+		return
+	var bal = float(raw.get("balance", 0.0))
+	if bal <= 0.0:
+		return
+	var bank = _bank(str(raw.get("bank_id", "")))
+	if not bank.is_empty() and not bool(bank.get("failed", false)):
+		return
+	var s = _savings()
+	var cover = minf(bal, 100000.0)
+	var lost = maxf(0.0, bal - cover)
+	GameState.player.cash = float(GameState.player.cash) + cover
+	s["balance"] = 0.0
+	s["rate"] = 0.0
+	s["bank_id"] = ""
+	GameState.player.savings = s
+	if lost > 0.01:
+		GameState.post_news("Banka skrachovala. Garančný fond vrátil %s, stratené %s." % [EconMath.eur(cover), EconMath.eur(lost)])
+	else:
+		GameState.post_news("Banka skrachovala. Garančný fond vrátil vklad %s." % EconMath.eur(cover))
+
 func process_savings_interest() -> void:
 	var raw = GameState.player.get("savings", {})
 	if typeof(raw) != TYPE_DICTIONARY or float(raw.get("balance", 0.0)) <= 0.0:
@@ -1363,17 +1389,7 @@ func process_savings_interest() -> void:
 	var bal = float(s.get("balance", 0.0))
 	var bank = _bank(str(s.get("bank_id", "")))
 	if bank.is_empty() or bool(bank.get("failed", false)):
-		var cover = minf(bal, 100000.0)
-		var lost = maxf(0.0, bal - cover)
-		GameState.player.cash = float(GameState.player.cash) + cover
-		s["balance"] = 0.0
-		s["rate"] = 0.0
-		s["bank_id"] = ""
-		GameState.player.savings = s
-		if lost > 0.01:
-			GameState.post_news("Banka skrachovala. Garančný fond vrátil %s, stratené %s." % [EconMath.eur(cover), EconMath.eur(lost)])
-		else:
-			GameState.post_news("Banka skrachovala. Garančný fond vrátil vklad %s." % EconMath.eur(cover))
+		settle_savings_guarantee()
 		return
 	var rate = savings_rate_for(bank)
 	s["rate"] = rate
