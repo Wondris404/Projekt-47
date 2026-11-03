@@ -108,6 +108,9 @@ func new_game(cfg: Dictionary) -> void:
 		"credit_score": 55.0,
 		"events": [],
 		"loans": [],
+		"loans_repaid": 0,
+		"loans_history": [],
+		"savings": {"bank_id": "", "balance": 0.0, "rate": 0.0},
 		"bonds": [],
 		"stocks": {},
 		"bank_id": "",
@@ -258,6 +261,7 @@ func _finish_day(month_before: int, year_before: int) -> void:
 			config.erase("shock_war")
 		BankingSystem.update_rates()
 		BankingSystem.process_monthly_interest()
+		BankingSystem.process_savings_interest()
 		BankingSystem.monthly()
 		GeopoliticsSystem.monthly()
 		AgentSystem.monthly()

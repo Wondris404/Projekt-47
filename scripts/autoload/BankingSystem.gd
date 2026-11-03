@@ -1270,6 +1270,103 @@ func repay_loan(loan_id: String, amount: float) -> Dictionary:
 		loan.monthly_payment = annuity_payment(float(loan.remaining), float(loan.get("annual_rate", 0.0)), months)
 	return {"ok": true, "reason": "", "paid": pay, "remaining": float(loan.remaining), "payment": float(loan.get("monthly_payment", 0.0)), "closed": bool(loan.get("paid", false))}
 
+func _savings() -> Dictionary:
+	var s = GameState.player.get("savings", {})
+	if typeof(s) != TYPE_DICTIONARY:
+		s = {}
+	if not s.has("bank_id"):
+		s["bank_id"] = ""
+	if not s.has("balance"):
+		s["balance"] = 0.0
+	if not s.has("rate"):
+		s["rate"] = 0.0
+	GameState.player.savings = s
+	return s
+
+func savings_rate_for(bank: Dictionary) -> float:
+	var iso = str(bank.get("country", GameState.player.get("home", "")))
+	var row: Dictionary = GameState.central.get(iso, {})
+	var base = float(row.get("base_rate", row.get("policy", 0.02)))
+	return maxf(0.0, base - 0.005)
+
+func deposit(amount: float) -> Dictionary:
+	if amount <= 0.0:
+		return {"ok": false, "reason": "Zlá suma."}
+	if float(GameState.player.get("cash", 0.0)) + 0.001 < amount:
+		return {"ok": false, "reason": "Nemáš dosť hotovosti."}
+	var s = _savings()
+	var bank: Dictionary = {}
+	var bid = str(s.get("bank_id", ""))
+	if bid != "" and float(s.get("balance", 0.0)) > 0.0:
+		bank = _bank(bid)
+		if bank.is_empty() or bool(bank.get("failed", false)) or str(bank.get("owner", "")) == "player":
+			return {"ok": false, "reason": "Sporiaci účet nie je dostupný."}
+	else:
+		bank = _pick_lender(0.0)
+		if bank.is_empty():
+			return {"ok": false, "reason": "Žiadna banka neprijíma vklady."}
+		s["bank_id"] = str(bank.get("id", ""))
+	GameState.player.cash = float(GameState.player.cash) - amount
+	s["balance"] = float(s.get("balance", 0.0)) + amount
+	s["rate"] = savings_rate_for(bank)
+	GameState.player.savings = s
+	bank.deposits = float(bank.get("deposits", 0.0)) + amount
+	bank.reserves = float(bank.get("reserves", 0.0)) + amount
+	return {"ok": true, "reason": "", "balance": float(s.balance), "rate": float(s.rate), "bank_id": str(s.bank_id)}
+
+func withdraw(amount: float) -> Dictionary:
+	if amount <= 0.0:
+		return {"ok": false, "reason": "Zlá suma."}
+	var s = _savings()
+	var bal = float(s.get("balance", 0.0))
+	if amount > bal + 0.001:
+		return {"ok": false, "reason": "Na účte nie je toľko peňazí."}
+	amount = minf(amount, bal)
+	var bank = _bank(str(s.get("bank_id", "")))
+	if bank.is_empty() or bool(bank.get("failed", false)):
+		return {"ok": false, "reason": "Banka je zatvorená. Vklad vyplatí garančný fond."}
+	if float(bank.get("reserves", 0.0)) + 0.001 < amount:
+		return {"ok": false, "reason": "Banka nemá dosť rezerv na výber."}
+	bank.reserves = float(bank.reserves) - amount
+	bank.deposits = maxf(0.0, float(bank.get("deposits", 0.0)) - amount)
+	s["balance"] = bal - amount
+	if float(s.balance) <= 0.01:
+		s["balance"] = 0.0
+	GameState.player.savings = s
+	GameState.player.cash = float(GameState.player.cash) + amount
+	return {"ok": true, "reason": "", "balance": float(s.balance), "cash": amount}
+
+func process_savings_interest() -> void:
+	var raw = GameState.player.get("savings", {})
+	if typeof(raw) != TYPE_DICTIONARY or float(raw.get("balance", 0.0)) <= 0.0:
+		return
+	var s = _savings()
+	var bal = float(s.get("balance", 0.0))
+	var bank = _bank(str(s.get("bank_id", "")))
+	if bank.is_empty() or bool(bank.get("failed", false)):
+		var cover = minf(bal, 100000.0)
+		var lost = maxf(0.0, bal - cover)
+		GameState.player.cash = float(GameState.player.cash) + cover
+		s["balance"] = 0.0
+		s["rate"] = 0.0
+		s["bank_id"] = ""
+		GameState.player.savings = s
+		if lost > 0.01:
+			GameState.post_news("Banka skrachovala. Garančný fond vrátil %s, stratené %s." % [EconMath.eur(cover), EconMath.eur(lost)])
+		else:
+			GameState.post_news("Banka skrachovala. Garančný fond vrátil vklad %s." % EconMath.eur(cover))
+		return
+	var rate = savings_rate_for(bank)
+	s["rate"] = rate
+	var interest = bal * rate / 12.0
+	if interest <= 0.0:
+		GameState.player.savings = s
+		return
+	s["balance"] = bal + interest
+	GameState.player.savings = s
+	bank.deposits = float(bank.get("deposits", 0.0)) + interest
+	bank.equity = float(bank.get("equity", 0.0)) - interest
+
 # mesacne: splatene uvery uvolnia zalohy (+ historia splacania), zabezpecene v defaulte -> banka zaberie zalohy
 func collateral_monthly() -> void:
 	for f in GameState.firms:
