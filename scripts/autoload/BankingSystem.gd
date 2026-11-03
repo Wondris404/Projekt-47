@@ -875,25 +875,41 @@ func request_loan(amount: float, years: int = 5) -> Dictionary:
 	return {"ok": true, "reason": "", "cap": cap, "rate": rate, "amount": amount, "payment": pay}
 
 func process_monthly_interest() -> void:
+	var any_miss = false
 	for loan in GameState.player.loans:
-		if float(loan.get("remaining", 0.0)) <= 1.0:
+		if bool(loan.get("paid", false)) or float(loan.get("remaining", 0.0)) <= 1.0:
 			continue
+		var interest = float(loan.remaining) * float(loan.get("annual_rate", 0.0)) / 12.0
+		var months_left = int(loan.get("months_left", 1))
 		var pay = float(loan.get("monthly_payment", 0.0))
-		var interest = float(loan.remaining) * float(loan.annual_rate) / 12.0
-		var principal = max(0.0, pay - interest)
+		if months_left <= 1 or pay > float(loan.remaining) + interest:
+			pay = float(loan.remaining) + interest
+		var principal = maxf(0.0, pay - interest)
+		if principal > float(loan.remaining):
+			principal = float(loan.remaining)
+			pay = principal + interest
 		if float(GameState.player.cash) + 0.001 < pay:
 			loan.missed = int(loan.get("missed", 0)) + 1
-			check_bankruptcy()
+			loan.remaining = float(loan.remaining) + interest
+			var missed_bank = _bank(str(loan.get("lender", "")))
+			if not missed_bank.is_empty():
+				missed_bank.explicit = float(missed_bank.get("explicit", 0.0)) + interest
+				missed_bank.equity = float(missed_bank.get("equity", 0.0)) + interest
+			any_miss = true
 			continue
 		GameState.player.cash = float(GameState.player.cash) - pay
-		loan.remaining = max(0.0, float(loan.remaining) - principal)
-		loan.months_left = int(loan.get("months_left", 1)) - 1
+		loan.remaining = maxf(0.0, float(loan.remaining) - principal)
+		loan.months_left = maxi(0, months_left - 1)
 		loan.missed = 0
 		var bank = _bank(str(loan.get("lender", "")))
 		if not bank.is_empty():
 			bank.reserves = float(bank.reserves) + pay
-			bank.explicit = max(0.0, float(bank.get("explicit", 0.0)) - principal)
+			bank.explicit = maxf(0.0, float(bank.get("explicit", 0.0)) - principal)
 			bank.equity = float(bank.get("equity", 0.0)) + interest
+		if float(loan.remaining) <= 1.0:
+			_note_repaid(loan)
+	if any_miss:
+		check_bankruptcy()
 
 func check_bankruptcy() -> Dictionary:
 	var missed = false
@@ -1169,11 +1185,7 @@ func _make_loan(amount: float, years: int, rate_add: float) -> Dictionary:
 	var premium = risk_premium_for(score, rating)
 	var base = float(GameState.central[iso].get("base_rate", 0.02))
 	var rate = max(0.001, base + premium + rate_add + Difficulty.rate_add() + PoliticsSystem.rate_bonus())
-	var bank = {}
-	for b in GameState.banks:
-		if not b.get("failed", false) and str(b.get("owner", "")) != "player" and float(b.get("reserves", 0.0)) + 0.001 >= amount:
-			bank = b
-			break
+	var bank = _pick_lender(amount)
 	if bank.is_empty():
 		return {"ok": false, "reason": "Banky nemajú dosť peňazí."}
 	var months = max(years, 1) * 12
@@ -1191,14 +1203,48 @@ func _make_loan(amount: float, years: int, rate_add: float) -> Dictionary:
 	GameState.next_loan += 1
 	return {"ok": true, "reason": "", "rate": rate, "amount": amount, "payment": pay}
 
+# Domovska banka s dostatkom rezerv, inak banka s najvacsimi rezervami. Nikdy hracova vlastna banka.
+func _pick_lender(amount: float) -> Dictionary:
+	var home = str(GameState.player.get("home", ""))
+	var best_home: Dictionary = {}
+	var best_home_res = -1.0
+	var best: Dictionary = {}
+	var best_res = -1.0
+	for b in GameState.banks:
+		if b.get("failed", false) or str(b.get("owner", "")) == "player":
+			continue
+		var res = float(b.get("reserves", 0.0))
+		if res + 0.001 < amount:
+			continue
+		if res > best_res:
+			best_res = res
+			best = b
+		if str(b.get("country", "")) == home and res > best_home_res:
+			best_home_res = res
+			best_home = b
+	if not best_home.is_empty():
+		return best_home
+	return best
+
 func _loan_by_id(lid: String) -> Dictionary:
 	for l in GameState.player.get("loans", []):
 		if str(l.get("id", "")) == lid:
 			return l
 	return {}
 
+# Splateny uver: presne raz (flag paid). Ostava v player.loans, kopia ide do loans_history.
+func _note_repaid(loan: Dictionary) -> void:
+	if bool(loan.get("paid", false)):
+		return
+	loan.remaining = 0.0
+	loan.months_left = 0
+	loan.paid = true
+	GameState.player.loans_repaid = int(GameState.player.get("loans_repaid", 0)) + 1
+	var hist: Array = GameState.player.get("loans_history", [])
+	hist.append(loan.duplicate(true))
+	GameState.player.loans_history = hist
+
 # Predcasne splatenie: ciastocne znizi zostatok a prepocita anuitu, uplne zavrie uver (paid).
-# Splateny uver ostava v player.loans (UI ho skryje). loans_repaid riesi _note_repaid.
 func repay_loan(loan_id: String, amount: float) -> Dictionary:
 	var loan = _loan_by_id(loan_id)
 	if loan.is_empty():
@@ -1218,9 +1264,7 @@ func repay_loan(loan_id: String, amount: float) -> Dictionary:
 		bank.reserves = float(bank.get("reserves", 0.0)) + pay
 		bank.explicit = maxf(0.0, float(bank.get("explicit", 0.0)) - pay)
 	if float(loan.remaining) <= 1.0:
-		loan.remaining = 0.0
-		loan.months_left = 0
-		loan.paid = true
+		_note_repaid(loan)
 	else:
 		var months = maxi(1, int(loan.get("months_left", 1)))
 		loan.monthly_payment = annuity_payment(float(loan.remaining), float(loan.get("annual_rate", 0.0)), months)
@@ -1240,7 +1284,7 @@ func collateral_monthly() -> void:
 			l.released = true
 			GameState.player.cash = float(GameState.player.cash) + float(l.get("escrow", 0.0))
 			l.escrow = 0.0
-			GameState.player.loans_repaid = int(GameState.player.get("loans_repaid", 0)) + 1
+			_note_repaid(l)
 			GameState.post_news("Úver %s splatený – zálohy uvoľnené." % str(l.id))
 		elif bool(l.get("secured", false)) and int(l.get("missed", 0)) >= 3 and float(l.get("remaining", 0.0)) > 1.0:
 			seize_collateral(l)
