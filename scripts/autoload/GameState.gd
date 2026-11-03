@@ -908,6 +908,27 @@ func validate_save(d) -> String:
 		for k7 in ["remaining", "annual_rate", "monthly_payment", "daily_payment"]:
 			if ln.has(k7) and not _num_ok(ln, k7, -1.0e15, 1.0e15):
 				return "Úver: neplatné '%s'." % k7
+		if ln.has("paid") and typeof(ln.get("paid")) != TYPE_BOOL:
+			return "Úver: neplatné 'paid'."
+	if pl.has("savings"):
+		if typeof(pl.savings) != TYPE_DICTIONARY:
+			return "Sporenie: neplatný formát."
+		if pl.savings.has("balance") and not _num_ok(pl.savings, "balance", -1.0e15, 1.0e15):
+			return "Sporenie: neplatný zostatok."
+		if pl.savings.has("rate") and not _num_ok(pl.savings, "rate", -1.0, 10.0):
+			return "Sporenie: neplatná sadzba."
+	if pl.has("loans_repaid") and not _num_ok(pl, "loans_repaid", 0.0, 1.0e9):
+		return "Neplatný počet splatených úverov."
+	if pl.has("loans_history"):
+		if typeof(pl.loans_history) != TYPE_ARRAY:
+			return "História úverov: neplatný formát."
+		for h in pl.loans_history:
+			if typeof(h) != TYPE_DICTIONARY:
+				return "História úverov: neplatná položka."
+			if h.has("remaining") and not _num_ok(h, "remaining", -1.0e15, 1.0e15):
+				return "História úverov: neplatný zostatok."
+			if h.has("paid") and typeof(h.get("paid")) != TYPE_BOOL:
+				return "História úverov: neplatné 'paid'."
 	for sk in pl.get("stocks", {}).keys():
 		if typeof(pl.stocks[sk]) not in _NUM:
 			return "Akcie hráča: neplatný počet."
@@ -1002,6 +1023,25 @@ func _fill_e1_fields() -> void:
 func _migrate_v2_to_v3() -> void:
 	_fill_e1_fields()
 
+# Stary save v3 nema sporenie ani historii uverov. Chybajuce polia dostanu default, existujuce sa neprepisuju.
+func _ensure_player_finance() -> void:
+	if typeof(player) != TYPE_DICTIONARY:
+		return
+	if not player.has("loans_repaid"):
+		player.loans_repaid = 0
+	if typeof(player.get("loans_history")) != TYPE_ARRAY:
+		player.loans_history = []
+	var sav = player.get("savings", null)
+	if typeof(sav) != TYPE_DICTIONARY:
+		player.savings = {"bank_id": "", "balance": 0.0, "rate": 0.0}
+		return
+	if not sav.has("bank_id"):
+		sav["bank_id"] = ""
+	if not sav.has("balance"):
+		sav["balance"] = 0.0
+	if not sav.has("rate"):
+		sav["rate"] = 0.0
+
 # Nacita save. Najprv validuje; pri chybe vrati text a zivy stav ostane nedotknuty.
 func from_dict(d: Dictionary) -> String:
 	var err = validate_save(d)
@@ -1015,6 +1055,7 @@ func from_dict(d: Dictionary) -> String:
 	day_index = int(d.get("day_index", 0))
 	date = {"y": int(d.get("date", {}).get("y", 2024)), "m": int(d.get("date", {}).get("m", 1)), "d": int(d.get("date", {}).get("d", 1))}
 	player = d.get("player", {})
+	_ensure_player_finance()
 	firms = d.get("firms", [])
 	banks = d.get("banks", [])
 	central = d.get("central", {})
