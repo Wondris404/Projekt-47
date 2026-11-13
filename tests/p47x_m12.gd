@@ -38,7 +38,7 @@ func run(u) -> void:
 	m.monthly()
 	u._chk("m12_penalty_restored", absf(float(GameState.world.SK.gdp_growth) - growth) < 0.000001)
 	u._new()
-	m.set_enabled("M12", false)
+	m.only([])
 	u._chk("m12_off_old_formula", absf(BankingSystem._bond_yield("SK") - _old_yield("SK")) < 0.0000001)
 	GameState.world.SK.debt_gdp = 20.0
 	var before = GameState.to_dict()

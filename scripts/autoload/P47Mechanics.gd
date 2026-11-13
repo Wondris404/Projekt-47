@@ -2,6 +2,7 @@ extends Node
 # Voliteľné mechaniky; žiadny zápis stavu ani RNG pri čítaní alebo vypnutí.
 # ODHAD: všetky nové bilančné koeficienty sú v data/p47x_balance.json.
 const M12 = preload("res://scripts/p47x/m12_sovereign.gd")
+const M09 = preload("res://scripts/p47x/m09_eureka.gd")
 var balance: Dictionary = {}
 
 func _ready() -> void:
@@ -76,9 +77,20 @@ func set_enabled(id: String, on: bool) -> void:
 	root["enabled"] = flags
 	GameState.ext["p47x"] = root
 
+# Testy: zapne len vymenované mechaniky, ostatné vypne (uložené v ext.p47x.enabled).
+func only(ids: Array) -> void:
+	for id in balance.keys():
+		if str(id).begins_with("M"):
+			set_enabled(str(id), str(id) in ids)
+
 func tension_premium(_iso: String) -> float:
 	return 0.0
+
+func research_mult(rid: String) -> float:
+	return M09.mult(self, rid)
 
 func monthly() -> void:
 	if active("M12"):
 		M12.monthly(self)
+	if active("M09"):
+		M09.monthly(self)

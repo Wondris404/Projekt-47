@@ -43,6 +43,9 @@ func rebuild() -> void:
 		var reqs: Array = r.get("requires", [])
 		b.tooltip_text = "%s\nCena %s, %d dní\nEfekt: %s%s" % [str(r.get("name", rid)), EconMath.eur(float(r.get("cost", 0))), int(r.get("days", 0)), str(r.get("text", "")),
 			("\nVyžaduje: " + ", ".join(reqs.map(func(q): return str(GameState.research_def(str(q)).get("name", q))))) if reqs.size() > 0 else ""]
+		var eureka = P47Mechanics.M09.text(P47Mechanics, rid) if not GameState.player.is_empty() else ""
+		if eureka != "":
+			b.tooltip_text += "\n" + eureka
 		b.disabled = GameState.player.is_empty() or not GameState.research_available(rid) or rid in queue
 		if rid in done:
 			b.modulate = Color(0.75, 1.0, 0.75)

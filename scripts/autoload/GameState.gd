@@ -499,7 +499,10 @@ func build_rnd_center() -> String:
 	return ""
 
 func _research_days(def: Dictionary) -> int:
-	return maxi(1, int(ceil(float(def.get("days", 30)) / max(float(player.modifiers.get("research_speed", 1.0)), 0.1))))
+	return maxi(1, int(ceil(float(def.get("days", 30)) * P47Mechanics.research_mult(str(def.get("id", ""))) / max(float(player.modifiers.get("research_speed", 1.0)), 0.1))))
+
+func research_cost(def: Dictionary) -> float:
+	return float(def.get("cost", 0.0)) * P47Mechanics.research_mult(str(def.get("id", "")))
 
 func _start_slot(rid: String, def: Dictionary) -> void:
 	var slot = {"id": rid, "left": _research_days(def), "total": _research_days(def), "name": def.get("name", rid)}
@@ -527,7 +530,7 @@ func start_research(rid: String) -> String:
 	for req in def.get("requires", []):
 		if str(req) not in player.done:
 			return "Chýba predpoklad."
-	var cost = float(def.get("cost", 0.0))
+	var cost = research_cost(def)
 	if float(player.cash) < cost:
 		return "Výskum stojí %s." % EconMath.eur(cost)
 	player.cash = float(player.cash) - cost

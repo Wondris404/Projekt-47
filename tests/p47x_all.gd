@@ -4,3 +4,4 @@ extends RefCounted
 func run(u) -> void:
 	load("res://tests/p47x_m44.gd").new().run(u)
 	load("res://tests/p47x_m12.gd").new().run(u)
+	load("res://tests/p47x_m09.gd").new().run(u)

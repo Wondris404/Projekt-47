@@ -18,5 +18,155 @@
     "stability_k": 50.0,
     "stability_max_month": 5.0,
     "gdp_growth_k": 0.2
+  },
+  "M09": {
+    "enabled": true,
+    "_note": "ODHAD: podmienky aj zľava; eureka sa kontroluje mesačne.",
+    "discount": 0.4,
+    "eureka": {
+      "auto1": {
+        "type": "firms_total",
+        "n": 3,
+        "text": "Prevádzkuj 3 firmy."
+      },
+      "auto2": {
+        "type": "count_industry",
+        "arg": "steel_mill,auto_plant,electronics_plant,textile_mill",
+        "n": 2,
+        "text": "Prevádzkuj 2 továrne."
+      },
+      "auto3": {
+        "type": "count_industry",
+        "arg": "steel_mill,auto_plant,electronics_plant,textile_mill,chip_fab",
+        "n": 4,
+        "text": "Prevádzkuj 4 továrne."
+      },
+      "chem1": {
+        "type": "count_industry",
+        "arg": "chem_plant,pharma_lab",
+        "n": 1,
+        "text": "Vlastni chemický závod alebo farmaceutické laboratórium."
+      },
+      "arms1": {
+        "type": "count_industry",
+        "arg": "arms_plant,aircraft_plant",
+        "n": 1,
+        "text": "Vlastni zbrojovku alebo letecký závod."
+      },
+      "agro1": {
+        "type": "count_industry",
+        "arg": "wheat_farm,coffee_farm,livestock",
+        "n": 2,
+        "text": "Prevádzkuj 2 farmy."
+      },
+      "mine1": {
+        "type": "count_industry",
+        "arg": "oil_well,coal_mine,iron_mine,copper_mine,gas_well",
+        "n": 1,
+        "text": "Vlastni baňu alebo vrt."
+      },
+      "mine2": {
+        "type": "count_industry",
+        "arg": "oil_well,coal_mine,iron_mine,copper_mine,gas_well",
+        "n": 3,
+        "text": "Prevádzkuj 3 bane alebo vrty."
+      },
+      "mine3": {
+        "type": "count_industry",
+        "arg": "oil_well,coal_mine,iron_mine,copper_mine,gas_well,offshore_oil_rig,offshore_gas_rig",
+        "n": 5,
+        "text": "Prevádzkuj 5 baní alebo vrtov."
+      },
+      "energy1": {
+        "type": "count_industry",
+        "arg": "power_coal,solar_plant,gas_plant,nuclear_plant",
+        "n": 1,
+        "text": "Vlastni elektráreň."
+      },
+      "energy2": {
+        "type": "count_industry",
+        "arg": "power_coal,solar_plant,gas_plant,nuclear_plant",
+        "n": 2,
+        "text": "Prevádzkuj 2 elektrárne."
+      },
+      "energy3": {
+        "type": "count_industry",
+        "arg": "solar_plant",
+        "n": 1,
+        "text": "Vlastni solárnu elektráreň."
+      },
+      "logistics1": {
+        "type": "count_industry",
+        "arg": "logistics_hub,warehouse",
+        "n": 1,
+        "text": "Vlastni logistické centrum alebo sklad."
+      },
+      "logistics2": {
+        "type": "count_industry",
+        "arg": "logistics_hub,warehouse,cargo_port",
+        "n": 2,
+        "text": "Prevádzkuj 2 logistické prevádzky."
+      },
+      "logistics3": {
+        "type": "count_industry",
+        "arg": "cargo_port,shipyard,airport",
+        "n": 1,
+        "text": "Vlastni prístav, lodenicu alebo letisko."
+      },
+      "score1": {
+        "type": "count_industry",
+        "arg": "finance_office,insurance,invest_fund,stock_broker",
+        "n": 1,
+        "text": "Vlastni finančnú firmu."
+      },
+      "it1": {
+        "type": "count_industry",
+        "arg": "software,data_center,ai_firm",
+        "n": 1,
+        "text": "Vlastni softvérovú firmu alebo dátové centrum."
+      },
+      "fin2": {
+        "type": "rating_over",
+        "n": 65,
+        "text": "Dosiahni rating 65."
+      },
+      "cons1": {
+        "type": "count_industry",
+        "arg": "cafe,restaurant,bakery,supermarket,eshop",
+        "n": 2,
+        "text": "Prevádzkuj 2 obchody alebo podniky služieb."
+      },
+      "cons2": {
+        "type": "count_industry",
+        "arg": "ad_agency,tv_station,social_network,newspaper",
+        "n": 1,
+        "text": "Vlastni reklamnú agentúru alebo médium."
+      },
+      "cons3": {
+        "type": "cash_over",
+        "n": 5000000,
+        "text": "Maj hotovosť 5 mil. €."
+      },
+      "biz_med": {
+        "type": "firms_total",
+        "n": 5,
+        "text": "Prevádzkuj 5 firiem."
+      },
+      "upg2": {
+        "type": "firms_total",
+        "n": 8,
+        "text": "Prevádzkuj 8 firiem."
+      },
+      "biz_large": {
+        "type": "cash_over",
+        "n": 10000000,
+        "text": "Maj hotovosť 10 mil. €."
+      },
+      "upg3": {
+        "type": "own_state",
+        "n": 1,
+        "text": "Vlastni štát."
+      }
+    }
   }
 }
