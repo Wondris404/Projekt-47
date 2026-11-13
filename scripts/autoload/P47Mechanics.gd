@@ -5,6 +5,7 @@ const M12 = preload("res://scripts/p47x/m12_sovereign.gd")
 const M09 = preload("res://scripts/p47x/m09_eureka.gd")
 const M02 = preload("res://scripts/p47x/m02_tension.gd")
 const M03 = preload("res://scripts/p47x/m03_blocs.gd")
+const M25 = preload("res://scripts/p47x/m25_proxy.gd")
 var balance: Dictionary = {}
 
 func _ready() -> void:
@@ -123,7 +124,17 @@ func bloc_tariff(a: String, b: String) -> float:
 func bloc_restricted(a: String, b: String) -> bool:
 	return active("M03") and M03.restricted(self, a, b)
 
+func proxy_supply(war_id: String, side_iso: String, kind: String, amount_month: float) -> String:
+	if not active("M25"):
+		return "Proxy dodávky sú vypnuté."
+	return M25.supply(self, war_id, side_iso, kind, amount_month)
+
+func concession_mult(iso: String) -> float:
+	return M25.concession_mult(self, iso) if active("M25") else 1.0
+
 func monthly() -> void:
+	if active("M25"):
+		M25.monthly(self)
 	if active("M03"):
 		M03.monthly(self)
 	if active("M02"):

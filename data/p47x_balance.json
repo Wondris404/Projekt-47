@@ -250,5 +250,20 @@
     "restrict_gap": 60.0,
     "influence_k": 0.02,
     "communist_drift": 2.0
+  },
+  "M25": {
+    "enabled": true,
+    "_note": "ODHAD: marža, odhalenie, odmeny.",
+    "cost_share": 0.8,
+    "intensity_bonus": 0.1,
+    "detect_chance": 0.25,
+    "detect_rating": 8,
+    "detect_relation": 10,
+    "tension_month": 1.0,
+    "gratitude_month": 2,
+    "concession_months": 60,
+    "concession_mult": 0.7,
+    "credit_months": 24,
+    "min_amount": 10000.0
   }
 }

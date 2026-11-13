@@ -169,7 +169,7 @@ func party_def(pid: String) -> Dictionary:
 
 # nasobok cien firiem v krajine: regulacia (0.5 = neutralne) + bonus z focus tree
 func cost_mult(iso: String) -> float:
-	var m = bonus_mult("cost")
+	var m = bonus_mult("cost") * P47Mechanics.concession_mult(iso)  # M25: koncesia po proxy vojne
 	var c: Dictionary = _ext().get("politics", {}).get(iso, {})
 	if not c.is_empty():
 		m *= 1.0 + (float(c.get("reg", 0.5)) - float(c.get("base_reg", 0.5))) * 0.4

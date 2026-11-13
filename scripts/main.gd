@@ -1842,6 +1842,17 @@ func _on_minister_tax() -> void:
 	_feedback("Daň v %s je %s." % [GameState.selected_iso, EconMath.pct(LawSystem.corporate_tax(GameState.selected_iso))], true)
 	_refresh_label()
 
+func _on_proxy_supply(kind: String, amount: float) -> void:
+	var iso = GameState.selected_iso
+	var war_id = ""
+	for w in GameState.wars:
+		if iso in w.get("a", []) or iso in w.get("b", []):
+			war_id = str(w.get("id", ""))
+			break
+	var err = "Vybraná krajina nie je vo vojne." if war_id == "" else P47Mechanics.proxy_supply(war_id, iso, kind, amount)
+	_feedback("Proxy dodávka: %s" % ("zmluva podpísaná." if err == "" else err), err == "")
+	_refresh_label()
+
 func _on_diplo(action: String) -> void:
 	var warn = P47Mechanics.confirm_needed(action, _chosen_country())  # M02: potvrdenie pred znížením DEFCON
 	if warn != "":
@@ -3182,6 +3193,18 @@ func _build_juan4_tabs(pol_tab: Node, focus_tab: Node) -> void:
 		gb.tooltip_text = PoliticsSystem.GENDER_TIPS["muž" if spec[1] == "campaign" else "žena"]
 		gb.pressed.connect(_on_gender_action.bind(str(spec[1])))
 		pol_tab.add_child(gb)
+	if P47Mechanics.active("M25"):  # M25: proxy dodávky stranám vojny
+		var ph = Label.new()
+		ph.text = "PROXY DODÁVKY (krajina = vybraná na mape, musí byť vo vojne)"
+		ph.theme_type_variation = "HeaderLabel"
+		pol_tab.add_child(ph)
+		for pspec in [["Zbrane 100 000 €/mes.", "arms", 100000.0], ["Úver 500 000 €/mes.", "credit", 500000.0]]:
+			var pb2 = Button.new()
+			pb2.name = "Proxy_" + str(pspec[1])
+			pb2.text = str(pspec[0])
+			pb2.tooltip_text = "Zisk a vďačnosť strany, ale +napätie. Nelegálny vývoz zbraní môže byť odhalený (rating −8)."
+			pb2.pressed.connect(_on_proxy_supply.bind(str(pspec[1]), float(pspec[2])))
+			pol_tab.add_child(pb2)
 	rival_label = Label.new()
 	rival_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	pol_tab.add_child(rival_label)
