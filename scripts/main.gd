@@ -1,4 +1,5 @@
 extends Control
+const UiFxScript = preload("res://scripts/ui/ui_fx.gd")  # p47/gfx
 
 const WorldMapScript = preload("res://scripts/ui/world_map.gd")
 const BusinessDescriptions = preload("res://scripts/business_descriptions.gd")
@@ -335,8 +336,12 @@ func _tab(tabs: TabContainer, title: String) -> VBoxContainer:
 func _build_play() -> void:
 	_apply_theme()
 	_load_ui_scale()
+	add_child(UiFxScript.new())  # p47/gfx: hover/klik feedback, fade zaloziek
 	var bg = ColorRect.new()
 	bg.color = UiPalette.BG_0
+	var bg_mat = ShaderMaterial.new()  # p47/gfx: gradient + vinetacia (fallback = bg.color)
+	bg_mat.shader = preload("res://scripts/ui/bg_p47.gdshader")
+	bg.material = bg_mat
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
@@ -885,7 +890,7 @@ func _build_play() -> void:
 	print("P47_UI_BUILT")
 
 func _apply_theme() -> void:
-	theme = load("res://ui/theme_factorio.tres")
+	theme = load("res://ui/theme_p47.tres")  # p47/gfx: jednotna tema (stara theme_factorio.tres ostava)
 
 func _load_ui_scale() -> void:
 	preload("res://scripts/gfx.gd").apply()  # JUAN23
@@ -4036,6 +4041,7 @@ func toggle_side_panel() -> void:
 	panel_btn.text = "◀ Skryť panel" if side_panel.visible else "▶ Panel"
 	if side_panel.visible:
 		_refresh_label()
+		UiFxScript.fade_in(side_panel, 0.18)  # p47/gfx: panel sa jemne vynori
 
 func _input_j12(event: InputEvent) -> void:
 	# JUAN12: Tab inak zoberie navigacia fokusu

@@ -5,6 +5,8 @@ var box: VBoxContainer
 var panel: PanelContainer
 var note: Label
 var _was_paused = false
+const ICONS = {"Pokračovať": "icon_play", "Uložiť hru": "icon_save", "Načítať hru": "icon_load", "Nastavenia": "icon_settings",
+	"Ukončiť hru": "icon_quit", "Späť": "icon_back"}  # p47/gfx
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -43,6 +45,13 @@ func open() -> void:
 	GameState.paused = true
 	visible = true
 	_home()
+	_animate_open.call_deferred()  # p47/gfx
+
+# p47/gfx: stmavenie sa prelnie, okno jemne "vyskoci" zo stredu
+func _animate_open() -> void:
+	var fx = preload("res://scripts/ui/ui_fx.gd")
+	fx.fade_in(self, 0.15)
+	fx.pop_in(panel, 0.22)
 
 func close() -> void:
 	visible = false
@@ -59,11 +68,15 @@ func _clear(title: String) -> void:
 	t.theme_type_variation = "HeaderLabel"
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(t)
+	if visible:
+		preload("res://scripts/ui/ui_fx.gd").fade_in(box, 0.12)  # p47/gfx: prepnutie dialogu
 
 func _b(text: String, cb: Callable, nm: String = "") -> Button:
 	var b = Button.new()
 	b.text = text
 	b.custom_minimum_size = Vector2(0, 38)
+	if ICONS.has(text):  # p47/gfx: vlastne SVG ikony
+		b.icon = load("res://assets/ui/p47/%s.svg" % ICONS[text])
 	if nm != "":
 		b.name = nm
 	b.pressed.connect(cb)
