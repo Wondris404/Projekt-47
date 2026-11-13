@@ -11,6 +11,7 @@ func run(host) -> void:
 	_v2_credits()
 	_v3_paid_missed_rating()
 	_v4_failed_lender()
+	_b01_load_keeps_slot()
 
 func _firm(id: String, industry: String, cash: float = 0.0) -> Dictionary:
 	var f = {"id": id, "name": id, "owner": "player", "country": str(GameState.player.home), "industry": industry,
@@ -159,3 +160,61 @@ func _v4_failed_lender() -> void:
 	u._chk("p47_v4_no_lender_no_reserves", absf(float(dead.reserves) - dead_res) < 0.001 and str(loan2.lender) == str(dead.id) and bool(loan2.get("lender_failed", false)))
 	for i in GameState.banks.size():
 		GameState.banks[i].failed = saved[i]
+
+class FakeHost:
+	extends RefCounted
+	var saved: Array = []
+	var loaded: Array = []
+	func save_game(slot: int) -> bool:
+		saved.append(slot)
+		return SaveSystem.save_slot(slot).ends_with(".json")
+	func _on_menu_load(slot: int) -> void:
+		loaded.append(slot)
+
+func _live(popup, nm: String) -> Node:
+	for c in popup.box.get_children():
+		if str(c.name) == nm and not c.is_queued_for_deletion():
+			return c
+	return null
+
+func _popup(host) -> Control:
+	var p = load("res://scripts/ui/pause_popup.gd").new()
+	p._ready()
+	p.host = host
+	return p
+
+func _b01_load_keeps_slot() -> void:
+	u._new()
+	var path1 = SaveSystem.save_slot(1)
+	SaveSystem.save_slot(2)
+	var before = FileAccess.get_file_as_string(path1)
+	GameState.player.cash = float(GameState.player.cash) + 12345.0  # neulozeny postup
+	GameState.day_index += 3
+	var host = FakeHost.new()
+	var p = _popup(host)
+	p._load_dlg()
+	var l1 = _live(p, "LoadSlot1")
+	u._chk("p47_b01_load_button", l1 != null and not l1.disabled)
+	if l1 == null:
+		p.free()
+		return
+	l1.pressed.emit()
+	u._chk("p47_b01_no_save_over_loading_slot", _live(p, "ConfirmSave") == null)
+	var yes = _live(p, "ConfirmYes")
+	if yes:
+		yes.pressed.emit()
+	u._chk("p47_b01_slot1_preserved", host.loaded == [1] and host.saved.is_empty() and FileAccess.get_file_as_string(path1) == before, str(host.loaded))
+	p.free()
+	# nacitanie slotu 2: "Najprv ulozit (slot 1)" ostava (ulozi do 1, nie do 2)
+	var host2 = FakeHost.new()
+	var p2 = _popup(host2)
+	p2._load_dlg()
+	var l2 = _live(p2, "LoadSlot2")
+	if l2:
+		l2.pressed.emit()
+	var cs = _live(p2, "ConfirmSave")
+	u._chk("p47_b01_slot2_offers_save1", cs != null)
+	if cs:
+		cs.pressed.emit()
+	u._chk("p47_b01_slot2_saves_slot1_loads_2", host2.saved == [1] and host2.loaded == [2], "%s %s" % [str(host2.saved), str(host2.loaded)])
+	p2.free()

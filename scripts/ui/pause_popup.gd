@@ -105,7 +105,7 @@ func _load_dlg() -> void:
 		var slot = s
 		var b = _b(_slot_text(slot), func(): _confirm("Načítať slot %d? Neuložený postup sa stratí." % slot, func():
 			visible = false
-			host._on_menu_load(slot)), "LoadSlot%d" % slot)
+			host._on_menu_load(slot), slot), "LoadSlot%d" % slot)
 		b.disabled = not SaveSystem.has_slot(slot)
 	_b("Späť", _home)
 
@@ -134,14 +134,15 @@ func _quit_dlg() -> void:
 	_b("Na plochu", func(): _confirm("Ukončiť hru a odísť na plochu? Neuložený postup sa stratí.", func(): get_tree().quit()), "QuitDesktop")
 	_b("Späť", _home)
 
-func _confirm(text: String, yes: Callable) -> void:
+# B01: loading_slot = slot, ktory sa ide nacitat; "Najprv ulozit (slot 1)" ho nesmie prepisat.
+func _confirm(text: String, yes: Callable, loading_slot: int = 0) -> void:
 	_clear("POTVRDIŤ")
 	var l = Label.new()
 	l.text = text
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.custom_minimum_size = Vector2(300, 0)
 	box.add_child(l)
-	if true:  # JUAN15: aj DEV hra sa dá uložiť
+	if loading_slot != 1:  # JUAN15: aj DEV hra sa dá uložiť; B01: neprepísať práve načítavaný slot 1
 		_b("Najprv uložiť (slot 1) a pokračovať", func():
 			host.save_game(1)
 			yes.call(), "ConfirmSave")
