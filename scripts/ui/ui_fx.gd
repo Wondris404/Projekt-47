@@ -126,6 +126,33 @@ static func curtain(host: Node, dur: float = 0.45, color: Color = Color(0.02, 0.
 	tw.tween_property(c, "modulate:a", 0.0, dur)
 	tw.tween_callback(layer.queue_free)
 
+# p47/gfx (kolo 2): animovane zatvorenie obrazovky – posledna snimka (napr. menu) sa prelnie do novej
+# a jemne sa priblizi. Viditelnost uzlov sa meni hned (testy/logika), animuje sa len obrazok na CanvasLayer.
+static func snapshot_fade(host: Node, dur: float = 0.38) -> void:
+	if not active() or host == null or not host.is_inside_tree():
+		return
+	var img := host.get_viewport().get_texture().get_image()
+	if img == null or img.is_empty():
+		curtain(host, dur)
+		return
+	var layer := CanvasLayer.new()
+	layer.name = "P47Snapshot"
+	layer.layer = 100
+	var r := TextureRect.new()
+	r.texture = ImageTexture.create_from_image(img)
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	r.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	r.stretch_mode = TextureRect.STRETCH_SCALE
+	layer.add_child(r)
+	host.add_child(layer)
+	r.pivot_offset = host.get_viewport().get_visible_rect().size * 0.5
+	var tw := r.create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tw.tween_property(r, "modulate:a", 0.0, dur)
+	tw.tween_property(r, "scale", Vector2(1.06, 1.06), dur)
+	tw.chain().tween_callback(layer.queue_free)
+
 # ---------------------------------------------------------------------------
 # p47/gfx: efekty pri hernych udalostiach (iba citanie signalov, logika hry sa nemeni)
 # ---------------------------------------------------------------------------

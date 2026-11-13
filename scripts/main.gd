@@ -402,6 +402,10 @@ func _build_play() -> void:
 	map.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	map.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	map_col.add_child(map)
+	if UiFxScript.active():  # p47/gfx: glow/pulz vyberu nad mapou (len vizual)
+		var map_fx = preload("res://scripts/ui/map_fx_overlay.gd").new()
+		map_fx.setup(map)
+		map.add_child(map_fx)
 	map.country_selected.connect(_on_country_picked)
 	map.place_requested.connect(_on_place_requested)  # JUAN3
 	map.hq_clicked.connect(open_portfolio_corp)  # JUAN15
@@ -832,6 +836,8 @@ func _build_play() -> void:
 		_save_recovery_test_runner.run(self)
 	elif "window_ui" in OS.get_cmdline_user_args():  # JUAN-P47: presuvatelne okna (GUI + screenshot)
 		_window_ui()
+	elif "gfx_anim_check" in OS.get_cmdline_user_args():  # p47/gfx: GUI kontrola animovaneho zatvarania (xvfb)
+		_gfx_anim_check.call_deferred()
 	elif "atlas_visual_audit" in OS.get_cmdline_user_args():
 		_atlas_visual_runner = load("res://tests/atlas_visual_audit.gd").new()
 		_atlas_visual_runner.run(self)
@@ -3621,7 +3627,7 @@ func _juan4_ui_checks() -> void:
 	cheat_console.close()
 	var dp_ok = cc_ok and _dev_error_text() != ""
 	print("P47_UI_J5 stock=%d credit=%d dev=%d devpanel=%d" % [int(stock_ok), int(credit_ok), int(dev_ok), int(dp_ok)])
-	_pause_checks()  # JUAN11
+	await _pause_checks()  # JUAN11 (p47/gfx: coroutine, caka na animovane zatvorenie)
 	toggle_side_panel()
 	var col_ok = not side_panel.visible
 	toggle_side_panel()
@@ -3989,10 +3995,10 @@ func toggle_pause_popup() -> void:
 		pause_popup.name = "PausePopup"
 		pause_popup.host = self
 		add_child(pause_popup)
-	if pause_popup.visible:
+	if pause_popup.visible and not pause_popup.is_closing():
 		pause_popup.close()
 	else:
-		pause_popup.open()
+		pause_popup.open()  # p47/gfx: otvorenie pocas zatvaracieho tweenu ho zrusi
 
 func _quit_to_menu() -> void:
 	if pause_popup:
@@ -4026,7 +4032,8 @@ func _pause_checks() -> void:
 	var open_ok = pause_popup.visible and GameState.paused and not (main_menu and main_menu.visible)
 	var has_btns = pause_popup.find_child("PauseSave", true, false) != null and pause_popup.find_child("PauseQuit", true, false) != null
 	toggle_pause_popup()
-	var close_ok = not pause_popup.visible and not GameState.paused
+	await pause_popup.wait_closed()  # p47/gfx: zatvaranie je animovane – pockat na koniec tweenu, potom overit
+	var close_ok = not pause_popup.visible and not GameState.paused and not pause_popup.is_closing()
 	print("P47_UI_J11_PAUSE open=%d buttons=%d close=%d" % [int(open_ok), int(has_btns), int(close_ok)])
 
 var toolbar_scroll: ScrollContainer
@@ -5204,3 +5211,36 @@ func _window_ui() -> void:
 			fails += 1
 	exit_code = 0 if fails == 0 else 1
 	get_tree().quit(exit_code)
+
+# p47/gfx (kolo 2): GUI test (nie headless) – pauza ostane otvorena pocas zatvaracieho tweenu a po nom sa naozaj zavrie;
+# zatvorenie menu spusti prelinaciu snimku; nad mapou je vizualna vrstva. Spustenie: xvfb-run godot --path . -- gfx_anim_check
+func _gfx_anim_check() -> void:
+	_on_menu_dev()
+	for _i in 10:
+		await get_tree().process_frame
+	GameState.paused = false
+	toggle_pause_popup()
+	for _i in 30:
+		await get_tree().process_frame
+	var open_ok = pause_popup.visible and GameState.paused and pause_popup.modulate.a > 0.99
+	toggle_pause_popup()
+	await get_tree().process_frame
+	var closing_ok = pause_popup.visible and pause_popup.is_closing()
+	await pause_popup.wait_closed()
+	var closed_ok = not pause_popup.visible and not pause_popup.is_closing() and not GameState.paused
+	toggle_pause_popup()
+	toggle_pause_popup()
+	toggle_pause_popup()  # znovu otvorit pocas zatvarania = zrusi zatvaranie
+	await get_tree().process_frame
+	var reopen_ok = pause_popup.visible and not pause_popup.is_closing()
+	toggle_pause_popup()
+	await pause_popup.wait_closed()
+	_show_menu()
+	for _i in 20:
+		await get_tree().process_frame
+	main_menu.visible = false
+	var snap_ok = find_child("P47Snapshot", false, false) != null
+	var mapfx_ok = map != null and map.find_child("MapFxOverlay", false, false) != null
+	var ok = open_ok and closing_ok and closed_ok and reopen_ok and snap_ok and mapfx_ok
+	print("P47_GFX_ANIM open=%d closing=%d closed=%d reopen=%d snapshot=%d mapfx=%d %s" % [int(open_ok), int(closing_ok), int(closed_ok), int(reopen_ok), int(snap_ok), int(mapfx_ok), "OK" if ok else "FAIL"])
+	get_tree().quit(0 if ok else 1)

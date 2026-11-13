@@ -37,6 +37,7 @@ const MENU_ICONS = {"Pokračovať": "icon_continue", "Nová hra": "icon_new", "U
 	"Nastavenia": "icon_settings", "Koniec": "icon_quit", "Späť do hry": "icon_play", "Späť": "icon_back", "Štart": "icon_play",
 	"Zopakovať tutoriál": "icon_tutorial"}
 var particles: CPUParticles2D
+var parallax: Control
 
 # JUAN5: celoobrazovkove menu v pixel style intra (jachta + skyline), mapa a herne UI su skryte (main._set_game_visible)
 signal dev_requested
@@ -73,6 +74,8 @@ func _ready() -> void:
 	bg_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	bg_tex.modulate = Color(0.85, 0.85, 0.9)
 	add_child(bg_tex)
+	parallax = preload("res://scripts/ui/menu_parallax.gd").new()  # p47/gfx (kolo 2): parallax vrstvy + svetla
+	add_child(parallax)
 	shade = ColorRect.new()
 	shade.color = Color(0.02, 0.02, 0.05, 0.25)
 	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -193,6 +196,10 @@ func _process(delta: float) -> void:
 	var vs = get_viewport_rect().size
 	bg_tex.size = vs * 1.08
 	bg_tex.position = Vector2(-vs.x * 0.04 + sin(_t * 0.07) * vs.x * 0.035, -vs.y * 0.04 + cos(_t * 0.05) * vs.y * 0.02)
+	if parallax:  # p47/gfx: najhlbsia vrstva sa hybe s mysou najmenej
+		bg_tex.position += parallax.layer_offset(0.6)
+		if particles:
+			particles.position = Vector2(vs.x * 0.5, vs.y * 0.82) + parallax.layer_offset(2.8)
 
 # vyska scrollu = min(obsah, volne miesto v okne); prepocita sa kazdy frame (resize okna, prepnutie panelu)
 func _cap_scroll() -> void:
@@ -606,4 +613,4 @@ func _on_vis_fx() -> void:
 	if visible:
 		fx.fade_in(self, 0.25)
 	elif get_parent() != null:
-		fx.curtain(get_parent(), 0.4)
+		fx.snapshot_fade(get_parent(), 0.38)  # p47/gfx (kolo 2): menu sa animovane "rozplynie" do hry
