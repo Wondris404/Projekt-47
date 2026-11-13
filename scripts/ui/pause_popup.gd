@@ -124,6 +124,7 @@ func _settings() -> void:
 	fs.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 	fs.toggled.connect(func(v): DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if v else DisplayServer.WINDOW_MODE_WINDOWED))
 	box.add_child(fs)
+	box.add_child(DesignManager.make_picker())  # P47 DESIGNS
 	_b("Späť", _home)
 
 func _quit_dlg() -> void:

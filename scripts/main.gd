@@ -67,6 +67,10 @@ func _ready() -> void:
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/strategic_hud.gd").new().run(unit)
 			exit_code = 1 if unit.fails > 0 else 0
+		elif args.size() > 0 and str(args[0]) == "designs_unit":  # P47 DESIGNS
+			var unit = load("res://tests/unit.gd").new()
+			load("res://tests/designs.gd").new().run(unit)
+			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "audit_unit":
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/audit_regressions.gd").new().run(unit)
@@ -802,7 +806,12 @@ func _build_play() -> void:
 	info = cash_label
 	side_tabs.tab_changed.connect(func(_index): _refresh_label())
 	_show_menu()
-	if "menu_new" in OS.get_cmdline_user_args():  # JUAN7: nahlad panelu Nova hra (screenshot)
+	DesignManager.attach(self)  # P47 DESIGNS: theme + mapa + hlavne menu podla zvoleneho dizajnu
+	if "design_shots" in OS.get_cmdline_user_args():  # P47 DESIGNS: tools/design_shots.sh
+		var shots = load("res://tests/design_shots.gd").new()
+		add_child(shots)
+		shots.run(self)
+	elif "menu_new" in OS.get_cmdline_user_args():  # JUAN7: nahlad panelu Nova hra (screenshot)
 		main_menu._pick_mode("medium")
 	elif OS.get_cmdline_user_args().size() > 0 and str(OS.get_cmdline_user_args()[0]).begins_with("tab_shot="):  # JUAN8: nahlad zalozky
 		_on_menu_dev()
@@ -885,7 +894,7 @@ func _build_play() -> void:
 	print("P47_UI_BUILT")
 
 func _apply_theme() -> void:
-	theme = load("res://ui/theme_factorio.tres")
+	theme = DesignManager.get_theme()  # P47 DESIGNS: "current" = res://ui/theme_factorio.tres
 
 func _load_ui_scale() -> void:
 	preload("res://scripts/gfx.gd").apply()  # JUAN23
