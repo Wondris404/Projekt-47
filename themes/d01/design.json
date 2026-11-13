@@ -1,0 +1,51 @@
+{
+  "_comment": "d01 = SABLONA. Skopiruj themes/d01 -> themes/dNN, zmen id/name a vsetko nizsie. Klucom zacinajucim '_' sa nic nedeje (komentare). Vsetky polia okrem 'name' su volitelne.",
+  "id": "d01",
+  "name": "Šablóna – Neon",
+  "author": "Alt C. (coding)",
+  "theme": "theme.tres",
+  "_palette_comment": "Paleta – citaju ju nove UI prvky cez DesignManager.color('accent', default). Hex #RRGGBB alebo #RRGGBBAA.",
+  "palette": {
+    "bg": "#0d0720",
+    "panel": "#140a2a",
+    "text": "#e0e6ff",
+    "text_dim": "#9aa0c8",
+    "accent": "#ff33bf",
+    "accent_2": "#00d9f2",
+    "ok": "#3dffa0",
+    "warn": "#ffd23d",
+    "bad": "#ff4d6a"
+  },
+  "fonts": {
+    "_comment": "Len informativne (skutocny font je v theme.tres). Kazdy font musi mat licenciu OFL alebo CC0 v LICENSES.md.",
+    "body": "Noto Sans (OFL, assets/fonts/NotoSans-Regular.ttf) – embolden 0.45",
+    "title": "Noto Sans (OFL)"
+  },
+  "_menu_comment": "Hlavne menu. background = cesta relativne k tomuto priecinku (Texture2D: .png s .import alebo .tres). use_theme_buttons/use_theme_panel: menu prevezme styl tlacidiel a panelu z theme.tres.",
+  "menu": {
+    "background": "menu_bg.tres",
+    "background_modulate": "#ffffff",
+    "shade": "#0d072040",
+    "logo_color": "#00e6ff",
+    "logo_outline": "#ff33bf",
+    "use_theme_buttons": true,
+    "use_theme_panel": true
+  },
+  "_motion_comment": "Motion parametre – nove animacie ich citaju cez DesignManager.motion('dur_fast', 0.12). Easing: linear|sine|quad|cubic|quart|expo|back|elastic|bounce s _in/_out/_in_out.",
+  "motion": {
+    "ease": "cubic_out",
+    "dur_fast": 0.12,
+    "dur_normal": 0.22,
+    "dur_slow": 0.45,
+    "hover_scale": 1.04,
+    "panel_open": "fade_slide",
+    "menu_parallax": 0.035
+  },
+  "_map_comment": "Mapa: tint = nasobenie farby vykreslovania mapy (self_modulate), #ffffff = bez zmeny. Ostatne kluce su pre buduce citanie cez DesignManager.map_value().",
+  "map": {
+    "tint": "#d8c8ffff",
+    "border": "#ff33bf",
+    "hover": "#00d9f2",
+    "selected": "#ffd23d"
+  }
+}

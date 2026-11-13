@@ -1,0 +1,199 @@
+[gd_resource type="Theme" load_steps=14 format=3]
+
+; ============================================================================
+; d01 "Šablóna – Neon" – UKÁŽKOVÝ dizajn na kopírovanie (pozri docs/DESIGNS.md).
+; Skopíruj celý priečinok themes/d01 -> themes/dNN a uprav farby/štýly nižšie.
+; Pravidlá: fonty len OFL/CC0 (súbor v themes/dNN/fonts/ + licencia, zápis v LICENSES.md),
+; žiadne cesty mimo themes/dNN/ okrem zdieľaných fontov z assets/fonts/.
+; Kľúče [resource] zodpovedajú ui/theme_factorio.tres (súčasný dizajn) – pokry aspoň tie.
+; ============================================================================
+
+; Font: zdieľaný NotoSans (OFL) z repa, cez FontVariation (hrubší + širší rozostup).
+; Vlastný font: [ext_resource type="FontFile" path="res://themes/dNN/fonts/Meno.ttf" id="1_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/NotoSans-Regular.ttf" id="1_font"]
+
+[sub_resource type="FontVariation" id="FontVariation_main"]
+base_font = ExtResource("1_font")
+variation_embolden = 0.45
+spacing_glyph = 1
+
+; --- Tlačidlá: normal / hover / pressed / disabled / focus -------------------
+[sub_resource type="StyleBoxFlat" id="Btn_normal"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0.09, 0.05, 0.17, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.0, 0.85, 0.95, 0.9)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.0, 0.85, 0.95, 0.25)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="Btn_hover"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0.22, 0.05, 0.3, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1.0, 0.2, 0.75, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(1.0, 0.2, 0.75, 0.45)
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id="Btn_pressed"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(1.0, 0.2, 0.75, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1.0, 0.85, 0.95, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="Btn_disabled"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0.08, 0.07, 0.11, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.3, 0.4, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxEmpty" id="Btn_focus"]
+
+; --- Panely, karty, polia, tooltip ------------------------------------------
+[sub_resource type="StyleBoxFlat" id="Panel_main"]
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+bg_color = Color(0.05, 0.03, 0.11, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1.0, 0.2, 0.75, 0.85)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(1.0, 0.2, 0.75, 0.25)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="Field"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.02, 0.02, 0.06, 1)
+border_width_bottom = 2
+border_color = Color(0.0, 0.85, 0.95, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+
+[sub_resource type="StyleBoxFlat" id="Tab_sel"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(1.0, 0.2, 0.75, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+
+[sub_resource type="StyleBoxFlat" id="Tab_unsel"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0.12, 0.06, 0.22, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+
+[sub_resource type="StyleBoxFlat" id="Tooltip"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.02, 0.01, 0.06, 0.97)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.0, 0.85, 0.95, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxEmpty" id="Empty"]
+
+[sub_resource type="StyleBoxFlat" id="Grabber"]
+bg_color = Color(0.0, 0.85, 0.95, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[resource]
+default_font = SubResource("FontVariation_main")
+default_font_size = 16
+Button/colors/font_color = Color(0.85, 0.97, 1, 1)
+Button/colors/font_disabled_color = Color(0.5, 0.5, 0.6, 1)
+Button/colors/font_hover_color = Color(1, 0.85, 0.97, 1)
+Button/colors/font_pressed_color = Color(0.05, 0.02, 0.1, 1)
+Button/styles/disabled = SubResource("Btn_disabled")
+Button/styles/focus = SubResource("Btn_focus")
+Button/styles/hover = SubResource("Btn_hover")
+Button/styles/normal = SubResource("Btn_normal")
+Button/styles/pressed = SubResource("Btn_pressed")
+Button/constants/h_separation = 6
+HeaderLabel/base_type = &"Label"
+HeaderLabel/colors/font_color = Color(0, 0.9, 1, 1)
+HeaderLabel/font_sizes/font_size = 18
+HeaderLabel/colors/font_outline_color = Color(0.4, 0, 0.3, 0.8)
+HeaderLabel/constants/outline_size = 4
+Label/colors/font_color = Color(0.88, 0.9, 1, 1)
+LineEdit/colors/font_color = Color(0.85, 0.97, 1, 1)
+LineEdit/styles/normal = SubResource("Field")
+OptionButton/colors/font_color = Color(0.85, 0.97, 1, 1)
+BoxContainer/constants/separation = 8
+VBoxContainer/constants/separation = 8
+HBoxContainer/constants/separation = 8
+PanelContainer/styles/panel = SubResource("Panel_main")
+Panel/styles/panel = SubResource("Panel_main")
+ScrollContainer/styles/panel = SubResource("Empty")
+SpinBox/colors/font_color = Color(0.85, 0.97, 1, 1)
+SpinBox/styles/normal = SubResource("Field")
+TabContainer/styles/tab_selected = SubResource("Tab_sel")
+TabContainer/styles/tab_unselected = SubResource("Tab_unsel")
+TooltipLabel/colors/font_color = Color(0.85, 0.97, 1, 1)
+TooltipPanel/styles/panel = SubResource("Tooltip")
+VScrollBar/styles/grabber = SubResource("Grabber")
+VScrollBar/styles/grabber_highlight = SubResource("Btn_pressed")

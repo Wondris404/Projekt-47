@@ -1,0 +1,16 @@
+[gd_resource type="GradientTexture2D" load_steps=2 format=3]
+
+; Pozadie menu d01: procedurálny gradient (vlastná práca, bez licencie tretích strán).
+; Vlastný obrázok: themes/dNN/menu_bg.png (+ .import po `--headless --import`), v design.json "background": "menu_bg.png".
+
+[sub_resource type="Gradient" id="Gradient_bg"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(0.32, 0.02, 0.38, 1, 0.06, 0.03, 0.2, 1, 0.0, 0.35, 0.45, 1)
+
+[resource]
+gradient = SubResource("Gradient_bg")
+width = 640
+height = 360
+fill = 1
+fill_from = Vector2(0.5, 1.1)
+fill_to = Vector2(1.1, -0.2)
