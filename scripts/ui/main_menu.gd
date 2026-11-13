@@ -79,6 +79,7 @@ func _ready() -> void:
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(shade)
 	_add_particles()  # p47/gfx: jemne svetielka nad mestom
+	visibility_changed.connect(_on_vis_fx)  # p47/gfx: prechody menu <-> hra
 	var root = VBoxContainer.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -595,3 +596,11 @@ func _place_particles() -> void:
 	var vs = get_viewport_rect().size
 	particles.position = Vector2(vs.x * 0.5, vs.y * 0.82)
 	particles.emission_rect_extents = Vector2(vs.x * 0.5, vs.y * 0.12)
+
+# p47/gfx: menu sa pri otvoreni prelnie; pri odchode do hry kratka clona (fade z ciernej)
+func _on_vis_fx() -> void:
+	var fx = preload("res://scripts/ui/ui_fx.gd")
+	if visible:
+		fx.fade_in(self, 0.25)
+	elif get_parent() != null:
+		fx.curtain(get_parent(), 0.4)

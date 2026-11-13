@@ -108,21 +108,23 @@ static func pop_in(c: Control, dur: float = 0.22) -> void:
 	tw.tween_property(c, "scale", Vector2.ONE, dur)
 	tw.tween_property(c, "modulate:a", 1.0, dur * 0.8).set_trans(Tween.TRANS_SINE)
 
-# prechod medzi "scenami" (menu -> hra): cierna clona, ktora zmizne
+# prechod medzi "scenami" (menu -> hra): cierna clona na vlastnom CanvasLayer (nad vsetkym UI), ktora zmizne
 static func curtain(host: Node, dur: float = 0.45, color: Color = Color(0.02, 0.025, 0.035)) -> void:
 	if not active() or host == null or not host.is_inside_tree():
 		return
+	var layer := CanvasLayer.new()
+	layer.name = "P47Curtain"
+	layer.layer = 100
 	var c := ColorRect.new()
-	c.name = "P47Curtain"
 	c.color = color
 	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	c.set_anchors_preset(Control.PRESET_FULL_RECT)
-	c.z_index = 200
-	host.add_child(c)
+	layer.add_child(c)
+	host.add_child(layer)
 	var tw := c.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tw.tween_property(c, "modulate:a", 0.0, dur)
-	tw.tween_callback(c.queue_free)
+	tw.tween_callback(layer.queue_free)
 
 # ---------------------------------------------------------------------------
 # p47/gfx: efekty pri hernych udalostiach (iba citanie signalov, logika hry sa nemeni)

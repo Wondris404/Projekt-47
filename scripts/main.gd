@@ -1378,8 +1378,6 @@ func _on_tutorial_repeat() -> void:
 
 func _on_start(cfg: Dictionary = {}) -> void:
 	var from_menu = cfg.has("country")
-	if from_menu:
-		UiFxScript.curtain(self)  # p47/gfx: plynuly prechod menu -> hra
 	var iso = str(cfg.get("country", GameState.selected_iso)) if from_menu else GameState.selected_iso
 	if not DataLoader.countries.has(iso):
 		iso = "SK" if DataLoader.countries.has("SK") else str(DataLoader.country_ids[0])
@@ -4043,6 +4041,7 @@ func toggle_side_panel() -> void:
 	panel_btn.text = "◀ Skryť panel" if side_panel.visible else "▶ Panel"
 	if side_panel.visible:
 		_refresh_label()
+		UiFxScript.fade_in(side_panel, 0.18)  # p47/gfx: panel sa jemne vynori
 
 func _input_j12(event: InputEvent) -> void:
 	# JUAN12: Tab inak zoberie navigacia fokusu
