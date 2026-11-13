@@ -567,6 +567,7 @@ func _build_play() -> void:
 	var cash_panel = side
 	cash_label = Label.new()
 	cash_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	cash_label.theme_type_variation = "CardLabel"  # p47/gfx: suhrn hraca ako karta
 	cash_panel.add_child(cash_label)
 	var lh = Label.new()
 	lh.text = "ÚVER Z BANKY"
@@ -609,6 +610,7 @@ func _build_play() -> void:
 	my_firms_label = Label.new()
 	my_firms_label.name = "MojeFirmy"
 	my_firms_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	my_firms_label.theme_type_variation = "CardLabel"  # p47/gfx
 	cash_panel.add_child(my_firms_label)
 	my_firms_buttons = VBoxContainer.new()  # JUAN3: klik = detail firmy
 	my_firms_buttons.name = "MojeFirmyDetail"
@@ -3292,6 +3294,7 @@ func _build_research_tab(tab: Node) -> void:
 	tab.add_child(h)
 	research_label = Label.new()
 	research_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	research_label.theme_type_variation = "CardLabel"  # p47/gfx
 	tab.add_child(research_label)
 	var sc = ScrollContainer.new()
 	sc.name = "ResearchScroll"

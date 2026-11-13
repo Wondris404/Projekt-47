@@ -107,6 +107,7 @@ def build():
     sep = box("sep_line", "BORDER", 0.9, None, 1, (0, 0, 0, 0), 0, m=(0, 0, 0, 0))
     empty = box("empty", flat_kind="StyleBoxEmpty", m=(0, 0, 0, 0))
     head_band = box("head_band", "BG_2", 1, "ACCENT", 1, (3, 0, 0, 1), (6, 6, 0, 0), m=(10, 4, 8, 4))
+    card = box("card", "BG_2", 0.95, "BORDER", 1, (3, 1, 1, 1), 8, m=(12, 9, 10, 9), shadow=6, shadow_a=0.35, shadow_off=(0, 2))
     menu_hover = box("menu_hover", "ACCENT", 0.2, None, 1, (0, 0, 0, 0), 4, m=(6, 3, 6, 3))
 
     t = col("TEXT")
@@ -181,6 +182,11 @@ def build():
         "HeaderLabel/constants/outline_size = 2",
         "HeaderLabel/constants/shadow_offset_y = 2",
         "HeaderLabel/styles/normal = " + head_band,  # kolo 2: sekcie panela ako hlavicky kariet
+        "CardLabel/base_type = &\"Label\"",  # kolo 2: textove bloky panela ako karty
+        "CardLabel/styles/normal = " + card,
+        "CardLabel/colors/font_color = " + t,
+        "CardLabel/font_sizes/font_size = 15",
+        "CardLabel/constants/line_spacing = 3",
         "TitleLabel/base_type = &\"Label\"",
         "TitleLabel/fonts/font = " + head_font,
         "TitleLabel/font_sizes/font_size = 22",
