@@ -1,4 +1,5 @@
 extends Control
+const UiFxScript = preload("res://scripts/ui/ui_fx.gd")  # p47/gfx
 
 const WorldMapScript = preload("res://scripts/ui/world_map.gd")
 const BusinessDescriptions = preload("res://scripts/business_descriptions.gd")
@@ -335,8 +336,12 @@ func _tab(tabs: TabContainer, title: String) -> VBoxContainer:
 func _build_play() -> void:
 	_apply_theme()
 	_load_ui_scale()
+	add_child(UiFxScript.new())  # p47/gfx: hover/klik feedback, fade zaloziek
 	var bg = ColorRect.new()
 	bg.color = UiPalette.BG_0
+	var bg_mat = ShaderMaterial.new()  # p47/gfx: gradient + vinetacia (fallback = bg.color)
+	bg_mat.shader = preload("res://scripts/ui/bg_p47.gdshader")
+	bg.material = bg_mat
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
@@ -1373,6 +1378,8 @@ func _on_tutorial_repeat() -> void:
 
 func _on_start(cfg: Dictionary = {}) -> void:
 	var from_menu = cfg.has("country")
+	if from_menu:
+		UiFxScript.curtain(self)  # p47/gfx: plynuly prechod menu -> hra
 	var iso = str(cfg.get("country", GameState.selected_iso)) if from_menu else GameState.selected_iso
 	if not DataLoader.countries.has(iso):
 		iso = "SK" if DataLoader.countries.has("SK") else str(DataLoader.country_ids[0])

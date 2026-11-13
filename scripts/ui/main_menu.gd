@@ -32,6 +32,11 @@ var mode_label: Label
 var nick_box: LineEdit
 var gender_box: OptionButton
 const GENDERS = ["muž", "žena", "iné"]
+# p47/gfx: ikony tlacidiel menu (assets/ui/p47, vlastne CC0)
+const MENU_ICONS = {"Pokračovať": "icon_continue", "Nová hra": "icon_new", "Uložiť hru": "icon_save", "Načítať hru": "icon_load",
+	"Nastavenia": "icon_settings", "Koniec": "icon_quit", "Späť do hry": "icon_play", "Späť": "icon_back", "Štart": "icon_play",
+	"Zopakovať tutoriál": "icon_tutorial"}
+var particles: CPUParticles2D
 
 # JUAN5: celoobrazovkove menu v pixel style intra (jachta + skyline), mapa a herne UI su skryte (main._set_game_visible)
 signal dev_requested
@@ -73,6 +78,7 @@ func _ready() -> void:
 	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(shade)
+	_add_particles()  # p47/gfx: jemne svetielka nad mestom
 	var root = VBoxContainer.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -112,8 +118,10 @@ func _ready() -> void:
 	sb.set_border_width_all(3)
 	sb.set_content_margin_all(18)
 	sb.shadow_color = Color(0, 0, 0, 0.55)
-	sb.shadow_size = 0
-	sb.shadow_offset = Vector2(6, 6)
+	sb.shadow_size = 18  # p47/gfx: makky tien a zaoblenie namiesto tvrdeho pixeloveho
+	sb.shadow_offset = Vector2(0, 8)
+	sb.set_corner_radius_all(12)
+	sb.anti_aliasing = true
 	sb.expand_margin_left = 0
 	center_panel.add_theme_stylebox_override("panel", sb)
 	center_panel.custom_minimum_size = Vector2(380, 0)
@@ -393,6 +401,9 @@ func _button(parent: Node, text: String, callback: Callable) -> Button:
 	button.text = text
 	button.custom_minimum_size = Vector2(0, 40)
 	_menu_style(button)  # JUAN16
+	if MENU_ICONS.has(text):  # p47/gfx: vlastne SVG ikony
+		button.icon = load("res://assets/ui/p47/%s.svg" % MENU_ICONS[text])
+		button.expand_icon = false
 	button.pressed.connect(callback)
 	parent.add_child(button)
 	return button
@@ -407,6 +418,8 @@ func _show_only(which: Control) -> void:
 	new_panel.visible = which == new_panel
 	load_panel.visible = which == load_panel
 	settings_panel.visible = which == settings_panel
+	if visible and which != null:
+		preload("res://scripts/ui/ui_fx.gd").fade_in(which, 0.18)  # p47/gfx
 
 func _open_new() -> void:
 	_pick_mode("medium")
@@ -511,7 +524,12 @@ func _menu_style(b: Button) -> void:
 		st.set_border_width_all(bw)
 		st.border_width_left = bw + 2
 		st.set_content_margin_all(8)
-		st.corner_detail = 1
+		st.content_margin_left = 14
+		st.set_corner_radius_all(8)  # p47/gfx: zaoblene, vyhladene
+		st.anti_aliasing = true
+		st.shadow_color = Color(0, 0, 0, 0.35)
+		st.shadow_size = 3
+		st.shadow_offset = Vector2(0, 2)
 		return st
 	b.add_theme_stylebox_override("normal", mk.call(Color(0.1, 0.11, 0.17, 0.92), Color(0.32, 0.3, 0.42), 2))
 	b.add_theme_stylebox_override("hover", mk.call(Color(0.2, 0.15, 0.08, 0.95), Color(1.0, 0.78, 0.25), 2))
@@ -522,10 +540,11 @@ func _menu_style(b: Button) -> void:
 	b.add_theme_color_override("font_pressed_color", Color(0.1, 0.06, 0.02))
 	b.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
 	b.add_theme_constant_override("outline_size", 3)
-	b.mouse_entered.connect(func():
-		if not b.disabled:
-			b.text = "▸ " + b.text.trim_prefix("▸ "))
-	b.mouse_exited.connect(func(): b.text = b.text.trim_prefix("▸ "))
+	b.add_theme_color_override("icon_normal_color", Color(1.0, 0.78, 0.25, 0.9))
+	b.add_theme_color_override("icon_hover_color", Color(1.0, 0.9, 0.55))
+	b.add_theme_color_override("icon_pressed_color", Color(0.1, 0.06, 0.02))
+	b.add_theme_constant_override("icon_max_width", 20)
+	# p47/gfx: hover feedback robi UiFx (scale + jas); text sa uz pri hover nemeni (bez skakania layoutu)
 
 func _animate_in() -> void:
 	if home == null or not is_inside_tree():
@@ -538,3 +557,41 @@ func _animate_in() -> void:
 			tw.tween_interval(0.05 * i)
 			tw.tween_property(c, "modulate:a", 1.0, 0.25)
 			i += 1
+
+# p47/gfx: pomaly stupajuce teple svetielka (CPUParticles2D kvoli GL Compatibility), na slabom HW menej
+func _add_particles() -> void:
+	particles = CPUParticles2D.new()
+	particles.name = "MenuParticles"
+	particles.texture = load("res://assets/ui/p47/spark.svg")
+	var low = preload("res://scripts/gfx.gd").low()
+	particles.amount = 16 if low else 36
+	particles.lifetime = 9.0
+	particles.preprocess = 9.0
+	particles.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	particles.direction = Vector2(0, -1)
+	particles.spread = 25.0
+	particles.gravity = Vector2(0, -4)
+	particles.initial_velocity_min = 8.0
+	particles.initial_velocity_max = 22.0
+	particles.scale_amount_min = 0.12
+	particles.scale_amount_max = 0.38
+	var ramp = Gradient.new()
+	ramp.set_color(0, Color(1.0, 0.8, 0.45, 0.0))
+	ramp.set_color(1, Color(1.0, 0.8, 0.45, 0.0))
+	ramp.add_point(0.2, Color(1.0, 0.82, 0.5, 0.55))
+	ramp.add_point(0.75, Color(1.0, 0.7, 0.35, 0.35))
+	particles.color_ramp = ramp
+	var mat = CanvasItemMaterial.new()
+	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	particles.material = mat
+	add_child(particles)
+	_place_particles()
+	get_viewport().size_changed.connect(_place_particles)
+	visibility_changed.connect(func(): particles.emitting = visible)
+
+func _place_particles() -> void:
+	if particles == null:
+		return
+	var vs = get_viewport_rect().size
+	particles.position = Vector2(vs.x * 0.5, vs.y * 0.82)
+	particles.emission_rect_extents = Vector2(vs.x * 0.5, vs.y * 0.12)
