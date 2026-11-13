@@ -628,7 +628,9 @@ func _refresh_rating() -> void:
 	score -= float(GameState.player.get("missed_total", 0)) * 4.0
 	var missed_now = 0
 	for loan2 in GameState.player.loans:
-		missed_now += int(loan2.missed)
+		if float(loan2.get("remaining", 0.0)) <= 1.0 or bool(loan2.get("paid", false)):
+			continue  # V3: splateny uver uz rating netrestá
+		missed_now += int(loan2.get("missed", 0))
 	score -= missed_now * 6.0
 	GameState.player.rating = int(EconMath.cl(score, 5.0, 96.0))
 

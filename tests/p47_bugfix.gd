@@ -9,6 +9,7 @@ func run(host) -> void:
 	_v1_three_miss_seize()
 	_v1_one_firm_per_month()
 	_v2_credits()
+	_v3_paid_missed_rating()
 
 func _firm(id: String, industry: String, cash: float = 0.0) -> Dictionary:
 	var f = {"id": id, "name": id, "owner": "player", "country": str(GameState.player.home), "industry": industry,
@@ -111,3 +112,20 @@ func _v2_credits() -> void:
 	var err = cfg.load("res://export_presets.cfg")
 	var inc = str(cfg.get_value("preset.0", "include_filter", "")) if err == OK else ""
 	u._chk("p47_v2_export_includes_credits", inc.split(",").has("CREDITS.md") and inc.split(",").has("assets/models/bunker/LICENSE.txt"), inc)
+
+func _v3_paid_missed_rating() -> void:
+	var loan = _setup_loan()
+	if loan.is_empty():
+		return
+	GameState.player.cash = 100000.0
+	loan.remaining = 0.0
+	loan.missed = 0
+	BankingSystem._refresh_rating()
+	var clean = int(GameState.player.rating)
+	loan.missed = 2
+	BankingSystem._refresh_rating()
+	u._chk("p47_v3_paid_loan_no_penalty", int(GameState.player.rating) == clean, "%d vs %d" % [int(GameState.player.rating), clean])
+	loan.remaining = 10000.0
+	BankingSystem._refresh_rating()
+	u._chk("p47_v3_active_loan_still_penalized", int(GameState.player.rating) < clean, "%d vs %d" % [int(GameState.player.rating), clean])
+
