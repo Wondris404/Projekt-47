@@ -307,6 +307,9 @@ func tariff(a: String, b: String) -> float:
 		return 0.0
 	if blocked(a, b):
 		return 0.85
+	return _tariff_base(a, b) + P47Mechanics.bloc_tariff(a, b)  # M03: clo medzi blokmi
+
+func _tariff_base(a: String, b: String) -> float:
 	var ca: Dictionary = DataLoader.countries.get(a, {})
 	var cb: Dictionary = DataLoader.countries.get(b, {})
 	var ba = str(ca.get("trade_bloc", ""))

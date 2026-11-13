@@ -104,6 +104,8 @@ func arms_export_allowed(src: String, dst: String) -> bool:
 		return false
 	if src != dst and GeopoliticsSystem.at_war(dst):
 		return false
+	if src != dst and P47Mechanics.bloc_restricted(src, dst):  # M03: CoCom-like zákaz medzi blokmi
+		return false
 	return true
 
 # DEAD: bez volajuceho (etapa 0: nezmazane, len oznacene)

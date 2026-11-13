@@ -4,6 +4,7 @@ extends Node
 const M12 = preload("res://scripts/p47x/m12_sovereign.gd")
 const M09 = preload("res://scripts/p47x/m09_eureka.gd")
 const M02 = preload("res://scripts/p47x/m02_tension.gd")
+const M03 = preload("res://scripts/p47x/m03_blocs.gd")
 var balance: Dictionary = {}
 
 func _ready() -> void:
@@ -116,7 +117,15 @@ func status_text() -> String:
 func research_mult(rid: String) -> float:
 	return M09.mult(self, rid)
 
+func bloc_tariff(a: String, b: String) -> float:
+	return M03.tariff_extra(self, a, b) if active("M03") else 0.0
+
+func bloc_restricted(a: String, b: String) -> bool:
+	return active("M03") and M03.restricted(self, a, b)
+
 func monthly() -> void:
+	if active("M03"):
+		M03.monthly(self)
 	if active("M02"):
 		M02.monthly(self)
 	if active("M12"):
