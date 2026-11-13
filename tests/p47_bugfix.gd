@@ -10,6 +10,7 @@ func run(host) -> void:
 	_v1_one_firm_per_month()
 	_v2_credits()
 	_v3_paid_missed_rating()
+	_v4_failed_lender()
 
 func _firm(id: String, industry: String, cash: float = 0.0) -> Dictionary:
 	var f = {"id": id, "name": id, "owner": "player", "country": str(GameState.player.home), "industry": industry,
@@ -129,3 +130,32 @@ func _v3_paid_missed_rating() -> void:
 	BankingSystem._refresh_rating()
 	u._chk("p47_v3_active_loan_still_penalized", int(GameState.player.rating) < clean, "%d vs %d" % [int(GameState.player.rating), clean])
 
+func _v4_failed_lender() -> void:
+	var loan = _setup_loan()
+	if loan.is_empty():
+		return
+	var old = BankingSystem._bank(str(loan.lender))
+	old.failed = true
+	var moved = BankingSystem.transfer_failed_loans(old)
+	var nb = BankingSystem._bank(str(loan.lender))
+	u._chk("p47_v4_loan_transferred", moved == 1 and str(nb.get("id", "")) != str(old.id) and not bool(nb.get("failed", false)), str(loan.lender))
+	GameState.player.cash = 100000.0
+	var old_res = float(old.reserves)
+	var nb_res = float(nb.reserves)
+	BankingSystem.process_monthly_interest()
+	u._chk("p47_v4_failed_reserves_unchanged", absf(float(old.reserves) - old_res) < 0.001 and float(nb.reserves) > nb_res, "%.2f / %.2f" % [float(old.reserves) - old_res, float(nb.reserves) - nb_res])
+	# krach bez prevzatia (lazy prevod v process_monthly_interest, ziadna zdrava banka)
+	var loan2 = _setup_loan()
+	if loan2.is_empty():
+		return
+	var dead = BankingSystem._bank(str(loan2.lender))
+	var saved: Array = []
+	for b in GameState.banks:
+		saved.append(bool(b.get("failed", false)))
+		b.failed = true
+	GameState.player.cash = 100000.0
+	var dead_res = float(dead.reserves)
+	BankingSystem.process_monthly_interest()
+	u._chk("p47_v4_no_lender_no_reserves", absf(float(dead.reserves) - dead_res) < 0.001 and str(loan2.lender) == str(dead.id) and bool(loan2.get("lender_failed", false)))
+	for i in GameState.banks.size():
+		GameState.banks[i].failed = saved[i]

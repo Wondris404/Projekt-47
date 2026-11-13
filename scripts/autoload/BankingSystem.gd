@@ -588,6 +588,7 @@ func _tick_player_bank(bank: Dictionary) -> void:
 		if str(GameState.player.get("bank_id", "")) == str(bank.get("id", "")):
 			GameState.player.bank_id = ""
 		GameState.post_news("%s skrachovala. Licencia zanikla, kapitál je preč." % bank.name)
+		transfer_failed_loans(bank)  # V4
 
 func _tick_ai_bank(bank: Dictionary) -> void:
 	var iso = str(bank.country)
@@ -604,6 +605,7 @@ func _tick_ai_bank(bank: Dictionary) -> void:
 	bank.reserves = float(bank.reserves) + inc - expn
 	if float(bank.equity) < 0.0:
 		bank.failed = true
+		transfer_failed_loans(bank)  # V4
 
 func _refresh_rating() -> void:
 	var profit = 0.0
@@ -895,12 +897,52 @@ func process_monthly_interest() -> void:
 		loan.months_left = int(loan.get("months_left", 1)) - 1
 		loan.missed = 0
 		var bank = _bank(str(loan.get("lender", "")))
-		if not bank.is_empty():
+		if not bank.is_empty() and bool(bank.get("failed", false)):
+			transfer_failed_loans(bank)  # V4: starsi save / krach mimo tickov
+			bank = _bank(str(loan.get("lender", "")))
+		if not bank.is_empty() and not bool(bank.get("failed", false)):
 			bank.reserves = float(bank.reserves) + pay
 			bank.explicit = max(0.0, float(bank.get("explicit", 0.0)) - principal)
 			bank.equity = float(bank.get("equity", 0.0)) + interest
 	if missed_any:
 		check_bankruptcy()
+
+# V4: zdrava banka, ktora prevezme uvery skrachovaneho veritela (najprv ta ista krajina, nie hracova banka)
+func _pick_lender(failed_bank: Dictionary) -> Dictionary:
+	var any: Dictionary = {}
+	for b in GameState.banks:
+		if bool(b.get("failed", false)) or str(b.get("owner", "")) == "player" or str(b.get("id", "")) == str(failed_bank.get("id", "")):
+			continue
+		if str(b.get("country", "")) == str(failed_bank.get("country", "")):
+			return b
+		if any.is_empty():
+			any = b
+	return any
+
+# V4: pri krachu banky prevedie hracove uvery na zdravu banku (lender + explicit). Ak ziadna nie je,
+# lender ostane, splatky sa nikam neposielaju (process_monthly_interest) a pride news. Vrati pocet prevedenych.
+func transfer_failed_loans(bank: Dictionary) -> int:
+	var moved = 0
+	var orphan = false
+	for loan in GameState.player.get("loans", []):
+		if str(loan.get("lender", "")) != str(bank.get("id", "")) or float(loan.get("remaining", 0.0)) <= 1.0:
+			continue
+		var nb = _pick_lender(bank)
+		if nb.is_empty():
+			if not bool(loan.get("lender_failed", false)):
+				loan.lender_failed = true
+				orphan = true
+			continue
+		var rem = float(loan.remaining)
+		bank.explicit = maxf(0.0, float(bank.get("explicit", 0.0)) - rem)
+		nb.explicit = float(nb.get("explicit", 0.0)) + rem
+		loan.lender = nb.id
+		loan.erase("lender_failed")
+		moved += 1
+		GameState.post_news("Úver %s po krachu %s prevzala %s." % [str(loan.get("id", "")), str(bank.get("name", "banky")), str(nb.get("name", nb.id))])
+	if orphan:
+		GameState.post_news("Veriteľ %s skrachoval a úver neprevzala žiadna banka. Splátky ostávajú, no banke sa nepripisujú." % str(bank.get("name", "")))
+	return moved
 
 # V1: chybajucu sumu splatky pokryje zo sporiaceho uctu hraca (GameState.player.savings.balance), ak existuje.
 # Na main sporiaci ucet hraca nie je (prida ho feat/banka-dokoncenie) -> vrati 0. Vrati presunutu sumu.
