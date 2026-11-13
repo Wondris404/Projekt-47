@@ -334,6 +334,8 @@ func sell_bond(index: int) -> String:
 	return ""
 
 func _bond_yield(iso: String) -> float:
+	if P47Mechanics.active("M12"):
+		return P47Mechanics.M12.yield_of(P47Mechanics, iso)
 	var c: Dictionary = GameState.world[iso]
 	return EconMath.cl(float(GameState.central[iso].policy) + float(c.political_risk) * 0.35 + max(0.0, float(c.debt_gdp) - 0.6) * 0.04, 0.004, 0.3)
 
@@ -341,6 +343,8 @@ func _bond_yield(iso: String) -> float:
 func _bond_yield_parts(iso: String) -> Array:
 	if not P47Mechanics.active("M44"):
 		return []
+	if P47Mechanics.active("M12"):
+		return P47Mechanics.M12.parts(P47Mechanics, iso)
 	var c: Dictionary = GameState.world[iso]
 	var parts: Array = [
 		{"label": "Centrálna sadzba", "value": float(GameState.central[iso].policy)},

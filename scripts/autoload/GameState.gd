@@ -270,6 +270,7 @@ func _finish_day(month_before: int, year_before: int) -> void:
 		IndustrySystem.airport_monthly()
 		StockMarket.monthly()
 		Empire.monthly()  # JUAN10
+		P47Mechanics.monthly()  # P47X: voliteľné mechaniky, vypnuté nič nemenia
 	if day_index % 7 == 0:
 		StockMarket.weekly()  # JUAN5 #19
 		Empire.weekly()  # JUAN10 financna divizia

@@ -2,5 +2,21 @@
   "_note": "ODHAD: koeficienty vyžadujú kalibráciu playtestom. enabled možno prepísať uloženým ext.p47x.enabled[MNN].",
   "M44": {
     "enabled": true
+  },
+  "M12": {
+    "enabled": true,
+    "k_debt": 0.03,
+    "k_policy": 0.33,
+    "k_political_risk": 0.35,
+    "tension_cap": 0.05,
+    "tension_iso_k": 0.02,
+    "min": 0.004,
+    "max": 0.5,
+    "loan_margin": 0.025,
+    "loan_stability_k": 0.05,
+    "penalty_threshold": 0.15,
+    "stability_k": 50.0,
+    "stability_max_month": 5.0,
+    "gdp_growth_k": 0.2
   }
 }

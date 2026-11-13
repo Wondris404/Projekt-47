@@ -10,12 +10,16 @@ func risk(iso: String) -> float:
 	return clampf(maxf(0.0, debt - 0.4) * 0.24 + (100.0 - stability) / 100.0 * 0.45 + float(c.get("political_risk", 0.1)) * 0.25, 0.0, 1.0)
 
 func suggested_rate(iso: String) -> float:
+	if P47Mechanics.active("M12"):
+		return P47Mechanics.sum_parts(P47Mechanics.M12.loan_parts(P47Mechanics, iso))
 	var policy = float(GameState.central.get(iso, {}).get("policy", 0.03))
 	return clampf(policy + 0.025 + risk(iso) * 0.12, 0.01, 0.4)
 
 func suggested_rate_parts(iso: String) -> Array:
 	if not P47Mechanics.active("M44"):
 		return []
+	if P47Mechanics.active("M12"):
+		return P47Mechanics.M12.loan_parts(P47Mechanics, iso)
 	var parts: Array = [
 		{"label": "Centrálna sadzba", "value": float(GameState.central.get(iso, {}).get("policy", 0.03))},
 		{"label": "Úverová marža", "value": 0.025},
