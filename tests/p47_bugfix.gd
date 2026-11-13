@@ -12,6 +12,7 @@ func run(host) -> void:
 	_v3_paid_missed_rating()
 	_v4_failed_lender()
 	_b01_load_keeps_slot()
+	_b17_ui_bond_ex()
 
 func _firm(id: String, industry: String, cash: float = 0.0) -> Dictionary:
 	var f = {"id": id, "name": id, "owner": "player", "country": str(GameState.player.home), "industry": industry,
@@ -218,3 +219,38 @@ func _b01_load_keeps_slot() -> void:
 		cs.pressed.emit()
 	u._chk("p47_b01_slot2_saves_slot1_loads_2", host2.saved == [1] and host2.loaded == [2], "%s %s" % [str(host2.saved), str(host2.loaded)])
 	p2.free()
+
+func _b17_issue(m, price: float) -> Dictionary:
+	m.bond_price.value = price
+	var c0 = float(GameState.player.cash)
+	var o0 = BankingSystem.player_bond_outstanding()
+	var n0 = GameState.player.bonds.size()
+	m._on_issue_bond()
+	return {"cash": float(GameState.player.cash) - c0, "out": BankingSystem.player_bond_outstanding() - o0, "n": GameState.player.bonds.size() - n0}
+
+func _b17_ui_bond_ex() -> void:
+	u._new()
+	GameState.player.cash = 100000.0
+	var m = load("res://scripts/main.gd").new()
+	m.bond_price = SpinBox.new()
+	m.bond_price.min_value = 1.0
+	m.bond_price.max_value = 10000.0
+	m.bond_qty = SpinBox.new()
+	m.bond_qty.max_value = 1000.0
+	m.bond_qty.value = 1.0
+	for px in [1.0, 49.0, 151.0, 10000.0]:
+		var r = _b17_issue(m, px)
+		u._chk("p47_b17_price_band_reject_%d" % int(px), absf(float(r.cash)) < 0.001 and absf(float(r.out)) < 0.001 and int(r.n) == 0, str(r))
+	var coupon = float(BankingSystem.bond_quote(1000.0, 0.0, 2.0).market_yield)
+	for px2 in [50.0, 150.0]:
+		var r2 = _b17_issue(m, px2)
+		u._chk("p47_b17_band_ok_1to1_%d" % int(px2), int(r2.n) == 1 and absf(float(r2.out) - 1000.0) < 0.001 and absf(float(r2.cash) / float(r2.out) - 1.0) < 0.01, str(r2))
+	var last: Dictionary = GameState.player.bonds[GameState.player.bonds.size() - 1]
+	u._chk("p47_b17_ui_coupon_from_quote", absf(float(last.coupon) - coupon) < 1e-9 and absf(float(last.coupon) - 0.05) > 1e-6, str(last.get("coupon", -1)))
+	# nad bond_limit(): odmietnutie, stav sa nezmeni
+	GameState.player.bonds.append({"country": "SK", "face": BankingSystem.bond_limit(), "coupon": 0.0, "years_left": 1.0, "issuer": "player"})
+	var r3 = _b17_issue(m, 100.0)
+	u._chk("p47_b17_over_limit_reject", absf(float(r3.cash)) < 0.001 and absf(float(r3.out)) < 0.001 and int(r3.n) == 0, str(r3))
+	GameState.player.bonds.pop_back()
+	if m.feedback_label:
+		m.feedback_label.visible = false

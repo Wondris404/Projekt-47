@@ -1683,10 +1683,21 @@ func firm_screen_text() -> String:
 	]
 
 func _on_issue_bond() -> void:
-	var face = 500.0
+	# B17: emisia z UI ide cez issue_bond_ex (bond_quote + bond_limit), cena v rovnakom pasme ako post_bond_order
+	var price = 100.0
+	var lots = 1.0
 	if bond_price:
-		face = max(100.0, float(bond_price.value))
-	var err = BankingSystem.issue_bond(face, 0.05, 2.0)
+		price = float(bond_price.value)
+	if bond_qty:
+		lots = maxf(1.0, float(bond_qty.value))
+	var err = ""
+	if price < BankingSystem.BOND_PX_MIN or price > BankingSystem.BOND_PX_MAX:
+		err = "price_band: cena mimo pásma %.0f–%.0f." % [BankingSystem.BOND_PX_MIN, BankingSystem.BOND_PX_MAX]
+	else:
+		var face = 1000.0 * lots  # 1 kus emisie = 1 000 € nominálu (minimum bond_quote)
+		var years = 2.0
+		var coupon = float(BankingSystem.bond_quote(face, 0.0, years).market_yield)  # kupón podľa trhu, nie napevno 5 %
+		err = BankingSystem.issue_bond_ex(face, coupon, years)
 	_feedback("Emisia dlhopisu: %s" % ("hotovo." if err == "" else err), err == "")
 	_refresh_label()
 
