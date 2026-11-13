@@ -195,7 +195,7 @@ func _process(delta: float) -> void:
 	# pomaly "kamerovy" pohyb po pixelovom obrazku (bez blikania)
 	var vs = get_viewport_rect().size
 	bg_tex.size = vs * 1.08
-	bg_tex.position = Vector2(-vs.x * 0.04 + sin(_t * 0.07) * vs.x * 0.035, -vs.y * 0.04 + cos(_t * 0.05) * vs.y * 0.02)
+	bg_tex.position = Vector2(-vs.x * 0.04 + sin(_t * 0.07) * vs.x * float(DesignManager.motion("menu_parallax", 0.035)), -vs.y * 0.04 + cos(_t * 0.05) * vs.y * float(DesignManager.motion("menu_parallax_y", 0.02)))  # P47 DESIGNS: motion
 	if parallax:  # p47/gfx: najhlbsia vrstva sa hybe s mysou najmenej
 		bg_tex.position += parallax.layer_offset(0.6)
 		if particles:
@@ -431,7 +431,7 @@ func _show_only(which: Control) -> void:
 	load_panel.visible = which == load_panel
 	settings_panel.visible = which == settings_panel
 	if visible and which != null:
-		preload("res://scripts/ui/ui_fx.gd").fade_in(which, 0.18)  # p47/gfx
+		preload("res://scripts/ui/ui_fx.gd").fade_in(which, DesignManager.dur("menu_page_fade", 0.18))  # p47/gfx
 
 func _open_new() -> void:
 	_pick_mode("medium")
@@ -612,6 +612,6 @@ func _place_particles() -> void:
 func _on_vis_fx() -> void:
 	var fx = preload("res://scripts/ui/ui_fx.gd")
 	if visible:
-		fx.fade_in(self, 0.25)
+		fx.fade_in(self, DesignManager.dur("menu_fade_in", 0.25))  # P47 DESIGNS: motion
 	elif get_parent() != null:
-		fx.snapshot_fade(get_parent(), 0.38)  # p47/gfx (kolo 2): menu sa animovane "rozplynie" do hry
+		fx.snapshot_fade(get_parent(), DesignManager.dur("menu_close", 0.38))  # p47/gfx (kolo 2): menu sa animovane "rozplynie" do hry

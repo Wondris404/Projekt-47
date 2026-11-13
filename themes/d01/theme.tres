@@ -5,7 +5,7 @@
 ; Skopíruj celý priečinok themes/d01 -> themes/dNN a uprav farby/štýly nižšie.
 ; Pravidlá: fonty len OFL/CC0 (súbor v themes/dNN/fonts/ + licencia, zápis v LICENSES.md),
 ; žiadne cesty mimo themes/dNN/ okrem zdieľaných fontov z assets/fonts/.
-; Kľúče [resource] zodpovedajú ui/theme_factorio.tres (súčasný dizajn) – pokry aspoň tie.
+; Kľúče [resource] zodpovedajú ui/theme_p47.tres (súčasný dizajn, gfx kolo 2) – pokry aspoň tie.
 ; ============================================================================
 
 ; Font: zdieľaný NotoSans (OFL) z repa, cez FontVariation (hrubší + širší rozostup).

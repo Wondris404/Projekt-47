@@ -3,6 +3,8 @@ extends Control
 # kuzele svetlometov a mestska ziara. Kazda vrstva sa posuva s mysou inou hlbkou. Iba kreslenie, ~30 FPS.
 
 const FPS := 30.0
+# P47 DESIGNS: motion menu_parallax_px (posun vrstiev s mysou, default 28 px) a menu_fx_fps (30).
+# Farby vrstiev (hmla, ziara, svetlomety) sa tonuju cez menu.parallax_tint (modulate, DesignManager.apply_menu).
 var bg: Control              # pixelovy obrazok mesta (najhlbsia vrstva), posuva ho main_menu
 var mouse_off := Vector2.ZERO  # vyhladeny posun mysi (-0.5..0.5)
 var _t := 0.0
@@ -46,12 +48,12 @@ func _process(delta: float) -> void:
 	var target := Vector2(clampf(m.x / maxf(vs.x, 1.0), 0.0, 1.0) - 0.5, clampf(m.y / maxf(vs.y, 1.0), 0.0, 1.0) - 0.5)
 	mouse_off = mouse_off.lerp(target, clampf(delta * 3.0, 0.0, 1.0))
 	_acc += delta
-	if _acc >= 1.0 / FPS:
+	if _acc >= 1.0 / float(DesignManager.motion("menu_fx_fps", FPS)):
 		_acc = 0.0
 		queue_redraw()
 
 func layer_offset(depth: float) -> Vector2:
-	return -mouse_off * 28.0 * depth
+	return -mouse_off * float(DesignManager.motion("menu_parallax_px", 28.0)) * depth
 
 func _draw() -> void:
 	var vs := size

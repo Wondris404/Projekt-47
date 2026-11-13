@@ -7,7 +7,7 @@ signal resources_pressed
 const Chrome = preload("res://scripts/ui/strategic_skin.gd")
 const Data = preload("res://scripts/ui/strategic_hud_data.gd")
 const PRIMARY := ["cash","debt","worth"]  # p47/gfx: hierarchia kariet
-const CARD_ACCENT := {"cash":Color("e8a33d"),"debt":Color("e08d7b"),"worth":Color("92c79b")}
+const CARD_ACCENT := {"cash":Color("e8a33d"),"debt":Color("e08d7b"),"worth":Color("92c79b")}  # P47 DESIGNS: povodne hodnoty; za behu sa cita _card_accent() (Chrome.CARD_ACCENT_*)
 const METRICS := [["cash","Peniaze","money",true],["debt","Dlh","debt",true],["worth","Majetok","money",true],["employees","Ľudia","employees",false],["influence","Vplyv","influence",false],["popularity","Popularita","popularity",false],["security","Bezpečnosť","res://assets/icons/pmc_unit.png",false],["firms","Firmy","res://assets/icons/hq.png",false],["states","Štáty","states",false]]
 var date_label: Label
 var cash_label: Label
@@ -43,7 +43,7 @@ func _ready() -> void:
 	var date_row := HBoxContainer.new()
 	date_row.alignment = BoxContainer.ALIGNMENT_END
 	clock_box.add_child(date_row)
-	date_row.add_child(Chrome.badge(Chrome.icon("clock"),Color("283435"),22))
+	date_row.add_child(Chrome.badge(Chrome.icon("clock"),Chrome.CLOCK_BADGE_BG,22))
 	date_label = Label.new()
 	date_label.text = "01.01.2024"
 	date_label.add_theme_font_size_override("font_size",15)
@@ -122,7 +122,7 @@ func _metric(parent: Container, spec: Array, width: int) -> void:
 	row.add_theme_constant_override("separation",5)
 	panel.add_child(row)
 	var texture: Texture2D = preload("res://scripts/ui/tex_util.gd").load_tex(spec[2]) if str(spec[2]).begins_with("res://") else Chrome.icon(spec[2])
-	row.add_child(Chrome.badge(texture,Color("2b3233"),34 if primary else 26))
+	row.add_child(Chrome.badge(texture,Chrome.METRIC_BADGE_BG,34 if primary else 26))
 	var texts := VBoxContainer.new()
 	texts.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	texts.add_theme_constant_override("separation",0)
@@ -198,16 +198,16 @@ func set_debt(_text: String) -> void:
 # p47/gfx (kolo 2): karty top baru – len prezentacia, vypocet hodnot (refresh/Data) je nezmeneny
 func _card_style(key: String, primary: bool) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color("1d2229") if primary else Color("181c22")
-	sb.border_color = Color("3a424e")
+	sb.bg_color = Chrome.CARD_BG if primary else Chrome.CARD_BG_2  # P47 DESIGNS: hodnoty z design.json "hud"
+	sb.border_color = Chrome.CARD_BORDER
 	sb.set_border_width_all(1)
-	var acc: Color = CARD_ACCENT.get(key, Color("5b6676"))
+	var acc: Color = _card_accent(key)
 	if primary:
 		sb.border_width_top = 3
 		sb.border_color = Color(acc, 0.9)
 		sb.bg_color = sb.bg_color.lerp(acc, 0.06)
-	sb.set_corner_radius_all(8)
-	sb.shadow_color = Color(0, 0, 0, 0.4)
+	sb.set_corner_radius_all(Chrome.CARD_RADIUS)
+	sb.shadow_color = Chrome.CARD_SHADOW
 	sb.shadow_size = 6 if primary else 3
 	sb.shadow_offset = Vector2(0, 2)
 	sb.anti_aliasing = true
@@ -222,4 +222,21 @@ func _card_hover(panel: Control, on: bool) -> void:
 	if not fx.active():
 		return
 	var tw := panel.create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tw.tween_property(panel, "self_modulate", Color(1.18, 1.15, 1.08) if on else Color.WHITE, 0.12)
+	tw.tween_property(panel, "self_modulate", Color(1.18, 1.15, 1.08) if on else Color.WHITE, DesignManager.dur("card_hover", 0.12))
+
+# P47 DESIGNS: akcent karty podla dizajnu (current = CARD_ACCENT)
+func _card_accent(key: String) -> Color:
+	match key:
+		"cash": return Chrome.CARD_ACCENT_CASH
+		"debt": return Chrome.CARD_ACCENT_DEBT
+		"worth": return Chrome.CARD_ACCENT_WORTH
+	return Chrome.CARD_ACCENT_OTHER
+
+# P47 DESIGNS: po prepnuti dizajnu (DesignManager.apply_all) znovu nastavi styl kariet a farby nadpisov
+func design_refresh() -> void:
+	for key in cards:
+		var card: Dictionary = cards[key]
+		var panel: Control = card.panel
+		panel.add_theme_stylebox_override("panel",_card_style(str(key),str(key) in PRIMARY))
+	if clock_status: clock_status.add_theme_color_override("font_color",Chrome.GOLD)
+	refresh()

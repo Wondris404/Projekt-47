@@ -277,7 +277,7 @@ func _paint_fast(sh: Dictionary, col: Color, view: Rect2, sc: float) -> void:
 	if tri_ok:
 		draw_mesh(m, null, Transform2D.IDENTITY, col)
 	var inv = 1.0 / maxf(sc, 0.0001)
-	var bcol = AtlasStyle.BORDER if atlas else Color(col.darkened(0.45), 0.9)
+	var bcol = AtlasStyle.BORDER if atlas else (Color(col.darkened(0.45), 0.9) if COUNTRY_BORDER.a <= 0.0 else COUNTRY_BORDER)  # P47 DESIGNS: map.country_border
 	for poly in sh.polys:
 		if not tri_ok and poly.size() >= 3:
 			draw_colored_polygon(poly, col)
@@ -1289,15 +1289,48 @@ func _draw_juan4_overlay() -> void:
 
 
 # ===================== JUAN16: krajsia mapa =====================
-const WATER_DEEP = Color("0E1A28")
-const WATER_SHALLOW = Color("2C5168")
+# P47 DESIGNS: farby mapy su static var – DesignManager ich prepise zo sekcii design.json "map"
+# (water_deep, water_mid, water_shallow, shallow_line, country_border) a "countries" (mode, terrain_*, political_*).
+# DEFAULTS = presne povodne hodnoty JUAN16 (dizajn "current"). country_border s alfou 0 = povodny tmavsi okraj z farby krajiny.
+const MAP_DEFAULTS := {
+	"WATER_DEEP": Color("0E1A28"),
+	"WATER_MID": Color("16293B"),
+	"WATER_SHALLOW": Color("2C5168"),
+	"SHALLOW_LINE": Color("9EC9D9", 0.25),
+	"COUNTRY_BORDER": Color(0, 0, 0, 0),
+}
+const COUNTRY_DEFAULTS := {
+	"MODE": "terrain",
+	"TERRAIN_TROPIC": Color("3F6B3A"),
+	"TERRAIN_DESERT": Color("9B8A5A"),
+	"TERRAIN_SAVANNA": Color("5E7A45"),
+	"TERRAIN_TEMPERATE": Color("5F7F4A"),
+	"TERRAIN_TUNDRA": Color("7C8670"),
+	"POLITICAL_MIX": 0.32,
+	"POLITICAL_S": 0.45,
+	"POLITICAL_V": 0.62,
+}
+static var WATER_DEEP: Color = Color("0E1A28")
+static var WATER_MID: Color = Color("16293B")
+static var WATER_SHALLOW: Color = Color("2C5168")
+static var SHALLOW_LINE: Color = Color("9EC9D9", 0.25)
+static var COUNTRY_BORDER: Color = Color(0, 0, 0, 0)
+static var MODE: String = "terrain"
+static var TERRAIN_TROPIC: Color = Color("3F6B3A")
+static var TERRAIN_DESERT: Color = Color("9B8A5A")
+static var TERRAIN_SAVANNA: Color = Color("5E7A45")
+static var TERRAIN_TEMPERATE: Color = Color("5F7F4A")
+static var TERRAIN_TUNDRA: Color = Color("7C8670")
+static var POLITICAL_MIX: float = 0.32
+static var POLITICAL_S: float = 0.45
+static var POLITICAL_V: float = 0.62
 var _tint_cache: Dictionary = {}
 var _city_cells: Dictionary = {}
 
 func _draw_water() -> void:
 	# vertikalny gradient hlbky (tmavsie k polom) - 2 polygony s farbami vrcholov
 	var top = WATER_DEEP
-	var mid = Color("16293B")
+	var mid = WATER_MID
 	var w = size.x
 	var h = size.y
 	draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w, 0), Vector2(w, h * 0.5), Vector2(0, h * 0.5)]), PackedColorArray([top, top, mid, mid]))
@@ -1312,7 +1345,7 @@ func _draw_shallows() -> void:
 	var view = Rect2(_to_world(Vector2.ZERO), size * inv).grow(wd * 2.0 * inv)
 	draw_set_transform(_origin(), 0.0, Vector2(sc, sc))
 	var c1 = Color(WATER_SHALLOW, 0.3)
-	var c2 = Color("9EC9D9", 0.25)
+	var c2 = SHALLOW_LINE
 	for sh in shapes:
 		if not view.intersects(sh.bb):
 			continue
@@ -1340,16 +1373,20 @@ func _terrain_tint(iso: String, t: float) -> Color:
 			break
 	var base: Color
 	if lat < 12.0:
-		base = Color("3F6B3A")  # trópy
+		base = TERRAIN_TROPIC  # trópy
 	elif lat < 33.0:
-		base = Color("9B8A5A").lerp(Color("5E7A45"), clampf((lat - 12.0) / 21.0 * 0.4 + (0.3 if iso.hash() % 3 == 0 else 0.0), 0.0, 1.0))  # púšte/savany
+		base = TERRAIN_DESERT.lerp(TERRAIN_SAVANNA, clampf((lat - 12.0) / 21.0 * 0.4 + (0.3 if iso.hash() % 3 == 0 else 0.0), 0.0, 1.0))  # púšte/savany
 	elif lat < 55.0:
-		base = Color("5F7F4A")  # mierne pásmo
+		base = TERRAIN_TEMPERATE  # mierne pásmo
 	else:
-		base = Color("7C8670")  # tundra/tajga
+		base = TERRAIN_TUNDRA  # tundra/tajga
+	if MODE == "palette":  # P47 DESIGNS: politicka paleta dizajnu (countries.palette/fixed) namiesto terenu
+		var AS = preload("res://scripts/ui/atlas_style.gd")
+		if AS.PALETTE.size() > 0:
+			base = Color(AS.FIXED.get(iso, AS.PALETTE[absi(iso.hash()) % AS.PALETTE.size()]), 1.0)
 	var hue = float(absi(iso.hash()) % 360) / 360.0
-	var pol = Color.from_hsv(hue, 0.45, 0.62)
-	var col = base.lerp(pol, 0.32).lightened(lerpf(-0.06, 0.06, t))
+	var pol = Color.from_hsv(hue, POLITICAL_S, POLITICAL_V)
+	var col = base.lerp(pol, POLITICAL_MIX).lightened(lerpf(-0.06, 0.06, t))
 	_tint_cache[iso] = col
 	return col
 
@@ -2069,3 +2106,8 @@ func _draw_products() -> void:
 		var tt = "Kam skončili výrobky: %s" % str(f.get("name", ""))
 		draw_string_outline(label_font, Vector2(12, size.y - 14), tt, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, 3, UiPalette.OUTLINE)
 		draw_string(label_font, Vector2(12, size.y - 14), tt, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.35, 0.85, 1.0))
+
+# P47 DESIGNS: po prepnuti dizajnu (DesignManager.apply_all) zahodi cache farieb krajin a prekresli mapu
+func design_refresh() -> void:
+	_tint_cache.clear()
+	queue_redraw()

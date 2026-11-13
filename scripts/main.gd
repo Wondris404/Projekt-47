@@ -342,6 +342,7 @@ func _build_play() -> void:
 	_load_ui_scale()
 	add_child(UiFxScript.new())  # p47/gfx: hover/klik feedback, fade zaloziek
 	var bg = ColorRect.new()
+	bg.name = "P47Background"  # P47 DESIGNS: DesignManager.apply_all nastavi farby shaderu podla dizajnu
 	bg.color = UiPalette.BG_0
 	var bg_mat = ShaderMaterial.new()  # p47/gfx: gradient + vinetacia (fallback = bg.color)
 	bg_mat.shader = preload("res://scripts/ui/bg_p47.gdshader")
@@ -4060,7 +4061,7 @@ func toggle_side_panel() -> void:
 	panel_btn.text = "◀ Skryť panel" if side_panel.visible else "▶ Panel"
 	if side_panel.visible:
 		_refresh_label()
-		UiFxScript.fade_in(side_panel, 0.18)  # p47/gfx: panel sa jemne vynori
+		UiFxScript.fade_in(side_panel, DesignManager.dur("panel_fade", 0.18))  # p47/gfx: panel sa jemne vynori (P47 DESIGNS: motion)
 
 func _input_j12(event: InputEvent) -> void:
 	# JUAN12: Tab inak zoberie navigacia fokusu

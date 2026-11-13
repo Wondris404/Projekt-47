@@ -69,8 +69,8 @@ func open() -> void:
 # p47/gfx: stmavenie sa prelnie, okno jemne "vyskoci" zo stredu
 func _animate_open() -> void:
 	var fx = preload("res://scripts/ui/ui_fx.gd")
-	fx.fade_in(self, 0.15)
-	fx.pop_in(panel, 0.22)
+	fx.fade_in(self, DesignManager.dur("pause_fade", 0.15))  # P47 DESIGNS: motion (current = povodne hodnoty)
+	fx.pop_in(panel, DesignManager.dur("pause_pop", 0.22))
 
 func close() -> void:
 	if _closing:
@@ -84,10 +84,13 @@ func close() -> void:
 		return
 	_closing = true
 	panel.pivot_offset = panel.size * 0.5
-	_close_tw = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	var te: Array = DesignManager.trans("ease_close", Tween.TRANS_CUBIC, Tween.EASE_IN)  # P47 DESIGNS
+	var cd := DesignManager.dur("pause_close", 0.16)
+	var cs := float(DesignManager.motion("pause_close_scale", 0.95))
+	_close_tw = create_tween().set_parallel(true).set_trans(te[0]).set_ease(te[1])
 	_close_tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	_close_tw.tween_property(self, "modulate:a", 0.0, 0.16)
-	_close_tw.tween_property(panel, "scale", Vector2(0.95, 0.95), 0.16)
+	_close_tw.tween_property(self, "modulate:a", 0.0, cd)
+	_close_tw.tween_property(panel, "scale", Vector2(cs, cs), cd)
 	_close_tw.chain().tween_callback(_finish_close)
 
 func _finish_close() -> void:
@@ -108,7 +111,7 @@ func _clear(title: String) -> void:
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(t)
 	if visible:
-		preload("res://scripts/ui/ui_fx.gd").fade_in(box, 0.12)  # p47/gfx: prepnutie dialogu
+		preload("res://scripts/ui/ui_fx.gd").fade_in(box, DesignManager.dur("dialog_fade", 0.12))  # p47/gfx: prepnutie dialogu
 
 func _b(text: String, cb: Callable, nm: String = "") -> Button:
 	var b = Button.new()

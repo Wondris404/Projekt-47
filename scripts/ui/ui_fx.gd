@@ -8,6 +8,9 @@ const HOVER_TIME := 0.12
 const PRESS_TIME := 0.07
 const TAB_FADE := 0.16
 const META := &"p47_fx"
+# P47 DESIGNS: konstanty vyssie su fallback (= dizajn "current"); za behu sa citaju cez DesignManager.motion()/dur():
+# hover_scale, press_scale, hover_time, press_time, tab_fade, pop_scale, snapshot_zoom, number_time,
+# ease_hover, ease_pop, ease_close (format "cubic_out"), dur_scale (nasobi vsetky trvania bez vlastneho kluca).
 
 static var enabled := true
 
@@ -55,7 +58,8 @@ func _tween_for(b: Button) -> Tween:
 	var old = b.get_meta(&"p47_tw", null)
 	if old is Tween and old.is_valid():
 		old.kill()
-	var tw := b.create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	var te: Array = DesignManager.trans("ease_hover", Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	var tw := b.create_tween().set_parallel(true).set_trans(te[0]).set_ease(te[1])
 	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	b.set_meta(&"p47_tw", tw)
 	return tw
@@ -66,26 +70,28 @@ func _hover(b: Button, on: bool) -> void:
 	if on and b.disabled:
 		return
 	var tw := _tween_for(b)
-	var s := HOVER_SCALE if (on and not _big(b)) else 1.0
-	tw.tween_property(b, "scale", Vector2(s, s), HOVER_TIME)
-	tw.tween_property(b, "self_modulate", Color(1.12, 1.1, 1.05) if on else Color.WHITE, HOVER_TIME)
+	var hs := float(DesignManager.motion("hover_scale", HOVER_SCALE))
+	var ht := DesignManager.dur("hover_time", HOVER_TIME)
+	var s := hs if (on and not _big(b)) else 1.0
+	tw.tween_property(b, "scale", Vector2(s, s), ht)
+	tw.tween_property(b, "self_modulate", Color(1.12, 1.1, 1.05) if on else Color.WHITE, ht)
 
 func _press(b: Button, down: bool) -> void:
 	if not is_instance_valid(b) or not b.is_inside_tree() or b.disabled:
 		return
 	var tw := _tween_for(b)
-	var hover_s := 1.0 if _big(b) else HOVER_SCALE
-	var s := PRESS_SCALE if down else (hover_s if b.is_hovered() else 1.0)
+	var hover_s := 1.0 if _big(b) else float(DesignManager.motion("hover_scale", HOVER_SCALE))
+	var s := float(DesignManager.motion("press_scale", PRESS_SCALE)) if down else (hover_s if b.is_hovered() else 1.0)
 	if _big(b):
 		s = 0.99 if down else 1.0
-	tw.tween_property(b, "scale", Vector2(s, s), PRESS_TIME if down else HOVER_TIME * 1.5).set_trans(Tween.TRANS_BACK if not down else Tween.TRANS_CUBIC)
+	tw.tween_property(b, "scale", Vector2(s, s), DesignManager.dur("press_time", PRESS_TIME) if down else DesignManager.dur("hover_time", HOVER_TIME) * 1.5).set_trans(Tween.TRANS_BACK if not down else Tween.TRANS_CUBIC)
 
 # --- zalozky: novy obsah sa jemne vynori ---
 func _on_tab_changed(idx: int, tabs: TabContainer) -> void:
 	var page := tabs.get_tab_control(idx)
 	if page == null:
 		return
-	fade_in(page, TAB_FADE)
+	fade_in(page, DesignManager.dur("tab_fade", TAB_FADE))
 
 # --- verejne pomocky ---
 static func fade_in(c: CanvasItem, dur: float = 0.2) -> void:
@@ -102,8 +108,10 @@ static func pop_in(c: Control, dur: float = 0.22) -> void:
 		return
 	c.pivot_offset = c.size * 0.5
 	c.modulate.a = 0.0
-	c.scale = Vector2(0.94, 0.94)
-	var tw := c.create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	var ps := float(DesignManager.motion("pop_scale", 0.94))
+	c.scale = Vector2(ps, ps)
+	var te: Array = DesignManager.trans("ease_pop", Tween.TRANS_BACK, Tween.EASE_OUT)
+	var tw := c.create_tween().set_parallel(true).set_trans(te[0]).set_ease(te[1])
 	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tw.tween_property(c, "scale", Vector2.ONE, dur)
 	tw.tween_property(c, "modulate:a", 1.0, dur * 0.8).set_trans(Tween.TRANS_SINE)
@@ -150,7 +158,8 @@ static func snapshot_fade(host: Node, dur: float = 0.38) -> void:
 	var tw := r.create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tw.tween_property(r, "modulate:a", 0.0, dur)
-	tw.tween_property(r, "scale", Vector2(1.06, 1.06), dur)
+	var z := float(DesignManager.motion("snapshot_zoom", 1.06))
+	tw.tween_property(r, "scale", Vector2(z, z), dur)
 	tw.chain().tween_callback(layer.queue_free)
 
 # ---------------------------------------------------------------------------
@@ -255,7 +264,9 @@ func crisis_pulse() -> void:
 	tw.tween_callback(r.queue_free)
 
 # animovane cislo v Label (top bar): text plynule dobehne na cielovu hodnotu + farebny zablesk
-static func animate_number(label: Label, from_v: float, to_v: float, fmt: Callable, up_color: Color, down_color: Color, dur: float = 0.45) -> void:
+static func animate_number(label: Label, from_v: float, to_v: float, fmt: Callable, up_color: Color, down_color: Color, dur: float = -1.0) -> void:
+	if dur < 0.0:
+		dur = DesignManager.dur("number_time", 0.45)  # P47 DESIGNS (current = 0.45)
 	label.text = fmt.call(to_v)
 	if not active() or not label.is_inside_tree() or is_equal_approx(from_v, to_v):
 		return
