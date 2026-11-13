@@ -40,7 +40,26 @@ func _ready() -> void:
 func is_open() -> bool:
 	return visible
 
+# p47/gfx (kolo 2): zatvaranie je animovane – okno ostane visible az do konca tweenu, potom emituje `closed`.
+signal closed
+var _closing := false
+var _close_tw: Tween
+
+func is_closing() -> bool:
+	return _closing
+
+# pre testy: pocka, kym sa okno naozaj skryje (ak uz je skryte, vrati sa hned)
+func wait_closed() -> void:
+	if visible and _closing:
+		await closed
+
 func open() -> void:
+	if _close_tw and _close_tw.is_valid():
+		_close_tw.kill()
+	_closing = false
+	modulate.a = 1.0
+	if panel:
+		panel.scale = Vector2.ONE
 	_was_paused = bool(GameState.paused)
 	GameState.paused = true
 	visible = true
@@ -54,10 +73,30 @@ func _animate_open() -> void:
 	fx.pop_in(panel, 0.22)
 
 func close() -> void:
-	visible = false
+	if _closing:
+		return
 	GameState.paused = _was_paused
 	if host and host.has_method("_refresh_label"):
 		host._refresh_label()
+	var fx = preload("res://scripts/ui/ui_fx.gd")
+	if not fx.active() or not visible:
+		_finish_close()
+		return
+	_closing = true
+	panel.pivot_offset = panel.size * 0.5
+	_close_tw = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	_close_tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_close_tw.tween_property(self, "modulate:a", 0.0, 0.16)
+	_close_tw.tween_property(panel, "scale", Vector2(0.95, 0.95), 0.16)
+	_close_tw.chain().tween_callback(_finish_close)
+
+func _finish_close() -> void:
+	_closing = false
+	visible = false
+	modulate.a = 1.0
+	if panel:
+		panel.scale = Vector2.ONE
+	closed.emit()
 
 func _clear(title: String) -> void:
 	for c in box.get_children():

@@ -91,7 +91,7 @@ def build():
     tab_sel = box("tab_sel", "BG_1", 1, "ACCENT", 1, (0, 2, 0, 0), (6, 6, 0, 0), m=(12, 5, 12, 5))
     tab_unsel = box("tab_unsel", "BG_0", 1, "BORDER", 0.7, (0, 0, 0, 1), (6, 6, 0, 0), m=(12, 5, 12, 5))
     tab_hover = box("tab_hover", "BG_2", 1, "ACCENT", 0.5, (0, 1, 0, 0), (6, 6, 0, 0), m=(12, 5, 12, 5))
-    tab_panel = box("tab_panel", "BG_1", 0.96, "BORDER", 0.8, (1, 0, 1, 1), (0, 6, 6, 6), m=(6, 6, 6, 6))
+    tab_panel = box("tab_panel", "BG_1", 0.97, "BORDER", 0.9, (1, 0, 1, 1), (0, 8, 8, 8), m=(10, 10, 10, 10), shadow=8, shadow_a=0.4, shadow_off=(0, 3))
     tooltip = box("tooltip", "TOOLTIP_BG", 0.97, "ACCENT_DIM", 1, (1, 1, 1, 1), 6, m=(10, 6, 10, 6), shadow=8, shadow_a=0.5, shadow_off=(0, 3))
     sc_bg = box("scroll_bg", "BG_0", 0.55, None, 1, (0, 0, 0, 0), 4, m=(2, 2, 2, 2))
     sc_grab = box("scroll_grab", "BG_3", 1, None, 1, (0, 0, 0, 0), 4, m=(3, 3, 3, 3))
@@ -106,6 +106,8 @@ def build():
     slider_area_hi = box("slider_area_hi", "ACCENT", 1, None, 1, (0, 0, 0, 0), 3, m=(0, 3, 0, 3))
     sep = box("sep_line", "BORDER", 0.9, None, 1, (0, 0, 0, 0), 0, m=(0, 0, 0, 0))
     empty = box("empty", flat_kind="StyleBoxEmpty", m=(0, 0, 0, 0))
+    head_band = box("head_band", "BG_2", 1, "ACCENT", 1, (3, 0, 0, 1), (6, 6, 0, 0), m=(10, 4, 8, 4))
+    card = box("card", "BG_2", 0.95, "BORDER", 1, (3, 1, 1, 1), 8, m=(12, 9, 10, 9), shadow=6, shadow_a=0.35, shadow_off=(0, 2))
     menu_hover = box("menu_hover", "ACCENT", 0.2, None, 1, (0, 0, 0, 0), 4, m=(6, 3, 6, 3))
 
     t = col("TEXT")
@@ -179,6 +181,12 @@ def build():
         "HeaderLabel/colors/font_shadow_color = Color(0, 0, 0, 0.5)",
         "HeaderLabel/constants/outline_size = 2",
         "HeaderLabel/constants/shadow_offset_y = 2",
+        "HeaderLabel/styles/normal = " + head_band,  # kolo 2: sekcie panela ako hlavicky kariet
+        "CardLabel/base_type = &\"Label\"",  # kolo 2: textove bloky panela ako karty
+        "CardLabel/styles/normal = " + card,
+        "CardLabel/colors/font_color = " + t,
+        "CardLabel/font_sizes/font_size = 15",
+        "CardLabel/constants/line_spacing = 3",
         "TitleLabel/base_type = &\"Label\"",
         "TitleLabel/fonts/font = " + head_font,
         "TitleLabel/font_sizes/font_size = 22",

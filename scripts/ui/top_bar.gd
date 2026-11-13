@@ -6,6 +6,8 @@ signal day_pressed
 signal resources_pressed
 const Chrome = preload("res://scripts/ui/strategic_skin.gd")
 const Data = preload("res://scripts/ui/strategic_hud_data.gd")
+const PRIMARY := ["cash","debt","worth"]  # p47/gfx: hierarchia kariet
+const CARD_ACCENT := {"cash":Color("e8a33d"),"debt":Color("e08d7b"),"worth":Color("92c79b")}
 const METRICS := [["cash","Peniaze","money",true],["debt","Dlh","debt",true],["worth","Majetok","money",true],["employees","Ľudia","employees",false],["influence","Vplyv","influence",false],["popularity","Popularita","popularity",false],["security","Bezpečnosť","res://assets/icons/pmc_unit.png",false],["firms","Firmy","res://assets/icons/hq.png",false],["states","Štáty","states",false]]
 var date_label: Label
 var cash_label: Label
@@ -32,7 +34,7 @@ func _ready() -> void:
 	finance.add_theme_constant_override("h_separation",4)
 	finance.add_theme_constant_override("v_separation",4)
 	first.add_child(finance)
-	for spec in METRICS.slice(0,2): _metric(finance,spec,154)
+	for spec in METRICS.slice(0,3): _metric(finance,spec,196)  # p47/gfx: hlavne karty (Peniaze, Dlh, Majetok) vacsie
 	cash_label = cards.cash.value
 	debt_label = cards.debt.value
 	clock_box = VBoxContainer.new()
@@ -75,7 +77,7 @@ func _ready() -> void:
 	other.add_theme_constant_override("h_separation",4)
 	other.add_theme_constant_override("v_separation",4)
 	add_child(other)
-	for spec in METRICS.slice(2): _metric(other,spec,132 if spec[0]=="worth" else 94)
+	for spec in METRICS.slice(3): _metric(other,spec,104)  # p47/gfx: vedlajsie karty
 	resources_button = preload("res://scripts/ui/hud_button.gd").new()
 	resources_button.text = "Suroviny a energia"
 	resources_button.icon = preload("res://scripts/ui/goods_icons.gd").icon("electricity")
@@ -108,8 +110,11 @@ func _clock_button(parent: Container, icon_id: String, tip: String) -> Button:
 func _metric(parent: Container, spec: Array, width: int) -> void:
 	var panel := preload("res://scripts/ui/hud_metric.gd").new()
 	panel.name = "Metric_"+spec[0]
-	panel.add_theme_stylebox_override("panel",Chrome.frame())
-	panel.custom_minimum_size = Vector2(width,48)
+	var primary: bool = spec[0] in PRIMARY
+	panel.add_theme_stylebox_override("panel",_card_style(str(spec[0]),primary))  # p47/gfx: karta namiesto texturoveho ramu
+	panel.custom_minimum_size = Vector2(width,56 if primary else 48)
+	panel.mouse_entered.connect(func(): _card_hover(panel,true))
+	panel.mouse_exited.connect(func(): _card_hover(panel,false))
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	parent.add_child(panel)
 	var row := HBoxContainer.new()
@@ -117,7 +122,7 @@ func _metric(parent: Container, spec: Array, width: int) -> void:
 	row.add_theme_constant_override("separation",5)
 	panel.add_child(row)
 	var texture: Texture2D = preload("res://scripts/ui/tex_util.gd").load_tex(spec[2]) if str(spec[2]).begins_with("res://") else Chrome.icon(spec[2])
-	row.add_child(Chrome.badge(texture,Color("2b3233"),28))
+	row.add_child(Chrome.badge(texture,Color("2b3233"),34 if primary else 26))
 	var texts := VBoxContainer.new()
 	texts.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	texts.add_theme_constant_override("separation",0)
@@ -126,11 +131,14 @@ func _metric(parent: Container, spec: Array, width: int) -> void:
 	title.text = spec[1]
 	title.add_theme_font_size_override("font_size",10)
 	title.add_theme_color_override("font_color",Chrome.MUTED)
+	title.uppercase = true  # p47/gfx: nadpis karty (len vizual, text ostava)
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	texts.add_child(title)
 	var value := Label.new()
 	value.text = "—"
-	value.add_theme_font_size_override("font_size",16 if spec[0] in ["cash","debt"] else 13)
+	value.add_theme_font_size_override("font_size",22 if primary else 15)  # p47/gfx: vacsie cisla
+	if primary:
+		value.add_theme_font_override("font",preload("res://ui/theme_p47.tres").get_font("font","HeaderLabel"))
 	value.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	texts.add_child(value)
 	var arrow := Label.new()
@@ -186,3 +194,32 @@ func set_cash(_amount: float) -> void:
 
 func set_debt(_text: String) -> void:
 	pass # Updated together with all other metrics, from the numeric source.
+
+# p47/gfx (kolo 2): karty top baru – len prezentacia, vypocet hodnot (refresh/Data) je nezmeneny
+func _card_style(key: String, primary: bool) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color("1d2229") if primary else Color("181c22")
+	sb.border_color = Color("3a424e")
+	sb.set_border_width_all(1)
+	var acc: Color = CARD_ACCENT.get(key, Color("5b6676"))
+	if primary:
+		sb.border_width_top = 3
+		sb.border_color = Color(acc, 0.9)
+		sb.bg_color = sb.bg_color.lerp(acc, 0.06)
+	sb.set_corner_radius_all(8)
+	sb.shadow_color = Color(0, 0, 0, 0.4)
+	sb.shadow_size = 6 if primary else 3
+	sb.shadow_offset = Vector2(0, 2)
+	sb.anti_aliasing = true
+	sb.content_margin_left = 8
+	sb.content_margin_right = 8
+	sb.content_margin_top = 4
+	sb.content_margin_bottom = 4
+	return sb
+
+func _card_hover(panel: Control, on: bool) -> void:
+	var fx = preload("res://scripts/ui/ui_fx.gd")
+	if not fx.active():
+		return
+	var tw := panel.create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(panel, "self_modulate", Color(1.18, 1.15, 1.08) if on else Color.WHITE, 0.12)
