@@ -20,3 +20,10 @@ Staré `*_placeholder.png` ostávajú v repe ako záloha, hra ich už nepoužív
 
 - **Boat Tug** (`boat-tug-a`) – Kenney – CC0 1.0 – https://kenney.nl/assets/watercraft-kit. Súbor `assets/models/ships/psv.glb` je prevod tohto modelu (predok na osi -Z, trup na Y = 0, textúra 512×512 vložená). `assets/sprites/ships/psv.png` je pohľad zhora. Používajú ho `psv` a `ahts`.
 - **Kenney Watercraft Kit** – Kenney – CC0 1.0 – https://kenney.nl/assets/watercraft-kit. Zapojené trupy: `carrier.glb` (carrier), `landing.glb` (lhd, lpd, lst, hospital), `destroyer.glb` (destroyer, cruiser), `frigate.glb` (frigate, corvette), `patrol.glb` (patrol, missile, sweeper, minelayer), `tanker.glb` (ropné tankery a oiler), `lng.glb` (lng, lpg). Cargo, bulk, general a ponorky ostávajú na fallback sprite.
+
+## UI grafika (vetva p47/gfx)
+
+- **Inter** (Regular, SemiBold) – The Inter Project Authors (Rasmus Andersson) – SIL Open Font License 1.1 – https://github.com/rsms/inter (release v4.1). Súbory `assets/fonts/Inter-Regular.ttf`, `assets/fonts/Inter-SemiBold.ttf`, licencia `assets/fonts/OFL-Inter.txt`. Základné písmo UI témy.
+- **Oswald** (variabilný) – The Oswald Project Authors (Vernon Adams a i.) – SIL Open Font License 1.1 – https://github.com/googlefonts/OswaldFont (súbor z https://github.com/google/fonts/tree/main/ofl/oswald). Súbor `assets/fonts/Oswald-Variable.ttf`, licencia `assets/fonts/OFL-Oswald.txt`. Nadpisy (`HeaderLabel`, `TitleLabel`).
+- **UI ikony** `assets/ui/p47/*.svg` – vlastné, Projekt-47 – CC0 1.0. Generuje ich `scripts/generate_ui_icons_p47.py`.
+- **UI téma** `ui/theme_p47.tres` – vlastná, Projekt-47 – CC0 1.0. Generuje ju `scripts/generate_theme_p47.py`. Stará `ui/theme_factorio.tres` ostáva v repe.

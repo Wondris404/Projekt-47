@@ -885,7 +885,7 @@ func _build_play() -> void:
 	print("P47_UI_BUILT")
 
 func _apply_theme() -> void:
-	theme = load("res://ui/theme_factorio.tres")
+	theme = load("res://ui/theme_p47.tres")  # p47/gfx: jednotna tema (stara theme_factorio.tres ostava)
 
 func _load_ui_scale() -> void:
 	preload("res://scripts/gfx.gd").apply()  # JUAN23
