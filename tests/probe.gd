@@ -422,6 +422,8 @@ func _probe() -> int:
 	})
 	GameState.player.cash = -1000000000.0
 	GameState.player.bankrupt = false
+	for pl in GameState.player.loans:  # V1: exekucia az pri 3. zmeskanej splatke
+		pl.missed = BankingSystem.FORECLOSE_AFTER - 1
 	GameState.date = {"y": 2025, "m": 1, "d": 31}
 	var score0 = float(GameState.player.credit_score)
 	var open0 = GameState.player_firms().size()

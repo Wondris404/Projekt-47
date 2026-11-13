@@ -875,6 +875,7 @@ func request_loan(amount: float, years: int = 5) -> Dictionary:
 	return {"ok": true, "reason": "", "cap": cap, "rate": rate, "amount": amount, "payment": pay}
 
 func process_monthly_interest() -> void:
+	var missed_any = false  # V1: exekucia sa vyhodnocuje raz za mesiac, nie pre kazdy uver
 	for loan in GameState.player.loans:
 		if float(loan.get("remaining", 0.0)) <= 1.0:
 			continue
@@ -882,8 +883,10 @@ func process_monthly_interest() -> void:
 		var interest = float(loan.remaining) * float(loan.annual_rate) / 12.0
 		var principal = max(0.0, pay - interest)
 		if float(GameState.player.cash) + 0.001 < pay:
+			_cover_from_savings(pay - float(GameState.player.cash))  # V1: najprv zo sporenia
+		if float(GameState.player.cash) + 0.001 < pay:
 			loan.missed = int(loan.get("missed", 0)) + 1
-			check_bankruptcy()
+			missed_any = true
 			continue
 		GameState.player.cash = float(GameState.player.cash) - pay
 		loan.remaining = max(0.0, float(loan.remaining) - principal)
@@ -894,39 +897,89 @@ func process_monthly_interest() -> void:
 			bank.reserves = float(bank.reserves) + pay
 			bank.explicit = max(0.0, float(bank.get("explicit", 0.0)) - principal)
 			bank.equity = float(bank.get("equity", 0.0)) + interest
+	if missed_any:
+		check_bankruptcy()
+
+# V1: chybajucu sumu splatky pokryje zo sporiaceho uctu hraca (GameState.player.savings.balance), ak existuje.
+# Na main sporiaci ucet hraca nie je (prida ho feat/banka-dokoncenie) -> vrati 0. Vrati presunutu sumu.
+func _cover_from_savings(need: float) -> float:
+	if need <= 0.0:
+		return 0.0
+	var sav = GameState.player.get("savings", null)
+	if typeof(sav) != TYPE_DICTIONARY:
+		return 0.0
+	var bal = float(sav.get("balance", 0.0))
+	var take = minf(bal, need)
+	if take <= 0.0:
+		return 0.0
+	sav.balance = bal - take
+	GameState.player.cash = float(GameState.player.cash) + take
+	var sb = _bank(str(sav.get("bank", sav.get("bank_id", ""))))
+	if not sb.is_empty():  # rovnake uctovanie ako vyber: banke klesnu vklady aj rezervy
+		sb.savings = maxf(0.0, float(sb.get("savings", 0.0)) - take)
+		sb.reserves = float(sb.get("reserves", 0.0)) - take
+	return take
+
+const FORECLOSE_AFTER = 3  # V1: exekucia firmy az po 3 zmeskanych splatkach toho isteho uveru
 
 func check_bankruptcy() -> Dictionary:
 	var missed = false
+	var worst: Dictionary = {}
 	for loan in GameState.player.loans:
+		if float(loan.get("remaining", 0.0)) <= 1.0 or bool(loan.get("paid", false)):
+			continue
 		if int(loan.get("missed", 0)) > 0:
 			missed = true
-			break
+		# zabezpecene uvery riesi collateral_monthly/seize_collateral (tiez po 3 zmeskanych)
+		if bool(loan.get("secured", false)) or int(loan.get("missed", 0)) < FORECLOSE_AFTER:
+			continue
+		if worst.is_empty() or int(loan.missed) > int(worst.missed) or (int(loan.missed) == int(worst.missed) and float(loan.remaining) > float(worst.remaining)):
+			worst = loan
 	if not missed:
 		return {"ok": false, "seized": false, "score": float(GameState.player.get("credit_score", 55.0))}
 	var score = float(GameState.player.get("credit_score", 55.0)) - 15.0
 	GameState.player.credit_score = max(0.0, score)
 	GameState.player.rating = int(GameState.player.credit_score)
+	if not GameState.player.has("events"):
+		GameState.player.events = []
+	if worst.is_empty():
+		var most = 0
+		for l in GameState.player.loans:
+			if float(l.get("remaining", 0.0)) > 1.0:
+				most = maxi(most, int(l.get("missed", 0)))
+		GameState.post_news("Zmeškaná splátka (%d/%d). Pri %d. zmeškanej banka zabaví firmu." % [most, FORECLOSE_AFTER, FORECLOSE_AFTER])
+		return {"ok": true, "seized": false, "score": float(GameState.player.credit_score), "proceeds": 0.0}
 	var seized = false
+	var proceeds = 0.0
 	var best: Dictionary = {}
 	var best_value = -1.0
 	for firm in GameState.firms:
-		if str(firm.get("owner", "")) != "player" or firm.get("closed", false):
+		if str(firm.get("owner", "")) != "player" or firm.get("closed", false) or str(firm.get("pledged", "")) != "":
 			continue
-		var ind: Dictionary = DataLoader.industries.get(firm.get("industry", ""), {})
-		var value = float(ind.get("cost", 0.0)) + float(firm.get("cash", 0.0))
+		var value = asset_market_value({"kind": "firm", "id": str(firm.get("id", ""))})
 		if value > best_value:
 			best_value = value
 			best = firm
 	if not best.is_empty():
+		# jedna firma za mesiac; vynos 60 % trhovej hodnoty ide na dlh a do rezerv veritela
+		proceeds = maxf(0.0, best_value) * 0.6
 		best.closed = true
+		best.cash = 0.0  # hotovost firmy je uz vo vynose
 		seized = true
-		GameState.post_news("Exekúcia zobrala %s." % str(best.get("name", best.get("industry", "firmu"))))
-	if not GameState.player.has("events"):
-		GameState.player.events = []
+		var applied = minf(proceeds, float(worst.remaining))
+		worst.remaining = maxf(0.0, float(worst.remaining) - applied)
+		worst.missed = 0
+		var lender = _bank(str(worst.get("lender", "")))
+		if not lender.is_empty() and not bool(lender.get("failed", false)):
+			lender.reserves = float(lender.get("reserves", 0.0)) + applied
+			lender.explicit = maxf(0.0, float(lender.get("explicit", 0.0)) - applied)
+		if proceeds > applied:
+			GameState.player.cash = float(GameState.player.cash) + (proceeds - applied)
+		GameState.post_news("Exekúcia zobrala %s, výťažok %s išiel na dlh." % [str(best.get("name", best.get("industry", "firmu"))), EconMath.eur(applied)])
 	GameState.player.events.append({"type": "bankruptcy", "day": GameState.day_index})
 	GameState.player.bankrupt = float(GameState.player.cash) <= 0.0 and not seized
-	GameState.post_story("bankruptcy", "Bankrot: zmeškaná splátka, credit score klesol, aktívum zabavené.")
-	return {"ok": true, "seized": seized, "score": float(GameState.player.credit_score)}
+	GameState.post_story("bankruptcy", "Exekúcia: %d zmeškané splátky, credit score klesol, firma zabavená a výťažok započítaný do dlhu." % FORECLOSE_AFTER)
+	return {"ok": true, "seized": seized, "score": float(GameState.player.credit_score), "proceeds": proceeds}
 
 func create_bank(deposit_rate: float, loan_rate: float, reserve_ratio: float) -> Dictionary:
 	var floor = LawSystem.min_reserve(str(GameState.player.get("home", "")))
