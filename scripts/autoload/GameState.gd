@@ -601,6 +601,9 @@ func debt() -> float:
 	var s = 0.0
 	for loan in player.get("loans", []):
 		s += float(loan.get("remaining", 0.0))
+	for b in player.get("bonds", []):  # B04: vydane dlhopisy hraca su tiez dlh (nominal)
+		if str(b.get("issuer", "")) == "player":
+			s += float(b.get("face", 0.0))
 	return s
 
 # DEAD: bez volajuceho (etapa 0: nezmazane, len oznacene)
@@ -615,7 +618,7 @@ func net_worth() -> float:
 		s += max(0.0, float(bank.equity))
 	for b in player.get("bonds", []):
 		if str(b.get("issuer", "")) == "player":
-			s -= float(b.get("face", 0.0))  # JUAN13: vlastny vydany dlhopis je dlh, nie majetok
+			pass  # JUAN13: vlastny vydany dlhopis je dlh, nie majetok; B04: uz je v debt() vyssie
 		else:
 			s += BankingSystem._bond_value(b)
 	s += StockMarket.portfolio_value()  # JUAN5 #19

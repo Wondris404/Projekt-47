@@ -13,6 +13,7 @@ func run(host) -> void:
 	_v4_failed_lender()
 	_b01_load_keeps_slot()
 	_b17_ui_bond_ex()
+	_b04_debt_bonds()
 
 func _firm(id: String, industry: String, cash: float = 0.0) -> Dictionary:
 	var f = {"id": id, "name": id, "owner": "player", "country": str(GameState.player.home), "industry": industry,
@@ -254,3 +255,12 @@ func _b17_ui_bond_ex() -> void:
 	GameState.player.bonds.pop_back()
 	if m.feedback_label:
 		m.feedback_label.visible = false
+
+func _b04_debt_bonds() -> void:
+	u._new()
+	var d0 = GameState.debt()
+	var nw0 = GameState.net_worth()
+	BankingSystem.issue_bond(100000.0, 0.05, 2.0)
+	u._chk("p47_b04_debt_includes_bonds", absf(GameState.debt() - d0 - 100000.0) < 0.01, "%.0f -> %.0f" % [d0, GameState.debt()])
+	u._chk("p47_b04_net_worth_no_double", absf(GameState.net_worth() - nw0) < 0.01, "%.2f -> %.2f" % [nw0, GameState.net_worth()])
+
