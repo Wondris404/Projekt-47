@@ -45,7 +45,9 @@ func rebuild() -> void:
 			("\nVyžaduje: " + ", ".join(reqs.map(func(q): return str(GameState.research_def(str(q)).get("name", q))))) if reqs.size() > 0 else ""]
 		b.disabled = GameState.player.is_empty() or not GameState.research_available(rid) or rid in queue
 		if rid in done:
-			b.modulate = Color(0.75, 1.0, 0.75)
+			_state_style(b, UiPalette.OK)  # p47/gfx: hotovy vyskum = zeleny ramik namiesto modulate
+		elif running:
+			_state_style(b, UiPalette.ACCENT)
 		b.pressed.connect(func(): research_pressed.emit(rid))
 		add_child(b)
 		nodes[rid] = r
@@ -67,3 +69,18 @@ func _draw() -> void:
 			var col = UiPalette.ACCENT if str(q) in done else UiPalette.BORDER_HI
 			var mid = (p.y + a.y) * 0.5
 			draw_polyline(PackedVector2Array([a, Vector2(a.x, mid), Vector2(p.x, mid), p]), col, 2.0)
+
+# p47/gfx: stavovy ramik uzla (hotovy/bezi) – citatelny aj ked je tlacidlo disabled
+func _state_style(b: Button, c: Color) -> void:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(c.r * 0.18, c.g * 0.18, c.b * 0.18, 0.95)
+	sb.border_color = c
+	sb.set_border_width_all(1)
+	sb.border_width_left = 3
+	sb.set_corner_radius_all(6)
+	sb.set_content_margin_all(4)
+	sb.anti_aliasing = true
+	for st in ["normal", "disabled", "hover"]:
+		b.add_theme_stylebox_override(st, sb)
+	b.add_theme_color_override("font_disabled_color", c.lightened(0.25))
+	b.add_theme_color_override("font_color", c.lightened(0.35))
