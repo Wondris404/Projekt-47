@@ -3,6 +3,7 @@ extends Node
 # ODHAD: všetky nové bilančné koeficienty sú v data/p47x_balance.json.
 const M12 = preload("res://scripts/p47x/m12_sovereign.gd")
 const M09 = preload("res://scripts/p47x/m09_eureka.gd")
+const M02 = preload("res://scripts/p47x/m02_tension.gd")
 var balance: Dictionary = {}
 
 func _ready() -> void:
@@ -83,13 +84,41 @@ func only(ids: Array) -> void:
 		if str(id).begins_with("M"):
 			set_enabled(str(id), str(id) in ids)
 
-func tension_premium(_iso: String) -> float:
-	return 0.0
+func tension_premium(iso: String) -> float:
+	if not active("M02"):
+		return 0.0
+	return minf(num("M12", "tension_cap", 0.05), M02.value(self) / 100.0 * num("M12", "tension_cap", 0.05)) + M02.by_iso(self, iso) / 100.0 * num("M12", "tension_iso_k", 0.02)
+
+func add_tension(amount: float, iso: String, reason: String) -> void:
+	if active("M02"):
+		M02.add(self, amount, iso, reason)
+
+func tension_demand_mult(cid: String) -> float:
+	return M02.demand_mult(self, cid) if active("M02") else 1.0
+
+# Akcia, ktorá zníži DEFCON, chce potvrdenie: druhé rovnaké stlačenie v ten istý deň ju vykoná.
+func confirm_needed(action: String, target: String) -> String:
+	if not active("M02") or not M02.would_lower_defcon(self, action):
+		return ""
+	var row = state("tension_confirm")
+	var key = "%s|%s|%d" % [action, target, GameState.day_index]
+	if str(row.get("pending", "")) == key:
+		row.erase("pending")
+		return ""
+	row["pending"] = key
+	return "Pozor: akcia zníži DEFCON na %d. Stlač ju znova na potvrdenie." % M02.defcon_of(self, M02.value(self) + M02.action_amount(self, action))
+
+func status_text() -> String:
+	if not active("M02"):
+		return ""
+	return "DEFCON %d · napätie %.0f" % [M02.defcon(self), M02.value(self)]
 
 func research_mult(rid: String) -> float:
 	return M09.mult(self, rid)
 
 func monthly() -> void:
+	if active("M02"):
+		M02.monthly(self)
 	if active("M12"):
 		M12.monthly(self)
 	if active("M09"):

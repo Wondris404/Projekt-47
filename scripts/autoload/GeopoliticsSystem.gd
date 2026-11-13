@@ -77,6 +77,7 @@ func _toggle_pair(bucket_name: String, target: String, on: bool, news: String) -
 func impose_embargo(target: String) -> String:
 	var err = _toggle_pair("embargoes", target, true, "Embargo voči %s.")
 	if err == "":
+		P47Mechanics.add_tension(P47Mechanics.M02.action_amount(P47Mechanics, "embargo"), str(GameState.player.get("home", "")), "Embargo voči %s" % target)
 		var home = str(GameState.player.get("home", ""))
 		set_relation(home, target, relation(home, target) - 20)
 	return err
@@ -124,6 +125,7 @@ func security_council(target: String) -> String:
 	if not GameState.un_sanctions.has(key):
 		GameState.un_sanctions.append(key)
 	GameState.world_events.append({"type": "un_sanction", "target": target, "day": GameState.day_index})
+	P47Mechanics.add_tension(P47Mechanics.M02.action_amount(P47Mechanics, "un"), target, "Bezpečnostná rada: %s" % target)
 	GameState.post_news("Bezpečnostná rada uvalila sankcie na %s." % target)
 	return ""
 
@@ -194,6 +196,7 @@ func impose_sanction(target: String) -> String:
 		return "Sankcia už platí."
 	GameState.sanctions.append(key)
 	set_relation(home, target, relation(home, target) - 25)
+	P47Mechanics.add_tension(P47Mechanics.M02.action_amount(P47Mechanics, "sanction"), home, "Sankcia voči %s" % target)
 	GameState.post_story("sanction", "Sankcia voči %s. Obchod je obmedzený." % target)
 	return ""
 
@@ -236,6 +239,9 @@ func war_intensity_world() -> float:
 	return min(n, 2.5)
 
 func conflict_demand(hot: bool, cid: String) -> float:
+	return _conflict_demand_base(hot, cid) * P47Mechanics.tension_demand_mult(cid)
+
+func _conflict_demand_base(hot: bool, cid: String) -> float:
 	if not hot:
 		return 1.0
 	if cid == "arms" or cid == "weapons":
@@ -363,6 +369,7 @@ func _start_war(a: String, b: String) -> void:
 		"days": 0,
 	})
 	set_relation(a, b, -85)
+	P47Mechanics.add_tension(P47Mechanics.M02.action_amount(P47Mechanics, "war"), a, "Vojna %s" % name)
 	for iso in [a, b]:
 		var c: Dictionary = GameState.world[iso]
 		apply_war_shock(c)

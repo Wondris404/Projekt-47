@@ -1843,6 +1843,10 @@ func _on_minister_tax() -> void:
 	_refresh_label()
 
 func _on_diplo(action: String) -> void:
+	var warn = P47Mechanics.confirm_needed(action, _chosen_country())  # M02: potvrdenie pred znížením DEFCON
+	if warn != "":
+		_feedback(warn, false)
+		return
 	var err = play_diplomacy(action, _chosen_country())
 	_feedback("Diplomacia %s: %s" % [action, "hotovo." if err == "" else err], err == "")
 	_refresh_label()
@@ -2157,6 +2161,10 @@ func _refresh_label(force_firm_list: bool = true) -> void:
 		var es = Empire.stats()
 		stat_strip.text = "Majetok %s  |  Ľudia %.0f  |  Vplyv %.0f  |  Popularita %.0f  |  Bezpečnosť %d  |  Firmy %d  |  Štáty %d" % [EconMath.eur(float(es.worth)), float(es.employees), float(es.influence), float(es.popularity), int(es.security), int(es.firms), int(es.states)]
 		stat_strip.tooltip_text = "Majetok · zamestnanci · vplyv · popularita · bezpečnosť · firmy · vlastnené štáty (detail: Portfólio)"
+		var p47_status = P47Mechanics.status_text()
+		if p47_status != "":
+			stat_strip.text += "  |  " + p47_status
+			stat_strip.tooltip_text += "\n" + p47_status + "\n" + P47Mechanics.breakdown_text(P47Mechanics.M02.breakdown(P47Mechanics), false)
 		stat_strip.mouse_filter = Control.MOUSE_FILTER_PASS
 	_refresh_juan4()
 	var iso = GameState.selected_iso

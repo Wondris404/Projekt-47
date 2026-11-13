@@ -168,5 +168,19 @@
         "text": "Vlastni štát."
       }
     }
+  },
+  "M02": {
+    "enabled": true,
+    "_note": "ODHAD: zdroje napätia a útlm.",
+    "start": 15.0,
+    "war": 12.0,
+    "embargo": 3.0,
+    "sanction": 2.0,
+    "security_council": 4.0,
+    "decay_month": 0.04,
+    "iso_decay_month": 0.035,
+    "defcon_step": 20.0,
+    "arms_demand_per_level": 0.08,
+    "log_max": 24
   }
 }
