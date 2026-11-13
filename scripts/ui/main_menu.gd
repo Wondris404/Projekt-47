@@ -403,6 +403,7 @@ func _settings() -> Control:
 	gq.tooltip_text = "Nízka: bez animácií mapy, pobrežných plytčín a stožiarov vedení. Automaticky = nízka na integrovanej grafike."
 	gq.item_selected.connect(func(i): preload("res://scripts/gfx.gd").set_setting(["auto", "high", "low"][i]))
 	box.add_child(gq)
+	box.add_child(DesignManager.make_picker())  # P47 DESIGNS
 	_button(box, "Zopakovať tutoriál", func(): tutorial_repeat_requested.emit())
 	_button(box, "Späť", func(): _show_only(home))
 	return box
