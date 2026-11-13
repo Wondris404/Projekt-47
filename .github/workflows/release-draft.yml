@@ -64,6 +64,7 @@ jobs:
           Rozbaľte všetky súbory do jedného priečinka a spustite Projekt-47.exe.
           Hra ukladá pozície do priečinka používateľských dát Godotu.
           Kým je v hre model bunkra CC BY-NC-SA, verziu nepredávajte.
+          Autori modelov a licencie: v hre Hlavné menu → Autori a licencie (bunker: „Star Wars Endor Bunker“ by aclarke064, CC BY-NC-SA 4.0; „Jet“ by Poly by Google, CC-BY 3.0).
           '@ | Set-Content -Encoding utf8 build/CITAJ-MA.txt
           foreach ($need in @('build/Projekt-47.exe', 'build/Projekt-47.console.exe', 'build/CITAJ-MA.txt')) {
             if (!(Test-Path -LiteralPath $need)) { throw "Missing $need" }

@@ -65,6 +65,7 @@ jobs:
           Žiadny online server.
           Uloženia ostávajú v Godot user://.
           Toto je CI artefakt, nie publikovaný GitHub Release.
+          Autori modelov a licencie: v hre Hlavné menu → Autori a licencie (bunker: „Star Wars Endor Bunker“ by aclarke064, CC BY-NC-SA 4.0; „Jet“ by Poly by Google, CC-BY 3.0).
           '@ | Set-Content -Encoding utf8 build/CITAJ-MA.txt
           foreach ($name in @('Projekt-47.exe', 'Projekt-47.console.exe', 'CITAJ-MA.txt')) {
             if (!(Test-Path -LiteralPath (Join-Path 'build' $name))) { throw "Missing build/$name" }
