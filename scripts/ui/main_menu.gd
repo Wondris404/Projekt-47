@@ -366,6 +366,52 @@ func _load_game() -> Control:
 	_button(box, "Späť", func(): _show_only(home))
 	return box
 
+# V2: obrazovka "Autori a licencie" – CC BY-NC-SA 4.0 (bunker) a CC-BY 3.0 (Jet) vyzaduju uvedenie autora pri sireni.
+const CREDITS_REQUIRED = """[b]Povinné uvedenie autorov[/b]
+• „Star Wars Endor Bunker“ by aclarke064, CC BY-NC-SA 4.0, https://sketchfab.com/3d-models/star-wars-endor-bunker-1c54abb1c6824f26a0a087d2bd7a635a (nekomerčné použitie)
+• „Jet“ by Poly by Google, CC-BY 3.0, via Poly Pizza (https://poly.pizza/m/dukcCKsLDrS)
+"""
+
+static func credits_bbcode() -> String:
+	var body = ""
+	if FileAccess.file_exists("res://CREDITS.md"):
+		body = FileAccess.get_file_as_string("res://CREDITS.md")
+	if body.strip_edges() == "":
+		body = "(CREDITS.md sa nepodarilo načítať)"
+	var lic = ""
+	if FileAccess.file_exists("res://assets/models/bunker/LICENSE.txt"):
+		lic = FileAccess.get_file_as_string("res://assets/models/bunker/LICENSE.txt")
+	var out = CREDITS_REQUIRED + "\n" + body.replace("[", "[lb]")
+	if lic.strip_edges() != "":
+		out += "\n\n[b]assets/models/bunker/LICENSE.txt[/b]\n" + lic.replace("[", "[lb]")
+	return out
+
+func _credits() -> Control:
+	var box = VBoxContainer.new()
+	box.name = "CreditsPanel"
+	box.add_theme_constant_override("separation", 8)
+	var title = Label.new()
+	title.text = "Autori a licencie"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(title)
+	credits_text = RichTextLabel.new()
+	credits_text.name = "CreditsText"
+	credits_text.bbcode_enabled = true
+	credits_text.fit_content = true
+	credits_text.scroll_active = false
+	credits_text.selection_enabled = true
+	credits_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	credits_text.custom_minimum_size = Vector2(0, 200)
+	credits_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	credits_text.text = credits_bbcode()
+	credits_text.meta_clicked.connect(func(m): OS.shell_open(str(m)))
+	box.add_child(credits_text)
+	_button(box, "Späť", func(): _show_only(home))
+	return box
+
+func _open_credits() -> void:
+	_show_only(credits_panel)
+
 func _settings() -> Control:
 	var box = VBoxContainer.new()
 	box.add_theme_constant_override("separation", 8)
@@ -403,6 +449,8 @@ func _button(parent: Node, text: String, callback: Callable) -> Button:
 	return button
 
 func _show_only(which: Control) -> void:
+	if credits_panel:  # V2
+		credits_panel.visible = which == credits_panel
 	home.visible = which == home
 	modes_panel.visible = which == modes_panel
 	if new_buttons:
@@ -412,8 +460,6 @@ func _show_only(which: Control) -> void:
 	new_panel.visible = which == new_panel
 	load_panel.visible = which == load_panel
 	settings_panel.visible = which == settings_panel
-	if credits_panel:
-		credits_panel.visible = which == credits_panel
 
 func _open_new() -> void:
 	_pick_mode("medium")
@@ -545,49 +591,3 @@ func _animate_in() -> void:
 			tw.tween_interval(0.05 * i)
 			tw.tween_property(c, "modulate:a", 1.0, 0.25)
 			i += 1
-
-# V2: obrazovka "Autori a licencie" – CC BY-NC-SA 4.0 (bunker) a CC-BY 3.0 (Jet) vyzaduju uvedenie autora pri sireni.
-const CREDITS_REQUIRED = """[b]Povinné uvedenie autorov[/b]
-• „Star Wars Endor Bunker“ by aclarke064, CC BY-NC-SA 4.0, https://sketchfab.com/3d-models/star-wars-endor-bunker-1c54abb1c6824f26a0a087d2bd7a635a (nekomerčné použitie)
-• „Jet“ by Poly by Google, CC-BY 3.0, via Poly Pizza (https://poly.pizza/m/dukcCKsLDrS)
-"""
-
-static func credits_bbcode() -> String:
-	var body = ""
-	if FileAccess.file_exists("res://CREDITS.md"):
-		body = FileAccess.get_file_as_string("res://CREDITS.md")
-	if body.strip_edges() == "":
-		body = "(CREDITS.md sa nepodarilo načítať)"
-	var lic = ""
-	if FileAccess.file_exists("res://assets/models/bunker/LICENSE.txt"):
-		lic = FileAccess.get_file_as_string("res://assets/models/bunker/LICENSE.txt")
-	var out = CREDITS_REQUIRED + "\n" + body.replace("[", "[lb]")
-	if lic.strip_edges() != "":
-		out += "\n\n[b]assets/models/bunker/LICENSE.txt[/b]\n" + lic.replace("[", "[lb]")
-	return out
-
-func _credits() -> Control:
-	var box = VBoxContainer.new()
-	box.name = "CreditsPanel"
-	box.add_theme_constant_override("separation", 8)
-	var title = Label.new()
-	title.text = "Autori a licencie"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	box.add_child(title)
-	credits_text = RichTextLabel.new()
-	credits_text.name = "CreditsText"
-	credits_text.bbcode_enabled = true
-	credits_text.fit_content = true
-	credits_text.scroll_active = false
-	credits_text.selection_enabled = true
-	credits_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	credits_text.custom_minimum_size = Vector2(0, 200)
-	credits_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	credits_text.text = credits_bbcode()
-	credits_text.meta_clicked.connect(func(m): OS.shell_open(str(m)))
-	box.add_child(credits_text)
-	_button(box, "Späť", func(): _show_only(home))
-	return box
-
-func _open_credits() -> void:
-	_show_only(credits_panel)
