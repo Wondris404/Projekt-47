@@ -155,7 +155,12 @@ func refresh() -> void:
 	for key in cards:
 		var card: Dictionary = cards[key]
 		var value := float(trends.current.get(key,0))
-		card.value.text = Data.compact(value,card.money)
+		if card.money:  # p47/gfx: penazne hodnoty plynule dobehnu (cielova hodnota sa zapise hned, potom 0.45 s vizualny prechod)
+			var prev := float(card.get("shown",value))
+			card["shown"] = value
+			preload("res://scripts/ui/ui_fx.gd").animate_number(card.value,prev,value,func(v: float) -> String: return Data.compact(v,true),Chrome.UP,Chrome.DOWN)
+		else:
+			card.value.text = Data.compact(value,card.money)
 		var change := float(trends.delta.get(key,0))
 		var col := Chrome.TEXT
 		if trends.delta.has(key) and not is_zero_approx(change):

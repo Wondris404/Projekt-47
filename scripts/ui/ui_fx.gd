@@ -20,6 +20,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().node_added.connect(_on_node_added)
 	_scan(get_tree().root)
+	if active():
+		_bind_game()
 
 func _scan(n: Node) -> void:
 	_on_node_added(n)
@@ -121,3 +123,119 @@ static func curtain(host: Node, dur: float = 0.45, color: Color = Color(0.02, 0.
 	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tw.tween_property(c, "modulate:a", 0.0, dur)
 	tw.tween_callback(c.queue_free)
+
+# ---------------------------------------------------------------------------
+# p47/gfx: efekty pri hernych udalostiach (iba citanie signalov, logika hry sa nemeni)
+# ---------------------------------------------------------------------------
+const BURST_GOLD := Color(1.0, 0.8, 0.4)
+const BURST_GREEN := Color(0.45, 0.9, 0.5)
+const CRISIS_RED := Color(0.85, 0.12, 0.08)
+var _fx_layer: CanvasLayer
+var _done_count := -1
+var _last_crisis_ms := -100000
+var _last_burst_ms := {}
+
+func _bind_game() -> void:
+	_fx_layer = CanvasLayer.new()
+	_fx_layer.name = "P47FxLayer"
+	_fx_layer.layer = 60
+	add_child(_fx_layer)
+	GameState.day_passed.connect(_on_day_fx)
+	GameState.news_posted.connect(_on_news_fx)
+	IndustrySystem.firm_upgraded.connect(func(_id, _a, _b): burst_at(_anchor("Metric_firms"), BURST_GOLD, "upgrade"))
+	IndustrySystem.dividends_paid.connect(func(total): if float(total) > 0.0: burst_at(_anchor("Metric_cash"), BURST_GOLD, "income"))
+
+func _anchor(node_name: String) -> Vector2:
+	var n = get_tree().root.find_child(node_name, true, false)
+	if n is Control and n.is_visible_in_tree():
+		return n.get_global_rect().get_center()
+	return get_viewport().get_visible_rect().size * Vector2(0.5, 0.2)
+
+func _on_day_fx(_day: int) -> void:
+	if not GameState.running or GameState.player.is_empty():
+		return
+	var done = GameState.player.get("done", [])
+	var n: int = done.size() if typeof(done) == TYPE_ARRAY else 0
+	if _done_count >= 0 and n > _done_count:
+		burst_at(get_viewport().get_visible_rect().size * Vector2(0.5, 0.5), BURST_GREEN, "research", 48)
+	_done_count = n
+
+func _on_news_fx(text: String) -> void:
+	if not GameState.running:
+		return
+	var cat := str(GameState.news_category(text))
+	if cat in ["šoky", "vojna"]:
+		crisis_pulse()
+
+# kratky "vybuch" svetielok (jednorazovy CPUParticles2D, sam sa zmaze)
+func burst_at(pos: Vector2, color: Color, key: String = "", amount: int = 28) -> void:
+	if not active() or _fx_layer == null:
+		return
+	var now := Time.get_ticks_msec()
+	if key != "" and now - int(_last_burst_ms.get(key, -100000)) < 600:
+		return  # pri 10x rychlosti nezahltit obrazovku
+	_last_burst_ms[key] = now
+	var p := CPUParticles2D.new()
+	p.texture = preload("res://assets/ui/p47/spark.svg")
+	p.one_shot = true
+	p.explosiveness = 0.9
+	p.amount = amount
+	p.lifetime = 0.9
+	p.position = pos
+	p.direction = Vector2(0, -1)
+	p.spread = 180.0
+	p.gravity = Vector2(0, 160)
+	p.initial_velocity_min = 90.0
+	p.initial_velocity_max = 220.0
+	p.damping_min = 40.0
+	p.damping_max = 80.0
+	p.scale_amount_min = 0.15
+	p.scale_amount_max = 0.45
+	var ramp := Gradient.new()
+	ramp.set_color(0, Color(color, 1.0))
+	ramp.set_color(1, Color(color, 0.0))
+	p.color_ramp = ramp
+	var mat := CanvasItemMaterial.new()
+	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	p.material = mat
+	_fx_layer.add_child(p)
+	p.emitting = true
+	get_tree().create_timer(p.lifetime + 0.3).timeout.connect(p.queue_free)
+
+# kriza/vojna: cerveny okraj obrazovky kratko pulzne
+func crisis_pulse() -> void:
+	if not active() or _fx_layer == null:
+		return
+	var now := Time.get_ticks_msec()
+	if now - _last_crisis_ms < 1500:
+		return
+	_last_crisis_ms = now
+	var r := ColorRect.new()
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	r.set_anchors_preset(Control.PRESET_FULL_RECT)
+	var m := ShaderMaterial.new()
+	m.shader = preload("res://scripts/ui/edge_pulse.gdshader")
+	m.set_shader_parameter("tint", CRISIS_RED)
+	r.material = m
+	r.modulate.a = 0.0
+	_fx_layer.add_child(r)
+	var tw := r.create_tween().set_trans(Tween.TRANS_SINE)
+	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tw.tween_property(r, "modulate:a", 1.0, 0.18)
+	tw.tween_property(r, "modulate:a", 0.0, 0.7)
+	tw.tween_callback(r.queue_free)
+
+# animovane cislo v Label (top bar): text plynule dobehne na cielovu hodnotu + farebny zablesk
+static func animate_number(label: Label, from_v: float, to_v: float, fmt: Callable, up_color: Color, down_color: Color, dur: float = 0.45) -> void:
+	label.text = fmt.call(to_v)
+	if not active() or not label.is_inside_tree() or is_equal_approx(from_v, to_v):
+		return
+	var old = label.get_meta(&"p47_num_tw", null)
+	if old is Tween and old.is_valid():
+		old.kill()
+	var tw := label.create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	label.set_meta(&"p47_num_tw", tw)
+	tw.tween_method(func(v: float): label.text = fmt.call(v), from_v, to_v, dur)
+	var flash := up_color if to_v > from_v else down_color
+	label.self_modulate = flash.lightened(0.25)
+	tw.tween_property(label, "self_modulate", Color.WHITE, dur * 1.6)
