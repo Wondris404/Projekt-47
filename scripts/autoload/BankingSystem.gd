@@ -116,7 +116,8 @@ func _advisor_month(bank: Dictionary) -> float:
 	bank.lending_rate = clampf(policy + 0.055 + risk * 0.08, 0.005, 0.4)
 	bank.cons_rate = clampf(policy + 0.09 + risk * 0.1, 0.01, 0.4)
 	BankProducts.set_rates(bank, deposit, clampf(policy + 0.035 + risk * 0.05, 0.005, 0.3), clampf(policy + 0.065 + risk * 0.08, 0.005, 0.4), reserve)
-	_advisor_log(bank, "Riziko %.0f %%; rezerva %.0f %%, prísnosť %.0f %%, vklady %s, úvery ľuďom %s; plat %s." % [risk * 100.0, reserve * 100.0, strict * 100.0, EconMath.pct(deposit), EconMath.pct(float(bank.cons_rate)), EconMath.eur(salary)])
+	var reason = ("Dôvod: nezamestnanosť %s a politické riziko %s. " % [EconMath.pct(float(country.get("unemployment", 0.05))), EconMath.pct(float(country.get("political_risk", 0.1)))]) if P47Mechanics.active("M44") else ""
+	_advisor_log(bank, reason + "Riziko %.0f %%; rezerva %.0f %%, prísnosť %.0f %%, vklady %s, úvery ľuďom %s; plat %s." % [risk * 100.0, reserve * 100.0, strict * 100.0, EconMath.pct(deposit), EconMath.pct(float(bank.cons_rate)), EconMath.eur(salary)])
 	return salary
 
 # DEAD: volane len z DEAD issue_loan (etapa 0: nezmazane, len oznacene)
@@ -335,6 +336,19 @@ func sell_bond(index: int) -> String:
 func _bond_yield(iso: String) -> float:
 	var c: Dictionary = GameState.world[iso]
 	return EconMath.cl(float(GameState.central[iso].policy) + float(c.political_risk) * 0.35 + max(0.0, float(c.debt_gdp) - 0.6) * 0.04, 0.004, 0.3)
+
+# M44: súčet zahŕňa aj korekciu clampu, teda presne zodpovedá výnosu.
+func _bond_yield_parts(iso: String) -> Array:
+	if not P47Mechanics.active("M44"):
+		return []
+	var c: Dictionary = GameState.world[iso]
+	var parts: Array = [
+		{"label": "Centrálna sadzba", "value": float(GameState.central[iso].policy)},
+		{"label": "Politické riziko", "value": float(c.political_risk) * 0.35},
+		{"label": "Dlh nad 60 % HDP", "value": maxf(0.0, float(c.debt_gdp) - 0.6) * 0.04},
+	]
+	parts.append({"label": "Ohraničenie výnosu", "value": _bond_yield(iso) - P47Mechanics.sum_parts(parts)})
+	return parts
 
 func _bond_value(b: Dictionary) -> float:
 	var now = max(_bond_yield(str(b.country)), 0.004)

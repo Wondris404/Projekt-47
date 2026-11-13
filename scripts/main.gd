@@ -36,6 +36,12 @@ func _ready() -> void:
 			exit_code = load("res://tests/stability.gd").new().run(days, home_iso)
 		elif args.size() > 0 and str(args[0]) == "unit":
 			exit_code = load("res://tests/unit.gd").new().run()
+		elif args.size() > 0 and str(args[0]) == "p47x_unit":
+			var unit = load("res://tests/unit.gd").new()
+			SaveSystem.use_test_dir()
+			load("res://tests/p47x_all.gd").new().run(unit)
+			SaveSystem.cleanup_test_dir()
+			exit_code = 1 if unit.fails > 0 else 0
 		elif args.size() > 0 and str(args[0]) == "camera_unit":
 			var unit = load("res://tests/unit.gd").new()
 			load("res://tests/atlas_camera_regressions.gd").new().run(unit, self)
@@ -3029,7 +3035,7 @@ func _build_sovereign_ui(bank: Dictionary) -> void:
 	_sovereign_country.item_selected.connect(func(_index):
 		var iso = str(_sovereign_country.get_selected_metadata())
 		_sovereign_rate.value = ceilf(SovereignLoans.suggested_rate(iso) * 10000.0) / 100.0
-		_sovereign_country.tooltip_text = "Riziko krajiny: %s" % EconMath.pct(SovereignLoans.risk(iso)))
+		_sovereign_country.tooltip_text = "Riziko krajiny: %s\n%s" % [EconMath.pct(SovereignLoans.risk(iso)), P47Mechanics.breakdown_text(SovereignLoans.suggested_rate_parts(iso))])
 	var lend = Button.new()
 	lend.name = "SovereignLend"
 	lend.text = "Poskytnúť štátny úver"

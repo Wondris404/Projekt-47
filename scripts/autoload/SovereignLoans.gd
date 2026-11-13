@@ -13,6 +13,17 @@ func suggested_rate(iso: String) -> float:
 	var policy = float(GameState.central.get(iso, {}).get("policy", 0.03))
 	return clampf(policy + 0.025 + risk(iso) * 0.12, 0.01, 0.4)
 
+func suggested_rate_parts(iso: String) -> Array:
+	if not P47Mechanics.active("M44"):
+		return []
+	var parts: Array = [
+		{"label": "Centrálna sadzba", "value": float(GameState.central.get(iso, {}).get("policy", 0.03))},
+		{"label": "Úverová marža", "value": 0.025},
+		{"label": "Riziko krajiny", "value": risk(iso) * 0.12},
+	]
+	parts.append({"label": "Ohraničenie sadzby", "value": suggested_rate(iso) - P47Mechanics.sum_parts(parts)})
+	return parts
+
 func outstanding(bank: Dictionary) -> float:
 	var total = 0.0
 	for loan in bank.get("sovereign_loans", []):

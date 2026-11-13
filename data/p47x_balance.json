@@ -1,0 +1,6 @@
+{
+  "_note": "ODHAD: koeficienty vyžadujú kalibráciu playtestom. enabled možno prepísať uloženým ext.p47x.enabled[MNN].",
+  "M44": {
+    "enabled": true
+  }
+}

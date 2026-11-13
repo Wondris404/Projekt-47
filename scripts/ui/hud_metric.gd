@@ -1,5 +1,8 @@
 extends PanelContainer
 
+func set_breakdown(parts: Array) -> void:
+	tooltip_text = P47Mechanics.breakdown_text(parts)
+
 func _make_custom_tooltip(text: String) -> Object:
 	var label := Label.new()
 	label.text = text
