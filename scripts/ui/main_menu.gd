@@ -103,6 +103,9 @@ func _ready() -> void:
 	logo.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))  # JUAN16
 	logo.add_theme_constant_override("shadow_offset_x", 4)
 	logo.add_theme_constant_override("shadow_offset_y", 4)
+	var head_font = load("res://ui/theme_p47.tres").get_font("font", "HeaderLabel")  # p47/gfx: titulok pismom Oswald
+	if head_font:
+		logo.add_theme_font_override("font", head_font)
 	root.add_child(logo)
 	var sub = Label.new()
 	sub_label = sub
