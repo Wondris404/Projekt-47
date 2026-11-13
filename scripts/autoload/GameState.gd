@@ -39,6 +39,7 @@ var usd_per_eur = 1.08
 var ext: Dictionary = {}  # JUAN4: politika, focus tree, AI konkurenti (volitelny kluc savu "ext")
 var game_settings: Dictionary = {}  # volitelne: zombie_mode, zombie_start_money
 var zombie: Dictionary = {}  # Halloween DLC, stary save ma prazdny slovnik
+var pending_p47x_enabled: Dictionary = {}  # P47X: prepínače mechaník z cfg novej hry
 var state_revision := 0  # Runtime only: distinguish worlds even at the same saved day.
 
 const SAVE_VERSION = 3  # v2: dlhopisy z knihy maju kupon = statny vynos (v1 mohol mat kupon = cena/100); v3 (etapa 1): dref, cpi_hist/cpi_acc/cpi_n, prev_rate/upd_day povinne
@@ -95,6 +96,9 @@ func new_game(cfg: Dictionary) -> void:
 		copy.basket = 1.0
 		copy.budget = 0.0
 		world[iso] = copy
+	P47Mechanics.apply_era(cfg, world)  # M01: éra mení HDP (2024 = bez zmeny)
+	if typeof(cfg.get("p47x_enabled")) == TYPE_DICTIONARY:
+		pending_p47x_enabled = cfg.p47x_enabled.duplicate()
 	LawSystem.bind_world()
 	var home = str(cfg.get("country", "SK"))
 	if not world.has(home):
@@ -131,6 +135,9 @@ func new_game(cfg: Dictionary) -> void:
 	GeopoliticsSystem.setup()
 	AgentSystem.spawn_ai()
 	ext = {}
+	if not pending_p47x_enabled.is_empty():
+		ext["p47x"] = {"enabled": pending_p47x_enabled}
+		pending_p47x_enabled = {}
 	game_settings = {
 		"zombie_mode": bool(cfg.get("zombie_mode", false)),
 		"zombie_start_money": int(cfg.get("zombie_start_money", 0)),

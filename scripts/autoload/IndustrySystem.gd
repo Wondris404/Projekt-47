@@ -92,6 +92,9 @@ func _req_name(code: String) -> String:
 
 # "" = odomknute, inak dovod
 func unlock_reason(ind_id: String, iso: String = "") -> String:
+	var era_lock = P47Mechanics.industry_lock(ind_id)  # M01: odvetvie ešte neexistuje
+	if era_lock != "":
+		return era_lock
 	if ind_id == "airport" and iso != "" and not airport_city_ok(iso):
 		return "Letisko vyžaduje mesto s aspoň 200 tis. obyvateľmi."
 	if not progression_on():

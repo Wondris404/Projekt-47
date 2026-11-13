@@ -265,5 +265,49 @@
     "concession_mult": 0.7,
     "credit_months": 24,
     "min_amount": 10000.0
+  },
+  "M01": {
+    "enabled": true,
+    "_note": "ODHAD: škály HDP voči 2024 (reálne, nie nominálne) a roky odvetví sú NEOVERENÉ, treba zdroj. Krajiny ostávajú dnešné (ZSSR/NDR/ČSSR v dátach chýbajú).",
+    "eras": {
+      "1950": {
+        "name": "Počiatky studenej vojny",
+        "gdp_scale": 0.12
+      },
+      "1962": {
+        "name": "Karibská kríza",
+        "gdp_scale": 0.2
+      },
+      "1973": {
+        "name": "Ropný šok",
+        "gdp_scale": 0.3
+      },
+      "1991": {
+        "name": "Rozpad bipolárneho sveta",
+        "gdp_scale": 0.5
+      },
+      "2008": {
+        "name": "Finančná kríza",
+        "gdp_scale": 0.8
+      },
+      "2024": {
+        "name": "Súčasnosť",
+        "gdp_scale": 1.0
+      }
+    },
+    "min_year": {
+      "nuclear_plant": 1956,
+      "chip_fab": 1968,
+      "software": 1975,
+      "solar_plant": 1980,
+      "eshop": 1995,
+      "data_center": 1995,
+      "social_network": 2004,
+      "ai_firm": 2012,
+      "offshore_gas_rig": 1960,
+      "fpso": 1977,
+      "stock_broker": 1950,
+      "airline": 1950
+    }
   }
 }

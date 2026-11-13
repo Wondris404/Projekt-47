@@ -6,6 +6,7 @@ const M09 = preload("res://scripts/p47x/m09_eureka.gd")
 const M02 = preload("res://scripts/p47x/m02_tension.gd")
 const M03 = preload("res://scripts/p47x/m03_blocs.gd")
 const M25 = preload("res://scripts/p47x/m25_proxy.gd")
+const M01 = preload("res://scripts/p47x/m01_eras.gd")
 var balance: Dictionary = {}
 
 func _ready() -> void:
@@ -21,6 +22,14 @@ func active(id: String) -> bool:
 		var flags = root.get("enabled", {})
 		if typeof(flags) == TYPE_DICTIONARY and flags.has(id):
 			return bool(flags[id])
+	var section = balance.get(id, {})
+	return typeof(section) == TYPE_DICTIONARY and bool(section.get("enabled", false))
+
+# Pri novej hre ešte platí ext starej hry, preto sa rozhoduje len podľa configu (cfg.p47x_enabled prepíše balance).
+func active_cfg(id: String, cfg: Dictionary) -> bool:
+	var flags = cfg.get("p47x_enabled", {})
+	if typeof(flags) == TYPE_DICTIONARY and flags.has(id):
+		return bool(flags[id])
 	var section = balance.get(id, {})
 	return typeof(section) == TYPE_DICTIONARY and bool(section.get("enabled", false))
 
@@ -131,6 +140,16 @@ func proxy_supply(war_id: String, side_iso: String, kind: String, amount_month: 
 
 func concession_mult(iso: String) -> float:
 	return M25.concession_mult(self, iso) if active("M25") else 1.0
+
+func apply_era(cfg: Dictionary, world: Dictionary) -> void:
+	if active_cfg("M01", cfg):
+		M01.apply(self, cfg, world)
+
+func industry_lock(ind_id: String) -> String:
+	return M01.industry_lock(self, ind_id) if active("M01") else ""
+
+func start_years() -> Array:
+	return M01.years(self) if active_cfg("M01", {}) else [2024]
 
 func monthly() -> void:
 	if active("M25"):

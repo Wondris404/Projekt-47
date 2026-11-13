@@ -31,6 +31,7 @@ var mode_id = "medium"  # JUAN4
 var mode_label: Label
 var nick_box: LineEdit
 var gender_box: OptionButton
+var year_box: OptionButton  # M01
 const GENDERS = ["muž", "žena", "iné"]
 
 # JUAN5: celoobrazovkove menu v pixel style intra (jachta + skyline), mapa a herne UI su skryte (main._set_game_visible)
@@ -293,13 +294,24 @@ func _new_game() -> Control:
 	if country_list.item_count > 0:
 		country_list.select(select_row)
 	box.add_child(country_list)
-	var year = SpinBox.new()
-	year.min_value = 2024
-	year.max_value = 2024
-	year.value = 2024
-	year.editable = false
-	year.tooltip_text = "1950 čaká na dáta. Hra zatiaľ používa rok 2024."
-	box.add_child(year)
+	var start_years: Array = P47Mechanics.start_years()
+	if start_years.size() > 1:  # M01: výber éry
+		year_box = OptionButton.new()
+		year_box.name = "EraYear"
+		for y in start_years:
+			year_box.add_item("%d – %s" % [int(y), str(P47Mechanics.M01.eras(P47Mechanics).get(str(y), {}).get("name", ""))])
+			year_box.set_item_metadata(year_box.item_count - 1, int(y))
+		year_box.select(year_box.item_count - 1)
+		year_box.tooltip_text = "Štartovací rok (experimentálne). HDP sveta sa prispôsobí ére, novšie odvetvia sú zamknuté."
+		box.add_child(year_box)
+	else:
+		var year = SpinBox.new()
+		year.min_value = 2024
+		year.max_value = 2024
+		year.value = 2024
+		year.editable = false
+		year.tooltip_text = "1950 čaká na dáta. Hra zatiaľ používa rok 2024."
+		box.add_child(year)
 	seed_box = SpinBox.new()
 	seed_box.min_value = 1
 	seed_box.max_value = 999999
@@ -483,7 +495,7 @@ func _emit_new() -> void:
 			return
 	new_game_requested.emit({
 		"country": iso,
-		"year": 2024,
+		"year": int(year_box.get_item_metadata(year_box.selected)) if year_box != null and year_box.selected >= 0 else 2024,
 		"seed": int(seed_box.value),
 		"starter": starter_box.button_pressed,
 		"tutorial": mode_id == "tutorial",
