@@ -532,6 +532,15 @@ func cpi_weights(iso: String) -> Dictionary:
 # okamzity CPI index (1.0 = vsetky ceny na base)
 var _cw = {}
 var _cw_day = -1
+var _base_px := {}
+
+func _base_price(cid: String) -> float:
+	if _base_px.has(cid):
+		return float(_base_px[cid])
+	var b: float = max(float(DataLoader.commodity(cid).get("base_price", 1.0)), 0.0001)
+	_base_px[cid] = b
+	return b
+
 func cpi_index(iso: String) -> float:
 	if _cw_day != GameState.day_index:
 		_cw.clear()
@@ -539,9 +548,14 @@ func cpi_index(iso: String) -> float:
 	if not _cw.has(iso):
 		_cw[iso] = cpi_weights(iso)
 	var w: Dictionary = _cw[iso]
+	var books: Dictionary = GameState.markets.get(iso, {})
 	var idx = 0.0
 	for cid in w.keys():
-		idx += float(w[cid]) * price(iso, cid) / max(float(DataLoader.commodity(cid).get("base_price", 1.0)), 0.0001)
+		var px := _base_price(str(cid))
+		var cur := px
+		if typeof(books) == TYPE_DICTIONARY and books.has(cid):
+			cur = float(books[cid].get("price", px))
+		idx += float(w[cid]) * cur / px
 	return idx
 
 func _accumulate_cpi(iso: String, steps: int = 1) -> void:
