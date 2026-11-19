@@ -108,8 +108,58 @@ func reset_runtime() -> void:
 	history.clear()
 	_dvec.clear()  # JUAN5: po nacitani/novej hre prvy den prepocita vsetky krajiny naplno
 	_prod_c.clear()
+	_forget_sd()
 	tier1.clear()
 	_full_next = true
+
+# Plochý index krajina × komodita. Rovnaké kľúče ako iso|cid, len bez skladania reťazca v horúcej slučke.
+var _grid_n := 0
+var _grid_c := 0
+var _pair := PackedStringArray()
+var _prod_m := PackedFloat64Array()
+var _prod_ok := PackedByteArray()
+var _share_rows: Array = []
+var _dm_list: Array = []
+var _tr_books: Array = []
+
+func _ensure_grid() -> void:
+	var n := DataLoader.country_ids.size()
+	var c := DataLoader.commodity_ids.size()
+	if n == _grid_n and c == _grid_c and _pair.size() == n * c:
+		return
+	_grid_n = n
+	_grid_c = c
+	var cells := n * c
+	_pair.resize(cells)
+	_prod_m.resize(cells)
+	_prod_ok.resize(n)
+	_prod_ok.fill(0)
+	_share_rows.clear()
+	_share_rows.resize(c)
+	for i in n:
+		var iso := str(DataLoader.country_ids[i])
+		var row := i * c
+		for ci in c:
+			_pair[row + ci] = iso + "|" + str(DataLoader.commodity_ids[ci])
+
+func _forget_sd() -> void:
+	if _prod_ok.size() > 0:
+		_prod_ok.fill(0)
+
+func _share_row(ci: int, cid: String) -> PackedFloat64Array:
+	_ensure_grid()
+	var existing = _share_rows[ci]
+	if existing is PackedFloat64Array and existing.size() == _grid_n:
+		return existing
+	if not DataLoader._share_cache.has(cid):
+		DataLoader.share(cid, str(DataLoader.country_ids[0]))
+	var shares: Dictionary = DataLoader._share_cache.get(cid, {})
+	var row := PackedFloat64Array()
+	row.resize(_grid_n)
+	for i in _grid_n:
+		row[i] = float(shares.get(str(DataLoader.country_ids[i]), 0.0))
+	_share_rows[ci] = row
+	return row
 
 func init_books() -> void:
 	GameState.markets.clear()
@@ -241,6 +291,12 @@ func trade_routes() -> void:
 	trade_routes_chunk(0, DataLoader.commodity_ids.size())
 
 func trade_routes_chunk(start: int, count: int) -> int:
+	var ids: Array = DataLoader.country_ids
+	if start == 0 or _tr_books.size() != ids.size():
+		_tr_books = []
+		_tr_books.resize(ids.size())
+		for i in ids.size():
+			_tr_books[i] = _books_of(str(ids[i]))
 	var end = mini(start + count, DataLoader.commodity_ids.size())
 	for index in range(start, end):
 		var cid = str(DataLoader.commodity_ids[index])
@@ -249,8 +305,12 @@ func trade_routes_chunk(start: int, count: int) -> int:
 			continue
 		var exporters = []
 		var importers = []
-		for iso in DataLoader.country_ids:
-			var book: Dictionary = _book(iso, cid)
+		for i in ids.size():
+			var iso := str(ids[i])
+			var shelf: Dictionary = _tr_books[i]
+			if not shelf.has(cid):
+				shelf[cid] = default_book(cid)
+			var book: Dictionary = shelf[cid]
 			var dem = max(float(book.get("last_dem", 1.0)), 0.001)
 			var days = float(book.stock) / dem
 			if days > 55.0 and float(book.stock) > 5.0:
@@ -359,6 +419,7 @@ func clear_chunk(start: int, n: int) -> int:
 	if start == 0:
 		if _active.is_empty():
 			refresh_tiers()
+		_ensure_grid()
 		_bases.resize(DataLoader.commodity_ids.size())
 		for j in _bases.size():
 			_bases[j] = float(DataLoader.commodity(DataLoader.commodity_ids[j]).get("base_price", 1.0))
@@ -372,10 +433,7 @@ func clear_chunk(start: int, n: int) -> int:
 			continue
 		done += 1
 		var steps = int(_dt.get(iso, 1))
-		var j = 0
-		for cid in DataLoader.commodity_ids:
-			_clear_one(iso, cid, steps, _bases[j])
-			j += 1
+		_clear_country(iso, i - 1, steps)
 		_remember(iso)
 		_accumulate_cpi(iso, steps)
 	return -1 if i >= ids.size() else i
@@ -383,19 +441,74 @@ func clear_chunk(start: int, n: int) -> int:
 func clear_all() -> void:
 	if _active.is_empty():
 		refresh_tiers()
+	_ensure_grid()
 	_bases.resize(DataLoader.commodity_ids.size())
 	for j in _bases.size():
 		_bases[j] = float(DataLoader.commodity(DataLoader.commodity_ids[j]).get("base_price", 1.0))
-	for iso in DataLoader.country_ids:
+	var ids: Array = DataLoader.country_ids
+	for ii in ids.size():
+		var iso := str(ids[ii])
 		if not _active.has(iso):
 			continue
 		var steps = int(_dt.get(iso, 1))
-		var j = 0
-		for cid in DataLoader.commodity_ids:
-			_clear_one(iso, cid, steps, _bases[j])
-			j += 1
+		_clear_country(iso, ii, steps)
 		_remember(iso)
 		_accumulate_cpi(iso, steps)
+
+func _clear_country(iso: String, ii: int, steps: int) -> void:
+	var books: Dictionary = _books_of(iso)
+	var cids: Array = DataLoader.commodity_ids
+	var ncid := cids.size()
+	var offers_on := not offers.is_empty()
+	var bids_on := not bids.is_empty()
+	for ci in ncid:
+		var cid = cids[ci]
+		if not books.has(cid):
+			books[cid] = default_book(cid)
+		var book: Dictionary = books[cid]
+		var idx: int = ii * ncid + ci
+		var k: String = _pair[idx]
+		var base: float = _bases[ci]
+		var firm_sup := 0.0
+		var firm_dem := 0.0
+		if offers_on and offers.has(k):
+			for o in offers[k]:
+				firm_sup += float(o.qty)
+		if bids_on and bids.has(k):
+			for b in bids[k]:
+				firm_dem += float(b.qty)
+		var npc_dem: float = float(d_now[k]) if d_now.has(k) else _one_demand(iso, cid)
+		var npc_sup: float = float(sup_day[k]) if sup_day.has(k) else npc_dem
+		var sup = npc_sup + firm_sup
+		var dem = npc_dem + firm_dem
+		var sell_fill = 1.0 if sup <= 0.0001 else clampf(dem / sup, 0.0, 1.0)
+		var buy_fill = 1.0 if dem <= 0.0001 else clampf(sup / dem, 0.0, 1.0)
+		if firm_sup > 0.0 or firm_dem > 0.0:
+			matching_market[k] = {"supply": npc_sup * sell_fill, "demand": npc_dem * buy_fill}
+		var factors = null if (_fast_f and d_now.has(k)) else _factors_cached(iso, cid)
+		for _s in steps:
+			book.price = adjust_price(float(book.price), max(dem, 0.0001), max(sup, 0.0001), float(book.stock), base)
+			book.stock = max(0.2, float(book.stock) + npc_sup - npc_dem)
+		if firm_sup > 0.0:
+			Empire.record_sales(iso, cid, offers[k], bids.get(k, []), npc_dem, dem, sell_fill, float(book.price))
+		book.last_dem = dem
+		book.last_sup = sup
+		book.sell_fill = sell_fill
+		book.buy_fill = buy_fill
+		if factors != null and not factors.is_empty():
+			book.f_pop = float(factors.population)
+			book.f_income = float(factors.income_factor)
+			book.f_tod = float(factors.time_of_day_factor)
+			book.f_weather = float(factors.weather_factor)
+			book.f_holiday = float(factors.holiday_factor)
+			book.f_comp = float(factors.competition_factor)
+			book.f_geo = float(factors.geopolitics_factor)
+			book.demand_product = float(factors.product)
+		book.capital_add = 0.0
+		if cid == "finance":
+			var gdp_eur = float(GameState.world.get(iso, {}).get("gdp_usd", 0.0)) / max(GameState.usd_per_eur, 0.2)
+			var rate = float(GameState.central.get(iso, {}).get("base_rate", GameState.central.get(iso, {}).get("policy", 0.02)))
+			book.capital_add = BankingSystem.capital_demand(rate, gdp_eur) / 365.0
 
 # --- CPI (etapa 1, krok 3): vazeny kosik spotrebnych komodit; vahy = podiel vydavkov (weight x poor/rich mult) ---
 const CPI_BASKET = ["wheat", "meat", "coffee", "food_service", "electricity", "crude_oil", "textiles", "electronics", "automobiles", "pharma"]
@@ -419,6 +532,15 @@ func cpi_weights(iso: String) -> Dictionary:
 # okamzity CPI index (1.0 = vsetky ceny na base)
 var _cw = {}
 var _cw_day = -1
+var _base_px := {}
+
+func _base_price(cid: String) -> float:
+	if _base_px.has(cid):
+		return float(_base_px[cid])
+	var b: float = max(float(DataLoader.commodity(cid).get("base_price", 1.0)), 0.0001)
+	_base_px[cid] = b
+	return b
+
 func cpi_index(iso: String) -> float:
 	if _cw_day != GameState.day_index:
 		_cw.clear()
@@ -426,9 +548,14 @@ func cpi_index(iso: String) -> float:
 	if not _cw.has(iso):
 		_cw[iso] = cpi_weights(iso)
 	var w: Dictionary = _cw[iso]
+	var books: Dictionary = GameState.markets.get(iso, {})
 	var idx = 0.0
 	for cid in w.keys():
-		idx += float(w[cid]) * price(iso, cid) / max(float(DataLoader.commodity(cid).get("base_price", 1.0)), 0.0001)
+		var px := _base_price(str(cid))
+		var cur := px
+		if typeof(books) == TYPE_DICTIONARY and books.has(cid):
+			cur = float(books[cid].get("price", px))
+		idx += float(w[cid]) * cur / px
 	return idx
 
 func _accumulate_cpi(iso: String, steps: int = 1) -> void:
@@ -547,13 +674,21 @@ func _demand_fast_prepare() -> void:
 	_fc.clear()
 	world_demand.clear()
 	_fast_f = true
+	_ensure_grid()
 	var tod = 1.08 if TimeSystem.dow() < 5 else 0.92
 	var month = int(GameState.date.m)
 	var day = int(GameState.date.d)
 	var ctxs = {}
-	for iso in DataLoader.country_ids:
+	var listed: Array = []
+	var ids: Array = DataLoader.country_ids
+	for i in ids.size():
+		var iso := str(ids[i])
 		if (_active.has(iso) or not _dvec.has(iso)) and GameState.world.has(iso):
-			ctxs[iso] = _ctx(iso)
+			var ctx := _ctx(iso)
+			ctx["iso"] = iso
+			ctx["i"] = i
+			ctxs[iso] = ctx
+			listed.append(ctx)
 	var nc = DataLoader.commodity_ids.size()
 	var inact = PackedFloat64Array()
 	inact.resize(nc)
@@ -563,6 +698,7 @@ func _demand_fast_prepare() -> void:
 			for j in min(nc, v.size()):
 				inact[j] += v[j]
 	_dm_contexts = ctxs
+	_dm_list = listed
 	_dm_inactive = inact
 	_dm_tod = tod
 	_dm_month = month
@@ -591,9 +727,10 @@ func _demand_fast_chunk(start: int, count: int) -> int:
 		var geo_hot = GeopoliticsSystem.conflict_demand(true, cid)
 		var xmas = month == 12 and day >= 24 and cid == "food_service"
 		var ram = month == 3 and day < 20 and cid == "food_service"
-		for iso in ctxs.keys():
-			var x: Dictionary = ctxs[iso]
-			var k = iso + "|" + cid
+		for x in _dm_list:
+			var iso: String = x.iso
+			var idx: int = int(x.i) * nc + ci
+			var k: String = _pair[idx]
 			var weather = 1.0 if x.weather == "clear" else EventSystem.weather_factor(x.weather, cid)
 			var holiday = 1.0
 			if xmas and str(x.grp).begins_with("christian"):
@@ -768,6 +905,7 @@ func _update_capacity(lod: bool = false) -> void:
 	_update_capacity_chunk(0, DataLoader.country_ids.size(), lod)
 
 func _update_capacity_chunk(start: int, count: int, lod: bool = false) -> int:
+	_ensure_grid()
 	var end = mini(start + count, DataLoader.country_ids.size())
 	for index in range(start, end):
 		var iso = str(DataLoader.country_ids[index])
@@ -775,9 +913,15 @@ func _update_capacity_chunk(start: int, count: int, lod: bool = false) -> int:
 			continue
 		var steps = int(_dt.get(iso, 1)) if lod else 1
 		var tau = CAP_TAU if steps <= 1 else 1.0 / (1.0 - pow(1.0 - 1.0 / CAP_TAU, steps))
-		for cid in DataLoader.commodity_ids:
-			var book: Dictionary = _book(iso, cid)
-			var dr = float(d_ref.get(iso + "|" + cid, 0.0))
+		var books: Dictionary = _books_of(iso)
+		var ncid := DataLoader.commodity_ids.size()
+		var row := index * ncid
+		for ci in ncid:
+			var cid = DataLoader.commodity_ids[ci]
+			if not books.has(cid):
+				books[cid] = default_book(cid)
+			var book: Dictionary = books[cid]
+			var dr = float(d_ref.get(_pair[row + ci], 0.0))
 			var cur = float(book.get("dref", 0.0))
 			if cur <= 0.0 or EconMath.is_bad(cur):
 				book.dref = dr
@@ -868,9 +1012,11 @@ var _sp_grps: Array = []
 var _sp_gmul := PackedFloat64Array()
 
 func _supply_prepare(lod: bool) -> void:
+	_ensure_grid()
 	if not lod:
 		sup_day.clear()
 		_prod_c.clear()
+		_forget_sd()
 	var open = _openness()
 	var ids: Array = DataLoader.country_ids
 	var n = ids.size()
@@ -934,17 +1080,13 @@ func _supply_chunk(start: int, count: int) -> int:
 			var d = float(bk[cid].get("dref", 0.0))
 			drs[i] = d
 			dw += d
-		var shares: Dictionary = DataLoader._share_cache[cid] if DataLoader._share_cache.has(cid) else {}
-		if shares.is_empty():
-			DataLoader.share(cid, str(ids[0]))
-			shares = DataLoader._share_cache.get(cid, {})
+		var shares := _share_row(ci, str(cid))
 		for i in n:
 			# sezonna produkcia sa vyhladzuje zasobami (priemer za rok = dopyt), preto sa z soku vyberie; tazba (susko, burka, vojna) ostava
-			var iso2: String = ids[i]
 			var m: float
-			var pv: PackedFloat64Array = _prod_c.get(iso2, PackedFloat64Array())
-			if not act[i] and pv.size() == ncid:
-				m = pv[ci]  # JUAN5: tier 2 - sok z posledneho prepoctu
+			var pidx: int = i * ncid + ci
+			if not act[i] and _prod_ok[i] == 1:
+				m = _prod_m[pidx]  # JUAN5: tier 2 - sok z posledneho prepoctu
 			else:
 				var si: int = sis[i]
 				var sv = float(seas[si]) if si < seas.size() else 1.0
@@ -963,23 +1105,25 @@ func _supply_chunk(start: int, count: int) -> int:
 					m_ev *= 0.82
 				var sp = max(sv, 0.05) if si < seas.size() else 1.0
 				m = m_ev / sp * gmul[i]
-				if pv.size() != ncid:
-					pv.resize(ncid)
-				pv[ci] = m
-				_prod_c[iso2] = pv
-			var p = dw * float(shares.get(iso2, 0.0)) * m if tradable else drs[i] * m
+				_prod_m[pidx] = m
+			var p = dw * shares[i] * m if tradable else drs[i] * m
 			prod[i] = p
 			tp += p
+		if ci == ncid - 1:
+			for i2 in n:
+				if act[i2]:
+					_prod_ok[i2] = 1
 		var f = clampf(tp / dw, 0.3, 2.0) if (tp > 0.0 and dw > 0.0) else 1.0
 		for i in n:
-			if not act[i] and sup_day.has(str(ids[i]) + "|" + cid):
+			var pidx2: int = i * ncid + ci
+			if not act[i] and sup_day.has(_pair[pidx2]):
 				continue
 			var dr3 = drs[i]
 			var s2 = prod[i]
 			if tradable:
 				var phi = phis[i]
 				s2 = (1.0 - phi) * s2 + phi * f * dr3
-			sup_day[str(ids[i]) + "|" + cid] = max(s2, 0.05 * dr3)
+			sup_day[_pair[pidx2]] = max(s2, 0.05 * dr3)
 	return end
 
 # neutral = referencny dopyt bez tyzdnoveho cyklu (tod): kapacita sa nema ladit na pracovny den
