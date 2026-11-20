@@ -7,6 +7,8 @@ var line: LineEdit
 var history: Array = []
 var hist_idx := 0
 
+const AMOUNT_MULTIPLIERS := {"k": 1.0e3, "m": 1.0e6, "b": 1.0e9, "mld": 1.0e9}
+
 const HELP := """Príkazy:
   help — tento zoznam
   money <x> — pridá x € (napr. money 1000000, money 5m, money 2b)
@@ -103,13 +105,15 @@ func _on_submit(t: String) -> void:
 static func parse_amount(s: String) -> float:
 	s = s.strip_edges().to_lower().replace(" ", "").replace(",", ".")
 	var mul := 1.0
-	if s.ends_with("k"): mul = 1.0e3
-	elif s.ends_with("m"): mul = 1.0e6
-	elif s.ends_with("b") or s.ends_with("mld"): mul = 1.0e9
-	s = s.trim_suffix("mld").trim_suffix("k").trim_suffix("m").trim_suffix("b")
+	for suffix in AMOUNT_MULTIPLIERS:
+		if s.ends_with(suffix):
+			mul = AMOUNT_MULTIPLIERS[suffix]
+			s = s.trim_suffix(suffix)
+			break
 	if not s.is_valid_float():
 		return NAN
-	return s.to_float() * mul
+	var amount = s.to_float() * mul
+	return amount if is_finite(amount) else NAN
 
 func run(cmd: String) -> String:
 	var p: PackedStringArray = cmd.strip_edges().split(" ", false)
@@ -131,10 +135,11 @@ func run(cmd: String) -> String:
 	match c:
 		"money":
 			var x = parse_amount(arg)
-			if is_nan(x):
+			var cash = float(GameState.player.cash) + x
+			if not is_finite(cash):
 				return "Použitie: money <x>  (napr. money 1000000 alebo money 5m)"
-			GameState.player.cash = float(GameState.player.cash) + x
-			out = "Pridané %s €. Hotovosť: %s €." % [String.num(x, 0), String.num(float(GameState.player.cash), 0)]
+			GameState.player.cash = cash
+			out = "Pridané %s €. Hotovosť: %s €." % [String.num(x, 0), String.num(cash, 0)]
 		"research":
 			if arg != "all":
 				return "Použitie: research all"
@@ -148,7 +153,9 @@ func run(cmd: String) -> String:
 			main._apply_dev()
 			out = "Dev efekty zapnuté: všetko odomknuté, výskum hotový, +50 M €."
 		"skip":
-			var n = int(arg) if arg.is_valid_int() else 30
+			if arg != "" and not arg.is_valid_int():
+				return "Použitie: skip <n>  (napr. skip 30)"
+			var n = 30 if arg == "" else int(arg)
 			n = clampi(n, 1, 3650)
 			var t0 = Time.get_ticks_msec()
 			for i in n:

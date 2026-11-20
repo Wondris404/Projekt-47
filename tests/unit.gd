@@ -20,6 +20,7 @@ func _new() -> void:
 func run() -> int:
 	SaveSystem.use_test_dir()
 	_new()
+	_cheat_commands()
 	_bonds()
 	_bond_exploit()
 	_save()
@@ -55,6 +56,22 @@ func run() -> int:
 	load("res://tests/zombie_dlc.gd").new().run(self)
 	SaveSystem.cleanup_test_dir()
 	return 1 if fails > 0 else 0
+
+func _cheat_commands() -> void:
+	var script = preload("res://scripts/ui/cheat_console.gd")
+	var console = script.new()
+	_chk("cheat_amount_suffix", script.parse_amount("2,5 mld") == 2.5e9)
+	_chk("cheat_amount_rejects_multiple_suffixes", is_nan(script.parse_amount("2mk")))
+	_chk("cheat_amount_rejects_overflow", is_nan(script.parse_amount("1e309")))
+	var cash = GameState.player.cash
+	GameState.player.cash = 1.0e308
+	var refused_money = console.run("money 1e308").begins_with("Použitie:")
+	_chk("cheat_money_keeps_finite_balance", refused_money and GameState.player.cash == 1.0e308)
+	GameState.player.cash = cash
+	var day = GameState.day_index
+	var refused_skip = console.run("skip 2.5").begins_with("Použitie:")
+	_chk("cheat_skip_preserves_day_on_invalid_input", refused_skip and GameState.day_index == day)
+	console.free()
 
 func _bonds() -> void:
 	GameState.player.cash = 10000.0
